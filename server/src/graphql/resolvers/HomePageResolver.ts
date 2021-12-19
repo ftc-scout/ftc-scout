@@ -1,5 +1,5 @@
 import { Arg, Int, Query, Resolver } from "type-graphql";
-import { EntityTarget } from "typeorm";
+import { EntityTarget, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { ALL_SEASONS, CURRENT_SEASON } from "../../constants";
 import { DATA_SOURCE } from "../../db/data-source";
 import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
@@ -31,6 +31,7 @@ export class HomePageResolver {
                 .createQueryBuilder()
                 .select('COUNT(DISTINCT("teamNumber"))')
                 .getRawOne()!) as { count: string };
+
             return +res.count;
         } else {
             return 0;
@@ -39,13 +40,12 @@ export class HomePageResolver {
 
     @Query(() => Int)
     async matchesPlayedCount(@Arg("season", () => Int) season: number): Promise<number> {
-        let query = DATA_SOURCE.getRepository(Match)
+        return DATA_SOURCE.getRepository(Match)
             .createQueryBuilder("m")
             .select()
             .where('m."eventSeason" = :season', { season })
-            .andWhere('m."hasBeenPlayed"');
-
-        return query.getCount();
+            .andWhere('m."hasBeenPlayed"')
+            .getCount();
     }
 
     @Query(() => Match, { nullable: true })
@@ -62,6 +62,7 @@ export class HomePageResolver {
             .where("m.hasBeenPlayed")
             .andWhere("NOT e.remote")
             .andWhere('m."eventSeason" = :season', { season: CURRENT_SEASON })
+            .limit(1)
             .getOne();
     }
 
@@ -72,19 +73,10 @@ export class HomePageResolver {
             .leftJoin(Event, "e", 'e.season = tep."eventSeason" AND e.code = tep."eventCode"')
             .orderBy('tep."totTotalpoints"', "DESC")
             .where("e.remote")
+            .andWhere('tep."eventSeason" = :season', { season: CURRENT_SEASON })
+            .limit(1)
             .getOne();
 
         return res ? new TeamEventParticipation(res) : null;
-    }
-
-    @Query(() => [Event])
-    async todaysEvents(): Promise<Event[]> {
-        // TODO actually implement this
-        return Event.find({
-            where: {
-                season: CURRENT_SEASON,
-            },
-            take: 5,
-        });
     }
 }
