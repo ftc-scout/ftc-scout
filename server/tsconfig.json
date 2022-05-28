@@ -2,6 +2,8 @@
     "compilerOptions": {
         /* Language and Environment */
         "target": "es6",
+        "lib": ["dom", "es6", "es2017", "esnext.asynciterable"],
+        // Required by typegraphql
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
 
