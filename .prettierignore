@@ -1,0 +1,11 @@
+/node_modules/
+/dist/
+
+.idea
+
+/server/node_modules/
+/server/dist/
+
+/web/node_modules/
+/web/.svelte-kit/
+/web/build/

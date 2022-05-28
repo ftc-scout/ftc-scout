@@ -1,0 +1,48 @@
+{
+    "compilerOptions": {
+        /* Language and Environment */
+        "target": "es6",
+        "experimentalDecorators": true,
+        "emitDecoratorMetadata": true,
+
+        /* Modules */
+        "module": "commonjs",
+        "baseUrl": ".",
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+
+        /* JavaScript Support */
+        "allowJs": false,
+
+        /* Emit */
+        "outDir": "./dist",
+        "sourceMap": true,
+        "removeComments": true,
+
+        /* Interop Constraints */
+        "esModuleInterop": true,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+
+        /* Type Checking */
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "useUnknownInCatchVariables": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+
+        /* Completeness */
+        "skipLibCheck": true
+    },
+    "exclude": ["node_modules"],
+    "include": ["./src/**/*.ts"]
+}
