@@ -9,8 +9,11 @@ import express from "express";
 import { buildSchema } from "type-graphql";
 import { SERVER_PORT, IS_DEV, WEB_ORIGIN } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
+import { FTCSDataSource } from "./db/data-source";
 
 async function main() {
+    await FTCSDataSource.initialize();
+
     const app = express();
 
     // Allow requests from our webpage.
