@@ -1,27 +1,49 @@
-import { hash } from "argon2";
-import { Arg, Field, Mutation, ObjectType, Resolver } from "type-graphql";
+import { hash, verify } from "argon2";
+import {
+    Arg,
+    Ctx,
+    Field,
+    MaybePromise,
+    Mutation,
+    ObjectType,
+    Query,
+    Resolver,
+} from "type-graphql";
 import { User } from "../../db/entities/User";
 import { checkPasswordRequirements } from "../../logic/requirements/password-requirements";
 import { checkUsernameRequirements } from "../../logic/requirements/username-requirements";
 import { FieldError } from "../objects/FieldError";
 import { PG_UNIQUE_VIOLATION } from "../../db/postgres-error-codes";
 import { isQueryFailedError } from "../../db/is-query-failed-error";
+import { GraphQLContext } from "../Context";
 
 @ObjectType()
 class UserErrorResponse {
     @Field(() => [FieldError], { nullable: true })
-    errors: FieldError[] | undefined;
+    errors?: FieldError[];
 
     @Field(() => User, { nullable: true })
-    user: User | undefined;
+    user?: User;
 }
 
 @Resolver()
 export class UserResolver {
+    @Query(() => User, { nullable: true })
+    me(@Ctx() { req }: GraphQLContext): MaybePromise<User | null> {
+        console.log(req.session);
+
+        if (!req.session.userId) {
+            return null;
+        }
+
+        return User.findOneBy({ id: req.session.userId });
+    }
+
     @Mutation(() => UserErrorResponse)
     async register(
         @Arg("username") username: string,
-        @Arg("password") password: string
+        @Arg("password") password: string,
+        @Ctx() { req }: GraphQLContext
     ): Promise<UserErrorResponse> {
         const usernameErrors = checkUsernameRequirements(username);
         const passwordErrors = checkPasswordRequirements(password);
@@ -29,7 +51,6 @@ export class UserResolver {
         if (usernameErrors.length || passwordErrors.length) {
             return {
                 errors: [...usernameErrors, ...passwordErrors],
-                user: undefined,
             };
         } else {
             try {
@@ -39,10 +60,10 @@ export class UserResolver {
                     password: hashedPassword,
                 }).save();
 
-                return {
-                    errors: undefined,
-                    user,
-                };
+                // Logs the user in
+                req.session.userId = user.id;
+
+                return { user };
             } catch (err) {
                 if (
                     isQueryFailedError(err) &&
@@ -55,11 +76,55 @@ export class UserResolver {
                                 message: "That username already exists.",
                             },
                         ],
-                        user: undefined,
                     };
                 }
                 throw err;
             }
         }
+    }
+
+    @Mutation(() => UserErrorResponse)
+    async login(
+        @Arg("username") username: string,
+        @Arg("password") password: string,
+        @Ctx() { req }: GraphQLContext
+    ): Promise<UserErrorResponse> {
+        const user = await User.findOneBy({ username });
+
+        if (!user) {
+            return {
+                errors: [
+                    {
+                        field: "username",
+                        message: "That username does not exist.",
+                    },
+                ],
+            };
+        }
+
+        const isCorrectPassword = await verify(user.password, password);
+
+        if (!isCorrectPassword) {
+            return {
+                errors: [
+                    {
+                        field: "password",
+                        message: "Incorrect password.",
+                    },
+                ],
+            };
+        }
+
+        // Log in the user
+        req.session.userId = user.id;
+
+        return { user };
+    }
+
+    @Mutation(() => Boolean)
+    async logout(@Ctx() { req }: GraphQLContext) {
+        // Log the user out
+        req.session.userId = undefined;
+        return true;
     }
 }
