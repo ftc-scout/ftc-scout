@@ -7,12 +7,7 @@ import { ApolloServer } from "apollo-server-express";
 import cors from "cors";
 import express from "express";
 import { buildSchema } from "type-graphql";
-import {
-    SERVER_PORT,
-    DEV_WEB_ORIGIN,
-    IS_DEV,
-    PROD_WEB_ORIGIN,
-} from "./constants";
+import { SERVER_PORT, IS_DEV, WEB_ORIGIN } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
 
 async function main() {
@@ -21,12 +16,12 @@ async function main() {
     // Allow requests from our webpage.
     app.use(
         cors({
-            origin: IS_DEV ? DEV_WEB_ORIGIN : PROD_WEB_ORIGIN,
+            origin: WEB_ORIGIN,
             credentials: true,
         })
     );
 
-    // Intilize the apollo graphql server
+    // Intilize the apollo graphql server.
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
             resolvers,

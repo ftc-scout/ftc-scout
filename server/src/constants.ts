@@ -3,5 +3,6 @@ export const IS_DEV = !IS_PROD;
 
 export const SERVER_PORT = 4000;
 
-export const DEV_WEB_ORIGIN = "http://localhost:3000";
-export const PROD_WEB_ORIGIN = "TODO";
+const DEV_WEB_ORIGIN = "http://localhost:3000";
+const PROD_WEB_ORIGIN = "TODO";
+export const WEB_ORIGIN = IS_DEV ? DEV_WEB_ORIGIN : PROD_WEB_ORIGIN;
