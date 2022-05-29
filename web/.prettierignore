@@ -3,3 +3,5 @@
 /.svelte-kit/
 
 .idea
+
+/src/lib/graphql/generated/

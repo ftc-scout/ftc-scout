@@ -7,7 +7,7 @@
         "experimentalDecorators": true,
         "emitDecoratorMetadata": true,
         /* Modules */
-        "module": "commonjs",
+        "module": "es6",
         "baseUrl": ".",
         "resolveJsonModule": true,
         "moduleResolution": "node",

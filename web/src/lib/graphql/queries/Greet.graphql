@@ -1,0 +1,3 @@
+query Greet($name: String!) {
+    greet(name: $name)
+}
