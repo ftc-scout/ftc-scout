@@ -44,3 +44,10 @@
 </script>
 
 <slot />
+
+<style>
+    :global(:root) {
+        --theme-color: #2c666e;
+        font-family: sans-serif;
+    }
+</style>
