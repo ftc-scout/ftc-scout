@@ -5,3 +5,5 @@
 .idea
 
 /src/lib/graphql/generated/
+
+.env

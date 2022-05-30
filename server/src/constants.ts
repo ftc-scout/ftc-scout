@@ -23,3 +23,7 @@ export const SESSION_SECRET = "TODO CHANGE SECRET"; // TODO change secret
 
 export const REDIS_PORT = 6379;
 export const REDIS_ORIGIN = "127.0.0.1";
+
+export const FTC_API_KEY = process.env.FTC_API_KEY;
+
+export const CURRENT_SEASON = 2021;
