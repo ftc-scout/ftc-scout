@@ -6,7 +6,7 @@ import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
 export class Team extends BaseEntity {
     @Field(() => Int)
     @PrimaryColumn()
-    teamNumber!: number;
+    number!: number;
 
     @Field()
     @Column()
