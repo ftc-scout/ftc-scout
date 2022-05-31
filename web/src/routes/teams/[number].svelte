@@ -26,8 +26,9 @@
 </script>
 
 {$page.params.number}
-{#if !$team?.data?.teamByNumber || $page.params.number == "18253"}
+{#if !$team?.data?.teamByNumber}
     That team doesn't exist
 {:else}
+<!-- Add goto command for team search and remove hudson block -->
     {$team.data.teamByNumber?.name}
 {/if}
