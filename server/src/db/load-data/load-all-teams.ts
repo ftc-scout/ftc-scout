@@ -18,7 +18,7 @@ export async function loadAllTeamsIntoDatabase() {
         }
 
         await Team.create({
-            teamNumber: apiTeam.teamNumber,
+            number: apiTeam.teamNumber,
             name: apiTeam.nameShort,
             schoolName: apiTeam.nameFull,
             country: apiTeam.country,

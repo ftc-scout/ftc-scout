@@ -9,4 +9,8 @@ export class TeamResolver {
     ): Promise<Team | null> {
         return Team.findOneBy({ number });
     }
+    @Query(() => Team, { nullable: true })
+    teamByName(@Arg("name", () => String) name: string): Promise<Team | null> {
+        return Team.findOneBy({ name });
+    }
 }
