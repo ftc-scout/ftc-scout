@@ -4,20 +4,12 @@
         TeamDocument,
         type TeamQuery,
     } from "$lib/graphql/generated/graphql-operations";
-    import type { Load } from "@sveltejs/kit";
     import { query, type OperationStore } from "@urql/svelte";
+    import { queryLoad } from "../../lib/graphql/query-load";
 
-    export const load: Load = async function load({ stuff, params }) {
-        return {
-            props: {
-                team: await stuff.query!(
-                    TeamDocument,
-                    { number: +(params.number) },
-                    undefined
-                ),
-            },
-        };
-    };
+    export const load = queryLoad("team", TeamDocument, ({ params }) => ({
+        number: +params.number,
+    }));
 </script>
 
 <script lang="ts">
@@ -29,6 +21,6 @@
 {#if !$team?.data?.teamByNumber}
     That team doesn't exist
 {:else}
-<!-- Add goto command for team search and remove hudson block -->
+    <!-- Add goto command for team search and remove hudson block -->
     {$team.data.teamByNumber?.name}
 {/if}
