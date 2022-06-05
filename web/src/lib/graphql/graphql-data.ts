@@ -28,13 +28,23 @@ type OmitRecursively<T extends any, K extends PropertyKey> = Omit<
     K
 >;
 
-type Actual<T> = OmitRecursively<T, "__typename">;
+// Written here
+
 type FieldNonNullable<T> = { [K in keyof T]: NonNullable<T[K]> };
-type Adjust<T> = Actual<FieldNonNullable<Required<T>>>;
+type ContainsNullable<T> = T extends FieldNonNullable<T> ? false : true;
+
+type Adjust<T> = OmitRecursively<T, "__typename">;
+
+type Flatten<T> = ContainsNullable<T> extends true
+    ? PickAndFlatten<
+          Required<FieldNonNullable<T>>,
+          keyof Required<FieldNonNullable<T>>
+      > | null
+    : PickAndFlatten<T, keyof T>;
 
 /** The type of the data returned from a query. */
 export type QueryData<T> = HasSingleKey<Adjust<T>> extends true
-    ? PickAndFlatten<Adjust<T>, keyof Adjust<T>>
+    ? Flatten<Adjust<T>>
     : Adjust<T>;
 
 /** A store holding the data for a query or null if the query failed. */
