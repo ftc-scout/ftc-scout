@@ -1,6 +1,7 @@
 query Team($number: Int!) {
   teamByNumber(number: $number) 
   {
+    number
     website
     name
   }
