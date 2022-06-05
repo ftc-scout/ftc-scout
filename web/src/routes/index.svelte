@@ -11,8 +11,10 @@
 <script lang="ts">
     import type { MeQuery } from "$lib/graphql/generated/graphql-operations";
     import { mutation, query, type OperationStore } from "@urql/svelte";
+    import type { QueryDataStore } from "../lib/graphql/graphql-data";
 
     export let me: OperationStore<MeQuery>;
+    export let meData: QueryDataStore<MeQuery>;
     query(me);
 
     const logoutMutation = mutation({ query: LogoutDocument });
@@ -23,8 +25,8 @@
     }
 </script>
 
-{#if me.data?.me}
-    <h1>Logged in as {me.data.me.username}</h1>
+{#if $meData}
+    <h1>Logged in as {$meData.username}</h1>
     <button on:click={logout}>Log Out</button>
 {:else}
     <h1>Logged Out</h1>
