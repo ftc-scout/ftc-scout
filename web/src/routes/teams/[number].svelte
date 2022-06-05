@@ -16,8 +16,6 @@
     export let team: OperationStore<TeamQuery>;
     export let teamData: QueryDataStore<TeamQuery>;
     query(team);
-
-    $: console.log($teamData);
 </script>
 
 {#if !$teamData}

@@ -26,7 +26,13 @@ export function queryLoad<Data = any, Variables = object>(
                         Object.keys(qr.data).filter((x) => x != "__typename")
                             .length == 1
                     ) {
-                        return Object.assign({}, ...Object.values(qr.data));
+                        let values = Object.values(qr.data);
+                        values = values.filter((x) => x != "__typename");
+                        if (!values[0]) {
+                            return null;
+                        } else {
+                            return Object.assign({}, ...values);
+                        }
                     } else {
                         return qr.data;
                     }
