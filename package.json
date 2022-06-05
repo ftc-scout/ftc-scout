@@ -6,7 +6,7 @@
         "prettier-plugin-svelte": "2.7.0"
     },
     "lint-staged": {
-        "*.{ts,js,css,md,json,svelte}": "prettier --write"
+        "*.{ts,js,css,md,json,svelte,graphql}": "prettier --write"
     },
     "scripts": {
         "prepare": "husky install",
