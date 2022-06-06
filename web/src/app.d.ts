@@ -14,6 +14,7 @@ declare global {
                 variables?: any,
                 context?: Partial<OperationContext & { pause: boolean }>
             ) => Promise<OperationStore>;
+            serverError: Writable<Readable<any | undefined>>;
         }
     }
 }

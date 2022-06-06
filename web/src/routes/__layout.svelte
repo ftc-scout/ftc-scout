@@ -7,12 +7,21 @@
 <script lang="ts">
     import type { Client } from "@urql/svelte";
     import { setClient } from "@urql/svelte";
+    import { get, type Readable, type Writable } from "svelte/store";
 
     export let client: Client;
     setClient(client);
+
+    export let serverError: Writable<Readable<any | undefined>>;
+    $: currentServerError = get($serverError);
 </script>
 
-<slot />
+{#if currentServerError === undefined}
+    <slot />
+{:else}
+    <h1>There was an error while contacting the server</h1>
+    <pre>{currentServerError}</pre>
+{/if}
 
 <style>
     :global(:root) {

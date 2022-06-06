@@ -48,4 +48,4 @@ export type QueryData<T> = HasSingleKey<Adjust<T>> extends true
     : Adjust<T>;
 
 /** A store holding the data for a query or null if the query failed. */
-export type QueryDataStore<T> = Readable<QueryData<T> | null>;
+export type QueryDataStore<T> = Readable<QueryData<T>>;
