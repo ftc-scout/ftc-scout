@@ -41,6 +41,9 @@ export function customCreateClient(fetch: Fetch): Client {
         exchanges: [
             dedupExchange,
             cacheExchange({
+                keys: {
+                    Team: (data) => "" + data.number,
+                },
                 updates: {
                     Mutation: {
                         logout: (_result, _args, cache, _info) => {
