@@ -1,20 +1,40 @@
 <script context="module" lang="ts">
     import { graphqlSetupLoad } from "../lib/graphql/graphql-setup-load";
 
-    export let load = graphqlSetupLoad;
+    export let load = combineLoads(
+        graphqlSetupLoad,
+        queryLoad("me", MeDocument, {})
+    );
 </script>
 
 <script lang="ts">
-    import type { Client } from "@urql/svelte";
-    import { setClient } from "@urql/svelte";
     import { get, type Readable, type Writable } from "svelte/store";
+    import { combineLoads } from "../lib/combine-loads";
+    import { queryLoad } from "../lib/graphql/query-load";
+    import {
+        MeDocument,
+        type MeQuery,
+    } from "../lib/graphql/generated/graphql-operations";
+    import type { QueryDataStore } from "../lib/graphql/graphql-data";
+    import {
+        Client,
+        query,
+        setClient,
+        type OperationStore,
+    } from "@urql/svelte";
 
     export let client: Client;
     setClient(client);
 
     export let serverError: Writable<Readable<any | undefined>>;
     $: currentServerError = get($serverError);
+
+    export let me: OperationStore<MeQuery>;
+    export let meData: QueryDataStore<MeQuery>;
+    $: query(me);
 </script>
+
+<p>{$meData?.username ? "Logged in as " + $meData.username : "Logged Out"}</p>
 
 {#if currentServerError === undefined}
     <slot />

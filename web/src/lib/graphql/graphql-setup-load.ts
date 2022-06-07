@@ -7,7 +7,7 @@ import {
 } from "@urql/svelte";
 import type { Load } from "@sveltejs/kit";
 import type { DocumentNode } from "graphql";
-import { derived, get, readable, writable } from "svelte/store";
+import { get, readable, writable } from "svelte/store";
 
 export const graphqlSetupLoad: Load = async function ({ fetch, stuff }) {
     const client = customCreateClient(fetch);
