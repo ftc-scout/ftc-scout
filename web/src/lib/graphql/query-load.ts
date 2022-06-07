@@ -2,7 +2,6 @@ import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { Load, LoadEvent } from "@sveltejs/kit";
 import type { OperationContext } from "@urql/svelte";
 import type { DocumentNode } from "graphql";
-import { is_client } from "svelte/internal";
 import { derived, readable } from "svelte/store";
 
 export function queryLoad<Data = any, Variables = object>(
