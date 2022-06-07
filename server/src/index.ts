@@ -28,6 +28,8 @@ import Redis from "ioredis";
 import { GraphQLContext } from "./graphql/Context";
 import { FTCSSession } from "./graphql/Session";
 import { loadAllTeamsIntoDatabase } from "./db/load-data/load-all-teams";
+import { Team } from "./db/entities/Team";
+import { IsNull } from "typeorm";
 
 async function main() {
     await FTCSDataSource.initialize();
@@ -102,6 +104,9 @@ async function main() {
         console.log(`Server started and listening on localhost:${SERVER_PORT}`);
     });
 
+    if (process.argv.includes("--clear-teams")) {
+        Team.clear();
+    }
     if (process.argv.includes("--load-teams")) {
         loadAllTeamsIntoDatabase();
     }

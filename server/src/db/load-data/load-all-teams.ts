@@ -12,8 +12,8 @@ export async function loadAllTeamsIntoDatabase() {
 
     let insertedTeamCount = 0;
     for (const apiTeam of apiTeams) {
-        if (apiTeam.nameShort === null) {
-            console.log(apiTeam);
+        // There is one weird team in the db that doesn't have a city but it is inactive. We will just ignore it.
+        if (apiTeam.nameShort === null || apiTeam.city === null) {
             continue;
         }
 

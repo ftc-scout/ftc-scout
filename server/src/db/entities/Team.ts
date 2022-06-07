@@ -12,24 +12,24 @@ export class Team extends BaseEntity {
     @Column()
     name!: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
+    @Field(() => String)
+    @Column()
     schoolName?: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
+    @Field(() => String)
+    @Column()
     country?: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
+    @Field(() => String)
+    @Column()
     stateOrProvince?: string;
 
-    @Field(() => String, { nullable: true })
-    @Column({ nullable: true })
+    @Field(() => String)
+    @Column()
     city?: string;
 
-    @Field(() => Int, { nullable: true })
-    @Column({ type: "int", nullable: true })
+    @Field(() => Int)
+    @Column({ type: "int" })
     rookieYear?: number;
 
     @Field(() => String, { nullable: true })
