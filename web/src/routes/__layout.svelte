@@ -82,6 +82,7 @@
         --small-gap: 4px;
         --gap: 8px;
         --large-gap: 12px;
+        --xl-gap: 32px;
 
         --small-padding: 4px;
         --ms-padding: 6px;

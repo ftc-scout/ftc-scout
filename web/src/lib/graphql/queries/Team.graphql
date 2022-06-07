@@ -3,5 +3,10 @@ query Team($number: Int!) {
         number
         website
         name
+        city
+        stateOrProvince
+        country
+        schoolName
+        rookieYear
     }
 }

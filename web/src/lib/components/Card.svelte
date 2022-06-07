@@ -8,10 +8,8 @@
         box-shadow: -2px 2px 10px 3px #e0e0e0;
         border-radius: 8px;
 
-        padding: 8px;
-        margin: 8px;
-    }
-
-    :global(h1.card) {
+        padding: var(--large-padding);
+        margin: var(--large-gap);
+        margin-bottom: var(--xl-gap);
     }
 </style>
