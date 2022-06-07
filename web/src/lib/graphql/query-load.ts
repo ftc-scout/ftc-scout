@@ -23,7 +23,6 @@ export function queryLoad<Data = any, Variables = object>(
         return {
             props: {
                 [name]: queryResult,
-                [name + "Data"]: derived(queryResult, getData),
             },
         };
     };
@@ -31,22 +30,4 @@ export function queryLoad<Data = any, Variables = object>(
 
 export function noQueryLoad(event: LoadEvent) {
     event.stuff.serverError.set(readable(undefined));
-}
-
-function getData(qr: any) {
-    if (!qr.data) {
-        return null;
-    } else if (
-        Object.keys(qr.data).filter((x) => x != "__typename").length == 1
-    ) {
-        let values = Object.values(qr.data);
-        values = values.filter((x) => x != "__typename");
-        if (!values[0]) {
-            return null;
-        } else {
-            return Object.assign({}, ...values);
-        }
-    } else {
-        return qr.data;
-    }
 }

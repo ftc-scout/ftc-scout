@@ -15,7 +15,6 @@
         MeDocument,
         type MeQuery,
     } from "../lib/graphql/generated/graphql-operations";
-    import type { QueryDataStore } from "../lib/graphql/graphql-data";
     import {
         Client,
         query,
@@ -30,13 +29,13 @@
     $: currentServerError = get($serverError);
 
     export let me: OperationStore<MeQuery>;
-    export let meData: QueryDataStore<MeQuery>;
+    $: meData = me?.data?.me;
     // It seems that if a subpage queries me then this page inherits the me prop.
     // Thus we need to resubscribe to it each time. Hence this is reactive.
     $: query(me);
 </script>
 
-<p>{$meData?.username ? "Logged in as " + $meData.username : "Logged Out"}</p>
+<p>{meData?.username ? "Logged in as " + meData.username : "Logged Out"}</p>
 
 {#if currentServerError === undefined}
     <slot />
