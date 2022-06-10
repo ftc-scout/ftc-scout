@@ -29,7 +29,6 @@ import { GraphQLContext } from "./graphql/Context";
 import { FTCSSession } from "./graphql/Session";
 import { loadAllTeamsIntoDatabase } from "./db/load-data/load-all-teams";
 import { Team } from "./db/entities/Team";
-import { IsNull } from "typeorm";
 
 async function main() {
     await FTCSDataSource.initialize();
