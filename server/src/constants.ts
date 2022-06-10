@@ -16,6 +16,8 @@ export const WEB_ORIGIN = IS_DEV ? DEV_WEB_ORIGIN : PROD_WEB_ORIGIN;
 export const DB_HOST = "localhost";
 export const DB_PORT = 5432;
 export const DB_NAME = "ftc-scout";
+export const DB_USERNAME = process.env.DB_USERNAME;
+export const DB_PASSWORD = process.env.DB_PASSWORD;
 
 export const COOKIE_NAME = "ftc-scout-cookie";
 export const COOKIE_AGE = YEAR_MS * 10;
