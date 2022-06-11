@@ -1,3 +1,5 @@
+import { Season } from "./ftc-api/types/Season";
+
 export const SECOND_MS = 1000;
 export const MINUTE_MS = SECOND_MS * 60;
 export const HOUR_MS = MINUTE_MS * 60;
@@ -28,4 +30,4 @@ export const REDIS_ORIGIN = "127.0.0.1";
 
 export const FTC_API_KEY = process.env.FTC_API_KEY;
 
-export const CURRENT_SEASON = 2021;
+export const CURRENT_SEASON: Season = 2021;

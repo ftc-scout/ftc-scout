@@ -30,8 +30,6 @@ class UserErrorResponse {
 export class UserResolver {
     @Query(() => User, { nullable: true })
     me(@Ctx() { req }: GraphQLContext): MaybePromise<User | null> {
-        console.log(req.session);
-
         if (!req.session.userId) {
             return null;
         }

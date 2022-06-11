@@ -19,6 +19,7 @@ import {
     SESSION_SECRET,
     REDIS_PORT,
     REDIS_ORIGIN,
+    CURRENT_SEASON,
 } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
 import { FTCSDataSource } from "./db/data-source";
@@ -29,6 +30,8 @@ import { GraphQLContext } from "./graphql/Context";
 import { FTCSSession } from "./graphql/Session";
 import { loadAllTeamsIntoDatabase } from "./db/load-data/load-all-teams";
 import { Team } from "./db/entities/Team";
+import { setupApiWatchers } from "./ftc-api/setup-watchers";
+import { Season } from "./ftc-api/types/Season";
 
 async function main() {
     await FTCSDataSource.initialize();
@@ -103,11 +106,13 @@ async function main() {
         console.log(`Server started and listening on localhost:${SERVER_PORT}`);
     });
 
+    setupApiWatchers([Season.FREIGHT_FRENZY]);
+
     if (process.argv.includes("--clear-teams")) {
         Team.clear();
     }
     if (process.argv.includes("--load-teams")) {
-        loadAllTeamsIntoDatabase();
+        loadAllTeamsIntoDatabase(CURRENT_SEASON);
     }
 }
 
