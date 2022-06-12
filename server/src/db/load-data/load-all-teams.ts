@@ -38,10 +38,13 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
         )
     ).filter((x): x is Team => !!x);
 
-    FTCSDataSource.transaction(async (em) => {
-        em.save(dbTeams);
-        em.save(
-            FtcApiMetadata.create({ season, lastTeamsReq: dateStartQuery })
+    await FTCSDataSource.transaction(async (em) => {
+        await em.save(dbTeams);
+        await em.save(
+            FtcApiMetadata.create({
+                season,
+                lastTeamsReq: dateStartQuery,
+            })
         );
     });
 
