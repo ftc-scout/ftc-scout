@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import { User } from "./User";
 
 @ObjectType()
 @Entity()
@@ -35,4 +36,7 @@ export class Team extends BaseEntity {
     @Field(() => String, { nullable: true })
     @Column({ nullable: true })
     website?: string;
+
+    @OneToMany(() => User, (user) => user.team)
+    members!: User[];
 }
