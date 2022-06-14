@@ -1,14 +1,16 @@
 {
-	"folders": [
-		{
-			"path": "server"
-		},
-		{
-			"path": "web"
-		},
-		{
-			"path": "markdown folder"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "server"
+        },
+        {
+            "path": "web"
+        },
+        {
+            "path": "markdown folder"
+        }
+    ],
+    "settings": {
+        "cSpell.words": ["timestamptz", "typeorm"]
+    }
 }

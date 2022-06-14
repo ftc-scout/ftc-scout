@@ -1,5 +1,13 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, OneToMany, PrimaryColumn } from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    OneToMany,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from "typeorm";
 import { User } from "./User";
 
 @ObjectType()
@@ -39,4 +47,12 @@ export class Team extends BaseEntity {
 
     @OneToMany(() => User, (user) => user.team)
     members!: User[];
+
+    @Field()
+    @CreateDateColumn()
+    createdAt!: Date;
+
+    @Field()
+    @UpdateDateColumn()
+    updatedAt!: Date;
 }
