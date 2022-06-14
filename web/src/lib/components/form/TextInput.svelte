@@ -5,7 +5,7 @@
 
     export let label: string;
     export let placeholder: string = "";
-    export let id: string = label.toLocaleLowerCase().replace(" ", "-");
+    export let id: string = label.toLocaleLowerCase().replace(/\s/g, "");
     export let password: boolean = false;
 
     export let value: string;

@@ -11,6 +11,7 @@
 
     let username: string = "";
     let password: string = "";
+    let teamNumber: string = "";
 
     let canSubmit = writable(true);
     $: $canSubmit = !!username.length && !!password.length;
@@ -20,8 +21,9 @@
     const loginMutation = mutation({ query: RegisterDocument });
 
     async function login() {
-        const response = (await loginMutation({ username, password })).data
-            ?.register;
+        const response = (
+            await loginMutation({ username, password, teamNumber })
+        ).data?.register;
         if (response?.errors) {
             $errors = response?.errors;
         } else {
@@ -50,6 +52,13 @@
             password
             bind:value={password}
         />
+
+        <TextInput
+            label="Team Number"
+            placeholder="12345"
+            bind:value={teamNumber}
+        />
+
         <SubmitButton />
     </Form>
 </MaxWidth>

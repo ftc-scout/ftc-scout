@@ -16,6 +16,7 @@ import { FieldError } from "../objects/FieldError";
 import { PG_UNIQUE_VIOLATION } from "../../db/postgres-error-codes";
 import { isQueryFailedError } from "../../db/is-query-failed-error";
 import { GraphQLContext } from "../Context";
+import { checkTeamNumberRequirements } from "../../logic/requirements/team-number-requirements";
 
 @ObjectType()
 class UserErrorResponse {
@@ -41,14 +42,24 @@ export class UserResolver {
     async register(
         @Arg("username") username: string,
         @Arg("password") password: string,
+        @Arg("teamNumber") teamNumber: string,
         @Ctx() { req }: GraphQLContext
     ): Promise<UserErrorResponse> {
         const usernameErrors = checkUsernameRequirements(username);
         const passwordErrors = checkPasswordRequirements(password);
+        const teamNumberErrors = await checkTeamNumberRequirements(teamNumber);
 
-        if (usernameErrors.length || passwordErrors.length) {
+        if (
+            usernameErrors.length ||
+            passwordErrors.length ||
+            teamNumberErrors.length
+        ) {
             return {
-                errors: [...usernameErrors, ...passwordErrors],
+                errors: [
+                    ...usernameErrors,
+                    ...passwordErrors,
+                    ...teamNumberErrors,
+                ],
             };
         } else {
             try {
@@ -56,6 +67,7 @@ export class UserResolver {
                 const user = await User.create({
                     username,
                     password: hashedPassword,
+                    team: teamNumber === "" ? null : +teamNumber,
                 }).save();
 
                 // Logs the user in

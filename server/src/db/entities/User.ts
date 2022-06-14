@@ -4,9 +4,11 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    ManyToOne,
     PrimaryGeneratedColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { Team } from "./Team";
 
 @ObjectType()
 @Entity()
@@ -21,6 +23,15 @@ export class User extends BaseEntity {
 
     @Column()
     password!: string;
+
+    @Field(() => Int, { nullable: true })
+    // @Column({ type: "int", nullable: true })
+    @ManyToOne(() => Team, (team) => team.members)
+    team!: number | null;
+
+    @Field()
+    @Column({ default: false })
+    isVerified!: boolean;
 
     @Field()
     @CreateDateColumn()
