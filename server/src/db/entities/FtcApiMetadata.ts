@@ -26,4 +26,10 @@ export class FtcApiMetadata extends BaseEntity {
             (await FtcApiMetadata.findOneBy({ season }))?.lastEventsReq ?? null
         );
     }
+
+    static async getLastMatchesReq(season: Season): Promise<Date | null> {
+        return (
+            (await FtcApiMetadata.findOneBy({ season }))?.lastMatchesReq ?? null
+        );
+    }
 }

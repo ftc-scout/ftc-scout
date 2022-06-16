@@ -4,10 +4,12 @@ import {
     Column,
     CreateDateColumn,
     Entity,
+    OneToMany,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
 import { Season } from "../../ftc-api/types/Season";
+import { Match } from "./Match";
 
 @Entity()
 export class Event extends BaseEntity {
@@ -20,8 +22,11 @@ export class Event extends BaseEntity {
     season!: Season;
 
     @Field(() => String)
-    @Column({ type: "text", unique: true })
+    @Column({ type: "text" })
     code!: string;
+
+    @OneToMany(() => Match, (match) => match.event)
+    matches!: Match[];
 
     @Field(() => String, { nullable: true })
     @Column({ type: "text", nullable: true })

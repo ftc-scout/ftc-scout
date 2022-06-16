@@ -8,6 +8,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { User } from "./User";
 
 @ObjectType()
@@ -47,6 +48,9 @@ export class Team extends BaseEntity {
 
     @OneToMany(() => User, (user) => user.team)
     members!: User[];
+
+    @OneToMany(() => TeamMatchParticipation, (tms) => tms.team)
+    matches!: TeamMatchParticipation[];
 
     @Field()
     @CreateDateColumn()
