@@ -17,7 +17,7 @@ import { User } from "./User";
 @Entity()
 export class Team extends BaseEntity {
     @Field(() => Int)
-    @PrimaryColumn()
+    @PrimaryColumn("int")
     number!: number;
 
     @Field()

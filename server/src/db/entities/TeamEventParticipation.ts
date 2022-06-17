@@ -1,21 +1,22 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
 import { TypeormLoader } from "type-graphql-dataloader";
-import {
-    BaseEntity,
-    Column,
-    Entity,
-    ManyToOne,
-    PrimaryGeneratedColumn,
-} from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Team } from "./Team";
-import { Event } from "./Event";
+import { Event, EVENT_CODE_LEN } from "./Event";
+import { Season } from "../../ftc-api/types/Season";
 
 @ObjectType()
 @Entity()
 export class TeamEventParticipation extends BaseEntity {
-    @Field(() => Int)
-    @PrimaryGeneratedColumn()
-    id!: number;
+    @Field(() => Int, { name: "season" })
+    @PrimaryColumn("smallint")
+    eventSeason!: Season;
+
+    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
+    eventCode!: string;
+
+    @PrimaryColumn("smallint")
+    teamNumber!: number;
 
     @Field(() => Event)
     @ManyToOne(() => Event, (event) => event.teams)
@@ -55,5 +56,5 @@ export class TeamEventParticipation extends BaseEntity {
     @Column("int8")
     matchesPlayed!: number;
 
-    //matchesCounted: number //This filed also exists but I'm not sure what it is
+    //matchesCounted: number //This field also exists but I'm not sure what it is
 }

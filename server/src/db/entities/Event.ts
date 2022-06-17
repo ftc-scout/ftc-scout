@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 import { TypeormLoader } from "type-graphql-dataloader";
 import {
     BaseEntity,
@@ -12,20 +12,19 @@ import {
 import { Season } from "../../ftc-api/types/Season";
 import { Match } from "./Match";
 import { TeamEventParticipation } from "./TeamEventParticipation";
+import { TeamMatchParticipation } from "./TeamMatchParticipation";
+
+export const EVENT_CODE_LEN = 16;
 
 @ObjectType()
 @Entity()
 export class Event extends BaseEntity {
-    @Field()
-    @PrimaryColumn({ type: "uuid", unique: true })
-    eventId!: string;
-
-    @Field()
-    @Column()
+    @Field(() => Int)
+    @PrimaryColumn("smallint")
     season!: Season;
 
     @Field()
-    @Column()
+    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
     code!: string;
 
     @Field(() => [Match])
@@ -33,13 +32,18 @@ export class Event extends BaseEntity {
     @TypeormLoader()
     matches!: Match[];
 
+    @Field(() => [TeamMatchParticipation])
+    @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.event)
+    @TypeormLoader()
+    teamMatches!: TeamMatchParticipation[];
+
     @Field(() => [TeamEventParticipation])
     @OneToMany(() => TeamEventParticipation, (tep) => tep.event)
     @TypeormLoader()
     teams!: TeamEventParticipation[];
 
     @Field(() => String, { nullable: true })
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "varchar", nullable: true })
     divisionCode!: string | null;
 
     @Field()
@@ -71,11 +75,11 @@ export class Event extends BaseEntity {
     regionCode!: string;
 
     @Field(() => String, { nullable: true })
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "varchar", nullable: true })
     leagueCode!: string | null;
 
     @Field(() => String, { nullable: true })
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "varchar", nullable: true })
     districtCode!: string | null;
 
     @Field()
@@ -99,15 +103,15 @@ export class Event extends BaseEntity {
     city!: string;
 
     @Field(() => String, { nullable: true })
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "varchar", nullable: true })
     website!: string | null;
 
     @Field(() => String, { nullable: true })
-    @Column({ type: "text", nullable: true })
+    @Column({ type: "varchar", nullable: true })
     liveStreamURL!: string | null;
 
     @Field(() => [String])
-    @Column({ type: "text", array: true })
+    @Column({ type: "varchar", array: true })
     webcasts!: string[];
 
     @Field()

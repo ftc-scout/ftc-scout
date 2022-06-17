@@ -21,7 +21,8 @@ export async function loadAllEvents(season: Season) {
             eventId: apiEvent.eventId,
             season,
             code: apiEvent.code,
-            divisionCode: apiEvent.divisionCode,
+            divisionCode:
+                apiEvent?.divisionCode === "" ? null : apiEvent.divisionCode,
             name: apiEvent.name,
             remote: apiEvent.remote,
             hybrid: apiEvent.hybrid,

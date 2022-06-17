@@ -7,18 +7,26 @@ import {
     Entity,
     ManyToOne,
     OneToMany,
-    PrimaryGeneratedColumn,
+    PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { Event } from "./Event";
+import { Season } from "../../ftc-api/types/Season";
+import { Event, EVENT_CODE_LEN } from "./Event";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 
 @ObjectType()
 @Entity()
 export class Match extends BaseEntity {
+    @Field(() => Int, { name: "season" })
+    @PrimaryColumn("smallint")
+    eventSeason!: Season;
+
+    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
+    eventCode!: string;
+
     @Field(() => Int)
-    @PrimaryGeneratedColumn()
-    id!: number;
+    @PrimaryColumn("smallint")
+    num!: number;
 
     @Field(() => Event)
     @ManyToOne(() => Event, (event) => event.matches)
@@ -57,10 +65,6 @@ export class Match extends BaseEntity {
     @Field(() => Int)
     @Column("int")
     series!: number;
-
-    @Field(() => Int)
-    @Column("int")
-    matchNumber!: number;
 
     @Field()
     @CreateDateColumn()
