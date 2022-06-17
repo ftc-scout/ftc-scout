@@ -1,4 +1,4 @@
-import { Field } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import { TypeormLoader } from "type-graphql-dataloader";
 import {
     BaseEntity,
@@ -11,7 +11,9 @@ import {
 } from "typeorm";
 import { Season } from "../../ftc-api/types/Season";
 import { Match } from "./Match";
+import { TeamEventParticipation } from "./TeamEventParticipation";
 
+@ObjectType()
 @Entity()
 export class Event extends BaseEntity {
     @Field()
@@ -30,6 +32,11 @@ export class Event extends BaseEntity {
     @OneToMany(() => Match, (match) => match.event)
     @TypeormLoader()
     matches!: Match[];
+
+    @Field(() => [TeamEventParticipation])
+    @OneToMany(() => TeamEventParticipation, (tep) => tep.event)
+    @TypeormLoader()
+    teams!: TeamEventParticipation[];
 
     @Field(() => String, { nullable: true })
     @Column({ type: "text", nullable: true })

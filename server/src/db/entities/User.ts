@@ -30,7 +30,7 @@ export class User extends BaseEntity {
     @TypeormLoader()
     team!: Team | null;
 
-    @Column({ nullable: true })
+    @Column("int", { nullable: true })
     teamId!: number | null;
 
     @Field()

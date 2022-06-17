@@ -9,6 +9,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { TeamEventParticipation } from "./TeamEventParticipation";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { User } from "./User";
 
@@ -53,9 +54,14 @@ export class Team extends BaseEntity {
     members!: User[];
 
     @Field(() => [TeamMatchParticipation])
-    @OneToMany(() => TeamMatchParticipation, (tms) => tms.team)
+    @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.team)
     @TypeormLoader()
     matches!: TeamMatchParticipation[];
+
+    @Field(() => [TeamEventParticipation])
+    @OneToMany(() => TeamEventParticipation, (tep) => tep.team)
+    @TypeormLoader()
+    events!: TeamEventParticipation[];
 
     @Field()
     @CreateDateColumn()
