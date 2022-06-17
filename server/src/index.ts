@@ -51,7 +51,7 @@ async function main() {
         })
     );
 
-    // Intilize sessions
+    // Initialize sessions
     app.use(
         session({
             name: COOKIE_NAME,
@@ -71,7 +71,7 @@ async function main() {
         })
     );
 
-    // Intilize the apollo graphql server.
+    // Initialize the apollo graphql server.
     const apolloServer = new ApolloServer({
         schema: await buildSchema({
             resolvers,
