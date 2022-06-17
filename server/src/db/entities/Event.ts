@@ -1,4 +1,5 @@
 import { Field } from "type-graphql";
+import { TypeormLoader } from "type-graphql-dataloader";
 import {
     BaseEntity,
     Column,
@@ -21,19 +22,21 @@ export class Event extends BaseEntity {
     @Column()
     season!: Season;
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     code!: string;
 
+    @Field(() => [Match])
     @OneToMany(() => Match, (match) => match.event)
+    @TypeormLoader()
     matches!: Match[];
 
     @Field(() => String, { nullable: true })
     @Column({ type: "text", nullable: true })
     divisionCode!: string | null;
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     name!: string;
 
     @Field()
@@ -52,12 +55,12 @@ export class Event extends BaseEntity {
     @Column()
     published!: boolean; // TODO - figure out what this means
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     type!: string; // TODO - An enum supposedly
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     regionCode!: string;
 
     @Field(() => String, { nullable: true })
@@ -68,24 +71,24 @@ export class Event extends BaseEntity {
     @Column({ type: "text", nullable: true })
     districtCode!: string | null;
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     venue!: string;
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     address!: string;
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     country!: string;
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     stateOrProvince!: string;
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     city!: string;
 
     @Field(() => String, { nullable: true })
@@ -100,8 +103,8 @@ export class Event extends BaseEntity {
     @Column({ type: "text", array: true })
     webcasts!: string[];
 
-    @Field(() => String)
-    @Column({ type: "text" })
+    @Field()
+    @Column()
     timezone!: string;
 
     @Field()

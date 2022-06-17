@@ -1,14 +1,20 @@
-import { Field } from "type-graphql";
+import { Field, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, ManyToOne } from "typeorm";
 import { Match } from "./Match";
 import { Team } from "./Team";
+import { TypeormLoader } from "type-graphql-dataloader";
 
+@ObjectType()
 @Entity()
 export class TeamMatchParticipation extends BaseEntity {
+    @Field(() => Match)
     @ManyToOne(() => Match, (match) => match.teams)
+    @TypeormLoader()
     match!: Match;
 
+    @Field(() => Team)
     @ManyToOne(() => Team, (team) => team.matches)
+    @TypeormLoader()
     team!: Team;
 
     @Field()
@@ -17,9 +23,17 @@ export class TeamMatchParticipation extends BaseEntity {
 
     @Field()
     @Column()
+    surrogate!: boolean;
+
+    @Field(() => Boolean, { nullable: true })
+    @Column("bool", { nullable: true })
+    noShow!: boolean | null;
+
+    @Field(() => Boolean, { nullable: true })
+    @Column("bool", { nullable: true })
     dq!: boolean;
 
-    @Field()
-    @Column()
+    @Field(() => Boolean, { nullable: true })
+    @Column("bool", { nullable: true })
     onField!: boolean;
 }

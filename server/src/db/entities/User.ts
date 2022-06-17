@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql";
+import { TypeormLoader } from "type-graphql-dataloader";
 import {
     BaseEntity,
     Column,
@@ -24,10 +25,13 @@ export class User extends BaseEntity {
     @Column()
     password!: string;
 
-    @Field(() => Int, { nullable: true })
-    // @Column({ type: "int", nullable: true })
+    @Field(() => Team, { nullable: true })
     @ManyToOne(() => Team, (team) => team.members)
-    team!: number | null;
+    @TypeormLoader()
+    team!: Team | null;
+
+    @Column({ nullable: true })
+    teamId!: number | null;
 
     @Field()
     @Column({ default: false })

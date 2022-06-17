@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql";
+import { TypeormLoader } from "type-graphql-dataloader";
 import {
     BaseEntity,
     Column,
@@ -46,10 +47,14 @@ export class Team extends BaseEntity {
     @Column({ nullable: true })
     website?: string;
 
+    @Field(() => [User])
     @OneToMany(() => User, (user) => user.team)
+    @TypeormLoader()
     members!: User[];
 
+    @Field(() => [TeamMatchParticipation])
     @OneToMany(() => TeamMatchParticipation, (tms) => tms.team)
+    @TypeormLoader()
     matches!: TeamMatchParticipation[];
 
     @Field()

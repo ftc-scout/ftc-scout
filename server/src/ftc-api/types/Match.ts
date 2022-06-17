@@ -1,23 +1,25 @@
 export interface MatchFTCAPI {
-    actualStartTime: string | null;
-    description: string | null;
-    tournamentLevel: string | null;
+    description: string;
+    tournamentLevel: string;
     series: number;
     matchNumber: number;
-    scoreRedFinal: number;
-    scoreRedFoul: number;
-    scoreRedAuto: number;
-    scoreBlueFinal: number;
-    scoreBlueFoul: number;
-    scoreBlueAuto: number;
+    startTime: string;
+    actualStartTime: string | null;
     postResultTime: string | null;
-    teams: TeamFTCAPI[];
-    modifiedOn: string | null;
+    scoreRedFinal: number | null;
+    scoreRedFoul: number | null;
+    scoreRedAuto: number | null;
+    scoreBlueFinal: number | null;
+    scoreBlueFoul: number | null;
+    scoreBlueAuto: number | null;
+    teams: TeamMatchParticipationFTCAPI[];
 }
 
-export interface TeamFTCAPI {
+export interface TeamMatchParticipationFTCAPI {
     teamNumber: number;
-    station: string | null;
-    dq: boolean;
-    onField: boolean;
+    station: string;
+    surrogate: boolean;
+    noShow: boolean | null;
+    dq: boolean | null;
+    onField: boolean | null;
 }

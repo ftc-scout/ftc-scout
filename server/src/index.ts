@@ -32,6 +32,8 @@ import { loadAllTeamsIntoDatabase } from "./db/load-data/load-all-teams";
 import { Team } from "./db/entities/Team";
 import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { Season } from "./ftc-api/types/Season";
+import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
+import { getConnection } from "typeorm";
 
 async function main() {
     await FTCSDataSource.initialize();
@@ -91,6 +93,9 @@ async function main() {
             IS_DEV
                 ? ApolloServerPluginLandingPageGraphQLPlayground()
                 : ApolloServerPluginLandingPageDisabled(),
+            ApolloServerLoaderPlugin({
+                typeormGetConnection: getConnection, // for use with TypeORM
+            }),
         ],
     });
 
