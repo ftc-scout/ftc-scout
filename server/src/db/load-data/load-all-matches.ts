@@ -24,7 +24,7 @@ function addDays(date: Date, days: number): Date {
 }
 
 export async function loadAllMatches(season: Season) {
-    console.log("Loading all matches from season" + season + ".");
+    console.log(`Loading all matches from season ${season}.`);
 
     let dateStartQuery = new Date();
     let dateLastReq = await FtcApiMetadata.getLastMatchesReq(season);

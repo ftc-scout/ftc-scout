@@ -51,8 +51,8 @@ export class TeamMatchParticipation extends BaseEntity {
     @TypeormLoader()
     team!: Team;
 
-    @Field()
-    @Column()
+    @Field(() => Station)
+    @Column("enum", { enum: Station })
     station!: Station;
 
     @Field()

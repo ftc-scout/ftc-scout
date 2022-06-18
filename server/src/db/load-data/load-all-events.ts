@@ -28,7 +28,7 @@ export async function loadAllEvents(season: Season) {
             hybrid: apiEvent.hybrid,
             fieldCount: apiEvent.fieldCount,
             published: apiEvent.published,
-            type: apiEvent.type,
+            type: +apiEvent.type!,
             regionCode: apiEvent.regionCode,
             leagueCode: apiEvent.leagueCode,
             districtCode:

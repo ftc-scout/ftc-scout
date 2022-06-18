@@ -13,6 +13,7 @@ import { Season } from "../../ftc-api/types/Season";
 import { Match } from "./Match";
 import { TeamEventParticipation } from "./TeamEventParticipation";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
+import { EventType } from "./types/EventType";
 
 export const EVENT_CODE_LEN = 16;
 
@@ -66,9 +67,9 @@ export class Event extends BaseEntity {
     @Column()
     published!: boolean; // TODO - figure out what this means
 
-    @Field()
-    @Column()
-    type!: string; // TODO - An enum supposedly
+    @Field(() => EventType)
+    @Column("enum", { enum: EventType })
+    type!: EventType;
 
     @Field()
     @Column()
