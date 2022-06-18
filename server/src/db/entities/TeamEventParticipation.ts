@@ -12,7 +12,7 @@ export class TeamEventParticipation extends BaseEntity {
     @PrimaryColumn("smallint")
     eventSeason!: Season;
 
-    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
+    @PrimaryColumn({ length: EVENT_CODE_LEN })
     eventCode!: string;
 
     @PrimaryColumn("smallint")

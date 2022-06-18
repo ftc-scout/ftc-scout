@@ -21,10 +21,10 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("smallint")
     eventSeason!: Season;
 
-    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
+    @PrimaryColumn({ length: EVENT_CODE_LEN })
     eventCode!: string;
 
-    @PrimaryColumn("int")
+    @PrimaryColumn("smallint")
     matchNum!: number;
 
     @PrimaryColumn("int")
@@ -64,9 +64,9 @@ export class TeamMatchParticipation extends BaseEntity {
 
     @Field(() => Boolean, { nullable: true })
     @Column("bool", { nullable: true })
-    dq!: boolean;
+    dq!: boolean | null;
 
     @Field(() => Boolean, { nullable: true })
     @Column("bool", { nullable: true })
-    onField!: boolean;
+    onField!: boolean | null;
 }
