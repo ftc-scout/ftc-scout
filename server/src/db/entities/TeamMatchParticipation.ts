@@ -13,6 +13,7 @@ import { TypeormLoader } from "type-graphql-dataloader";
 import { EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";
 import { Event } from "./Event";
+import { Station } from "./types/Station";
 
 @ObjectType()
 @Entity()
@@ -24,7 +25,7 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn({ length: EVENT_CODE_LEN })
     eventCode!: string;
 
-    @PrimaryColumn("smallint")
+    @PrimaryColumn("int")
     matchNum!: number;
 
     @PrimaryColumn("int")
@@ -52,7 +53,7 @@ export class TeamMatchParticipation extends BaseEntity {
 
     @Field()
     @Column()
-    station!: string; // TODO enum
+    station!: Station;
 
     @Field()
     @Column()

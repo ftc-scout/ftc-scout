@@ -1,6 +1,7 @@
 import { DAY_MS } from "../constants";
 import { FtcApiMetadata } from "../db/entities/FtcApiMetadata";
 import { loadAllEvents as loadAllEventsIntoDatabase } from "../db/load-data/load-all-events";
+import { loadAllMatches } from "../db/load-data/load-all-matches";
 import { loadAllTeamsIntoDatabase } from "../db/load-data/load-all-teams";
 import { Season } from "./types/Season";
 
@@ -8,14 +9,21 @@ export async function setupApiWatchers(seasons: Season[]) {
     seasons.forEach(ensureSeasonHasMetadataTable);
 
     for (const season of seasons) {
-        setupApiWatcher(
-            () => loadAllTeamsIntoDatabase(season),
-            () => FtcApiMetadata.getLastTeamsReq(season)
-        );
-        setupApiWatcher(
-            () => loadAllEventsIntoDatabase(season),
-            () => FtcApiMetadata.getLastEventsReq(season)
-        );
+        setupApiWatcher([
+            {
+                reqFunction: () => loadAllTeamsIntoDatabase(season),
+                getTimeOfLastReq: () => FtcApiMetadata.getLastTeamsReq(season),
+            },
+            {
+                reqFunction: () => loadAllEventsIntoDatabase(season),
+                getTimeOfLastReq: () => FtcApiMetadata.getLastEventsReq(season),
+            },
+            {
+                reqFunction: () => loadAllMatches(season),
+                getTimeOfLastReq: () =>
+                    FtcApiMetadata.getLastMatchesReq(season),
+            },
+        ]);
     }
 }
 
@@ -24,20 +32,30 @@ function ensureSeasonHasMetadataTable(season: Season) {
 }
 
 async function setupApiWatcher(
-    reqFunction: () => void,
-    getTimeOfLastReq: () => Promise<Date | null>
+    funcsToRun: {
+        reqFunction: () => Promise<void>;
+        getTimeOfLastReq: () => Promise<Date | null>;
+    }[]
 ) {
     let lastMidnight = getLastMidnight();
-    if (((await getTimeOfLastReq()) ?? 0) < lastMidnight) {
-        reqFunction();
+    for (let func of funcsToRun) {
+        if (((await func.getTimeOfLastReq()) ?? 0) < lastMidnight) {
+            await func.reqFunction();
+        }
     }
 
     let nextMidnight = getNextMidnight();
     let currentTime = new Date();
 
-    setTimeout(() => {
-        reqFunction();
-        setInterval(reqFunction, DAY_MS);
+    let runAll = async () => {
+        for (let func of funcsToRun) {
+            await func.reqFunction();
+        }
+    };
+
+    setTimeout(async () => {
+        await runAll();
+        setInterval(runAll, DAY_MS);
     }, nextMidnight.getTime() - currentTime.getTime());
 }
 

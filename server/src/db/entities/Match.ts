@@ -13,6 +13,7 @@ import {
 import { Season } from "../../ftc-api/types/Season";
 import { Event, EVENT_CODE_LEN } from "./Event";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
+import { TournamentLevel } from "./types/TournamentLevel";
 
 @ObjectType()
 @Entity()
@@ -25,7 +26,7 @@ export class Match extends BaseEntity {
     eventCode!: string;
 
     @Field(() => Int)
-    @PrimaryColumn("smallint")
+    @PrimaryColumn("int")
     num!: number;
 
     @Field(() => Event)
@@ -54,16 +55,12 @@ export class Match extends BaseEntity {
     @Column("timestamptz", { nullable: true })
     postResultTime!: Date | null;
 
-    @Field()
-    @Column()
-    description!: string;
-
-    @Field()
-    @Column()
-    tournamentLevel!: string;
+    @Field(() => TournamentLevel)
+    @Column("enum", { enum: TournamentLevel })
+    tournamentLevel!: TournamentLevel;
 
     @Field(() => Int)
-    @Column("int")
+    @Column("int8")
     series!: number;
 
     @Field()
