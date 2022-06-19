@@ -9,18 +9,18 @@ import {
 } from "typeorm";
 import { Match } from "./Match";
 import { Team } from "./Team";
-import { TypeormLoader } from "type-graphql-dataloader";
 import { EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";
 import { Event } from "./Event";
 import { Station } from "./types/Station";
+import { TypeormLoader } from "type-graphql-dataloader";
 
 @ObjectType()
 @Entity()
 export class TeamMatchParticipation extends BaseEntity {
-    @Field(() => Int, { name: "season" })
+    @Field(() => Int)
     @PrimaryColumn("smallint")
-    eventSeason!: Season;
+    season!: Season;
 
     @PrimaryColumn({ length: EVENT_CODE_LEN })
     eventCode!: string;
@@ -31,15 +31,21 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("int")
     teamNumber!: number;
 
-    @Field(() => Event)
-    @ManyToOne(() => Event, (event) => event.teamMatches)
-    @TypeormLoader()
-    event!: Event;
+    // It seems typeorm can't handle multiple relations using the same columns as foreign keys.
+
+    // @Field(() => Event)
+    // @ManyToOne(() => Event, (event) => event.teamMatches)
+    // @JoinColumn([
+    //     { name: "season", referencedColumnName: "season" },
+    //     { name: "eventCode", referencedColumnName: "code" },
+    // ])
+    // @TypeormLoader()
+    // event!: Event;
 
     @Field(() => Match)
     @ManyToOne(() => Match, (match) => match.teams)
     @JoinColumn([
-        { name: "eventSeason", referencedColumnName: "eventSeason" },
+        { name: "season", referencedColumnName: "eventSeason" },
         { name: "eventCode", referencedColumnName: "eventCode" },
         { name: "matchNum", referencedColumnName: "num" },
     ])

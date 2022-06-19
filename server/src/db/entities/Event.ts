@@ -33,10 +33,10 @@ export class Event extends BaseEntity {
     @TypeormLoader()
     matches!: Match[];
 
-    @Field(() => [TeamMatchParticipation])
-    @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.event)
-    @TypeormLoader()
-    teamMatches!: TeamMatchParticipation[];
+    // @Field(() => [TeamMatchParticipation])
+    // @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.event)
+    // @TypeormLoader()
+    // teamMatches!: TeamMatchParticipation[];
 
     @Field(() => [TeamEventParticipation])
     @OneToMany(() => TeamEventParticipation, (tep) => tep.event)

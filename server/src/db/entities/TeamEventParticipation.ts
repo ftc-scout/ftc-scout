@@ -1,9 +1,9 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
-import { TypeormLoader } from "type-graphql-dataloader";
 import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
 import { Team } from "./Team";
 import { Event, EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";
+import { TypeormLoader } from "type-graphql-dataloader";
 
 @ObjectType()
 @Entity()

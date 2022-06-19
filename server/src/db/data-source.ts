@@ -6,10 +6,10 @@ import {
     DB_USERNAME,
     IS_DEV,
 } from "../constants";
-import { DataSource } from "typeorm";
+import { createConnection, DataSource, DataSourceOptions } from "typeorm";
 import { entities } from "./entities";
 
-export const FTCSDataSource = new DataSource({
+const config: DataSourceOptions = {
     type: "postgres",
     host: DB_HOST,
     port: DB_PORT,
@@ -19,4 +19,7 @@ export const FTCSDataSource = new DataSource({
     synchronize: IS_DEV,
     logging: true,
     entities,
-});
+};
+
+export const FTCSDataSource = new DataSource(config);
+createConnection(config);
