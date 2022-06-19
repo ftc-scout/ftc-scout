@@ -6,6 +6,7 @@ import { Event } from "./entities/Event";
 import { TeamMatchParticipation } from "./entities/TeamMatchParticipation";
 import { TeamEventParticipation } from "./entities/TeamEventParticipation";
 import { Match } from "./entities/Match";
+import { MatchScores2021 } from "./entities/MatchScores2021";
 
 export const entities: MixedList<string | Function | EntitySchema<any>> = [
     User,
@@ -15,4 +16,5 @@ export const entities: MixedList<string | Function | EntitySchema<any>> = [
     Match,
     TeamMatchParticipation,
     TeamEventParticipation,
+    MatchScores2021,
 ];

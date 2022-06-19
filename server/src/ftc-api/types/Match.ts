@@ -1,4 +1,4 @@
-export interface MatchFTCAPI {
+export interface MatchFtcApi {
     description: string;
     tournamentLevel: string;
     series: number;
@@ -12,10 +12,10 @@ export interface MatchFTCAPI {
     scoreBlueFinal: number | null;
     scoreBlueFoul: number | null;
     scoreBlueAuto: number | null;
-    teams: TeamMatchParticipationFTCAPI[];
+    teams: TeamMatchParticipationFtcApi[];
 }
 
-export interface TeamMatchParticipationFTCAPI {
+export interface TeamMatchParticipationFtcApi {
     teamNumber: number;
     station: string;
     surrogate: boolean;

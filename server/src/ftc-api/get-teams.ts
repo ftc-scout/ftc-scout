@@ -1,19 +1,19 @@
 import { makeRequest } from "./make-request";
 import { Season } from "./types/Season";
-import { TeamFTCAPI } from "./types/Team";
+import { TeamFtcApi } from "./types/Team";
 
 export async function getAllTeams(
     season: Season,
     since: Date | null
-): Promise<TeamFTCAPI[]> {
-    let teams: TeamFTCAPI[] = [];
+): Promise<TeamFtcApi[]> {
+    let teams: TeamFtcApi[] = [];
 
     let currentPage: number | null = 1;
     while (currentPage !== null) {
         let {
             pageTeams,
             nextPage,
-        }: { pageTeams: TeamFTCAPI[]; nextPage: number | null } =
+        }: { pageTeams: TeamFtcApi[]; nextPage: number | null } =
             await getOneTeamsPage(season, currentPage, since);
         teams = teams.concat(pageTeams);
         currentPage = nextPage;
@@ -26,10 +26,10 @@ async function getOneTeamsPage(
     season: Season,
     page: number,
     since: Date | null
-): Promise<{ pageTeams: TeamFTCAPI[]; nextPage: number | null }> {
+): Promise<{ pageTeams: TeamFtcApi[]; nextPage: number | null }> {
     let resp = await makeRequest(`${season}/teams`, { page }, since);
     if (resp) {
-        let teams: TeamFTCAPI[] = resp["teams"];
+        let teams: TeamFtcApi[] = resp["teams"];
         let maxPage = resp["pageTotal"];
 
         return {

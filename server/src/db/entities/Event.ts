@@ -12,7 +12,6 @@ import {
 import { Season } from "../../ftc-api/types/Season";
 import { Match } from "./Match";
 import { TeamEventParticipation } from "./TeamEventParticipation";
-import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { EventType } from "./types/EventType";
 
 export const EVENT_CODE_LEN = 16;

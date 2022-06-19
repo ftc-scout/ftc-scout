@@ -1,4 +1,4 @@
-export interface EventFTCAPI {
+export interface EventFtcApi {
     eventId: string;
     code: string | null;
     divisionCode: string | null;

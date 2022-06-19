@@ -11,7 +11,6 @@ import { Match } from "./Match";
 import { Team } from "./Team";
 import { EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";
-import { Event } from "./Event";
 import { Station } from "./types/Station";
 import { TypeormLoader } from "type-graphql-dataloader";
 

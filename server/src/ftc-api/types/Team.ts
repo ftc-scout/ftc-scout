@@ -1,4 +1,4 @@
-export interface TeamFTCAPI {
+export interface TeamFtcApi {
     teamNumber: number;
     nameFull: string | null;
     nameShort: string | null;

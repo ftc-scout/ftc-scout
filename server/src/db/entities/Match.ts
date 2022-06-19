@@ -12,6 +12,7 @@ import {
 } from "typeorm";
 import { Season } from "../../ftc-api/types/Season";
 import { Event, EVENT_CODE_LEN } from "./Event";
+import { MatchScores2021 } from "./MatchScores2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { TournamentLevel } from "./types/TournamentLevel";
 
@@ -28,6 +29,18 @@ export class Match extends BaseEntity {
     @Field(() => Int)
     @PrimaryColumn("int")
     num!: number;
+
+    static encodeMatchNumberTraditional(
+        matchNum: number,
+        level: TournamentLevel,
+        series: number
+    ): number {
+        return level.valueOf() * 10000 + series * 1000 + matchNum;
+    }
+
+    static encodeMatchNumberRemote(matchNum: number, teamNum: number) {
+        return teamNum * 100 + matchNum;
+    }
 
     @Field(() => Event)
     @ManyToOne(() => Event, (event) => event.matches)
@@ -62,6 +75,14 @@ export class Match extends BaseEntity {
     @Field(() => Int)
     @Column("int8")
     series!: number;
+
+    @Field(() => [MatchScores2021])
+    @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
+        cascade: true,
+        eager: true,
+    })
+    @TypeormLoader()
+    scores2021!: MatchScores2021[];
 
     @Field()
     @CreateDateColumn()

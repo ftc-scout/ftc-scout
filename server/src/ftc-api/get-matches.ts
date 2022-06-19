@@ -1,11 +1,11 @@
 import { makeRequest } from "./make-request";
-import { MatchFTCAPI } from "./types/Match";
+import { MatchFtcApi } from "./types/Match";
 import { Season } from "./types/Season";
 
 export async function getMatches(
     season: Season,
     eventCode: string
-): Promise<MatchFTCAPI[]> {
+): Promise<MatchFtcApi[]> {
     let [qual, playoff] = await Promise.all([
         makeRequest(
             `${season}/schedule/${eventCode}/qual/hybrid`,
@@ -18,10 +18,6 @@ export async function getMatches(
             null
         ),
     ]);
-
-    if (typeof qual == "string" || typeof playoff == "string") {
-        console.log(qual, playoff);
-    }
 
     return [
         ...(qual ? qual["schedule"] : []),
