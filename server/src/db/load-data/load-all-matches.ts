@@ -115,12 +115,12 @@ function createDbEntities(
                 PLAYOFF: TournamentLevel.FINALS, // ???
             }[match.tournamentLevel]!;
             let isRemote = match.teams.length == 1;
-            let adjustedMatchNum = isRemote
-                ? Match.encodeMatchNumberRemote(
+            let matchId = isRemote
+                ? Match.encodeMatchIdRemote(
                       match.matchNumber,
                       match.teams[0].teamNumber
                   )
-                : Match.encodeMatchNumberTraditional(
+                : Match.encodeMatchIdTraditional(
                       match.matchNumber,
                       tournamentLevel,
                       match.series
@@ -128,7 +128,7 @@ function createDbEntities(
             let dbMatch = Match.create({
                 eventSeason: season,
                 eventCode,
-                num: adjustedMatchNum,
+                id: matchId,
                 hasBeenPlayed: !!match.postResultTime,
                 scheduledStartTime: match.startTime,
                 actualStartTime: match.actualStartTime,
@@ -138,7 +138,7 @@ function createDbEntities(
             } as DeepPartial<Match>);
 
             let thisMatchScores = findMatchScoresForMatchNum(
-                adjustedMatchNum,
+                matchId,
                 matchScores
             );
             if (thisMatchScores) {
@@ -148,7 +148,7 @@ function createDbEntities(
                             dbMatch.scores2021 = MatchScores2021.fromTradApi(
                                 season,
                                 eventCode,
-                                adjustedMatchNum,
+                                matchId,
                                 thisMatchScores
                             );
                         } else if (isMatchScores2021Remote(thisMatchScores)) {
@@ -156,7 +156,7 @@ function createDbEntities(
                                 MatchScores2021.fromApiRemote(
                                     season,
                                     eventCode,
-                                    adjustedMatchNum,
+                                    matchId,
                                     thisMatchScores
                                 ),
                             ];
@@ -174,7 +174,7 @@ function createDbEntities(
                 let dbTeamMatchParticipation = TeamMatchParticipation.create({
                     season: season,
                     eventCode,
-                    matchNum: adjustedMatchNum,
+                    matchId,
                     teamNumber: team.teamNumber,
                     station: {
                         Red1: Station.RED_1,
@@ -202,25 +202,25 @@ function createDbEntities(
 }
 
 function findMatchScoresForMatchNum(
-    matchNum: number,
+    matchId: number,
     matchScores: MatchScoresFtcApi[]
 ): MatchScoresFtcApi | undefined {
     for (let ms of matchScores) {
         let isRemote =
             (ms as MatchScores2021RemoteFtcApi).teamNumber != undefined;
-        let msMatchNum = isRemote
-            ? Match.encodeMatchNumberRemote(
+        let msMatchId = isRemote
+            ? Match.encodeMatchIdRemote(
                   (ms as MatchScores2021RemoteFtcApi).matchNumber,
                   (ms as MatchScores2021RemoteFtcApi).teamNumber
               )
-            : Match.encodeMatchNumberTraditional(
+            : Match.encodeMatchIdTraditional(
                   (ms as MatchScores2021TradFtcApi).matchNumber,
                   tournamentLevelFromApi(
                       (ms as MatchScores2021TradFtcApi).matchLevel
                   ),
                   (ms as MatchScores2021TradFtcApi).matchSeries
               );
-        if (matchNum == msMatchNum) return ms;
+        if (matchId == msMatchId) return ms;
     }
     return undefined;
 }

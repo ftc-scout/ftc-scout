@@ -28,9 +28,9 @@ export class Match extends BaseEntity {
 
     @Field(() => Int)
     @PrimaryColumn("int")
-    num!: number;
+    id!: number;
 
-    static encodeMatchNumberTraditional(
+    static encodeMatchIdTraditional(
         matchNum: number,
         level: TournamentLevel,
         series: number
@@ -38,7 +38,7 @@ export class Match extends BaseEntity {
         return level.valueOf() * 10000 + series * 1000 + matchNum;
     }
 
-    static encodeMatchNumberRemote(matchNum: number, teamNum: number) {
+    static encodeMatchIdRemote(matchNum: number, teamNum: number) {
         return teamNum * 100 + matchNum;
     }
 

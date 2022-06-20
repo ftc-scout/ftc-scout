@@ -38,7 +38,7 @@ export class MatchScores2021 extends BaseEntity {
     eventCode!: string;
 
     @PrimaryColumn("int")
-    matchNum!: number;
+    matchId!: number;
 
     @Field(() => Alliance)
     @PrimaryColumn("enum", { enum: Alliance })
@@ -49,7 +49,7 @@ export class MatchScores2021 extends BaseEntity {
     @JoinColumn([
         { name: "season", referencedColumnName: "eventSeason" },
         { name: "eventCode", referencedColumnName: "eventCode" },
-        { name: "matchNum", referencedColumnName: "num" },
+        { name: "matchId", referencedColumnName: "id" },
     ])
     @TypeormLoader()
     match!: Match;
@@ -298,14 +298,14 @@ export class MatchScores2021 extends BaseEntity {
     static fromApiRemote(
         season: Season,
         eventCode: string,
-        adjustedMatchNum: number,
+        matchId: number,
         ms: MatchScores2021RemoteFtcApi
     ): MatchScores2021 {
         let s = ms.scores;
         let dbms = MatchScores2021.create({
             season,
             eventCode,
-            matchNum: adjustedMatchNum,
+            matchId,
             alliance: Alliance.SOLO,
             randomization: ms.randomization,
             barcodeElement: barcodeElementFromApi(s.barcodeElement),
@@ -334,14 +334,14 @@ export class MatchScores2021 extends BaseEntity {
     static fromTradApi(
         season: Season,
         eventCode: string,
-        adjustedMatchNum: number,
+        matchId: number,
         ms: MatchScores2021TradFtcApi
     ): MatchScores2021[] {
         return ms.alliances.map((a) => {
             let dbms = MatchScores2021.create({
                 season,
                 eventCode,
-                matchNum: adjustedMatchNum,
+                matchId,
                 alliance: allianceFromString(a.alliance),
                 randomization: ms.randomization,
                 barcodeElement: barcodeElementFromApi(a.barcodeElement1),

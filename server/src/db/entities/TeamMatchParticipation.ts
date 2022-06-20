@@ -25,7 +25,7 @@ export class TeamMatchParticipation extends BaseEntity {
     eventCode!: string;
 
     @PrimaryColumn("int")
-    matchNum!: number;
+    matchId!: number;
 
     @PrimaryColumn("int")
     teamNumber!: number;
@@ -46,7 +46,7 @@ export class TeamMatchParticipation extends BaseEntity {
     @JoinColumn([
         { name: "season", referencedColumnName: "eventSeason" },
         { name: "eventCode", referencedColumnName: "eventCode" },
-        { name: "matchNum", referencedColumnName: "num" },
+        { name: "matchId", referencedColumnName: "id" },
     ])
     @TypeormLoader()
     match!: Match;
