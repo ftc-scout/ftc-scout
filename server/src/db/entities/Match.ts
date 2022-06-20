@@ -39,7 +39,7 @@ export class Match extends BaseEntity {
     }
 
     static encodeMatchIdRemote(matchNum: number, teamNum: number) {
-        return teamNum * 100 + matchNum;
+        return teamNum * 1000 + matchNum;
     }
 
     @Field(() => Event)
@@ -68,6 +68,11 @@ export class Match extends BaseEntity {
     @Column("timestamptz", { nullable: true })
     postResultTime!: Date | null;
 
+    @Field(() => Int)
+    get matchNum(): number {
+        return this.id % 1000;
+    }
+
     @Field(() => TournamentLevel)
     @Column("enum", { enum: TournamentLevel })
     tournamentLevel!: TournamentLevel;
@@ -75,6 +80,18 @@ export class Match extends BaseEntity {
     @Field(() => Int)
     @Column("int8")
     series!: number;
+
+    @Field(() => String)
+    get matchDescription(): string {
+        switch (this.tournamentLevel) {
+            case TournamentLevel.QUALS:
+                return `Quals ${this.matchNum}`;
+            case TournamentLevel.SEMIS:
+                return `Semis ${this.series} Match ${this.matchNum}`;
+            case TournamentLevel.FINALS:
+                return `Finals ${this.matchNum}`;
+        }
+    }
 
     @Field(() => [MatchScores2021])
     @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
