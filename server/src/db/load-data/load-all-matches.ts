@@ -242,21 +242,13 @@ async function getEventCodesToLoadMatchesFrom(
                       season,
                       start: LessThanOrEqual(dateStartQuery),
                       end: MoreThanOrEqual(addDays(dateLastReq, -1)), // with a little extra leeway.
+                      published: true,
                   },
-                  // Or that don't have any matches and are in the future or within the last week
+                  // Or that were updated since the last request.
                   {
                       season,
-                      code: Raw(
-                          (a) =>
-                              `${a} NOT IN (SELECT "eventCode" FROM match WHERE season=:season)`,
-                          { season }
-                      ),
-                      start: MoreThanOrEqual(addDays(dateStartQuery, -7)),
-                  },
-                  // Or that was created since the last request.
-                  {
-                      season,
-                      createdAt: Between(dateLastReq, dateStartQuery),
+                      updatedAt: Between(dateLastReq, dateStartQuery),
+                      published: true,
                   },
               ],
           });
