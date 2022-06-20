@@ -13,7 +13,10 @@ import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { Match } from "../entities/Match";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { Station } from "../entities/types/Station";
-import { TournamentLevel } from "../entities/types/TournamentLevel";
+import {
+    TournamentLevel,
+    tournamentLevelFromApi,
+} from "../entities/types/TournamentLevel";
 import { Event } from "../entities/Event";
 import { MatchFtcApi } from "../../ftc-api/types/Match";
 import { MatchScores2021 } from "../entities/MatchScores2021";
@@ -24,6 +27,7 @@ import {
     MatchScoresFtcApi,
 } from "../../ftc-api/types/match-scores/MatchScores";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
+import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -50,26 +54,54 @@ export async function loadAllMatches(season: Season) {
 
     console.log("Loading matches from api.");
 
-    let apiEvents: {
+    await FTCSDataSource.transaction(async (em) => {
+        // lets do this 25 at a time so we don't get rate limited or run out of memory.
+        const chunkSize = 25;
+        for (let i = 0; i < eventCodes.length; i += chunkSize) {
+            console.log(`Starting chunk starting at ${i}.`);
+
+            const chunk = eventCodes.slice(i, i + chunkSize);
+            let chunkEvents = await Promise.all(
+                chunk.map(async (ec) => ({
+                    eventCode: ec,
+                    matches: await getMatches(season, ec),
+                    matchScores: await getMatchScores(season, ec),
+                }))
+            );
+
+            console.log("Fetched from API. Inserting into db.");
+
+            let { dbMatches, dbTeamMatchParticipations } = createDbEntities(
+                season,
+                chunkEvents
+            );
+
+            await em.save(dbMatches, { chunk: 500 });
+            await em.save(dbTeamMatchParticipations, { chunk: 500 });
+
+            console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
+        }
+
+        await em.save(
+            FtcApiMetadata.create({
+                season,
+                lastMatchesReq: dateStartQuery,
+            })
+        );
+    });
+}
+
+function createDbEntities(
+    season: Season,
+    apiEvents: {
         eventCode: string;
         matches: MatchFtcApi[];
         matchScores: MatchScoresFtcApi[];
-    }[] = [];
-    // lets do this 50 at a time so we don't get rate limited.
-    const chunkSize = 50;
-    for (let i = 0; i < eventCodes.length; i += chunkSize) {
-        const chunk = eventCodes.slice(i, i + chunkSize);
-        let chunkEvents = await Promise.all(
-            chunk.map(async (ec) => ({
-                eventCode: ec,
-                matches: await getMatches(season, ec),
-                matchScores: await getMatchScores(season, ec),
-            }))
-        );
-        apiEvents.push(...chunkEvents);
-        console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
-    }
-
+    }[]
+): {
+    dbMatches: Match[];
+    dbTeamMatchParticipations: TeamMatchParticipation[];
+} {
     let dbMatches: Match[] = [];
     let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
 
@@ -85,8 +117,8 @@ export async function loadAllMatches(season: Season) {
             let isRemote = match.teams.length == 1;
             let adjustedMatchNum = isRemote
                 ? Match.encodeMatchNumberRemote(
-                      match.teams[0].teamNumber,
-                      match.matchNumber
+                      match.matchNumber,
+                      match.teams[0].teamNumber
                   )
                 : Match.encodeMatchNumberTraditional(
                       match.matchNumber,
@@ -105,27 +137,27 @@ export async function loadAllMatches(season: Season) {
                 series: match.series,
             } as DeepPartial<Match>);
 
-            if (matchScores.length) {
+            let thisMatchScores = findMatchScoresForMatchNum(
+                adjustedMatchNum,
+                matchScores
+            );
+            if (thisMatchScores) {
                 switch (season) {
                     case Season.FREIGHT_FRENZY:
-                        if (isMatchScores2021Trad(matchScores[0])) {
-                            dbMatch.scores2021 = (
-                                matchScores as MatchScores2021TradFtcApi[]
-                            ).flatMap((ms) =>
-                                MatchScores2021.fromTradApi(
-                                    season,
-                                    eventCode,
-                                    adjustedMatchNum,
-                                    ms
-                                )
+                        if (isMatchScores2021Trad(thisMatchScores)) {
+                            dbMatch.scores2021 = MatchScores2021.fromTradApi(
+                                season,
+                                eventCode,
+                                adjustedMatchNum,
+                                thisMatchScores
                             );
-                        } else if (isMatchScores2021Remote(matchScores[0])) {
+                        } else if (isMatchScores2021Remote(thisMatchScores)) {
                             dbMatch.scores2021 = [
                                 MatchScores2021.fromApiRemote(
                                     season,
                                     eventCode,
                                     adjustedMatchNum,
-                                    matchScores[0]
+                                    thisMatchScores
                                 ),
                             ];
                         }
@@ -140,7 +172,7 @@ export async function loadAllMatches(season: Season) {
                 if (!team.teamNumber) continue;
 
                 let dbTeamMatchParticipation = TeamMatchParticipation.create({
-                    eventSeason: season,
+                    season: season,
                     eventCode,
                     matchNum: adjustedMatchNum,
                     teamNumber: team.teamNumber,
@@ -163,30 +195,34 @@ export async function loadAllMatches(season: Season) {
         }
     }
 
-    console.log("Inserting into database.");
-
-    await FTCSDataSource.transaction(async (em) => {
-        await chunkedSave(em, dbMatches, 1000);
-        await chunkedSave(em, dbTeamMatchParticipations, 1000);
-        await em.save(
-            FtcApiMetadata.create({
-                season,
-                lastMatchesReq: dateStartQuery,
-            })
-        );
-    });
+    return {
+        dbMatches,
+        dbTeamMatchParticipations,
+    };
 }
 
-async function chunkedSave<T>(
-    em: EntityManager,
-    items: T[],
-    chunkSize: number
-) {
-    for (let i = 0; i < items.length; i += chunkSize) {
-        const chunk = items.slice(i, i + chunkSize);
-        await em.save(chunk);
-        console.log(`Loaded ${i + chunkSize}/${items.length}`);
+function findMatchScoresForMatchNum(
+    matchNum: number,
+    matchScores: MatchScoresFtcApi[]
+): MatchScoresFtcApi | undefined {
+    for (let ms of matchScores) {
+        let isRemote =
+            (ms as MatchScores2021RemoteFtcApi).teamNumber != undefined;
+        let msMatchNum = isRemote
+            ? Match.encodeMatchNumberRemote(
+                  (ms as MatchScores2021RemoteFtcApi).matchNumber,
+                  (ms as MatchScores2021RemoteFtcApi).teamNumber
+              )
+            : Match.encodeMatchNumberTraditional(
+                  (ms as MatchScores2021TradFtcApi).matchNumber,
+                  tournamentLevelFromApi(
+                      (ms as MatchScores2021TradFtcApi).matchLevel
+                  ),
+                  (ms as MatchScores2021TradFtcApi).matchSeries
+              );
+        if (matchNum == msMatchNum) return ms;
     }
+    return undefined;
 }
 
 async function getEventCodesToLoadMatchesFrom(

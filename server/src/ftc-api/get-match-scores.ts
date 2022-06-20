@@ -11,8 +11,13 @@ export async function getMatchScores(
         makeRequest(`${season}/scores/${eventCode}/playoff`, undefined, null),
     ]);
 
-    return [
-        ...(qual ? qual["schedule"] : []),
-        ...(playoff ? playoff["schedule"] : []),
-    ];
+    try {
+        return [
+            ...(!!qual ? qual["MatchScores"] : []),
+            ...(!!playoff ? playoff["MatchScores"] : []),
+        ];
+    } catch {
+        console.log(qual, season, eventCode);
+        return [];
+    }
 }

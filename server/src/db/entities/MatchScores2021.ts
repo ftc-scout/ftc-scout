@@ -163,31 +163,84 @@ export class MatchScores2021 extends BaseEntity {
     majorPenalties!: number;
 
     @Field(() => Int)
-    get autoCarouselPoints(): number {
-        return this.autoCarousel ? 10 : 0;
-    }
+    @Column("int8")
+    autoCarouselPoints!: number;
 
     @Field(() => Int)
-    get autoNavigationPoints(): number {
-        return (
+    @Column("int8")
+    autoNavigationPoints!: number;
+
+    @Field(() => Int)
+    @Column("int8")
+    autoFreightPoints!: number;
+
+    @Field(() => Int)
+    @Column("int8")
+    autoBonusPoints!: number;
+
+    @Field(() => Int)
+    @Column("int8")
+    driverControlledAllianceHubPoints!: number;
+
+    @Field(() => Int, { nullable: true })
+    @Column("int8", { nullable: true })
+    driverControlledSharedHubPoints!: number | null;
+
+    @Field(() => Int)
+    @Column("int8")
+    driverControlledStoragePoints!: number;
+
+    @Field(() => Int)
+    @Column("int8")
+    endgameDeliveryPoints!: number;
+
+    @Field(() => Int)
+    @Column("int8")
+    allianceBalancedPoints!: number;
+
+    @Field(() => Int, { nullable: true })
+    @Column("int8", { nullable: true })
+    sharedUnbalancedPoints!: number | null;
+
+    @Field(() => Int)
+    @Column("int8")
+    endgameParkingPoints!: number;
+
+    @Field(() => Int)
+    @Column("int8")
+    cappingPoints!: number;
+
+    @Field(() => Int)
+    @Column("smallint")
+    autoPoints!: number;
+
+    @Field(() => Int)
+    @Column("smallint")
+    driverControlledPoints!: number;
+
+    @Field(() => Int)
+    @Column("smallint")
+    endgamePoints!: number;
+
+    @Field(() => Int)
+    @Column("smallint")
+    penaltyPoints!: number;
+
+    @Field(() => Int)
+    @Column("smallint")
+    totalPoints!: number;
+
+    addGeneratedProps() {
+        this.autoCarouselPoints = this.autoCarousel ? 10 : 0;
+        this.autoNavigationPoints =
             [0, 3, 6, 5, 10][this.autoNavigation] +
             (this.autoNavigation2 != null
                 ? [0, 3, 6, 5, 10][this.autoNavigation2]
-                : 0)
-        );
-    }
-
-    @Field(() => Int)
-    get autoFreightPoints(): number {
-        return (
+                : 0);
+        this.autoFreightPoints =
             this.autoStorageFreight * 2 +
-            (this.autoFreight1 + this.autoFreight2 + this.autoFreight3) * 6
-        );
-    }
-
-    @Field(() => Int)
-    get autoBonusPoints(): number {
-        return (
+            (this.autoFreight1 + this.autoFreight2 + this.autoFreight3) * 6;
+        this.autoBonusPoints =
             (this.autoBonus
                 ? this.barcodeElement == BarcodeElement2021.DUCK
                     ? 10
@@ -197,103 +250,49 @@ export class MatchScores2021 extends BaseEntity {
                 ? this.barcodeElement == BarcodeElement2021.DUCK
                     ? 10
                     : 20
-                : 0)
-        );
-    }
-
-    @Field(() => Int)
-    get driverControlledAllianceHubPoints(): number {
-        return (
+                : 0);
+        this.driverControlledAllianceHubPoints =
             this.driverControlledFreight1 * 2 +
             this.driverControlledFreight2 * 4 +
-            this.driverControlledFreight3 * 6
-        );
-    }
-
-    @Field(() => Int, { nullable: true })
-    get driverControlledSharedHubPoints(): number | null {
-        return this.sharedFreight == null ? null : this.sharedFreight * 4;
-    }
-
-    @Field(() => Int)
-    get driverControlledStoragePoints(): number {
-        return this.driverControlledStoragePoints * 2;
-    }
-
-    @Field(() => Int)
-    get endgameDeliveryPoints(): number {
-        return this.endgameDucksDelivered * 6;
-    }
-
-    @Field(() => Int)
-    get allianceBalancedPoints(): number {
-        return this.allianceBalanced ? 10 : 0;
-    }
-
-    @Field(() => Int, { nullable: true })
-    get sharedUnbalancedPoints(): number | null {
-        return this.sharedUnbalanced == null
-            ? null
-            : this.sharedUnbalanced
-            ? 20
-            : 0;
-    }
-
-    @Field(() => Int)
-    get endgameParkingPoints(): number {
-        return (
+            this.driverControlledFreight3 * 6;
+        this.driverControlledSharedHubPoints =
+            this.sharedFreight == null ? null : this.sharedFreight * 4;
+        this.driverControlledStoragePoints =
+            this.driverControlledStorageFreight * 1;
+        this.endgameDeliveryPoints = this.endgameDucksDelivered * 6;
+        this.allianceBalancedPoints = this.allianceBalanced ? 10 : 0;
+        this.sharedUnbalancedPoints =
+            this.sharedUnbalanced == null
+                ? null
+                : this.sharedUnbalanced
+                ? 20
+                : 0;
+        this.endgameParkingPoints =
             [0, 3, 6][this.endgamePark] +
-            (this.endgamePark2 != null ? [0, 3, 6][this.endgamePark2] : 0)
-        );
-    }
-
-    @Field(() => Int)
-    get cappingPoints(): number {
-        return this.capped * 15;
-    }
-
-    @Field(() => Int)
-    get autoPoints(): number {
-        return (
+            (this.endgamePark2 != null ? [0, 3, 6][this.endgamePark2] : 0);
+        this.cappingPoints = this.capped * 15;
+        this.autoPoints =
             this.autoCarouselPoints +
             this.autoNavigationPoints +
             this.autoFreightPoints +
-            this.autoBonusPoints
-        );
-    }
-
-    @Field(() => Int)
-    get driverControlledPoints(): number {
-        return (
+            this.autoBonusPoints;
+        this.driverControlledPoints =
             this.driverControlledAllianceHubPoints +
             this.driverControlledStoragePoints +
-            (this.driverControlledSharedHubPoints ?? 0)
-        );
-    }
-
-    @Field(() => Int)
-    get endgamePoints(): number {
-        return (
+            (this.driverControlledSharedHubPoints ?? 0);
+        this.endgamePoints =
             this.endgameDeliveryPoints +
             this.allianceBalancedPoints +
             (this.sharedUnbalancedPoints ?? 0) +
-            this.endgameParkingPoints
-        );
-    }
-
-    @Field(() => Int)
-    get penaltyPoints(): number {
-        return this.majorPenalties * -30 + this.minorPenalties * -10;
-    }
-
-    @Field(() => Int)
-    get totalPoints(): number {
-        return (
+            this.endgameParkingPoints +
+            this.cappingPoints;
+        this.penaltyPoints =
+            this.majorPenalties * -30 + this.minorPenalties * -10;
+        this.totalPoints =
             this.autoPoints +
             this.driverControlledPoints +
             this.endgamePoints +
-            this.penaltyPoints
-        );
+            this.penaltyPoints;
     }
 
     static fromApiRemote(
@@ -303,7 +302,7 @@ export class MatchScores2021 extends BaseEntity {
         ms: MatchScores2021RemoteFtcApi
     ): MatchScores2021 {
         let s = ms.scores;
-        return MatchScores2021.create({
+        let dbms = MatchScores2021.create({
             season,
             eventCode,
             matchNum: adjustedMatchNum,
@@ -328,6 +327,8 @@ export class MatchScores2021 extends BaseEntity {
             minorPenalties: s.minorPenalties,
             majorPenalties: s.majorPenalties,
         } as DeepPartial<MatchScores2021>);
+        dbms.addGeneratedProps();
+        return dbms;
     }
 
     static fromTradApi(
@@ -336,8 +337,8 @@ export class MatchScores2021 extends BaseEntity {
         adjustedMatchNum: number,
         ms: MatchScores2021TradFtcApi
     ): MatchScores2021[] {
-        return ms.alliances.map((a) =>
-            MatchScores2021.create({
+        return ms.alliances.map((a) => {
+            let dbms = MatchScores2021.create({
                 season,
                 eventCode,
                 matchNum: adjustedMatchNum,
@@ -368,7 +369,9 @@ export class MatchScores2021 extends BaseEntity {
                 capped: a.capped,
                 minorPenalties: a.minorPenalties,
                 majorPenalties: a.majorPenalties,
-            } as DeepPartial<MatchScores2021>)
-        );
+            } as DeepPartial<MatchScores2021>);
+            dbms.addGeneratedProps();
+            return dbms;
+        });
     }
 }
