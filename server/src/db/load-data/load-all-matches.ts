@@ -1,10 +1,8 @@
 import {
     Between,
     DeepPartial,
-    EntityManager,
     LessThanOrEqual,
     MoreThanOrEqual,
-    Raw,
 } from "typeorm";
 import { getMatches } from "../../ftc-api/get-matches";
 import { Season } from "../../ftc-api/types/Season";
