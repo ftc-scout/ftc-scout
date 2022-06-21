@@ -93,7 +93,6 @@ export class Match extends BaseEntity {
         }
     }
 
-    @Field(() => [MatchScores2021])
     @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
         cascade: true,
         eager: true,

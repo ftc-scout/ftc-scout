@@ -119,6 +119,16 @@ async function main() {
     if (process.argv.includes("--load-teams")) {
         loadAllTeamsIntoDatabase(CURRENT_SEASON);
     }
+
+    // console.log(
+    //     (
+    //         await Match.findOneBy({
+    //             eventSeason: 2021,
+    //             eventCode: "USCALAAM0",
+    //             id: 3,
+    //         })
+    //     )?.scores2021
+    // );
 }
 
 main();

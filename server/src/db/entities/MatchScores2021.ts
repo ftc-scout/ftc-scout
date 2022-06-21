@@ -1,4 +1,3 @@
-import { Field, Int, ObjectType } from "type-graphql";
 import {
     BaseEntity,
     Column,
@@ -12,7 +11,6 @@ import { Season } from "../../ftc-api/types/Season";
 import { EVENT_CODE_LEN } from "./Event";
 import { Match } from "./Match";
 import { Alliance, allianceFromString } from "./types/Alliance";
-import { TypeormLoader } from "type-graphql-dataloader";
 import {
     BarcodeElement2021,
     barcodeElementFromApi,
@@ -28,7 +26,6 @@ import {
 import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
 
-@ObjectType()
 @Entity()
 export class MatchScores2021 extends BaseEntity {
     @PrimaryColumn("smallint", { default: Season.FREIGHT_FRENZY })
@@ -40,18 +37,15 @@ export class MatchScores2021 extends BaseEntity {
     @PrimaryColumn("int")
     matchId!: number;
 
-    @Field(() => Alliance)
     @PrimaryColumn("enum", { enum: Alliance })
     alliance!: Alliance;
 
-    @Field(() => Match)
     @ManyToOne(() => Match, (match) => match.scores2021)
     @JoinColumn([
         { name: "season", referencedColumnName: "eventSeason" },
         { name: "eventCode", referencedColumnName: "eventCode" },
         { name: "matchId", referencedColumnName: "id" },
     ])
-    @TypeormLoader()
     match!: Match;
 
     // @Field(() => Event)
@@ -62,171 +56,129 @@ export class MatchScores2021 extends BaseEntity {
     // ])
     // event!: Event;
 
-    @Field(() => Int)
     @Column("int8")
     randomization!: number;
 
-    @Field(() => BarcodeElement2021)
     @Column("enum", { enum: BarcodeElement2021 })
     barcodeElement!: BarcodeElement2021;
 
-    @Field(() => BarcodeElement2021, { nullable: true })
     @Column("enum", { enum: BarcodeElement2021, nullable: true })
     barcodeElement2!: BarcodeElement2021 | null;
 
-    @Field()
     @Column()
     autoCarousel!: boolean;
 
-    @Field(() => AutoNavigation2021)
     @Column("enum", { enum: AutoNavigation2021 })
     autoNavigation!: AutoNavigation2021;
 
-    @Field(() => AutoNavigation2021, { nullable: true })
     @Column("enum", { enum: AutoNavigation2021, nullable: true })
     autoNavigation2!: AutoNavigation2021 | null;
 
-    @Field()
     @Column()
     autoBonus!: boolean;
 
-    @Field(() => Boolean, { nullable: true })
     @Column("bool", { nullable: true })
     autoBonus2!: boolean;
 
-    @Field(() => Int)
     @Column("int8")
     autoStorageFreight!: number;
 
-    @Field(() => Int)
     @Column("int8")
     autoFreight1!: number;
 
-    @Field(() => Int)
     @Column("int8")
     autoFreight2!: number;
 
-    @Field(() => Int)
     @Column("int8")
     autoFreight3!: number;
 
-    @Field(() => Int)
     @Column("int8")
     driverControlledStorageFreight!: number;
 
-    @Field(() => Int)
     @Column("int8")
     driverControlledFreight1!: number;
 
-    @Field(() => Int)
     @Column("int8")
     driverControlledFreight2!: number;
 
-    @Field(() => Int)
     @Column("int8")
     driverControlledFreight3!: number;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     sharedFreight!: number | null;
 
-    @Field(() => Int)
     @Column("int8")
     endgameDucksDelivered!: number;
 
-    @Field()
     @Column()
     allianceBalanced!: boolean;
 
-    @Field(() => Boolean, { nullable: true })
     @Column("bool", { nullable: true })
     sharedUnbalanced!: boolean | null;
 
-    @Field(() => EndgamePark2021)
     @Column("enum", { enum: EndgamePark2021 })
     endgamePark!: EndgamePark2021;
 
-    @Field(() => EndgamePark2021, { nullable: true })
     @Column("enum", { enum: EndgamePark2021, nullable: true })
     endgamePark2!: EndgamePark2021 | null;
 
-    @Field(() => Int)
     @Column("int8")
     capped!: number;
 
-    @Field(() => Int)
     @Column("int8")
     minorPenalties!: number;
 
-    @Field(() => Int)
     @Column("int8")
     majorPenalties!: number;
 
-    @Field(() => Int)
     @Column("int8")
     autoCarouselPoints!: number;
 
-    @Field(() => Int)
     @Column("int8")
     autoNavigationPoints!: number;
 
-    @Field(() => Int)
     @Column("int8")
     autoFreightPoints!: number;
 
-    @Field(() => Int)
     @Column("int8")
     autoBonusPoints!: number;
 
-    @Field(() => Int)
     @Column("int8")
     driverControlledAllianceHubPoints!: number;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     driverControlledSharedHubPoints!: number | null;
 
-    @Field(() => Int)
     @Column("int8")
     driverControlledStoragePoints!: number;
 
-    @Field(() => Int)
     @Column("int8")
     endgameDeliveryPoints!: number;
 
-    @Field(() => Int)
     @Column("int8")
     allianceBalancedPoints!: number;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     sharedUnbalancedPoints!: number | null;
 
-    @Field(() => Int)
     @Column("int8")
     endgameParkingPoints!: number;
 
-    @Field(() => Int)
     @Column("int8")
     cappingPoints!: number;
 
-    @Field(() => Int)
     @Column("smallint")
     autoPoints!: number;
 
-    @Field(() => Int)
     @Column("smallint")
     driverControlledPoints!: number;
 
-    @Field(() => Int)
     @Column("smallint")
     endgamePoints!: number;
 
-    @Field(() => Int)
     @Column("smallint")
     penaltyPoints!: number;
 
-    @Field(() => Int)
     @Column("smallint")
     totalPoints!: number;
 
