@@ -80,6 +80,7 @@
         --navbar-size: 60px;
 
         --small-gap: 4px;
+        --medium-hap: 6px;
         --gap: 8px;
         --large-gap: 12px;
         --xl-gap: 32px;
@@ -104,5 +105,19 @@
 
     :global(*) {
         box-sizing: border-box;
+    }
+
+    :global(h1) {
+        font-size: 32px;
+        margin-top: var(--large-gap);
+        margin-bottom: var(--large-gap);
+    }
+
+    :global(a) {
+        text-decoration: none;
+    }
+
+    :global(a:hover) {
+        text-decoration: underline;
     }
 </style>

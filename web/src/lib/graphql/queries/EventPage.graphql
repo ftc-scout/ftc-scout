@@ -1,0 +1,13 @@
+query EventPage($season: Int!, $code: String!) {
+    eventByCode(season: $season, code: $code) {
+        season
+        name
+        start
+        end
+        venue
+        city
+        stateOrProvince
+        country
+        website
+    }
+}
