@@ -31,11 +31,10 @@
 
     .centerer {
         position: absolute;
-        /* width: calc(100% - 10.75em); */
         left: 10.75em;
         right: 0;
 
-        padding: var(--large-padding);
+        height: calc(var(--xl-gap) * 1.5);
 
         display: flex;
         align-items: center;
