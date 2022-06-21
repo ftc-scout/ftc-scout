@@ -16,6 +16,7 @@ import {
     type LoginMutation,
     type RegisterMutation,
 } from "./generated/graphql-operations";
+import schema from "./generated/schema.json";
 
 type Fetch = (input: RequestInfo, init?: RequestInit) => Promise<Response>;
 
@@ -41,8 +42,16 @@ export function customCreateClient(fetch: Fetch): Client {
         exchanges: [
             dedupExchange,
             cacheExchange({
+                schema,
                 keys: {
                     Team: (data) => "" + data.number,
+                    Event: (data) => `${data.season}/${data.code}`,
+                    Match: (data) =>
+                        `${data.season}/${data.eventCode}/${data.id}`,
+                    MatchScores2021Traditional: () => null,
+                    MatchScores2021TraditionalAlliance: () => null,
+                    MatchScores2021Remote: () => null,
+                    TeamMatchParticipation: () => null,
                 },
                 updates: {
                     Mutation: {

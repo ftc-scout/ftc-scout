@@ -1,0 +1,9 @@
+fragment FullMatchScores2021Traditional on MatchScores2021Traditional {
+    randomization
+    red {
+        ...FullMatchScores2021TraditionAlliance
+    }
+    blue {
+        ...FullMatchScores2021TraditionAlliance
+    }
+}

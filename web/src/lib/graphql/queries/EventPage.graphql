@@ -1,6 +1,7 @@
 query EventPage($season: Int!, $code: String!) {
     eventByCode(season: $season, code: $code) {
         season
+        code
         name
         start
         end
@@ -9,5 +10,8 @@ query EventPage($season: Int!, $code: String!) {
         stateOrProvince
         country
         website
+        matches {
+            ...EventPageMatch
+        }
     }
 }

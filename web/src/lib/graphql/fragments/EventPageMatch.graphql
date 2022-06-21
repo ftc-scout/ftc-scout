@@ -1,0 +1,21 @@
+fragment EventPageMatch on Match {
+    season
+    eventCode
+    id
+    matchDescription
+    tournamentLevel
+    scores {
+        ...FullMatchScores
+    }
+    teams {
+        station
+        team {
+            number
+            name
+        }
+        surrogate
+        noShow
+        dq
+        onField
+    }
+}

@@ -6,3 +6,6 @@ generates:
             - typescript
             - typescript-operations
             - typed-document-node
+    ./src/lib/graphql/generated/schema.json:
+        plugins:
+            - introspection

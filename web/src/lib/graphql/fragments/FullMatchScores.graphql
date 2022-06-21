@@ -1,0 +1,11 @@
+fragment FullMatchScores on MatchScores {
+    __typename
+    ... on MatchScores2021Remote {
+        __typename
+        ...FullMatchScores2021Remote
+    }
+    ... on MatchScores2021Traditional {
+        __typename
+        ...FullMatchScores2021Traditional
+    }
+}

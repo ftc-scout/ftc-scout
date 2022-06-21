@@ -1,8 +1,5 @@
 <script context="module" lang="ts">
-    import {
-        EventPageDocument,
-        type EventPageQuery,
-    } from "../../../lib/graphql/generated/graphql-operations";
+    import { EventPageDocument } from "../../../lib/graphql/generated/graphql-operations";
     import { queryLoad } from "../../../lib/graphql/query-load";
     import { query, type OperationStore } from "@urql/svelte";
 
@@ -20,11 +17,12 @@
         faLocationDot,
         faGlobe,
     } from "@fortawesome/free-solid-svg-icons";
-    import Fa from "svelte-fa";
     import { prettyPrintDateRange } from "../../../lib/util/format/pretty-print-date";
     import { prettyPrintURL } from "../../../lib/util/format/pretty-print-url";
     import DataFromFirst from "../../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../../lib/components/InfoIconRow.svelte";
+    import type { EventPageQuery } from "../../../lib/graphql/generated/graphql-operations";
+    import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
 
     export let event: OperationStore<EventPageQuery>;
     query(event);
@@ -34,7 +32,7 @@
     $: endDate = new Date(eventData?.end);
 </script>
 
-<MaxWidth width={"1000px"}>
+<MaxWidth width={"1250px"}>
     {#if eventData}
         <Card>
             <h1>{eventData.season} {eventData.name}</h1>
@@ -60,6 +58,7 @@
         </Card>
         <Card>
             <h2>Matches</h2>
+            <MatchTable matches={eventData.matches} />
         </Card>
     {:else}
         <Card>That event does not exist</Card>

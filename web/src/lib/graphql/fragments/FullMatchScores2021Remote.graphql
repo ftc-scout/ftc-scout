@@ -1,0 +1,36 @@
+fragment FullMatchScores2021Remote on MatchScores2021Remote {
+    randomization
+    barcodeElement
+    autoCarousel
+    autoNavigation
+    autoBonus
+    autoStorageFreight
+    autoFreight1
+    autoFreight2
+    autoFreight3
+    driverControlledStorageFreight
+    driverControlledFreight1
+    driverControlledFreight2
+    driverControlledFreight3
+    endgameDucksDelivered
+    allianceBalanced
+    endgamePark
+    capped
+    minorPenalties
+    majorPenalties
+    autoCarouselPoints
+    autoNavigationPoints
+    autoFreightPoints
+    autoBonusPoints
+    driverControlledAllianceHubPoints
+    driverControlledStoragePoints
+    endgameDeliveryPoints
+    allianceBalancedPoints
+    endgameParkingPoints
+    cappingPoints
+    autoPoints
+    driverControlledPoints
+    endgamePoints
+    penaltyPoints
+    totalPoints
+}
