@@ -17,7 +17,7 @@ const config: DataSourceOptions = {
     password: DB_PASSWORD,
     database: DB_NAME,
     synchronize: IS_DEV,
-    logging: true,
+    logging: IS_DEV,
     entities,
 };
 
