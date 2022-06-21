@@ -28,13 +28,17 @@
     export let team: OperationStore<TeamQuery>;
     query(team);
     $: teamData = $team.data?.teamByNumber;
+
 </script>
 
 <MaxWidth width={"1000px"}>
-    <Card>
+
         {#if !teamData}
+        <Card>
             That team doesn't exist
+        </Card>
         {:else}
+        <Card>
             <!-- Add goto command for team search and remove hudson block -->
             <h1>{teamData.number} - {teamData.name}</h1>
 
@@ -58,7 +62,11 @@
                 Rookie Year: {teamData.rookieYear}
             </InfoIconRow>
 
-            <DataFromFirst />
+            <DataFromFirst/>
+        </Card>
+        <Card>
+            <!-- just put in what you want here in this second card -->
+            this team is cool!
+        </Card>
         {/if}
-    </Card>
 </MaxWidth>
