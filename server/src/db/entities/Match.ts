@@ -23,6 +23,7 @@ export class Match extends BaseEntity {
     @PrimaryColumn("smallint")
     eventSeason!: Season;
 
+    @Field(() => String)
     @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
     eventCode!: string;
 
@@ -85,11 +86,11 @@ export class Match extends BaseEntity {
     get matchDescription(): string {
         switch (this.tournamentLevel) {
             case TournamentLevel.QUALS:
-                return `Quals ${this.matchNum}`;
+                return `Q-${this.matchNum}`;
             case TournamentLevel.SEMIS:
-                return `Semis ${this.series} Match ${this.matchNum}`;
+                return `SF-${this.series}-${this.matchNum}`;
             case TournamentLevel.FINALS:
-                return `Finals ${this.matchNum}`;
+                return `F-${this.matchNum}`;
         }
     }
 

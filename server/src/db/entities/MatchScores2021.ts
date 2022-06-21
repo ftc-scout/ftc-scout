@@ -240,11 +240,13 @@ export class MatchScores2021 extends BaseEntity {
             this.cappingPoints;
         this.penaltyPoints =
             this.majorPenalties * -30 + this.minorPenalties * -10;
-        this.totalPoints =
+        this.totalPoints = Math.max(
             this.autoPoints +
-            this.driverControlledPoints +
-            this.endgamePoints +
-            this.penaltyPoints;
+                this.driverControlledPoints +
+                this.endgamePoints +
+                this.penaltyPoints,
+            0
+        );
     }
 
     static fromApiRemote(

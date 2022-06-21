@@ -64,9 +64,9 @@ export class TeamMatchParticipation extends BaseEntity {
     @Column()
     surrogate!: boolean;
 
-    @Field(() => Boolean, { nullable: true })
-    @Column("bool", { nullable: true })
-    noShow!: boolean | null;
+    @Field(() => Boolean)
+    @Column("bool")
+    noShow!: boolean;
 
     @Field(() => Boolean, { nullable: true })
     @Column("bool", { nullable: true })
