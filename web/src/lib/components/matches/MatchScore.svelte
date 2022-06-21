@@ -4,7 +4,7 @@
     export let winner: "RED" | "BLUE";
 </script>
 
-<td style:width="10ch">
+<td style:width="6.25em">
     <div>
         <span class="o l" class:winner={winner == "RED"}> {red} </span>
         <span>-</span>

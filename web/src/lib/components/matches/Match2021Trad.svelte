@@ -18,7 +18,11 @@
         scores.red.totalPoints > scores.blue.totalPoints ? "RED" : "BLUE";
 </script>
 
-<td style:width="7ch" class:red={winner == "RED"} class:blue={winner == "BLUE"}>
+<td
+    style:width="4.5em"
+    class:red={winner == "RED"}
+    class:blue={winner == "BLUE"}
+>
     <strong>{match.matchDescription}</strong>
 </td>
 
@@ -31,7 +35,7 @@
 {#each sortedTeams as team}
     <MatchTeam
         {team}
-        width={`calc((100% - 17ch) / ${match.teams.length})`}
+        width={`calc((100% - 10.75em) / ${match.teams.length})`}
         winner={team.station.startsWith(winner)}
     />
 {/each}

@@ -4,6 +4,7 @@
         type EventPageMatchFragment,
     } from "../../graphql/generated/graphql-operations";
     import Match from "./Match.svelte";
+    import MatchTableHeader from "./MatchTableHeader.svelte";
     import SectionRow from "./SectionRow.svelte";
 
     export let matches: EventPageMatchFragment[];
@@ -20,6 +21,8 @@
 </script>
 
 <table>
+    <MatchTableHeader />
+
     {#if finalsMatches.length}
         <SectionRow level={TournamentLevel.Finals} />
     {/if}
@@ -36,7 +39,7 @@
 
     {#each semisMatches as match, i}
         {#if match}
-            <Match {match} zebraStripe={(i + finalsMatches.length) % 2 == 1} />
+            <Match {match} zebraStripe={i % 2 == 1} />
         {/if}
     {/each}
 
@@ -46,12 +49,7 @@
 
     {#each qualsMatches as match, i}
         {#if match}
-            <Match
-                {match}
-                zebraStripe={(i + semisMatches.length + finalsMatches.length) %
-                    2 ==
-                    1}
-            />
+            <Match {match} zebraStripe={i % 2 == 1} />
         {/if}
     {/each}
 </table>
@@ -61,5 +59,8 @@
         border-spacing: 0;
         width: 100%;
         display: block;
+
+        border: 1px solid lightgray;
+        clip-path: inset(0 0 0 0 round 8px);
     }
 </style>

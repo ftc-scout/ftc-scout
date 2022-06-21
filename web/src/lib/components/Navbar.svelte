@@ -36,6 +36,8 @@
         background-color: var(--foreground-color);
 
         box-shadow: 0 4px 4px -4px var(--shadow-color);
+
+        z-index: 10;
     }
 
     .login-button {
