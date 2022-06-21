@@ -171,6 +171,8 @@
         color: var(--text-color);
         font-family: var(--main-font);
         font-size: var(--font-size);
+
+        margin: 0;
     }
 
     :global(*) {
