@@ -61,6 +61,7 @@
         display: block;
 
         border: 1px solid lightgray;
+        border-radius: 8px;
         clip-path: inset(0 0 0 0 round 8px);
     }
 </style>
