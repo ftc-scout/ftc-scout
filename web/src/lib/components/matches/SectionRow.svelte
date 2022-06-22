@@ -4,11 +4,11 @@
     export let level: TournamentLevel;
 </script>
 
-<thead>
-    <div class="red-block" />
-    <div class="blue-block" />
+<tr>
+    <td class="red-block" />
+    <td class="blue-block" />
 
-    <div class="centerer">
+    <td class="centerer">
         <span>
             {#if level == TournamentLevel.Quals}
                 Qualification Matches
@@ -18,15 +18,19 @@
                 Finals
             {/if}
         </span>
-    </div>
-</thead>
+    </td>
+</tr>
 
 <style>
-    thead {
+    tr {
         width: 100%;
         position: relative;
         height: calc(var(--xl-gap) * 1.5);
         display: table;
+    }
+
+    td {
+        display: block;
     }
 
     .centerer {

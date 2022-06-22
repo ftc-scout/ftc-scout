@@ -23,35 +23,37 @@
 <table>
     <MatchTableHeader />
 
-    {#if finalsMatches.length}
-        <SectionRow level={TournamentLevel.Finals} />
-    {/if}
-
-    {#each finalsMatches as match, i}
-        {#if match}
-            <Match {match} zebraStripe={i % 2 == 1} />
+    <tbody>
+        {#if finalsMatches.length}
+            <SectionRow level={TournamentLevel.Finals} />
         {/if}
-    {/each}
 
-    {#if semisMatches.length}
-        <SectionRow level={TournamentLevel.Semis} />
-    {/if}
+        {#each finalsMatches as match, i}
+            {#if match}
+                <Match {match} zebraStripe={i % 2 == 1} />
+            {/if}
+        {/each}
 
-    {#each semisMatches as match, i}
-        {#if match}
-            <Match {match} zebraStripe={i % 2 == 1} />
+        {#if semisMatches.length}
+            <SectionRow level={TournamentLevel.Semis} />
         {/if}
-    {/each}
 
-    {#if qualsMatches.length && (semisMatches.length || finalsMatches.length)}
-        <SectionRow level={TournamentLevel.Quals} />
-    {/if}
+        {#each semisMatches as match, i}
+            {#if match}
+                <Match {match} zebraStripe={i % 2 == 1} />
+            {/if}
+        {/each}
 
-    {#each qualsMatches as match, i}
-        {#if match}
-            <Match {match} zebraStripe={i % 2 == 1} />
+        {#if qualsMatches.length && (semisMatches.length || finalsMatches.length)}
+            <SectionRow level={TournamentLevel.Quals} />
         {/if}
-    {/each}
+
+        {#each qualsMatches as match, i}
+            {#if match}
+                <Match {match} zebraStripe={i % 2 == 1} />
+            {/if}
+        {/each}
+    </tbody>
 </table>
 
 <style>
@@ -63,5 +65,9 @@
         border: 1px solid lightgray;
         border-radius: 8px;
         clip-path: inset(0 0 0 0 round 8px);
+    }
+
+    tbody {
+        display: block;
     }
 </style>
