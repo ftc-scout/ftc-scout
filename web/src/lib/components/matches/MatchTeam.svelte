@@ -7,6 +7,7 @@
         team: { number: number; name: string };
     };
     export let winner: boolean;
+    export let border = false;
 
     $: number = team.team.number;
     $: name = team.team.name;
@@ -29,6 +30,7 @@
     class:red
     class:blue
     class:solo
+    class:border
     style:max-width={width}
     style:min-width={width}
 >
@@ -64,6 +66,31 @@
 
     td.blue:hover {
         outline: 2px solid var(--color-team-blue);
+    }
+
+    td.solo:hover {
+        outline: 2px solid var(--color-team-neutral);
+    }
+
+    td:hover {
+        z-index: 1;
+    }
+
+    td.border {
+        border-right: 2px solid lightgray;
+        clip-path: inset(-2px -0.5px -2px -2px);
+    }
+
+    td.border.solo:hover {
+        border-right: 2px solid var(--color-team-neutral); /* This is quite the hack */
+    }
+
+    td.border.red:hover {
+        border-right: 2px solid var(--color-team-red); /* This is quite the hack */
+    }
+
+    td.border.blue:hover {
+        border-right: 2px solid var(--color-team-blue); /* This is quite the hack */
     }
 
     a {

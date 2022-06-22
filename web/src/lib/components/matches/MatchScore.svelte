@@ -1,26 +1,31 @@
 <script lang="ts">
-    export let red: number;
-    export let blue: number;
-    export let winner: "RED" | "BLUE" | "TIE";
+    export let red: number | null = null;
+    export let blue: number | null = null;
+    export let solo: number | null = null;
+    export let winner: "RED" | "BLUE" | "TIE" | "SOLO";
 </script>
 
 <td style:width="6.25em">
     <div>
-        <span
-            class="o l"
-            class:winner={winner == "RED"}
-            class:tie={winner == "TIE"}
-        >
-            {red}
-        </span>
-        <span>-</span>
-        <span
-            class="o r"
-            class:winner={winner == "BLUE"}
-            class:tie={winner == "TIE"}
-        >
-            {blue}
-        </span>
+        {#if winner == "SOLO"}
+            <b>{solo}</b>
+        {:else}
+            <span
+                class="o l"
+                class:winner={winner == "RED"}
+                class:tie={winner == "TIE"}
+            >
+                {red}
+            </span>
+            <span>-</span>
+            <span
+                class="o r"
+                class:winner={winner == "BLUE"}
+                class:tie={winner == "TIE"}
+            >
+                {blue}
+            </span>
+        {/if}
     </div>
 </td>
 

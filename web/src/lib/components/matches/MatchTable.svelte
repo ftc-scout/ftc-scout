@@ -3,56 +3,75 @@
         TournamentLevel,
         type EventPageMatchFragment,
     } from "../../graphql/generated/graphql-operations";
-    import Match from "./Match.svelte";
-    import MatchTableHeader from "./MatchTableHeader.svelte";
+    import TradMatchTableHeader from "./TradMatchTableHeader.svelte";
     import SectionRow from "./SectionRow.svelte";
+    import { groupBy } from "../../util/group-by";
+    import RemoteMatches from "./RemoteMatches.svelte";
+    import MatchTrad from "./MatchTrad.svelte";
+    import RemoteMatchTableHeader from "./RemoteMatchTableHeader.svelte";
 
     export let matches: EventPageMatchFragment[];
+    export let isRemote: boolean;
 
-    $: qualsMatches = matches.filter(
-        (m) => m.tournamentLevel == TournamentLevel.Quals
-    );
+    $: qualsMatches = matches
+        .filter((m) => m.tournamentLevel == TournamentLevel.Quals)
+        .sort((a, b) => a.id - b.id);
     $: semisMatches = matches.filter(
         (m) => m.tournamentLevel == TournamentLevel.Semis
-    );
-    $: finalsMatches = matches.filter(
-        (m) => m.tournamentLevel == TournamentLevel.Finals
-    );
+    ); // We don't sort the semifinals because we don't know what order they were played in.
+    $: finalsMatches = matches
+        .filter((m) => m.tournamentLevel == TournamentLevel.Finals)
+        .sort((a, b) => a.id - b.id);
+
+    $: soloMatches = groupBy(matches, (m) => m.id - (m.id % 1000));
 </script>
 
 <table>
-    <MatchTableHeader />
+    {#if isRemote}
+        <RemoteMatchTableHeader />
+    {:else}
+        <TradMatchTableHeader />
+    {/if}
 
     <tbody>
-        {#if finalsMatches.length}
-            <SectionRow level={TournamentLevel.Finals} />
-        {/if}
-
-        {#each finalsMatches as match, i}
-            {#if match}
-                <Match {match} zebraStripe={i % 2 == 1} />
+        {#if isRemote}
+            {#each soloMatches as oneTeamMatches, i}
+                <RemoteMatches
+                    matches={oneTeamMatches}
+                    zebraStripe={i % 2 == 1}
+                />
+            {/each}
+        {:else}
+            {#if finalsMatches.length}
+                <SectionRow level={TournamentLevel.Finals} />
             {/if}
-        {/each}
 
-        {#if semisMatches.length}
-            <SectionRow level={TournamentLevel.Semis} />
-        {/if}
+            {#each finalsMatches as match, i}
+                {#if match}
+                    <MatchTrad {match} zebraStripe={i % 2 == 1} />
+                {/if}
+            {/each}
 
-        {#each semisMatches as match, i}
-            {#if match}
-                <Match {match} zebraStripe={i % 2 == 1} />
+            {#if semisMatches.length}
+                <SectionRow level={TournamentLevel.Semis} />
             {/if}
-        {/each}
 
-        {#if qualsMatches.length && (semisMatches.length || finalsMatches.length)}
-            <SectionRow level={TournamentLevel.Quals} />
-        {/if}
+            {#each semisMatches as match, i}
+                {#if match}
+                    <MatchTrad {match} zebraStripe={i % 2 == 1} />
+                {/if}
+            {/each}
 
-        {#each qualsMatches as match, i}
-            {#if match}
-                <Match {match} zebraStripe={i % 2 == 1} />
+            {#if qualsMatches.length && (semisMatches.length || finalsMatches.length)}
+                <SectionRow level={TournamentLevel.Quals} />
             {/if}
-        {/each}
+
+            {#each qualsMatches as match, i}
+                {#if match}
+                    <MatchTrad {match} zebraStripe={i % 2 == 1} />
+                {/if}
+            {/each}
+        {/if}
     </tbody>
 </table>
 
@@ -64,7 +83,6 @@
 
         border: 1px solid lightgray;
         border-radius: 8px;
-        clip-path: inset(0 0 0 0 round 8px);
     }
 
     tbody {

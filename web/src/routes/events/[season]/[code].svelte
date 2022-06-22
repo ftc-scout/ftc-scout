@@ -58,7 +58,10 @@
         </Card>
         <Card>
             <h2>Matches</h2>
-            <MatchTable matches={eventData.matches} />
+            <MatchTable
+                matches={eventData.matches}
+                isRemote={eventData.remote}
+            />
         </Card>
     {:else}
         <Card>That event does not exist</Card>

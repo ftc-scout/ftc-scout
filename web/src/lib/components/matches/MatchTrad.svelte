@@ -1,16 +1,17 @@
 <script lang="ts">
-    import type { EventPageMatchFragment } from "../../graphql/generated/graphql-operations";
+    import type {
+        EventPageMatchFragment,
+        FullMatchScores2021TraditionalFragment,
+    } from "../../graphql/generated/graphql-operations";
     import { sortStation } from "../../util/station-ordering";
+    import MatchDescription from "./MatchDescription.svelte";
     import MatchScore from "./MatchScore.svelte";
     import MatchTeam from "./MatchTeam.svelte";
 
     export let match: EventPageMatchFragment;
-    // export let scores: FullMatchScores2021TraditionalFragment;
-    export let scores: {
-        red: { totalPoints: number };
-        blue: { totalPoints: number };
-    };
+    export let zebraStripe: boolean;
 
+    $: scores = match.scores as FullMatchScores2021TraditionalFragment;
     $: sortedTeams = match.teams.sort((a, b) =>
         sortStation(a.station, b.station)
     );
@@ -23,44 +24,33 @@
             : "TIE";
 </script>
 
-<td
-    style:width="4.5em"
-    class:red={winner == "RED"}
-    class:blue={winner == "BLUE"}
-    class:tie={winner == "TIE"}
->
-    <strong>{match.matchDescription}</strong>
-</td>
+<tr class:zebra-stripe={zebraStripe}>
+    <MatchDescription {winner} description={match.matchDescription} />
 
-<MatchScore
-    red={scores.red.totalPoints}
-    blue={scores.blue.totalPoints}
-    {winner}
-/>
-
-{#each sortedTeams as team}
-    <MatchTeam
-        {team}
-        width={`calc((100% - 10.75em) / ${match.teams.length})`}
-        winner={team.station.startsWith(winner)}
+    <MatchScore
+        red={scores.red.totalPoints}
+        blue={scores.blue.totalPoints}
+        {winner}
     />
-{/each}
+
+    {#each sortedTeams as team}
+        <MatchTeam
+            {team}
+            width={`calc((100% - 10.75em) / ${match.teams.length})`}
+            winner={team.station.startsWith(winner)}
+        />
+    {/each}
+</tr>
 
 <style>
-    td {
-        display: inline-block;
-        padding-left: var(--gap);
+    tr {
+        display: table;
+        width: 100%;
+        max-width: 100%;
+        min-width: 100%;
     }
 
-    .red {
-        color: var(--color-team-red);
-    }
-
-    .blue {
-        color: var(--color-team-blue);
-    }
-
-    .tie {
-        color: var(--color-team-neutral);
+    .zebra-stripe {
+        background-color: var(--zebra-stripe-color);
     }
 </style>
