@@ -9,7 +9,7 @@ export const YEAR_MS = DAY_MS * 365;
 export const IS_PROD = process.env.NODE_ENV === "production";
 export const IS_DEV = !IS_PROD;
 
-export const SERVER_PORT = 4000;
+export const SERVER_PORT = +process.env.PORT;
 
 export const LOGGING = process.env.LOGGING == "1";
 

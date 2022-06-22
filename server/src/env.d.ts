@@ -6,5 +6,6 @@ declare namespace NodeJS {
         LOGGING: string;
         SESSION_SECRET: string;
         REDIS_URL: string;
+        PORT: string;
     }
 }
