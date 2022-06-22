@@ -17,9 +17,8 @@ import {
     IS_PROD,
     COOKIE_AGE,
     SESSION_SECRET,
-    REDIS_PORT,
-    REDIS_ORIGIN,
     CURRENT_SEASON,
+    REDIS_URL,
 } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
 import { FTCSDataSource } from "./db/data-source";
@@ -41,7 +40,7 @@ async function main() {
     const app = express();
 
     const RedisStore = connectRedis(session);
-    const redisClient = new Redis(REDIS_PORT, REDIS_ORIGIN);
+    const redisClient = new Redis(REDIS_URL);
 
     // Allow requests from our webpage.
     app.use(
@@ -119,16 +118,6 @@ async function main() {
     if (process.argv.includes("--load-teams")) {
         loadAllTeamsIntoDatabase(CURRENT_SEASON);
     }
-
-    // console.log(
-    //     (
-    //         await Match.findOneBy({
-    //             eventSeason: 2021,
-    //             eventCode: "USCALAAM0",
-    //             id: 3,
-    //         })
-    //     )?.scores2021
-    // );
 }
 
 main();
