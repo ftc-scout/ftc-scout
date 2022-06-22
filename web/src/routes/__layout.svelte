@@ -89,6 +89,7 @@
             243,
             var(--color-team-transparency)
         );
+        --color-team-neutral: rgb(170, 0, 255);
         --zebra-stripe-color: rgb(245, 245, 245);
 
         /* Fonts */

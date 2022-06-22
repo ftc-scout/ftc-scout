@@ -1,14 +1,26 @@
 <script lang="ts">
     export let red: number;
     export let blue: number;
-    export let winner: "RED" | "BLUE";
+    export let winner: "RED" | "BLUE" | "TIE";
 </script>
 
 <td style:width="6.25em">
     <div>
-        <span class="o l" class:winner={winner == "RED"}> {red} </span>
+        <span
+            class="o l"
+            class:winner={winner == "RED"}
+            class:tie={winner == "TIE"}
+        >
+            {red}
+        </span>
         <span>-</span>
-        <span class="o r" class:winner={winner == "BLUE"}> {blue} </span>
+        <span
+            class="o r"
+            class:winner={winner == "BLUE"}
+            class:tie={winner == "TIE"}
+        >
+            {blue}
+        </span>
     </div>
 </td>
 
@@ -32,6 +44,11 @@
 
     .r.winner {
         color: var(--color-team-blue);
+        font-weight: bold;
+    }
+
+    .tie {
+        color: var(--color-team-neutral);
         font-weight: bold;
     }
 

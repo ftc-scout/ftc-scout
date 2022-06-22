@@ -5,7 +5,7 @@
         FullMatchScores2021TraditionalFragment,
     } from "../../graphql/generated/graphql-operations";
     import Match2021Remote from "./Match2021Remote.svelte";
-    import Match2021Trad from "./Match2021Trad.svelte";
+    import Match2021Trad from "./MatchTrad.svelte";
 
     export let match: EventPageMatchFragment;
     export let zebraStripe: boolean;
