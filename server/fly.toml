@@ -10,6 +10,9 @@ processes = []
 
 [env]
   PORT = "8080"
+  WEB_URL="http://localhost:3000"
+  LOGGING="0"
+  REDIS_URL="redis://localhost:6379"
 
 [experimental]
   allowed_public_ports = []
