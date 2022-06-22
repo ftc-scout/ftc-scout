@@ -28,13 +28,35 @@
     query(team);
     $: teamData = $team.data?.teamByNumber;
 </script>
+<style>
+    /* Change this so im not plagiarizing off of someone else who may be working on this project */
+    .edit-button {
+    border: var(--theme-color) 2px solid;
+    text-decoration: none;
 
+    background-color: transparent;
+    color: var(--theme-color);
+    font-weight: bold;
+    font-size: var(--small-font-size);
+    padding: var(--padding) var(--ml-padding);
+    margin: 0 var(--small-gap);
+    border-radius: var(--pill-border-radius);
+
+    display: inline-block;
+
+    cursor: pointer;
+}
+.edit-button:hover {
+        /* maybe like add a fade in transition to the hover colours */
+        background-color: var(--theme-color);
+        color: var(--theme-text-color);
+    }
+</style>
 <MaxWidth width={"1000px"}>
     {#if !teamData}
         <Card>That team doesn't exist</Card>
     {:else}
         <Card>
-            <!-- Add goto command for team search and remove hudson block -->
             <h1>{teamData.number} - {teamData.name}</h1>
 
             <InfoIconRow icon={faSchool}>
@@ -59,9 +81,14 @@
 
             <DataFromFirst />
         </Card>
+        <button class="edit-button" type="button">Edit Document</button>
         <Card>
-            <!-- just put in what you want here in this second card -->
-            this team is cool!
+            <!-- TODO: have the button make it editable or not -->
+            <!-- TODO: Save changes made -->
+            <!-- TODO: Make it so you can only edit if your team matches the team you're editing -->
+            <p1 contenteditable="true">
+             This team is cool
+            </p1>
         </Card>
     {/if}
 </MaxWidth>
