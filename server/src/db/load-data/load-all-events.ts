@@ -4,6 +4,7 @@ import { FTCSDataSource } from "../data-source";
 import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { Event } from "../../db/entities/Event";
 import { DeepPartial } from "typeorm";
+import { DB_CHUNK_SIZE } from "../../constants";
 
 export async function loadAllEvents(season: Season) {
     console.log(`Fetching all events for season ${season}.`);
@@ -49,7 +50,7 @@ export async function loadAllEvents(season: Season) {
     });
 
     await FTCSDataSource.transaction(async (em) => {
-        await em.save(dbEvents);
+        await em.save(dbEvents, { chunk: DB_CHUNK_SIZE });
         await em.save(
             FtcApiMetadata.create({
                 season,

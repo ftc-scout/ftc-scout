@@ -19,9 +19,10 @@ export async function makeRequest(
             },
         }
     );
+    let text = await response.text();
     try {
-        return await response.json();
-    } catch {
+        return JSON.parse(text);
+    } catch (e) {
         return null;
     }
 }

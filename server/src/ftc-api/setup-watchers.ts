@@ -39,10 +39,14 @@ async function setupApiWatcher(
 ) {
     let lastMidnight = getLastMidnight();
     for (let func of funcsToRun) {
+        console.log("checking", await func.getTimeOfLastReq());
         if (((await func.getTimeOfLastReq()) ?? 0) < lastMidnight) {
+            console.log("running");
             await func.reqFunction();
         }
     }
+
+    console.log("setting timers");
 
     let nextMidnight = getNextMidnight();
     let currentTime = new Date();

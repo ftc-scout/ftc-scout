@@ -96,7 +96,6 @@ export class Match extends BaseEntity {
 
     @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
         cascade: true,
-        eager: true,
     })
     @TypeormLoader()
     scores2021!: MatchScores2021[];

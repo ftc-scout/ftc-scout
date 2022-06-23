@@ -6,6 +6,7 @@ export async function getMatches(
     season: Season,
     eventCode: string
 ): Promise<MatchFtcApi[]> {
+    console.log(`Requesting matches from ${season}/${eventCode}`);
     let [qual, playoff] = await Promise.all([
         makeRequest(
             `${season}/schedule/${eventCode}/qual/hybrid`,

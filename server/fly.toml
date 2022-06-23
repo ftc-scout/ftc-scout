@@ -1,45 +1,46 @@
 # fly.toml file generated for ftc-scout on 2022-06-22T15:40:56-07:00
-
 app = "ftc-scout"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
 [build]
-  builder = "heroku/buildpacks:20"
+builder = "heroku/buildpacks:20"
 
 [env]
-  PORT = "8080"
-  WEB_URL="http://localhost:3000"
-  LOGGING="0"
-  REDIS_URL="redis://localhost:6379"
+PORT = "8080"
+WEB_URL = "http://localhost:3000"
+LOGGING = "1"
+NODE_ENV = "production"
 
 [experimental]
-  allowed_public_ports = []
-  auto_rollback = true
+allowed_public_ports = []
+auto_rollback = true
+private_network = true
 
 [[services]]
-  http_checks = []
-  internal_port = 8080
-  processes = ["app"]
-  protocol = "tcp"
-  script_checks = []
-  [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
-    type = "connections"
+http_checks = []
+internal_port = 8080
+processes = ["app"]
+protocol = "tcp"
+script_checks = []
 
-  [[services.ports]]
-    force_https = true
-    handlers = ["http"]
-    port = 80
+[services.concurrency]
+hard_limit = 25
+soft_limit = 20
+type = "connections"
 
-  [[services.ports]]
-    handlers = ["tls", "http"]
-    port = 443
+[[services.ports]]
+force_https = true
+handlers = ["http"]
+port = 80
 
-  [[services.tcp_checks]]
-    grace_period = "1s"
-    interval = "15s"
-    restart_limit = 0
-    timeout = "2s"
+[[services.ports]]
+handlers = ["tls", "http"]
+port = 443
+
+[[services.tcp_checks]]
+grace_period = "1s"
+interval = "15s"
+restart_limit = 0
+timeout = "2s"

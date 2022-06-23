@@ -8,6 +8,9 @@
         },
         {
             "path": "markdown folder"
+        },
+        {
+            "path": "fly-redis"
         }
     ],
     "settings": {

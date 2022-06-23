@@ -12,7 +12,7 @@ import { buildSchema } from "type-graphql";
 import {
     SERVER_PORT,
     IS_DEV,
-    WEB_ORIGIN,
+    // WEB_ORIGIN,
     COOKIE_NAME,
     IS_PROD,
     COOKIE_AGE,
@@ -33,6 +33,9 @@ import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { Season } from "./ftc-api/types/Season";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
+// import { DeepPartial, getConnection } from "typeorm";
+// import { Match } from "./db/entities/Match";
+// import { TournamentLevel } from "./db/entities/types/TournamentLevel";
 
 async function main() {
     await FTCSDataSource.initialize();
@@ -41,13 +44,18 @@ async function main() {
 
     const RedisStore = connectRedis(session);
     const redisClient = new Redis(REDIS_URL);
+    redisClient.on("error", function (error) {
+        error;
+        // console.dir(error);
+    });
 
     // Allow requests from our webpage.
     app.use(
-        cors({
-            origin: WEB_ORIGIN,
-            credentials: true,
-        })
+        cors()
+        // {
+        // origin: WEB_ORIGIN,
+        // credentials: true,
+        // }
     );
 
     // Initialize sessions
@@ -72,6 +80,7 @@ async function main() {
 
     // Initialize the apollo graphql server.
     const apolloServer = new ApolloServer({
+        introspection: true,
         schema: await buildSchema({
             resolvers,
             validate: false,
@@ -118,6 +127,17 @@ async function main() {
     if (process.argv.includes("--load-teams")) {
         loadAllTeamsIntoDatabase(CURRENT_SEASON);
     }
+
+    // await Match.create({
+    //     eventSeason: 2021,
+    //     eventCode: "AUCMP",
+    //     id: 11505001,
+    //     hasBeenPlayed: true,
+    //     scheduledStartTime: new Date(),
+    //     tournamentLevel: TournamentLevel.QUALS,
+    //     series: 0
+    // } as DeepPartial<Match>).save();
+    // console.log("SAVED")
 }
 
 main();

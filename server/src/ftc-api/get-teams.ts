@@ -17,6 +17,7 @@ export async function getAllTeams(
             await getOneTeamsPage(season, currentPage, since);
         teams = teams.concat(pageTeams);
         currentPage = nextPage;
+        await new Promise((r) => setTimeout(r, 500));
     }
 
     return teams;
@@ -27,16 +28,20 @@ async function getOneTeamsPage(
     page: number,
     since: Date | null
 ): Promise<{ pageTeams: TeamFtcApi[]; nextPage: number | null }> {
+    console.log("fetching page ", page);
     let resp = await makeRequest(`${season}/teams`, { page }, since);
     if (resp) {
         let teams: TeamFtcApi[] = resp["teams"];
         let maxPage = resp["pageTotal"];
+
+        console.log("got ", teams.length, " teams out of ", maxPage, " pages ");
 
         return {
             pageTeams: teams,
             nextPage: page === maxPage ? null : page + 1,
         };
     } else {
+        console.log("got nothing");
         return {
             pageTeams: [],
             nextPage: null,

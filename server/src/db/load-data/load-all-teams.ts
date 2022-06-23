@@ -1,4 +1,5 @@
 import { DeepPartial } from "typeorm";
+import { DB_CHUNK_SIZE } from "../../constants";
 import { getAllTeams } from "../../ftc-api/get-teams";
 import { Season } from "../../ftc-api/types/Season";
 import { FTCSDataSource } from "../data-source";
@@ -39,7 +40,7 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
     ).filter((x): x is Team => !!x);
 
     await FTCSDataSource.transaction(async (em) => {
-        await em.save(dbTeams);
+        await em.save(dbTeams, { chunk: DB_CHUNK_SIZE });
         await em.save(
             FtcApiMetadata.create({
                 season,

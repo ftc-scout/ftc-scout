@@ -1,0 +1,20 @@
+# fly.toml file generated for ftc-scout-redis on 2022-06-22T16:33:55-07:00
+app = "ftc-scout-redis"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[build]
+image = "flyio/redis:6.2.6"
+
+[env]
+
+[experimental]
+allowed_public_ports = []
+auto_rollback = true
+
+[[services]]
+
+[[mounts]]
+source = "redis_server"
+destination = "/data"

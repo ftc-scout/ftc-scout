@@ -26,6 +26,7 @@ import {
 } from "../../ftc-api/types/match-scores/MatchScores";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
 import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
+import { DB_CHUNK_SIZE } from "../../constants";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -74,10 +75,15 @@ export async function loadAllMatches(season: Season) {
                 chunkEvents
             );
 
-            await em.save(dbMatches, { chunk: 500 });
-            await em.save(dbTeamMatchParticipations, { chunk: 500 });
+            console.log(
+                dbMatches.length,
+                "matches to insert.",
+                dbTeamMatchParticipations.length,
+                "tmps to insert"
+            );
 
-            console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
+            await em.save(dbMatches, { chunk: DB_CHUNK_SIZE });
+            await em.save(dbTeamMatchParticipations, { chunk: DB_CHUNK_SIZE });
         }
 
         await em.save(
