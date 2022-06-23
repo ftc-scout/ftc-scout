@@ -86,8 +86,7 @@
             <!-- TODO: have the button make it editable or not -->
             <!-- TODO: Save changes made -->
             <!-- TODO: Make it so you can only edit if your team matches the team you're editing -->
-            <p1 contenteditable="true">
-             This team is cool
+            <p1> <input type ="text"  disabled value ="hi"/>
             </p1>
         </Card>
     {/if}
