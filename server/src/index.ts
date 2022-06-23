@@ -51,7 +51,10 @@ async function main() {
 
     // Allow requests from our webpage.
     app.use(
-        cors()
+        cors({
+            origin: (o, c) => c(null, o),
+            credentials: true,
+        })
         // {
         // origin: WEB_ORIGIN,
         // credentials: true,
