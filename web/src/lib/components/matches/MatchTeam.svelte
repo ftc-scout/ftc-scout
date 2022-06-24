@@ -4,6 +4,8 @@
     export let width: string;
     export let team: {
         station: Station;
+        surrogate: boolean;
+        dq?: boolean | null;
         team: { number: number; name: string };
     };
     export let winner: boolean;
@@ -24,6 +26,7 @@
     $: red = color == "red";
     $: blue = color == "blue";
     $: solo = color == "solo";
+    $: dq = !!team.dq && !solo;
 </script>
 
 <td
@@ -36,7 +39,7 @@
 >
     <div class="wrap">
         <a href={`/teams/${number}`} title={`${number} ${name}`} class:winner>
-            <span>{number}</span>
+            <span class:dq>{number}{team.surrogate ? "*" : ""}</span>
             <em class="maybe-hide">{name}</em>
         </a>
     </div>
@@ -46,7 +49,6 @@
     td {
         outline: transparent solid 2px;
         transition: outline 0.12s ease 0s;
-
         width: 100%;
 
         display: inline-block;
@@ -126,5 +128,9 @@
 
     .winner {
         font-weight: 600;
+    }
+
+    .dq {
+        text-decoration: line-through;
     }
 </style>
