@@ -27,6 +27,13 @@
     query(team);
     let teamData: TeamQuery["teamByNumber"] | null;
     $: teamData = $team.data?.teamByNumber;
+
+    $: sortedEvents = teamData?.events.sort(
+        (a, b) =>
+            new Date(b.event.start as string).getTime() -
+            new Date(a.event.start as string).getTime()
+    );
+    $: console.log(teamData, sortedEvents);
 </script>
 
 <MaxWidth width={"1000px"}>
@@ -59,7 +66,7 @@
             <DataFromFirst />
         </Card>
 
-        {#each teamData.events as teamEvent}
+        {#each sortedEvents as teamEvent}
             {@const event = teamEvent.event}
             <Card>
                 <h2>{event.name}</h2>

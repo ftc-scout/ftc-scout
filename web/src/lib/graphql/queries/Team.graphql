@@ -12,6 +12,7 @@ query Team($number: Int!) {
             event {
                 name
                 remote
+                start
                 matchesForTeam(teamNumber: $number) {
                     match {
                         ...EventPageMatch
