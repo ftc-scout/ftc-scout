@@ -1,9 +1,17 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    DeepPartial,
+    Entity,
+    ManyToOne,
+    PrimaryColumn,
+} from "typeorm";
 import { Team } from "./Team";
 import { Event, EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";
 import { TypeormLoader } from "type-graphql-dataloader";
+import { RankingFtcApi } from "../../ftc-api/types/TeamRanking";
 
 @ObjectType()
 @Entity()
@@ -57,4 +65,23 @@ export class TeamEventParticipation extends BaseEntity {
     matchesPlayed!: number;
 
     //matchesCounted: number //This field also exists but I'm not sure what it is
+
+    static fromApi(
+        season: Season,
+        ec: string,
+        api: RankingFtcApi
+    ): TeamEventParticipation {
+        return TeamEventParticipation.create({
+            eventSeason: season,
+            eventCode: ec,
+            teamNumber: api.teamNumber,
+            rank: api.rank,
+            wins: api.wins,
+            losses: api.losses,
+            ties: api.ties,
+            qualAverage: api.qualAverage,
+            dq: api.dq,
+            matchesPlayed: api.matchesCounted,
+        } as DeepPartial<TeamEventParticipation>);
+    }
 }

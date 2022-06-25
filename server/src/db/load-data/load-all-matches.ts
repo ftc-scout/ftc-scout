@@ -26,6 +26,9 @@ import {
 } from "../../ftc-api/types/match-scores/MatchScores";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
 import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
+import { getEventRankings } from "../../ftc-api/get-rankings";
+import { RankingFtcApi } from "../../ftc-api/types/TeamRanking";
+import { TeamEventParticipation } from "../entities/TeamEventParticipation";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -64,18 +67,21 @@ export async function loadAllMatches(season: Season) {
                     eventCode: ec,
                     matches: await getMatches(season, ec),
                     matchScores: await getMatchScores(season, ec),
+                    rankings: await getEventRankings(season, ec),
                 }))
             );
 
             console.log("Fetched from API. Inserting into db.");
 
-            let { dbMatches, dbTeamMatchParticipations } = createDbEntities(
-                season,
-                chunkEvents
-            );
+            let {
+                dbMatches,
+                dbTeamMatchParticipations,
+                dbTeamEventParticipations,
+            } = createDbEntities(season, chunkEvents);
 
             await em.save(dbMatches, { chunk: 500 });
             await em.save(dbTeamMatchParticipations, { chunk: 500 });
+            await em.save(dbTeamEventParticipations, { chunk: 500 });
 
             console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
         }
@@ -95,10 +101,12 @@ function createDbEntities(
         eventCode: string;
         matches: MatchFtcApi[];
         matchScores: MatchScoresFtcApi[];
+        rankings: RankingFtcApi[];
     }[]
 ): {
     dbMatches: Match[];
     dbTeamMatchParticipations: TeamMatchParticipation[];
+    dbTeamEventParticipations: TeamEventParticipation[];
 } {
     let dbMatches: Match[] = [];
     let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
@@ -193,9 +201,17 @@ function createDbEntities(
         }
     }
 
+    let dbTeamEventParticipations: TeamEventParticipation[] = apiEvents.flatMap(
+        (e) =>
+            e.rankings.map((r) =>
+                TeamEventParticipation.fromApi(season, e.eventCode, r)
+            )
+    );
+
     return {
         dbMatches,
         dbTeamMatchParticipations,
+        dbTeamEventParticipations,
     };
 }
 

@@ -36,9 +36,15 @@ export async function makeRequest(
     );
 
     let text = (await response.text()).trim();
-    if (text == "") {
+    // Sometimes the api returns the html for a page if it doesn't have data. Fun!
+    if (text == "" || text.startsWith("<!DOCTYPE html>")) {
         return null;
     } else {
-        return JSON.parse(text);
+        try {
+            return JSON.parse(text);
+        } catch (e) {
+            console.log(url, params, sinceDate, text);
+            throw e;
+        }
     }
 }

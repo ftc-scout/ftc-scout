@@ -8,5 +8,16 @@ query Team($number: Int!) {
         country
         schoolName
         rookieYear
+        events {
+            event {
+                name
+                remote
+                matchesForTeam(teamNumber: $number) {
+                    match {
+                        ...EventPageMatch
+                    }
+                }
+            }
+        }
     }
 }
