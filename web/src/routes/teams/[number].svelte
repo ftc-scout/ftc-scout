@@ -33,7 +33,6 @@
             new Date(b.event.start as string).getTime() -
             new Date(a.event.start as string).getTime()
     );
-    $: console.log(teamData, sortedEvents);
 </script>
 
 <MaxWidth width={"1000px"}>
