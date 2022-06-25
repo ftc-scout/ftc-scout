@@ -6,6 +6,7 @@
     export let zebraStripe: boolean;
 
     $: team = matches[0].teams[0];
+    $: noShows = matches.map((m) => m.teams[0].noShow);
     $: scores = matches.map((m) => (m.scores as any)?.totalPoints);
     $: totalPoints = scores.reduce((a, b) => a + b, 0);
 </script>
@@ -13,8 +14,12 @@
 <tr class:zebra-stripe={zebraStripe}>
     <MatchTeam {team} width="" winner={false} border />
 
-    {#each scores as score}
-        <td class="score">{score}</td>
+    {#each scores as score, i}
+        <td class:score={!noShows[i]}>
+            {#if !noShows[i]}
+                {score}
+            {/if}
+        </td>
     {/each}
 
     <td class="total">{totalPoints}</td>

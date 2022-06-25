@@ -24,6 +24,9 @@
         .sort((a, b) => a.id - b.id);
 
     $: soloMatches = groupBy(matches, (m) => m.id - (m.id % 1000));
+
+    $: anySurrogate = matches.some((m) => m.teams.some((t) => t.surrogate));
+    $: anyDq = matches.some((m) => m.teams.some((t) => t.dq));
 </script>
 
 <table>
@@ -75,6 +78,18 @@
     </tbody>
 </table>
 
+<div style="padding-top: var(--small-padding)">
+    {#if anySurrogate && !isRemote}
+        <div class="explain">* Surrogate</div>
+    {/if}
+
+    {#if anyDq && !isRemote}
+        <div class="explain" style="text-decoration: line-through">
+            Disqualified or No Show
+        </div>
+    {/if}
+</div>
+
 <style>
     table {
         border-spacing: 0;
@@ -87,5 +102,9 @@
 
     tbody {
         display: block;
+    }
+
+    .explain {
+        padding-left: var(--small-padding);
     }
 </style>

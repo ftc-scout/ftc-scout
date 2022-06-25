@@ -6,6 +6,8 @@
         station: Station;
         surrogate: boolean;
         dq?: boolean | null;
+        noShow: boolean;
+        onField: boolean;
         team: { number: number; name: string };
     };
     export let winner: boolean;
@@ -26,7 +28,16 @@
     $: red = color == "red";
     $: blue = color == "blue";
     $: solo = color == "solo";
+
     $: dq = !!team.dq && !solo;
+    $: noShow = team.noShow && !solo;
+    $: surrogate = team.surrogate;
+
+    $: title =
+        `${number} ${name}` +
+        (dq ? " (Disqualified)" : "") +
+        (noShow ? " (No Show)" : "") +
+        (surrogate ? " (Surrogate)" : "");
 </script>
 
 <td
@@ -34,12 +45,13 @@
     class:blue
     class:solo
     class:border
+    class:not-on-field={!team.onField}
     style:max-width={width}
     style:min-width={width}
 >
     <div class="wrap">
-        <a href={`/teams/${number}`} title={`${number} ${name}`} class:winner>
-            <span class:dq>{number}{team.surrogate ? "*" : ""}</span>
+        <a href={`/teams/${number}`} {title} class:winner>
+            <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
             <em class="maybe-hide">{name}</em>
         </a>
     </div>
@@ -132,5 +144,9 @@
 
     .dq {
         text-decoration: line-through;
+    }
+
+    .not-on-field {
+        color: gray;
     }
 </style>
