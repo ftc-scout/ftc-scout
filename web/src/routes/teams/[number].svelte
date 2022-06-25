@@ -27,8 +27,6 @@
     query(team);
     let teamData: TeamQuery["teamByNumber"] | null;
     $: teamData = $team.data?.teamByNumber;
-
-    $: console.log($team.data);
 </script>
 
 <MaxWidth width={"1000px"}>
@@ -68,6 +66,7 @@
                 <MatchTable
                     isRemote={event.remote}
                     matches={event.matchesForTeam.map((mt) => mt.match)}
+                    teamFocus={teamData.number}
                 />
             </Card>
         {/each}

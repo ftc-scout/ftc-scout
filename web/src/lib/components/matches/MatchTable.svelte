@@ -12,6 +12,7 @@
 
     export let matches: EventPageMatchFragment[];
     export let isRemote: boolean;
+    export let teamFocus: number | null = null;
 
     $: qualsMatches = matches
         .filter((m) => m.tournamentLevel == TournamentLevel.Quals)
@@ -51,7 +52,7 @@
 
             {#each finalsMatches as match, i}
                 {#if match}
-                    <MatchTrad {match} zebraStripe={i % 2 == 1} />
+                    <MatchTrad {match} {teamFocus} zebraStripe={i % 2 == 1} />
                 {/if}
             {/each}
 
@@ -61,7 +62,7 @@
 
             {#each semisMatches as match, i}
                 {#if match}
-                    <MatchTrad {match} zebraStripe={i % 2 == 1} />
+                    <MatchTrad {match} {teamFocus} zebraStripe={i % 2 == 1} />
                 {/if}
             {/each}
 
@@ -71,7 +72,7 @@
 
             {#each qualsMatches as match, i}
                 {#if match}
-                    <MatchTrad {match} zebraStripe={i % 2 == 1} />
+                    <MatchTrad {match} {teamFocus} zebraStripe={i % 2 == 1} />
                 {/if}
             {/each}
         {/if}

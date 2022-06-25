@@ -7,10 +7,11 @@
         surrogate: boolean;
         dq?: boolean | null;
         noShow: boolean;
-        onField: boolean;
+        onField?: boolean | null;
         team: { number: number; name: string };
     };
     export let winner: boolean;
+    export let focused = false;
     export let border = false;
 
     $: number = team.team.number;
@@ -45,6 +46,7 @@
     class:blue
     class:solo
     class:border
+    class:focused
     class:not-on-field={!team.onField}
     style:max-width={width}
     style:min-width={width}
@@ -148,5 +150,15 @@
 
     .not-on-field {
         color: gray;
+    }
+
+    .focused.red {
+        background-color: var(--color-team-red);
+        color: white;
+    }
+
+    .focused.blue {
+        background-color: var(--color-team-blue);
+        color: white;
     }
 </style>
