@@ -14,14 +14,18 @@
     import { prettyPrintURL } from "$lib/util/format/pretty-print-url";
     import {
         faGlobe,
+        faCalendarAlt,
         faLocationDot,
         faSchool,
         faPlus,
+        faTrophy,
     } from "@fortawesome/free-solid-svg-icons";
     import DataFromFirst from "../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../lib/components/InfoIconRow.svelte";
     import type { TeamQuery } from "../../lib/graphql/generated/graphql-operations";
     import MatchTable from "../../lib/components/matches/MatchTable.svelte";
+    import { prettyPrintDateRangeString } from "../../lib/util/format/pretty-print-date";
+    import { prettyPrintOrdinal } from "../../lib/util/format/pretty-print-ordinal";
 
     export let team: OperationStore<TeamQuery>;
     query(team);
@@ -32,7 +36,7 @@
         (a, b) =>
             new Date(b.event.start as string).getTime() -
             new Date(a.event.start as string).getTime()
-    );
+    )!;
 </script>
 
 <MaxWidth width={"1000px"}>
@@ -68,7 +72,36 @@
         {#each sortedEvents as teamEvent}
             {@const event = teamEvent.event}
             <Card>
-                <h2>{event.name}</h2>
+                <h2>
+                    <a
+                        class="event-link"
+                        href={`/events/${event.season}/${event.code}`}
+                    >
+                        {event.name}
+                    </a>
+                </h2>
+
+                <InfoIconRow icon={faCalendarAlt}>
+                    {prettyPrintDateRangeString(event.start, event.end)}
+                </InfoIconRow>
+
+                <InfoIconRow icon={faLocationDot}>
+                    {event.venue}, {event.city}, {event.stateOrProvince},
+                    {event.country}
+                </InfoIconRow>
+
+                <InfoIconRow icon={faTrophy}>
+                    <b>{prettyPrintOrdinal(teamEvent.rank)}</b> place (quals)
+                </InfoIconRow>
+
+                {#if !event.remote}
+                    <InfoIconRow icon={null}>
+                        W-L-T: <b>
+                            {teamEvent.wins}-{teamEvent.losses}-{teamEvent.ties}
+                        </b>
+                    </InfoIconRow>
+                {/if}
+
                 <MatchTable
                     isRemote={event.remote}
                     matches={event.matchesForTeam.map((mt) => mt.match)}
@@ -105,9 +138,19 @@
 
         cursor: pointer;
     }
+
     .edit-button:hover {
         /* maybe like add a fade in transition to the hover colours */
         background-color: var(--theme-color);
         color: var(--theme-text-color);
+    }
+
+    .event-link {
+        color: inherit;
+        text-decoration: none;
+    }
+
+    .event-link:hover {
+        text-decoration: underline;
     }
 </style>

@@ -9,10 +9,21 @@ query Team($number: Int!) {
         schoolName
         rookieYear
         events {
+            rank
+            wins
+            losses
+            ties
             event {
                 name
                 remote
                 start
+                end
+                code
+                season
+                venue
+                city
+                stateOrProvince
+                country
                 matchesForTeam(teamNumber: $number) {
                     match {
                         ...EventPageMatch

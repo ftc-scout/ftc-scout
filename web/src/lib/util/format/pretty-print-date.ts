@@ -8,6 +8,10 @@ export function prettyPrintDateRange(start: Date, end: Date): string {
     }
 }
 
+export function prettyPrintDateRangeString(start: string, end: string): string {
+    return prettyPrintDateRange(new Date(start), new Date(end));
+}
+
 function prettyPrintDate(date: Date): string {
     return date.toLocaleDateString(undefined, {
         day: "numeric",
