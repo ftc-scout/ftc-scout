@@ -4,17 +4,23 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
+    DeepPartial,
     Entity,
     ManyToOne,
     OneToMany,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { MatchFtcApi } from "../../ftc-api/types/Match";
 import { Season } from "../../ftc-api/types/Season";
 import { Event, EVENT_CODE_LEN } from "./Event";
 import { MatchScores2021 } from "./MatchScores2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
-import { TournamentLevel } from "./types/TournamentLevel";
+import { Alliance } from "./types/Alliance";
+import {
+    TournamentLevel,
+    tournamentLevelFromApi,
+} from "./types/TournamentLevel";
 
 @ObjectType()
 @Entity()
@@ -108,4 +114,60 @@ export class Match extends BaseEntity {
     @Field()
     @UpdateDateColumn()
     updatedAt!: Date;
+
+    redTotalPoints(): number | null {
+        if (this.scores2021) {
+            return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0]
+                .totalPoints;
+        } else {
+            return null;
+        }
+    }
+
+    blueTotalPoints(): number | null {
+        if (this.scores2021) {
+            return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0]
+                .totalPoints;
+        } else {
+            return null;
+        }
+    }
+
+    soloPoints(): number | null {
+        if (this.scores2021) {
+            return this.scores2021[0].totalPoints;
+        } else {
+            return null;
+        }
+    }
+
+    static fromApi(
+        season: Season,
+        eventCode: string,
+        apiMatch: MatchFtcApi,
+        isRemote: boolean
+    ): Match {
+        let tournamentLevel = tournamentLevelFromApi(apiMatch.tournamentLevel);
+        let matchId = isRemote
+            ? Match.encodeMatchIdRemote(
+                  apiMatch.matchNumber,
+                  apiMatch.teams[0].teamNumber
+              )
+            : Match.encodeMatchIdTraditional(
+                  apiMatch.matchNumber,
+                  tournamentLevel,
+                  apiMatch.series
+              );
+        return Match.create({
+            eventSeason: season,
+            eventCode,
+            id: matchId,
+            hasBeenPlayed: !!apiMatch.postResultTime,
+            scheduledStartTime: apiMatch.startTime,
+            actualStartTime: apiMatch.actualStartTime,
+            postResultTime: apiMatch.postResultTime,
+            tournamentLevel,
+            series: apiMatch.series,
+        } as DeepPartial<Match>);
+    }
 }

@@ -1,6 +1,11 @@
 export interface MatchFtcApi {
     description: string;
-    tournamentLevel: string;
+    tournamentLevel:
+        | "OTHER"
+        | "QUALIFICATION"
+        | "SEMIFINAL"
+        | "FINAL"
+        | "PLAYOFF";
     series: number;
     matchNumber: number;
     startTime: string;
@@ -17,7 +22,7 @@ export interface MatchFtcApi {
 
 export interface TeamMatchParticipationFtcApi {
     teamNumber: number;
-    station: string;
+    station: "Red1" | "Red2" | "Red3" | "Blue1" | "Blue2" | "Blue3" | "1";
     surrogate: boolean;
     noShow: boolean | null;
     dq: boolean | null;

@@ -2,6 +2,7 @@ import { Field, Int, ObjectType } from "type-graphql";
 import {
     BaseEntity,
     Column,
+    DeepPartial,
     Entity,
     JoinColumn,
     ManyToOne,
@@ -11,8 +12,9 @@ import { Match } from "./Match";
 import { Team } from "./Team";
 import { EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";
-import { Station } from "./types/Station";
+import { Station, stationFromFtcApi } from "./types/Station";
 import { TypeormLoader } from "type-graphql-dataloader";
+import { TeamMatchParticipationFtcApi } from "../../ftc-api/types/Match";
 
 @ObjectType()
 @Entity()
@@ -75,4 +77,23 @@ export class TeamMatchParticipation extends BaseEntity {
     @Field(() => Boolean, { nullable: true })
     @Column("bool", { nullable: true })
     onField!: boolean | null;
+
+    static fromApi(
+        season: Season,
+        eventCode: string,
+        matchId: number,
+        team: TeamMatchParticipationFtcApi
+    ): TeamMatchParticipation {
+        return TeamMatchParticipation.create({
+            season: season,
+            eventCode,
+            matchId,
+            teamNumber: team.teamNumber,
+            station: stationFromFtcApi(team.station),
+            surrogate: team.surrogate,
+            noShow: team.noShow,
+            dq: team.dq,
+            onField: team.onField,
+        } as DeepPartial<TeamMatchParticipation>);
+    }
 }

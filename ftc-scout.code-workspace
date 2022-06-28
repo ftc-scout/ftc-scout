@@ -11,6 +11,6 @@
         }
     ],
     "settings": {
-        "cSpell.words": ["timestamptz", "typeorm"]
+        "cSpell.words": ["QUALS", "timestamptz", "tmps", "typeorm"]
     }
 }

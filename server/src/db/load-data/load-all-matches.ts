@@ -1,34 +1,21 @@
-import {
-    Between,
-    DeepPartial,
-    LessThanOrEqual,
-    MoreThanOrEqual,
-} from "typeorm";
+import { Between, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { getMatches } from "../../ftc-api/get-matches";
 import { Season } from "../../ftc-api/types/Season";
 import { FTCSDataSource } from "../data-source";
 import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { Match } from "../entities/Match";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
-import { Station } from "../entities/types/Station";
-import {
-    TournamentLevel,
-    tournamentLevelFromApi,
-} from "../entities/types/TournamentLevel";
+import { tournamentLevelFromApi } from "../entities/types/TournamentLevel";
 import { Event } from "../entities/Event";
 import { MatchFtcApi } from "../../ftc-api/types/Match";
 import { MatchScores2021 } from "../entities/MatchScores2021";
 import { getMatchScores } from "../../ftc-api/get-match-scores";
-import {
-    isMatchScores2021Remote,
-    isMatchScores2021Trad,
-    MatchScoresFtcApi,
-} from "../../ftc-api/types/match-scores/MatchScores";
+import { MatchScoresFtcApi } from "../../ftc-api/types/match-scores/MatchScores";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
 import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
-import { getEventRankings } from "../../ftc-api/get-rankings";
-import { RankingFtcApi } from "../../ftc-api/types/TeamRanking";
 import { TeamEventParticipation } from "../entities/TeamEventParticipation";
+import { getTeamsAtEvent } from "../../ftc-api/get-teams";
+import { calculateEventStatistics } from "../../logic/calculate-event-statistics";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -64,10 +51,11 @@ export async function loadAllMatches(season: Season) {
             const chunk = eventCodes.slice(i, i + chunkSize);
             let chunkEvents = await Promise.all(
                 chunk.map(async (ec) => ({
-                    eventCode: ec,
-                    matches: await getMatches(season, ec),
-                    matchScores: await getMatchScores(season, ec),
-                    rankings: await getEventRankings(season, ec),
+                    eventCode: ec.code,
+                    remote: ec.remote,
+                    matches: await getMatches(season, ec.code),
+                    matchScores: await getMatchScores(season, ec.code),
+                    teams: await getTeamsAtEvent(season, ec.code),
                 }))
             );
 
@@ -99,74 +87,50 @@ function createDbEntities(
     season: Season,
     apiEvents: {
         eventCode: string;
+        remote: boolean;
         matches: MatchFtcApi[];
         matchScores: MatchScoresFtcApi[];
-        rankings: RankingFtcApi[];
+        teams: number[];
     }[]
 ): {
     dbMatches: Match[];
     dbTeamMatchParticipations: TeamMatchParticipation[];
     dbTeamEventParticipations: TeamEventParticipation[];
 } {
-    let dbMatches: Match[] = [];
-    let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
+    let dbMatchesAll: Match[] = [];
+    let dbTeamMatchParticipationsAll: TeamMatchParticipation[] = [];
+    let dbTeamEventParticipationsAll: TeamEventParticipation[] = [];
 
-    for (let { eventCode, matches, matchScores } of apiEvents) {
+    for (let { eventCode, remote, matches, matchScores, teams } of apiEvents) {
+        let dbMatches: Match[] = [];
+        let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
+
         for (let match of matches) {
-            let tournamentLevel = {
-                QUALIFICATION: TournamentLevel.QUALS,
-                SEMIFINAL: TournamentLevel.SEMIS,
-                FINAL: TournamentLevel.FINALS,
-                OTHER: TournamentLevel.QUALS, // No idea what these are
-                PLAYOFF: TournamentLevel.FINALS, // ???
-            }[match.tournamentLevel]!;
-            let isRemote = match.teams.length == 1;
-            let matchId = isRemote
-                ? Match.encodeMatchIdRemote(
-                      match.matchNumber,
-                      match.teams[0].teamNumber
-                  )
-                : Match.encodeMatchIdTraditional(
-                      match.matchNumber,
-                      tournamentLevel,
-                      match.series
-                  );
-            let dbMatch = Match.create({
-                eventSeason: season,
-                eventCode,
-                id: matchId,
-                hasBeenPlayed: !!match.postResultTime,
-                scheduledStartTime: match.startTime,
-                actualStartTime: match.actualStartTime,
-                postResultTime: match.postResultTime,
-                tournamentLevel,
-                series: match.series,
-            } as DeepPartial<Match>);
+            let dbMatch = Match.fromApi(season, eventCode, match, remote);
 
             let thisMatchScores = findMatchScoresForMatchNum(
-                matchId,
+                dbMatch.id,
                 matchScores
             );
             if (thisMatchScores) {
-                switch (season) {
-                    case Season.FREIGHT_FRENZY:
-                        if (isMatchScores2021Trad(thisMatchScores)) {
-                            dbMatch.scores2021 = MatchScores2021.fromTradApi(
+                switch ([season, remote]) {
+                    case [Season.FREIGHT_FRENZY, false]:
+                        dbMatch.scores2021 = MatchScores2021.fromTradApi(
+                            season,
+                            eventCode,
+                            dbMatch.id,
+                            thisMatchScores as MatchScores2021TradFtcApi
+                        );
+                        break;
+                    case [Season.FREIGHT_FRENZY, true]:
+                        dbMatch.scores2021 = [
+                            MatchScores2021.fromApiRemote(
                                 season,
                                 eventCode,
-                                matchId,
-                                thisMatchScores
-                            );
-                        } else if (isMatchScores2021Remote(thisMatchScores)) {
-                            dbMatch.scores2021 = [
-                                MatchScores2021.fromApiRemote(
-                                    season,
-                                    eventCode,
-                                    matchId,
-                                    thisMatchScores
-                                ),
-                            ];
-                        }
+                                dbMatch.id,
+                                thisMatchScores as MatchScores2021RemoteFtcApi
+                            ),
+                        ];
                         break;
                     default:
                         throw `Cannot load match scores for season ${season}`;
@@ -177,41 +141,34 @@ function createDbEntities(
             for (let team of match.teams) {
                 if (!team.teamNumber) continue;
 
-                let dbTeamMatchParticipation = TeamMatchParticipation.create({
-                    season: season,
+                let dbTeamMatchParticipation = TeamMatchParticipation.fromApi(
+                    season,
                     eventCode,
-                    matchId,
-                    teamNumber: team.teamNumber,
-                    station: {
-                        Red1: Station.RED_1,
-                        Red2: Station.RED_2,
-                        Red3: Station.RED_3,
-                        Blue1: Station.BLUE_1,
-                        Blue2: Station.BLUE_2,
-                        Blue3: Station.BLUE_3,
-                        1: Station.SOLO,
-                    }[team.station],
-                    surrogate: team.surrogate,
-                    noShow: team.noShow,
-                    dq: team.dq,
-                    onField: team.onField,
-                } as DeepPartial<TeamMatchParticipation>);
+                    dbMatch.id,
+                    team
+                );
                 dbTeamMatchParticipations.push(dbTeamMatchParticipation);
             }
         }
+
+        let dbTeamEventParticipations = calculateEventStatistics(
+            season,
+            eventCode,
+            teams,
+            dbMatches,
+            dbTeamMatchParticipations,
+            remote
+        );
+
+        dbMatchesAll.push(...dbMatches);
+        dbTeamMatchParticipationsAll.push(...dbTeamMatchParticipations);
+        dbTeamEventParticipationsAll.push(...dbTeamEventParticipations);
     }
 
-    let dbTeamEventParticipations: TeamEventParticipation[] = apiEvents.flatMap(
-        (e) =>
-            e.rankings.map((r) =>
-                TeamEventParticipation.fromApi(season, e.eventCode, r)
-            )
-    );
-
     return {
-        dbMatches,
-        dbTeamMatchParticipations,
-        dbTeamEventParticipations,
+        dbMatches: dbMatchesAll,
+        dbTeamMatchParticipations: dbTeamMatchParticipationsAll,
+        dbTeamEventParticipations: dbTeamEventParticipationsAll,
     };
 }
 
@@ -243,12 +200,13 @@ async function getEventCodesToLoadMatchesFrom(
     season: Season,
     dateStartQuery: Date,
     dateLastReq: Date | null
-): Promise<string[]> {
+): Promise<{ code: string; remote: boolean }[]> {
     let events = !dateLastReq
         ? await Event.findBy({ season }) // Get all events because we haven't made a request yet.
         : await Event.find({
               select: {
                   code: true,
+                  remote: true,
               },
               where: [
                   // Get events that were ongoing anytime between the last query and now
@@ -266,5 +224,5 @@ async function getEventCodesToLoadMatchesFrom(
                   },
               ],
           });
-    return events.map((e) => e.code);
+    return events;
 }
