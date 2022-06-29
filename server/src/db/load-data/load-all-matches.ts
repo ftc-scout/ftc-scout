@@ -34,11 +34,12 @@ export async function loadAllMatches(season: Season) {
 
     console.log("Getting event codes.");
 
-    let eventCodes = await getEventCodesToLoadMatchesFrom(
-        season,
-        dateStartQuery,
-        dateLastReq
-    );
+    // let eventCodes = await getEventCodesToLoadMatchesFrom(
+    // season,
+    // dateStartQuery,
+    // dateLastReq
+    // );
+    let eventCodes = [{ code: "USCALACMP", remote: false }];
 
     console.log("Loading matches from api.");
 
@@ -47,6 +48,7 @@ export async function loadAllMatches(season: Season) {
         const chunkSize = 25;
         for (let i = 0; i < eventCodes.length; i += chunkSize) {
             console.log(`Starting chunk starting at ${i}.`);
+            console.log("Fetching from api.");
 
             const chunk = eventCodes.slice(i, i + chunkSize);
             let chunkEvents = await Promise.all(
@@ -59,13 +61,15 @@ export async function loadAllMatches(season: Season) {
                 }))
             );
 
-            console.log("Fetched from API. Inserting into db.");
+            console.log("Calculating.");
 
             let {
                 dbMatches,
                 dbTeamMatchParticipations,
                 dbTeamEventParticipations,
             } = createDbEntities(season, chunkEvents);
+
+            console.log("Inserting into db.");
 
             await em.save(dbMatches, { chunk: 500 });
             await em.save(dbTeamMatchParticipations, { chunk: 500 });

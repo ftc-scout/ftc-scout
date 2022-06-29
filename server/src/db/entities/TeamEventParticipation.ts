@@ -63,4 +63,8 @@ export class TeamEventParticipation extends BaseEntity {
     @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     matchesPlayed!: number | null;
+
+    @Field(() => Float, { nullable: true })
+    @Column("float", { nullable: true })
+    opr!: number | null;
 }

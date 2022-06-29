@@ -33,7 +33,6 @@ import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { Season } from "./ftc-api/types/Season";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
-import { calculateOPR } from "./logic/calculate-opr";
 
 async function main() {
     await FTCSDataSource.initialize();

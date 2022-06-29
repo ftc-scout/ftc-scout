@@ -5,6 +5,7 @@ import { TeamMatchParticipation } from "../db/entities/TeamMatchParticipation";
 import { stationIsBlue, stationIsRed } from "../db/entities/types/Station";
 import { TournamentLevel } from "../db/entities/types/TournamentLevel";
 import { Season } from "../ftc-api/types/Season";
+import { calculateOPR } from "./calculate-opr";
 
 export function calculateEventStatistics(
     eventSeason: Season,
@@ -86,6 +87,44 @@ export function calculateEventStatistics(
                 participations[t].qualPoints! /
                 participations[t].qualMatchesPlayed!;
         });
+
+        console.log(matches.length);
+        let oprRecords = matches.flatMap((match) => {
+            if (!match.hasBeenPlayed) return [];
+            // if (match.tournamentLevel != TournamentLevel.QUALS) return []; // Maybe?
+
+            let [rTeam1, rTeam2] = getRedTeams(tmps, match.id);
+            let [bTeam1, bTeam2] = getBlueTeams(tmps, match.id);
+
+            // Sometimes there is only one alliance for some reason?
+            let records = [];
+            if (rTeam1 && rTeam2) {
+                records.push({
+                    team1: rTeam1,
+                    team2: rTeam2,
+                    result: match.redTotalPoints()!,
+                });
+            }
+            if (bTeam1 && bTeam2) {
+                records.push({
+                    team1: bTeam1,
+                    team2: bTeam2,
+                    result: match.blueTotalPoints()!,
+                });
+            }
+            return records;
+        });
+
+        let oprs = calculateOPR(oprRecords);
+
+        Object.entries(oprs).forEach(([teamNumber, opr]) => {
+            try {
+                participations[+teamNumber].opr = opr;
+            } catch (err) {
+                console.log(teamNumber, opr);
+                throw err;
+            }
+        });
     } else {
         tmps.forEach((tmp) => {
             participations[tmp.teamNumber].qualPoints = 0;
@@ -105,6 +144,16 @@ export function calculateEventStatistics(
             if (tmp.dq) {
                 participations[tmp.teamNumber].dq!++;
             }
+            participations[tmp.teamNumber].matchesPlayed!++;
+        });
+
+        let teamsWithMatches = getTeams(tmps);
+
+        teamsWithMatches.forEach((t) => {
+            participations[t].qualAverage =
+                participations[t].qualPoints! /
+                participations[t].qualMatchesPlayed!;
+            participations[t].opr = participations[t].qualAverage;
         });
     }
 
@@ -121,13 +170,19 @@ export function calculateEventStatistics(
 
 function getRedTeams(tmps: TeamMatchParticipation[], id: number): number[] {
     return tmps
-        .filter((tmp) => tmp.matchId == id && stationIsRed(tmp.station))
+        .filter(
+            (tmp) =>
+                tmp.matchId == id && stationIsRed(tmp.station) && tmp.onField
+        )
         .map((tmp) => tmp.teamNumber);
 }
 
 function getBlueTeams(tmps: TeamMatchParticipation[], id: number): number[] {
     return tmps
-        .filter((tmp) => tmp.matchId == id && stationIsBlue(tmp.station))
+        .filter(
+            (tmp) =>
+                tmp.matchId == id && stationIsBlue(tmp.station) && tmp.onField
+        )
         .map((tmp) => tmp.teamNumber);
 }
 
