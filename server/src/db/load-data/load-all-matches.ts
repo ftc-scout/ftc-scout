@@ -113,27 +113,24 @@ function createDbEntities(
                 matchScores
             );
             if (thisMatchScores) {
-                switch ([season, remote]) {
-                    case [Season.FREIGHT_FRENZY, false]:
-                        dbMatch.scores2021 = MatchScores2021.fromTradApi(
+                if (season == Season.FREIGHT_FRENZY && !remote) {
+                    dbMatch.scores2021 = MatchScores2021.fromTradApi(
+                        season,
+                        eventCode,
+                        dbMatch.id,
+                        thisMatchScores as MatchScores2021TradFtcApi
+                    );
+                } else if (season == Season.FREIGHT_FRENZY && remote) {
+                    dbMatch.scores2021 = [
+                        MatchScores2021.fromApiRemote(
                             season,
                             eventCode,
                             dbMatch.id,
-                            thisMatchScores as MatchScores2021TradFtcApi
-                        );
-                        break;
-                    case [Season.FREIGHT_FRENZY, true]:
-                        dbMatch.scores2021 = [
-                            MatchScores2021.fromApiRemote(
-                                season,
-                                eventCode,
-                                dbMatch.id,
-                                thisMatchScores as MatchScores2021RemoteFtcApi
-                            ),
-                        ];
-                        break;
-                    default:
-                        throw `Cannot load match scores for season ${season}`;
+                            thisMatchScores as MatchScores2021RemoteFtcApi
+                        ),
+                    ];
+                } else {
+                    throw `Cannot load match scores for season ${season}`;
                 }
             }
             dbMatches.push(dbMatch);

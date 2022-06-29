@@ -199,7 +199,7 @@ export class MatchScores2021 extends BaseEntity {
                     : 20
                 : 0) +
             (this.autoBonus2
-                ? this.barcodeElement == BarcodeElement2021.DUCK
+                ? this.barcodeElement2 == BarcodeElement2021.DUCK
                     ? 10
                     : 20
                 : 0);

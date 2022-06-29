@@ -12,8 +12,8 @@ export async function makeRequest(
     while (true) {
         let now = Date.now();
 
-        if (lastRequest > now - 200) {
-            await new Promise((r) => setTimeout(r, lastRequest + 200 - now));
+        if (lastRequest > now - 400) {
+            await new Promise((r) => setTimeout(r, lastRequest + 400 - now));
         } else {
             break;
         }
@@ -24,16 +24,15 @@ export async function makeRequest(
     const paramsString = Object.entries(params)
         .map((x) => `${x[0]}=${x[1]}`)
         .join("&");
-    let response = await fetch(
-        `http://ftc-api.firstinspires.org/v2.0/${url}?${paramsString}`,
-        {
-            headers: {
-                Authorization: `Basic ${FTC_API_KEY}`,
-                "FMS-OnlyModifiedSince":
-                    sinceDate?.toLocaleDateString("en-US") ?? "",
-            },
-        }
-    );
+    let fullUrl = `http://ftc-api.firstinspires.org/v2.0/${url}?${paramsString}`;
+    console.log(`Making a request to ${fullUrl}`);
+    let response = await fetch(fullUrl, {
+        headers: {
+            Authorization: `Basic ${FTC_API_KEY}`,
+            "FMS-OnlyModifiedSince":
+                sinceDate?.toLocaleDateString("en-US") ?? "",
+        },
+    });
 
     let text = (await response.text()).trim();
     // Sometimes the api returns the html for a page if it doesn't have data. Fun!

@@ -56,7 +56,7 @@ async function getOneTeamsPage(
 
         return {
             pageTeams: teams,
-            nextPage: page === maxPage ? null : page + 1,
+            nextPage: page >= maxPage ? null : page + 1,
         };
     } else {
         return {

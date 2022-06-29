@@ -39,40 +39,42 @@ export function calculateEventStatistics(
         for (let match of matches) {
             if (!match.hasBeenPlayed) continue;
 
-            if (match.redTotalPoints()! > match.blueTotalPoints()!) {
-                getRedTeams(tmps, match.id).forEach(
-                    (t) => participations[t].wins!++
-                );
-                getBlueTeams(tmps, match.id).forEach(
-                    (t) => participations[t].losses!++
-                );
-            } else if (match.blueTotalPoints()! > match.redTotalPoints()!) {
-                getBlueTeams(tmps, match.id).forEach(
-                    (t) => participations[t].wins!++
-                );
-                getRedTeams(tmps, match.id).forEach(
-                    (t) => participations[t].losses!++
-                );
-            } else {
-                getMatchTeams(tmps, match.id).forEach(
-                    (t) => participations[t.teamNumber].ties!++
-                );
+            if (match.tournamentLevel == TournamentLevel.QUALS) {
+                if (match.redTotalPoints()! > match.blueTotalPoints()!) {
+                    getRedTeams(tmps, match.id).forEach(
+                        (t) => participations[t].wins!++
+                    );
+                    getBlueTeams(tmps, match.id).forEach(
+                        (t) => participations[t].losses!++
+                    );
+                } else if (match.blueTotalPoints()! > match.redTotalPoints()!) {
+                    getBlueTeams(tmps, match.id).forEach(
+                        (t) => participations[t].wins!++
+                    );
+                    getRedTeams(tmps, match.id).forEach(
+                        (t) => participations[t].losses!++
+                    );
+                } else {
+                    getMatchTeams(tmps, match.id).forEach(
+                        (t) => participations[t.teamNumber].ties!++
+                    );
+                }
             }
 
             getMatchTeams(tmps, match.id).forEach((t) => {
                 participations[t.teamNumber].matchesPlayed!++;
                 if (match.tournamentLevel == TournamentLevel.QUALS) {
                     participations[t.teamNumber].qualMatchesPlayed!++;
+                    if (stationIsRed(t.station)) {
+                        participations[t.teamNumber].qualPoints! +=
+                            match.redTotalPoints()!;
+                    } else {
+                        participations[t.teamNumber].qualPoints! +=
+                            match.blueTotalPoints()!;
+                    }
                 }
                 if (t.dq) {
                     participations[t.teamNumber].dq!++;
-                }
-                if (stationIsRed(t.station)) {
-                    participations[t.teamNumber].qualPoints! +=
-                        match.redTotalPoints()!;
-                } else {
-                    participations[t.teamNumber].qualPoints! +=
-                        match.blueTotalPoints()!;
                 }
             });
         }
@@ -81,7 +83,8 @@ export function calculateEventStatistics(
 
         teamsWithMatches.forEach((t) => {
             participations[t].qualAverage =
-                participations[t].qualPoints! / participations[t].qualAverage!;
+                participations[t].qualPoints! /
+                participations[t].qualMatchesPlayed!;
         });
     } else {
         tmps.forEach((tmp) => {
@@ -93,6 +96,8 @@ export function calculateEventStatistics(
 
         tmps.forEach((tmp) => {
             let match = getMatch(matches, tmp);
+
+            if (!match.hasBeenPlayed) return;
 
             participations[tmp.teamNumber].qualPoints! += match.soloPoints()!;
             participations[tmp.teamNumber].qualMatchesPlayed!++;
@@ -106,10 +111,9 @@ export function calculateEventStatistics(
     let rankedTeams = Object.entries(participations)
         .filter(([_, v]) => !!v.qualPoints)
         .map(([k, v]) => [+k, v.qualPoints!] as const)
-        .sort(([_ka, a], [_kb, b]) => a - b);
-
-    for (let rank = 1; rank <= rankedTeams.length; rank++) {
-        participations[rankedTeams[rank][0]].rank = rank;
+        .sort(([_ka, a], [_kb, b]) => b - a);
+    for (let rank = 0; rank < rankedTeams.length; rank++) {
+        participations[rankedTeams[rank][0]].rank = rank + 1;
     }
 
     return Object.values(participations);
