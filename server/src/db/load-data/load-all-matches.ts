@@ -34,12 +34,11 @@ export async function loadAllMatches(season: Season) {
 
     console.log("Getting event codes.");
 
-    // let eventCodes = await getEventCodesToLoadMatchesFrom(
-    // season,
-    // dateStartQuery,
-    // dateLastReq
-    // );
-    let eventCodes = [{ code: "USCALACMP", remote: false }];
+    let eventCodes = await getEventCodesToLoadMatchesFrom(
+        season,
+        dateStartQuery,
+        dateLastReq
+    );
 
     console.log("Loading matches from api.");
 
