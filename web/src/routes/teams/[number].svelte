@@ -181,8 +181,4 @@
     .event-link:hover {
         text-decoration: underline;
     }
-
-    .small-stat {
-        margin-right: var(--small-gap);
-    }
 </style>
