@@ -4,7 +4,7 @@ import { AutoNavigation2021 } from "../../db/entities/types/2021/AutoNavigation2
 import { BarcodeElement2021 } from "../../db/entities/types/2021/BarcodeElement2021";
 import { EndgamePark2021 } from "../../db/entities/types/2021/EndgamePark2021";
 
-@ObjectType("MatchScores2021Remote")
+@ObjectType("MatchScores2021Remote", { simpleResolvers: true })
 export class MatchScores2021RemoteGraphql {
     constructor(dbScore: MatchScores2021) {
         this.randomization = dbScore.randomization;

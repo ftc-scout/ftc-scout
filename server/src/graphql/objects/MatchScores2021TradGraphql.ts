@@ -4,7 +4,7 @@ import { AutoNavigation2021 } from "../../db/entities/types/2021/AutoNavigation2
 import { BarcodeElement2021 } from "../../db/entities/types/2021/BarcodeElement2021";
 import { EndgamePark2021 } from "../../db/entities/types/2021/EndgamePark2021";
 
-@ObjectType("MatchScores2021TraditionalAlliance")
+@ObjectType("MatchScores2021TraditionalAlliance", { simpleResolvers: true })
 export class MatchScores2021TradAllianceGraphql {
     constructor(dbScore: MatchScores2021) {
         this.barcodeElement1 = dbScore.barcodeElement;
