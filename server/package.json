@@ -28,6 +28,7 @@
         "express-session": "^1.17.3",
         "ioredis": "^4.28.5",
         "isomorphic-fetch": "^3.0.0",
+        "mathjs": "^10.6.4",
         "nodemon": "^2.0.16",
         "pg": "^8.7.3",
         "pg-protocol": "^1.5.0",
