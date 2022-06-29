@@ -13,6 +13,9 @@ query Team($number: Int!) {
             wins
             losses
             ties
+            qualPoints
+            qualAverage
+            opr
             event {
                 name
                 remote

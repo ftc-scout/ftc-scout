@@ -22,10 +22,14 @@
     } from "@fortawesome/free-solid-svg-icons";
     import DataFromFirst from "../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../lib/components/InfoIconRow.svelte";
-    import type { TeamQuery } from "../../lib/graphql/generated/graphql-operations";
+    import type {
+        TeamDocument,
+        TeamQuery,
+    } from "../../lib/graphql/generated/graphql-operations";
     import MatchTable from "../../lib/components/matches/MatchTable.svelte";
     import { prettyPrintDateRangeString } from "../../lib/util/format/pretty-print-date";
     import { prettyPrintOrdinal } from "../../lib/util/format/pretty-print-ordinal";
+    import { prettyPrintFloat } from "../../lib/util/format/pretty-print-float";
 
     export let team: OperationStore<TeamQuery>;
     query(team);
@@ -90,15 +94,39 @@
                     {event.country}
                 </InfoIconRow>
 
-                <InfoIconRow icon={faTrophy}>
-                    <b>{prettyPrintOrdinal(teamEvent.rank)}</b> place (quals)
-                </InfoIconRow>
+                {#if teamEvent.rank}
+                    <InfoIconRow icon={faTrophy}>
+                        <b>{prettyPrintOrdinal(teamEvent.rank)}</b> place (quals)
+                    </InfoIconRow>
+                {/if}
 
-                {#if !event.remote}
+                {#if typeof teamEvent.wins == "number" && typeof teamEvent.losses == "number" && typeof teamEvent.ties == "number"}
                     <InfoIconRow icon={null}>
                         W-L-T: <b>
                             {teamEvent.wins}-{teamEvent.losses}-{teamEvent.ties}
                         </b>
+                    </InfoIconRow>
+                {/if}
+
+                {@const rp = typeof teamEvent.qualPoints == "number"}
+                {@const opr = typeof teamEvent.opr == "number" && !event.remote}
+                {@const avg = typeof teamEvent.qualAverage == "number"}
+
+                {#if rp || opr || avg}
+                    <InfoIconRow icon={null}>
+                        {#if typeof teamEvent.qualPoints == "number"}
+                            <b>{teamEvent.qualPoints}</b> RP{opr || avg
+                                ? " · "
+                                : ""}
+                        {/if}
+                        {#if typeof teamEvent.opr == "number" && !event.remote}
+                            <b>{prettyPrintFloat(teamEvent.opr)}</b> OPR{avg
+                                ? " · "
+                                : ""}
+                        {/if}
+                        {#if typeof teamEvent.qualAverage == "number"}
+                            <b>{prettyPrintFloat(teamEvent.qualAverage)}</b> AVG
+                        {/if}
                     </InfoIconRow>
                 {/if}
 
@@ -152,5 +180,9 @@
 
     .event-link:hover {
         text-decoration: underline;
+    }
+
+    .small-stat {
+        margin-right: var(--small-gap);
     }
 </style>
