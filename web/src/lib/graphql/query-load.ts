@@ -8,7 +8,7 @@ export function queryLoad<Data = any, Variables = object>(
     name: string,
     query: string | DocumentNode | TypedDocumentNode<Data, Variables>,
     variablesProducer?: Variables | ((event: LoadEvent) => Variables),
-    contextIn?: Partial<OperationContext & { pause: boolean }>
+    context?: Partial<OperationContext & { pause: boolean }>
 ): Load {
     return async function load(event: LoadEvent) {
         let variables =
