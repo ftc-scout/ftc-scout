@@ -10,7 +10,6 @@
 </script>
 
 <script lang="ts">
-    import MaxWidth from "../../../lib/components/MaxWidth.svelte";
     import Card from "../../../lib/components/Card.svelte";
     import {
         faCalendarAlt,
@@ -33,36 +32,31 @@
     $: endDate = new Date(eventData?.end);
 </script>
 
-<Loading store={event}>
-    <MaxWidth width={"1250px"}>
-        <Card>
-            <h1>{eventData.season} {eventData.name}</h1>
+<Loading store={event} width={"1250px"}>
+    <Card>
+        <h1>{eventData.season} {eventData.name}</h1>
 
-            <InfoIconRow icon={faCalendarAlt}>
-                {prettyPrintDateRange(startDate, endDate)}
+        <InfoIconRow icon={faCalendarAlt}>
+            {prettyPrintDateRange(startDate, endDate)}
+        </InfoIconRow>
+
+        {#if eventData.website}
+            <InfoIconRow icon={faGlobe}>
+                <a href={eventData.website}>
+                    {prettyPrintURL(eventData.website)}
+                </a>
             </InfoIconRow>
+        {/if}
 
-            {#if eventData.website}
-                <InfoIconRow icon={faGlobe}>
-                    <a href={eventData.website}>
-                        {prettyPrintURL(eventData.website)}
-                    </a>
-                </InfoIconRow>
-            {/if}
+        <InfoIconRow icon={faLocationDot}>
+            {eventData.venue}, {eventData.city}, {eventData.stateOrProvince},
+            {eventData.country}
+        </InfoIconRow>
 
-            <InfoIconRow icon={faLocationDot}>
-                {eventData.venue}, {eventData.city}, {eventData.stateOrProvince},
-                {eventData.country}
-            </InfoIconRow>
-
-            <DataFromFirst />
-        </Card>
-        <Card>
-            <h2>Matches</h2>
-            <MatchTable
-                matches={eventData.matches}
-                isRemote={eventData.remote}
-            />
-        </Card>
-    </MaxWidth>
+        <DataFromFirst />
+    </Card>
+    <Card>
+        <h2>Matches</h2>
+        <MatchTable matches={eventData.matches} isRemote={eventData.remote} />
+    </Card>
 </Loading>

@@ -9,7 +9,6 @@
 </script>
 
 <script lang="ts">
-    import MaxWidth from "$lib/components/MaxWidth.svelte";
     import Card from "$lib/components/Card.svelte";
     import { prettyPrintURL } from "$lib/util/format/pretty-print-url";
     import {
@@ -40,107 +39,105 @@
     )!;
 </script>
 
-<Loading store={team}>
-    <MaxWidth width={"1000px"}>
-        <Card>
-            <h1>{teamData.number} - {teamData.name}</h1>
+<Loading store={team} width={"1000px"}>
+    <Card>
+        <h1>{teamData.number} - {teamData.name}</h1>
 
-            <InfoIconRow icon={faSchool}>
-                {teamData.schoolName}
+        <InfoIconRow icon={faSchool}>
+            {teamData.schoolName}
+        </InfoIconRow>
+
+        {#if teamData.website}
+            <InfoIconRow icon={faGlobe}>
+                <a class="content" href={teamData.website}>
+                    {prettyPrintURL(teamData.website)}
+                </a>
+            </InfoIconRow>
+        {/if}
+
+        <InfoIconRow icon={faLocationDot}>
+            {teamData.city}, {teamData.stateOrProvince}, {teamData.country}
+        </InfoIconRow>
+
+        <InfoIconRow icon={faPlus}>
+            Rookie Year: {teamData.rookieYear}
+        </InfoIconRow>
+
+        <DataFromFirst />
+    </Card>
+
+    {#each sortedEvents as teamEvent}
+        {@const event = teamEvent.event}
+        <Card>
+            <h2>
+                <a
+                    class="event-link"
+                    href={`/events/${event.season}/${event.code}`}
+                >
+                    {event.name}
+                </a>
+            </h2>
+
+            <InfoIconRow icon={faCalendarAlt}>
+                {prettyPrintDateRangeString(event.start, event.end)}
             </InfoIconRow>
 
-            {#if teamData.website}
-                <InfoIconRow icon={faGlobe}>
-                    <a class="content" href={teamData.website}>
-                        {prettyPrintURL(teamData.website)}
-                    </a>
+            <InfoIconRow icon={faLocationDot}>
+                {event.venue}, {event.city}, {event.stateOrProvince},
+                {event.country}
+            </InfoIconRow>
+
+            {#if teamEvent.rank}
+                <InfoIconRow icon={faTrophy}>
+                    <b>{prettyPrintOrdinal(teamEvent.rank)}</b> place (quals)
                 </InfoIconRow>
             {/if}
 
-            <InfoIconRow icon={faLocationDot}>
-                {teamData.city}, {teamData.stateOrProvince}, {teamData.country}
-            </InfoIconRow>
-
-            <InfoIconRow icon={faPlus}>
-                Rookie Year: {teamData.rookieYear}
-            </InfoIconRow>
-
-            <DataFromFirst />
-        </Card>
-
-        {#each sortedEvents as teamEvent}
-            {@const event = teamEvent.event}
-            <Card>
-                <h2>
-                    <a
-                        class="event-link"
-                        href={`/events/${event.season}/${event.code}`}
-                    >
-                        {event.name}
-                    </a>
-                </h2>
-
-                <InfoIconRow icon={faCalendarAlt}>
-                    {prettyPrintDateRangeString(event.start, event.end)}
+            {#if typeof teamEvent.wins == "number" && typeof teamEvent.losses == "number" && typeof teamEvent.ties == "number"}
+                <InfoIconRow icon={null}>
+                    W-L-T: <b>
+                        {teamEvent.wins}-{teamEvent.losses}-{teamEvent.ties}
+                    </b>
                 </InfoIconRow>
+            {/if}
 
-                <InfoIconRow icon={faLocationDot}>
-                    {event.venue}, {event.city}, {event.stateOrProvince},
-                    {event.country}
+            {@const rp = typeof teamEvent.qualPoints == "number"}
+            {@const opr = typeof teamEvent.opr == "number" && !event.remote}
+            {@const avg = typeof teamEvent.qualAverage == "number"}
+
+            {#if rp || opr || avg}
+                <InfoIconRow icon={null}>
+                    {#if typeof teamEvent.qualPoints == "number"}
+                        <b>{teamEvent.qualPoints}</b> RP{opr || avg
+                            ? " · "
+                            : ""}
+                    {/if}
+                    {#if typeof teamEvent.opr == "number" && !event.remote}
+                        <b>{prettyPrintFloat(teamEvent.opr)}</b> OPR{avg
+                            ? " · "
+                            : ""}
+                    {/if}
+                    {#if typeof teamEvent.qualAverage == "number"}
+                        <b>{prettyPrintFloat(teamEvent.qualAverage)}</b> AVG
+                    {/if}
                 </InfoIconRow>
+            {/if}
 
-                {#if teamEvent.rank}
-                    <InfoIconRow icon={faTrophy}>
-                        <b>{prettyPrintOrdinal(teamEvent.rank)}</b> place (quals)
-                    </InfoIconRow>
-                {/if}
-
-                {#if typeof teamEvent.wins == "number" && typeof teamEvent.losses == "number" && typeof teamEvent.ties == "number"}
-                    <InfoIconRow icon={null}>
-                        W-L-T: <b>
-                            {teamEvent.wins}-{teamEvent.losses}-{teamEvent.ties}
-                        </b>
-                    </InfoIconRow>
-                {/if}
-
-                {@const rp = typeof teamEvent.qualPoints == "number"}
-                {@const opr = typeof teamEvent.opr == "number" && !event.remote}
-                {@const avg = typeof teamEvent.qualAverage == "number"}
-
-                {#if rp || opr || avg}
-                    <InfoIconRow icon={null}>
-                        {#if typeof teamEvent.qualPoints == "number"}
-                            <b>{teamEvent.qualPoints}</b> RP{opr || avg
-                                ? " · "
-                                : ""}
-                        {/if}
-                        {#if typeof teamEvent.opr == "number" && !event.remote}
-                            <b>{prettyPrintFloat(teamEvent.opr)}</b> OPR{avg
-                                ? " · "
-                                : ""}
-                        {/if}
-                        {#if typeof teamEvent.qualAverage == "number"}
-                            <b>{prettyPrintFloat(teamEvent.qualAverage)}</b> AVG
-                        {/if}
-                    </InfoIconRow>
-                {/if}
-
-                <MatchTable
-                    isRemote={event.remote}
-                    matches={event.matchesForTeam.map((mt) => mt.match)}
-                    teamFocus={teamData.number}
-                />
-            </Card>
-        {/each}
-
-        <button class="edit-button" type="button">Edit Document</button>
-        <Card>
-            <!-- TODO: have the button make it editable or not -->
-            <!-- TODO: Save changes made -->
-            <!-- TODO: Make it so you can only edit if your team matches the team you're editing -->
-            <p1> <input type="text" disabled value="hi" /> </p1>
+            <MatchTable
+                isRemote={event.remote}
+                matches={event.matchesForTeam.map((mt) => mt.match)}
+                teamFocus={teamData.number}
+            />
         </Card>
-    </MaxWidth>
+    {/each}
+
+    <button class="edit-button" type="button">Edit Document</button>
+    <Card>
+        <!-- TODO: have the button make it editable or not -->
+        <!-- TODO: Save changes made -->
+        <!-- TODO: Make it so you can only edit if your team matches the team you're editing -->
+        <p1> <input type="text" disabled value="hi" /> </p1>
+    </Card>
 </Loading>
 
 <style>
