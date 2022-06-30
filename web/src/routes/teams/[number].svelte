@@ -22,19 +22,16 @@
     } from "@fortawesome/free-solid-svg-icons";
     import DataFromFirst from "../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../lib/components/InfoIconRow.svelte";
-    import type {
-        TeamDocument,
-        TeamQuery,
-    } from "../../lib/graphql/generated/graphql-operations";
+    import type { TeamQuery } from "../../lib/graphql/generated/graphql-operations";
     import MatchTable from "../../lib/components/matches/MatchTable.svelte";
     import { prettyPrintDateRangeString } from "../../lib/util/format/pretty-print-date";
     import { prettyPrintOrdinal } from "../../lib/util/format/pretty-print-ordinal";
     import { prettyPrintFloat } from "../../lib/util/format/pretty-print-float";
+    import Loading from "../../lib/components/Loading.svelte";
 
     export let team: OperationStore<TeamQuery>;
     query(team);
-    let teamData: TeamQuery["teamByNumber"] | null;
-    $: teamData = $team.data?.teamByNumber;
+    $: teamData = $team.data?.teamByNumber!;
 
     $: sortedEvents = teamData?.events.sort(
         (a, b) =>
@@ -43,10 +40,8 @@
     )!;
 </script>
 
-<MaxWidth width={"1000px"}>
-    {#if !teamData}
-        <Card>That team doesn't exist</Card>
-    {:else}
+<Loading store={team}>
+    <MaxWidth width={"1000px"}>
         <Card>
             <h1>{teamData.number} - {teamData.name}</h1>
 
@@ -145,8 +140,8 @@
             <!-- TODO: Make it so you can only edit if your team matches the team you're editing -->
             <p1> <input type="text" disabled value="hi" /> </p1>
         </Card>
-    {/if}
-</MaxWidth>
+    </MaxWidth>
+</Loading>
 
 <style>
     /* Change this so im not plagiarizing off of someone else who may be working on this project */

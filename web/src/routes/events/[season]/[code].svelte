@@ -23,17 +23,18 @@
     import InfoIconRow from "../../../lib/components/InfoIconRow.svelte";
     import type { EventPageQuery } from "../../../lib/graphql/generated/graphql-operations";
     import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
+    import Loading from "../../../lib/components/Loading.svelte";
 
     export let event: OperationStore<EventPageQuery>;
     query(event);
-    $: eventData = $event.data?.eventByCode;
+    $: eventData = $event.data?.eventByCode!;
 
     $: startDate = new Date(eventData?.start);
     $: endDate = new Date(eventData?.end);
 </script>
 
-<MaxWidth width={"1250px"}>
-    {#if eventData}
+<Loading store={event}>
+    <MaxWidth width={"1250px"}>
         <Card>
             <h1>{eventData.season} {eventData.name}</h1>
 
@@ -63,7 +64,5 @@
                 isRemote={eventData.remote}
             />
         </Card>
-    {:else}
-        <Card>That event does not exist</Card>
-    {/if}
-</MaxWidth>
+    </MaxWidth>
+</Loading>
