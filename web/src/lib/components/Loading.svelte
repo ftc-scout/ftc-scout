@@ -1,16 +1,16 @@
 <script lang="ts">
-    import type { OperationStore } from "@urql/svelte";
     import MaxWidth from "./MaxWidth.svelte";
     import Skeleton from "./skeleton/Skeleton.svelte";
+    import type { ApolloQueryResult } from "@apollo/client";
 
-    export let store: OperationStore;
+    export let store: ApolloQueryResult<unknown>;
     export let width: string;
 </script>
 
 <MaxWidth {width}>
-    {#if $store.fetching}
+    {#if store.loading}
         <Skeleton />
-    {:else if $store.data == null}
+    {:else if store.data == null}
         doesn't exist
     {:else}
         <slot />

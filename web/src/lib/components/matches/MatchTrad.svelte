@@ -13,7 +13,7 @@
     export let zebraStripe: boolean;
 
     $: scores = match.scores as FullMatchScores2021TraditionalFragment;
-    $: sortedTeams = match.teams.sort((a, b) =>
+    $: sortedTeams = [...match.teams].sort((a, b) =>
         sortStation(a.station, b.station)
     );
     let winner: "RED" | "BLUE" | "TIE";

@@ -1,24 +1,26 @@
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { Load, LoadEvent } from "@sveltejs/kit";
-import type { OperationContext } from "@urql/svelte";
 import type { DocumentNode } from "graphql";
-import { derived, readable } from "svelte/store";
+import { readable } from "svelte/store";
+import { apolloClient } from "./client";
 
 export function queryLoad<Data = any, Variables = object>(
     name: string,
-    query: string | DocumentNode | TypedDocumentNode<Data, Variables>,
-    variablesProducer?: Variables | ((event: LoadEvent) => Variables),
-    context?: Partial<OperationContext & { pause: boolean }>
+    query: DocumentNode | TypedDocumentNode<Data, Variables>,
+    variablesProducer: Variables | ((event: LoadEvent) => Variables)
 ): Load {
     return async function load(event: LoadEvent) {
         let variables =
             typeof variablesProducer === "function"
                 ? (variablesProducer as (event: LoadEvent) => Variables)(event)
                 : variablesProducer;
-        let queryResult = await event.stuff.query!(query, variables, context);
+        let queryResult = await apolloClient.query({
+            query,
+            variables,
+        });
 
         // Update the errors for the page
-        event.stuff.serverError.set(derived(queryResult, (qr) => qr.error));
+        // event.stuff.serverError.set(derived(queryResult, (qr) => qr.error));
 
         return {
             props: {

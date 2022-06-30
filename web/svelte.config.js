@@ -8,7 +8,14 @@ const config = {
         adapter: adapter(),
         vite: {
             ssr: {
-                noExternal: ["@fortawesome/free-solid-svg-icons"],
+                noExternal: [
+                    "@fortawesome/free-solid-svg-icons",
+                    "@apollo/client",
+                    "svelte-apollo",
+                ],
+            },
+            optimizeDeps: {
+                exclude: ["@apollo/client", "svelte-apollo"],
             },
         },
     },

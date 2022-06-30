@@ -1,6 +1,5 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { mutation } from "@urql/svelte";
     import { writable, type Writable } from "svelte/store";
     import Form from "../lib/components/form/Form.svelte";
     import type { FormError } from "../lib/components/form/FormError";

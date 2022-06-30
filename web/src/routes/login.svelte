@@ -1,6 +1,5 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
-    import { mutation } from "@urql/svelte";
     import { writable, type Writable } from "svelte/store";
     import Form from "../lib/components/form/Form.svelte";
     import type { FormError } from "../lib/components/form/FormError";
@@ -8,6 +7,7 @@
     import TextInput from "../lib/components/form/TextInput.svelte";
     import MaxWidth from "../lib/components/MaxWidth.svelte";
     import { LoginDocument } from "../lib/graphql/generated/graphql-operations";
+    import { mutation } from "svelte-apollo";
 
     let username: string = "";
     let password: string = "";
@@ -17,11 +17,12 @@
 
     let errors: Writable<FormError[]> = writable([]);
 
-    const loginMutation = mutation({ query: LoginDocument });
+    const loginMutation = mutation(LoginDocument);
 
     async function login() {
-        const response = (await loginMutation({ username, password })).data
-            ?.login;
+        const response = (
+            (await loginMutation({ username, password } as any)).data as any
+        ).login;
         if (response?.errors) {
             $errors = response?.errors;
         } else {

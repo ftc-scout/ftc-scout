@@ -1,7 +1,6 @@
 <script context="module" lang="ts">
     import { EventPageDocument } from "../../../lib/graphql/generated/graphql-operations";
     import { queryLoad } from "../../../lib/graphql/query-load";
-    import { query, type OperationStore } from "@urql/svelte";
 
     export const load = queryLoad("event", EventPageDocument, ({ params }) => ({
         season: +params.season,
@@ -23,10 +22,10 @@
     import type { EventPageQuery } from "../../../lib/graphql/generated/graphql-operations";
     import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
     import Loading from "../../../lib/components/Loading.svelte";
+    import type { ApolloQueryResult } from "@apollo/client";
 
-    export let event: OperationStore<EventPageQuery>;
-    query(event);
-    $: eventData = $event.data?.eventByCode!;
+    export let event: ApolloQueryResult<EventPageQuery>;
+    $: eventData = event.data?.eventByCode!;
 
     $: startDate = new Date(eventData?.start);
     $: endDate = new Date(eventData?.end);

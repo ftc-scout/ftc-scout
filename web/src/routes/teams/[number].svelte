@@ -1,5 +1,4 @@
 <script context="module" lang="ts">
-    import { query, type OperationStore } from "@urql/svelte";
     import { TeamDocument } from "../../lib/graphql/generated/graphql-operations";
     import { queryLoad } from "../../lib/graphql/query-load";
 
@@ -27,12 +26,12 @@
     import { prettyPrintOrdinal } from "../../lib/util/format/pretty-print-ordinal";
     import { prettyPrintFloat } from "../../lib/util/format/pretty-print-float";
     import Loading from "../../lib/components/Loading.svelte";
+    import type { ApolloQueryResult } from "@apollo/client";
 
-    export let team: OperationStore<TeamQuery>;
-    query(team);
-    $: teamData = $team.data?.teamByNumber!;
+    export let team: ApolloQueryResult<TeamQuery>;
+    $: teamData = team.data.teamByNumber!;
 
-    $: sortedEvents = teamData?.events.sort(
+    $: sortedEvents = [...teamData.events].sort(
         (a, b) =>
             new Date(b.event.start as string).getTime() -
             new Date(a.event.start as string).getTime()
@@ -133,9 +132,6 @@
 
     <button class="edit-button" type="button">Edit Document</button>
     <Card>
-        <!-- TODO: have the button make it editable or not -->
-        <!-- TODO: Save changes made -->
-        <!-- TODO: Make it so you can only edit if your team matches the team you're editing -->
         <p1> <input type="text" disabled value="hi" /> </p1>
     </Card>
 </Loading>

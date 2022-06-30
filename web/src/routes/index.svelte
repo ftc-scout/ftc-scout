@@ -10,7 +10,6 @@
 
 <script lang="ts">
     // import type { MeQuery } from "$lib/graphql/generated/graphql-operations";
-    // import { mutation, query, type OperationStore } from "@urql/svelte";
 
     // export let me: OperationStore<MeQuery>;
     // $: meData = $me.data?.me;

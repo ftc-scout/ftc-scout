@@ -1,28 +1,44 @@
 <script lang="ts">
     import { LogoutDocument } from "$lib/graphql/generated/graphql-operations";
-    import { mutation } from "@urql/svelte";
+    import { mutation } from "svelte-apollo";
 
     export let meData: any; // TODO type
 
-    const logoutMutation = mutation({ query: LogoutDocument });
-    const logout = async () => await logoutMutation();
+    const logoutMutation = mutation(LogoutDocument);
+    const logout = async () => await logoutMutation({});
     import { goto } from "$app/navigation";
     let searchValue = "";
 </script>
 
 <nav>
     {#if meData}
-    <!-- TODO: change this searchbar so it isn't localhost3000 -->
-    <form on:submit|preventDefault={() => goto(`http://localhost:3000/teams/${searchValue}`)}>
-        <input type="search" name="teamsearch" bind:value={searchValue} placeholder="input team">
-    </form>
+        <!-- TODO: change this searchbar so it isn't localhost3000 -->
+        <form
+            on:submit|preventDefault={() =>
+                goto(`http://localhost:3000/teams/${searchValue}`)}
+        >
+            <input
+                type="search"
+                name="teamsearch"
+                bind:value={searchValue}
+                placeholder="input team"
+            />
+        </form>
         <button class="login-button" on:click={logout}>Log Out</button>
         <p>{meData.username}</p>
     {:else}
         <a class="login-button" href="/login">Log In</a>
         <a class="login-button" href="/register">Register</a>
-        <form on:submit|preventDefault={() => goto(`http://localhost:3000/teams/${searchValue}`)}>
-            <input type="search" name="teamsearch" bind:value={searchValue} placeholder="input team">
+        <form
+            on:submit|preventDefault={() =>
+                goto(`http://localhost:3000/teams/${searchValue}`)}
+        >
+            <input
+                type="search"
+                name="teamsearch"
+                bind:value={searchValue}
+                placeholder="input team"
+            />
         </form>
     {/if}
 </nav>
