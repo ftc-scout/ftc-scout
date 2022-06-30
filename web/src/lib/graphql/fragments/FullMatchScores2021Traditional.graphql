@@ -1,4 +1,7 @@
 fragment FullMatchScores2021Traditional on MatchScores2021Traditional {
+    season
+    eventCode
+    matchId
     randomization
     red {
         ...FullMatchScores2021TraditionAlliance

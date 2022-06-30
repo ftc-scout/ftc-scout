@@ -38,68 +38,75 @@ export function customCreateClient(fetch: Fetch): Client {
         fetch,
         fetchOptions: {
             credentials: "include",
-            cache: "no-cache",
         },
+        requestPolicy: "cache-first",
         exchanges: [
             dedupExchange,
-            // cacheExchange({
-            //     schema,
-            //     keys: {
-            //         Team: (data) => "" + data.number,
-            //         Event: (data) => `${data.season}/${data.code}`,
-            //         Match: (data) =>
-            //             `${data.season}/${data.eventCode}/${data.id}`,
-            //         MatchScores2021Traditional: () => null,
-            //         MatchScores2021TraditionalAlliance: () => null,
-            //         MatchScores2021Remote: () => null,
-            //         TeamMatchParticipation: () => null,
-            //         TeamEventParticipation: () => null,
-            //     },
-            //     updates: {
-            //         Mutation: {
-            //             logout: (_result, _args, cache, _info) => {
-            //                 cache.updateQuery({ query: MeDocument }, (_) => ({
-            //                     me: null,
-            //                 }));
-            //             },
-            //             login: (result: LoginMutation, _args, cache, _info) => {
-            //                 betterUpdateQuery<MeQuery>(
-            //                     cache,
-            //                     { query: MeDocument },
-            //                     (query) => {
-            //                         if (result.login.errors) {
-            //                             return query;
-            //                         } else {
-            //                             return {
-            //                                 me: result.login.user,
-            //                             } as MeQuery;
-            //                         }
-            //                     }
-            //                 );
-            //             },
-            //             register: (
-            //                 result: RegisterMutation,
-            //                 _args,
-            //                 cache,
-            //                 _info
-            //             ) => {
-            //                 betterUpdateQuery<MeQuery>(
-            //                     cache,
-            //                     { query: MeDocument },
-            //                     (query) => {
-            //                         if (result.register.errors) {
-            //                             return query;
-            //                         } else {
-            //                             return {
-            //                                 me: result.register.user,
-            //                             } as MeQuery;
-            //                         }
-            //                     }
-            //                 );
-            //             },
-            //         },
-            //     },
-            // }),
+            cacheExchange({
+                schema,
+                keys: {
+                    Team: (data) => "" + data.number,
+                    Event: (data) => `${data.season}/${data.code}`,
+                    Match: (data) =>
+                        `${data.season}/${data.eventCode}/${data.id}`,
+                    MatchScores2021Traditional: (data) =>
+                        `${data.season}/${data.eventCode}/${data.matchId}`,
+                    MatchScores2021TraditionalAlliance: (data) =>
+                        `${data.season}/${data.eventCode}/${data.matchId}/${data.alliance}`,
+                    MatchScores2021Remote: (data) =>
+                        `${data.season}/${data.eventCode}/${data.matchId}`,
+                    TeamMatchParticipation: (data) =>
+                        `${data.season}/${data.eventCode}/${data.matchId}/${data.teamNumber}`,
+                    TeamEventParticipation: (data) =>
+                        `${data.season}/${data.eventCode}/${data.teamNumber}`,
+                },
+                updates: {
+                    Mutation: {
+                        logout: (_result, _args, cache, _info) => {
+                            console.log(cache);
+                            cache.updateQuery({ query: MeDocument }, (_) => ({
+                                me: null,
+                            }));
+                        },
+                        login: (result: LoginMutation, _args, cache, _info) => {
+                            console.log(cache);
+                            betterUpdateQuery<MeQuery>(
+                                cache,
+                                { query: MeDocument },
+                                (query) => {
+                                    if (result.login.errors) {
+                                        return query;
+                                    } else {
+                                        return {
+                                            me: result.login.user,
+                                        } as MeQuery;
+                                    }
+                                }
+                            );
+                        },
+                        register: (
+                            result: RegisterMutation,
+                            _args,
+                            cache,
+                            _info
+                        ) => {
+                            betterUpdateQuery<MeQuery>(
+                                cache,
+                                { query: MeDocument },
+                                (query) => {
+                                    if (result.register.errors) {
+                                        return query;
+                                    } else {
+                                        return {
+                                            me: result.register.user,
+                                        } as MeQuery;
+                                    }
+                                }
+                            );
+                        },
+                    },
+                },
+            }),
             fetchExchange,
         ],
     });

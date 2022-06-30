@@ -1,7 +1,7 @@
 <script context="module" lang="ts">
-    import { query, type OperationStore } from "@urql/svelte";
+    import { getClient, query, type OperationStore } from "@urql/svelte";
     import { TeamDocument } from "../../lib/graphql/generated/graphql-operations";
-    import { queryLoad } from "../../lib/graphql/query-load";
+    import { policy, queryLoad, setPolicy } from "../../lib/graphql/query-load";
 
     export const load = queryLoad("team", TeamDocument, ({ params }) => ({
         number: +params.number,
@@ -37,10 +37,18 @@
             new Date(b.event.start as string).getTime() -
             new Date(a.event.start as string).getTime()
     )!;
+
+    function x() {
+        setPolicy("cache-only");
+        // c.requestPolicy = "cache-only";
+        // console.log(c)
+    }
 </script>
 
 <Loading store={team} width={"1000px"}>
     <Card>
+        <button on:click={x}>x</button>
+
         <h1>{teamData.number} - {teamData.name}</h1>
 
         <InfoIconRow icon={faSchool}>

@@ -8,6 +8,10 @@ fragment EventPageMatch on Match {
         ...FullMatchScores
     }
     teams {
+        season
+        eventCode
+        matchId
+        teamNumber
         station
         team {
             number

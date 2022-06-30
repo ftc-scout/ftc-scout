@@ -9,6 +9,9 @@ query Team($number: Int!) {
         schoolName
         rookieYear
         events {
+            season
+            eventCode
+            teamNumber
             rank
             wins
             losses
@@ -17,6 +20,8 @@ query Team($number: Int!) {
             qualAverage
             opr
             event {
+                season
+                code
                 name
                 remote
                 start
@@ -28,6 +33,10 @@ query Team($number: Int!) {
                 stateOrProvince
                 country
                 matchesForTeam(teamNumber: $number) {
+                    season
+                    eventCode
+                    matchId
+                    teamNumber
                     match {
                         ...EventPageMatch
                     }

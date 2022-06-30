@@ -1,4 +1,8 @@
 fragment FullMatchScores2021TraditionAlliance on MatchScores2021TraditionalAlliance {
+    season
+    eventCode
+    matchId
+    alliance
     barcodeElement1
     barcodeElement2
     autoCarousel

@@ -1,4 +1,7 @@
 fragment FullMatchScores2021Remote on MatchScores2021Remote {
+    season
+    eventCode
+    matchId
     randomization
     barcodeElement
     autoCarousel
