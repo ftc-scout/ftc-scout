@@ -6,7 +6,10 @@
     import SubmitButton from "../lib/components/form/SubmitButton.svelte";
     import TextInput from "../lib/components/form/TextInput.svelte";
     import MaxWidth from "../lib/components/MaxWidth.svelte";
-    import { LoginDocument } from "../lib/graphql/generated/graphql-operations";
+    import {
+        LoginDocument,
+        MeDocument,
+    } from "../lib/graphql/generated/graphql-operations";
     import { mutation } from "svelte-apollo";
 
     let username: string = "";
@@ -17,11 +20,14 @@
 
     let errors: Writable<FormError[]> = writable([]);
 
-    const loginMutation = mutation(LoginDocument);
+    const loginMutation = mutation(LoginDocument, {
+        refetchQueries: [{ query: MeDocument }],
+    });
 
     async function login() {
         const response = (
-            (await loginMutation({ username, password } as any)).data as any
+            (await loginMutation({ variables: { username, password } }))
+                .data as any
         ).login;
         if (response?.errors) {
             $errors = response?.errors;

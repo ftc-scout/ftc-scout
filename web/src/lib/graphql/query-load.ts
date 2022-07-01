@@ -19,17 +19,10 @@ export function queryLoad<Data = any, Variables = object>(
             variables,
         });
 
-        // Update the errors for the page
-        // event.stuff.serverError.set(derived(queryResult, (qr) => qr.error));
-
         return {
             props: {
                 [name]: queryResult,
             },
         };
     };
-}
-
-export function noQueryLoad(event: LoadEvent) {
-    event.stuff.serverError.set(readable(undefined));
 }

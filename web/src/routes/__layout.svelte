@@ -1,23 +1,20 @@
 <script context="module" lang="ts">
-    export let load = queryLoad("me", MeDocument, {});
+    // export let load = queryLoad("me", MeDocument, {});
 </script>
 
 <script lang="ts">
-    import { get, type Readable, type Writable } from "svelte/store";
-    import { queryLoad } from "../lib/graphql/query-load";
     import {
         MeDocument,
         type MeQuery,
     } from "../lib/graphql/generated/graphql-operations";
     import Navbar from "$lib/components/Navbar.svelte";
-    import type { ApolloQueryResult } from "@apollo/client";
-    import { setClient } from "svelte-apollo";
+    import { query, setClient, type ReadableQuery } from "svelte-apollo";
     import { apolloClient } from "../lib/graphql/client";
 
     setClient(apolloClient);
 
-    export let me: ApolloQueryResult<MeQuery>;
-    $: meData = me.data.me;
+    export let me: ReadableQuery<MeQuery> = query(MeDocument);
+    $: meData = $me?.data?.me;
 </script>
 
 <Navbar {meData} />

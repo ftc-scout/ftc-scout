@@ -3,10 +3,15 @@ import { MatchScores2021 } from "../../db/entities/MatchScores2021";
 import { AutoNavigation2021 } from "../../db/entities/types/2021/AutoNavigation2021";
 import { BarcodeElement2021 } from "../../db/entities/types/2021/BarcodeElement2021";
 import { EndgamePark2021 } from "../../db/entities/types/2021/EndgamePark2021";
+import { Season } from "../../ftc-api/types/Season";
 
 @ObjectType("MatchScores2021Remote", { simpleResolvers: true })
 export class MatchScores2021RemoteGraphql {
     constructor(dbScore: MatchScores2021) {
+        this.season = dbScore.season;
+        this.eventCode = dbScore.eventCode;
+        this.matchId = dbScore.matchId;
+
         this.randomization = dbScore.randomization;
         this.barcodeElement = dbScore.barcodeElement;
         this.autoCarousel = dbScore.autoCarousel;
@@ -45,6 +50,15 @@ export class MatchScores2021RemoteGraphql {
         this.penaltyPoints = dbScore.penaltyPoints;
         this.totalPoints = dbScore.totalPoints;
     }
+
+    @Field(() => Int)
+    season: Season;
+
+    @Field()
+    eventCode: string;
+
+    @Field(() => Int)
+    matchId: number;
 
     @Field(() => Int)
     randomization: number;

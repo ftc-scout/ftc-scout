@@ -23,12 +23,15 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("smallint")
     season!: Season;
 
+    @Field()
     @PrimaryColumn({ length: EVENT_CODE_LEN })
     eventCode!: string;
 
+    @Field(() => Int)
     @PrimaryColumn("int")
     matchId!: number;
 
+    @Field(() => Int)
     @PrimaryColumn("int")
     teamNumber!: number;
 

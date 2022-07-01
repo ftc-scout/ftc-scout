@@ -3,6 +3,7 @@ import { IS_DEV, SERVER_ORIGIN } from "../constants";
 
 const link = new HttpLink({
     uri: SERVER_ORIGIN,
+    credentials: "include",
 });
 
 const cache = new InMemoryCache({

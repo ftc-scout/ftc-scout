@@ -3,10 +3,17 @@ import { MatchScores2021 } from "../../db/entities/MatchScores2021";
 import { AutoNavigation2021 } from "../../db/entities/types/2021/AutoNavigation2021";
 import { BarcodeElement2021 } from "../../db/entities/types/2021/BarcodeElement2021";
 import { EndgamePark2021 } from "../../db/entities/types/2021/EndgamePark2021";
+import { Alliance } from "../../db/entities/types/Alliance";
+import { Season } from "../../ftc-api/types/Season";
 
 @ObjectType("MatchScores2021TraditionalAlliance", { simpleResolvers: true })
 export class MatchScores2021TradAllianceGraphql {
     constructor(dbScore: MatchScores2021) {
+        this.season = dbScore.season;
+        this.eventCode = dbScore.eventCode;
+        this.matchId = dbScore.matchId;
+        this.alliance = dbScore.alliance;
+
         this.barcodeElement1 = dbScore.barcodeElement;
         this.barcodeElement2 = dbScore.barcodeElement2!;
         this.autoCarousel = dbScore.autoCarousel;
@@ -53,6 +60,18 @@ export class MatchScores2021TradAllianceGraphql {
         this.penaltyPoints = dbScore.penaltyPoints;
         this.totalPoints = dbScore.totalPoints;
     }
+
+    @Field(() => Int)
+    season: Season;
+
+    @Field()
+    eventCode: string;
+
+    @Field(() => Int)
+    matchId: number;
+
+    @Field(() => Alliance)
+    alliance: Alliance;
 
     @Field(() => BarcodeElement2021)
     barcodeElement1: BarcodeElement2021;
@@ -181,10 +200,23 @@ export class MatchScores2021TradAllianceGraphql {
 @ObjectType("MatchScores2021Traditional")
 export class MatchScores2021TradGraphql {
     constructor(red: MatchScores2021, blue: MatchScores2021) {
+        this.season = red.season;
+        this.eventCode = red.eventCode;
+        this.matchId = red.matchId;
+
         this.randomization = red.randomization;
         this.red = new MatchScores2021TradAllianceGraphql(red);
         this.blue = new MatchScores2021TradAllianceGraphql(blue);
     }
+
+    @Field(() => Int)
+    season: Season;
+
+    @Field()
+    eventCode: string;
+
+    @Field(() => Int)
+    matchId: number;
 
     @Field(() => Int)
     randomization: number;
