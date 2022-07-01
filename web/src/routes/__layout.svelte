@@ -17,6 +17,15 @@
     $: meData = $me?.data?.me;
 </script>
 
+<svelte:head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+        rel="stylesheet"
+    />
+</svelte:head>
+
 <Navbar {meData} />
 
 <div class="content">
@@ -24,9 +33,6 @@
 </div>
 
 <style>
-    @import "@fontsource/inter/400.css";
-    @import "@fontsource/inter/600.css";
-
     .content {
         margin-top: var(--navbar-size);
         padding: var(--padding);
