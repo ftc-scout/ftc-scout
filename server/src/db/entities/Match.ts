@@ -145,7 +145,8 @@ export class Match extends BaseEntity {
         season: Season,
         eventCode: string,
         apiMatch: MatchFtcApi,
-        isRemote: boolean
+        isRemote: boolean,
+        hasBeenPlayed: boolean
     ): Match {
         let tournamentLevel = tournamentLevelFromApi(apiMatch.tournamentLevel);
         let matchId = isRemote
@@ -162,7 +163,7 @@ export class Match extends BaseEntity {
             eventSeason: season,
             eventCode,
             id: matchId,
-            hasBeenPlayed: !!apiMatch.postResultTime,
+            hasBeenPlayed,
             scheduledStartTime: apiMatch.startTime,
             actualStartTime: apiMatch.actualStartTime,
             postResultTime: apiMatch.postResultTime,

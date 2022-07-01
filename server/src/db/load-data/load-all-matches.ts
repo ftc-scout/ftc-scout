@@ -109,12 +109,30 @@ function createDbEntities(
         let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
 
         for (let match of matches) {
-            let dbMatch = Match.fromApi(season, eventCode, match, remote);
-
             let thisMatchScores = findMatchScoresForMatchNum(
-                dbMatch.id,
+                remote
+                    ? Match.encodeMatchIdRemote(
+                          match.matchNumber,
+                          match.teams[0].teamNumber
+                      )
+                    : Match.encodeMatchIdTraditional(
+                          match.matchNumber,
+                          tournamentLevelFromApi(match.tournamentLevel),
+                          match.series
+                      ),
                 matchScores
             );
+
+            let hasBeenPlayed = !!match.postResultTime || !!thisMatchScores;
+
+            let dbMatch = Match.fromApi(
+                season,
+                eventCode,
+                match,
+                remote,
+                hasBeenPlayed
+            );
+
             if (thisMatchScores) {
                 if (season == Season.FREIGHT_FRENZY && !remote) {
                     dbMatch.scores2021 = MatchScores2021.fromTradApi(
@@ -159,6 +177,16 @@ function createDbEntities(
             dbTeamMatchParticipations,
             remote
         );
+
+        if (
+            dbTeamEventParticipations.some(
+                (tep) => tep.opr != null && isNaN(tep.opr)
+            )
+        ) {
+            // console.log(eventCode, remote, matches, matchScores, teams);
+            console.log(dbTeamEventParticipations);
+            throw "No!";
+        }
 
         dbMatchesAll.push(...dbMatches);
         dbTeamMatchParticipationsAll.push(...dbTeamMatchParticipations);

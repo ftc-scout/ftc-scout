@@ -9,11 +9,14 @@ export async function makeRequest(
     sinceDate: Date | null
 ): Promise<any | null> {
     // Rate limit ourselves to 5 requests per second
+    const REQUEST_TIME = 300;
     while (true) {
         let now = Date.now();
 
-        if (lastRequest > now - 400) {
-            await new Promise((r) => setTimeout(r, lastRequest + 400 - now));
+        if (lastRequest > now - REQUEST_TIME) {
+            await new Promise((r) =>
+                setTimeout(r, lastRequest + REQUEST_TIME - now)
+            );
         } else {
             break;
         }

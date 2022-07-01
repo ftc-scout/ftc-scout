@@ -84,11 +84,12 @@ export function calculateEventStatistics(
 
         teamsWithMatches.forEach((t) => {
             participations[t].qualAverage =
-                participations[t].qualPoints! /
-                participations[t].qualMatchesPlayed!;
+                participations[t].qualMatchesPlayed == 0
+                    ? null
+                    : participations[t].qualPoints! /
+                      participations[t].qualMatchesPlayed!;
         });
 
-        console.log(matches.length);
         let oprRecords = matches.flatMap((match) => {
             if (!match.hasBeenPlayed) return [];
             // if (match.tournamentLevel != TournamentLevel.QUALS) return []; // Maybe?
@@ -151,8 +152,10 @@ export function calculateEventStatistics(
 
         teamsWithMatches.forEach((t) => {
             participations[t].qualAverage =
-                participations[t].qualPoints! /
-                participations[t].qualMatchesPlayed!;
+                participations[t].qualMatchesPlayed == 0
+                    ? null
+                    : participations[t].qualPoints! /
+                      participations[t].qualMatchesPlayed!;
             participations[t].opr = participations[t].qualAverage;
         });
     }

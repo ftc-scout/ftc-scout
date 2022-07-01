@@ -5,9 +5,6 @@ import { Matrix, SingularValueDecomposition } from "ml-matrix";
 export function calculateOPR(
     scores: { team1: number; team2: number; result: number }[]
 ): Record<number, number> {
-    console.log(scores);
-    console.log(scores.length);
-
     if (scores.length == 0) return [];
 
     let allTeams = [...new Set(scores.flatMap((s) => [s.team1, s.team2]))];
