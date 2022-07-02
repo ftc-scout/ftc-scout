@@ -56,6 +56,10 @@
     </Card>
     <Card>
         <h2>Matches</h2>
-        <MatchTable matches={eventData.matches} isRemote={eventData.remote} />
+        <MatchTable
+            matches={eventData.matches}
+            event={eventData}
+            isRemote={eventData.remote}
+        />
     </Card>
 </Loading>

@@ -56,7 +56,7 @@ export class MatchResolver {
                 matchId: _match.id,
             });
 
-            if (scores) {
+            if (scores && scores.length != 0) {
                 switch (scores[0].alliance) {
                     case Alliance.SOLO:
                         return new MatchScores2021RemoteGraphql(scores[0]);

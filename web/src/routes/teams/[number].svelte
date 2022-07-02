@@ -124,6 +124,7 @@
 
             <MatchTable
                 isRemote={event.remote}
+                {event}
                 matches={event.matchesForTeam.map((mt) => mt.match)}
                 teamFocus={teamData.number}
             />

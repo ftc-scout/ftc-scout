@@ -11,6 +11,7 @@
     import RemoteMatchTableHeader from "./RemoteMatchTableHeader.svelte";
 
     export let matches: EventPageMatchFragment[];
+    export let event: { start: string };
     export let isRemote: boolean;
     export let teamFocus: number | null = null;
 
@@ -28,6 +29,8 @@
 
     $: anySurrogate = matches.some((m) => m.teams.some((t) => t.surrogate));
     $: anyDq = matches.some((m) => m.teams.some((t) => t.dq));
+
+    $: console.log(matches);
 </script>
 
 <table>
@@ -38,43 +41,64 @@
     {/if}
 
     <tbody>
-        {#if isRemote}
-            {#each soloMatches as oneTeamMatches, i}
-                <RemoteMatches
-                    matches={oneTeamMatches}
-                    zebraStripe={i % 2 == 1}
-                />
-            {/each}
+        {#if matches.length}
+            {#if isRemote}
+                {#each soloMatches as oneTeamMatches, i}
+                    <RemoteMatches
+                        matches={oneTeamMatches}
+                        zebraStripe={i % 2 == 1}
+                    />
+                {/each}
+            {:else}
+                {#if finalsMatches.length}
+                    <SectionRow level={TournamentLevel.Finals} />
+                {/if}
+
+                {#each finalsMatches as match, i}
+                    {#if match}
+                        <MatchTrad
+                            {match}
+                            {teamFocus}
+                            zebraStripe={i % 2 == 1}
+                        />
+                    {/if}
+                {/each}
+
+                {#if semisMatches.length}
+                    <SectionRow level={TournamentLevel.Semis} />
+                {/if}
+
+                {#each semisMatches as match, i}
+                    {#if match}
+                        <MatchTrad
+                            {match}
+                            {teamFocus}
+                            zebraStripe={i % 2 == 1}
+                        />
+                    {/if}
+                {/each}
+
+                {#if qualsMatches.length && (semisMatches.length || finalsMatches.length)}
+                    <SectionRow level={TournamentLevel.Quals} />
+                {/if}
+
+                {#each qualsMatches as match, i}
+                    {#if match}
+                        <MatchTrad
+                            {match}
+                            {teamFocus}
+                            zebraStripe={i % 2 == 1}
+                        />
+                    {/if}
+                {/each}
+            {/if}
         {:else}
-            {#if finalsMatches.length}
-                <SectionRow level={TournamentLevel.Finals} />
+            <!-- TODO: deal with timezones -->
+            {#if new Date() > new Date(event.start)}
+                <tr>Matches have not yet been reported for this event.</tr>
+            {:else}
+                <tr>This event has not yet begun.</tr>
             {/if}
-
-            {#each finalsMatches as match, i}
-                {#if match}
-                    <MatchTrad {match} {teamFocus} zebraStripe={i % 2 == 1} />
-                {/if}
-            {/each}
-
-            {#if semisMatches.length}
-                <SectionRow level={TournamentLevel.Semis} />
-            {/if}
-
-            {#each semisMatches as match, i}
-                {#if match}
-                    <MatchTrad {match} {teamFocus} zebraStripe={i % 2 == 1} />
-                {/if}
-            {/each}
-
-            {#if qualsMatches.length && (semisMatches.length || finalsMatches.length)}
-                <SectionRow level={TournamentLevel.Quals} />
-            {/if}
-
-            {#each qualsMatches as match, i}
-                {#if match}
-                    <MatchTrad {match} {teamFocus} zebraStripe={i % 2 == 1} />
-                {/if}
-            {/each}
         {/if}
     </tbody>
 </table>
@@ -107,5 +131,12 @@
 
     .explain {
         padding-left: var(--small-padding);
+    }
+
+    tr {
+        display: block;
+        width: 100%;
+        text-align: center;
+        padding: var(--padding);
     }
 </style>
