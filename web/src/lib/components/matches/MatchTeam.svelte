@@ -33,12 +33,14 @@
     $: dq = !!team.dq && !solo;
     $: noShow = team.noShow && !solo;
     $: surrogate = team.surrogate;
+    $: onField = team.onField;
 
     $: title =
         `${number} ${name}` +
         (dq ? " (Disqualified)" : "") +
         (noShow ? " (No Show)" : "") +
-        (surrogate ? " (Surrogate)" : "");
+        (surrogate ? " (Surrogate)" : "") +
+        (!onField ? " (Not on Field)" : "");
 </script>
 
 <td
@@ -47,7 +49,7 @@
     class:solo
     class:border
     class:focused
-    class:not-on-field={!team.onField}
+    class:not-on-field={!onField}
     style:max-width={width}
     style:min-width={width}
 >
