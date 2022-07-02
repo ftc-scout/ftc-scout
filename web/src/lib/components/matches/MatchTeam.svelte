@@ -37,10 +37,10 @@
 
     $: title =
         `${number} ${name}` +
-        (dq ? " (Disqualified)" : "") +
         (noShow ? " (No Show)" : "") +
-        (surrogate ? " (Surrogate)" : "") +
-        (!onField ? " (Not on Field)" : "");
+        (dq && !noShow ? " (Disqualified)" : "") +
+        (!onField && !dq && !noShow ? " (Not on Field)" : "") +
+        (surrogate ? " (Surrogate)" : "");
 </script>
 
 <td
