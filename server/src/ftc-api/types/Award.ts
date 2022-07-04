@@ -1,4 +1,4 @@
-export interface EventAward {
+export interface AwardFtcApi {
     awardId: number;
     teamId: number;
     eventId: number;

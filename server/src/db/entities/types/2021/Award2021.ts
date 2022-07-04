@@ -1,15 +1,13 @@
-import { EventAward as AwardFtcApi } from "../../../../ftc-api/types/EventAward";
+import { registerEnumType } from "type-graphql";
+import { AwardFtcApi as AwardFtcApi } from "../../../../ftc-api/types/Award";
 
 export type Award2021 = number;
 
 export enum AwardTypes2021 {
     DEANS_LIST = 0,
     JUDGES_CHOICE = 100,
-    VOLUNTEER_OTY = 200,
     DIVISION_FINALIST = 300,
     DIVISION_WINNER = 400,
-    CHAMPIONSHIP_FINALIST = 500,
-    CHAMPIONSHIP_WINNER = 600,
     COMPASS = 700,
     PROMOTE = 800,
     CONTROL = 900,
@@ -19,15 +17,16 @@ export enum AwardTypes2021 {
     CONNECT = 1300,
     THINK = 1400,
     TOP_RANKED = 1500,
-    DEANS_LIST_SEMI = 1600,
-    DEANS_LIST_FINAL = 1700,
     INSPIRE = 1800,
     WINNER = 1900,
     FINALIST = 2000,
-    SEMIFINALIST = 2100,
 }
 
-export function award2021FromFtcApi(award: AwardFtcApi): Award2021 | null {
+registerEnumType(AwardTypes2021, {
+    name: "AwardTypes2021",
+});
+
+export function awardCode2021FromFtcApi(award: AwardFtcApi): Award2021 | null {
     switch (award.awardId) {
         case 1: // Judges Choice
             return award2021Top(AwardTypes2021.JUDGES_CHOICE, award, 6);

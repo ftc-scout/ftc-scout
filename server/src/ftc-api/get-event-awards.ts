@@ -1,11 +1,11 @@
 import { makeRequest } from "./make-request";
-import { EventAward } from "./types/EventAward";
+import { AwardFtcApi } from "./types/Award";
 import { Season } from "./types/Season";
 
 export async function getEventAwards(
     season: Season,
     eventCode: string
-): Promise<EventAward[]> {
+): Promise<AwardFtcApi[]> {
     let resp = await makeRequest(
         `${season}/awards/${eventCode}`,
         undefined,

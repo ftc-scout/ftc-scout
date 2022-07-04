@@ -13,7 +13,7 @@ export async function loadAllAwards(season: Season) {
     for (let i = 0; i < eventCodes.length; i += chunkSize) {
         const chunk = eventCodes.slice(i, i + chunkSize);
 
-        let awardsApi = (
+        (
             await Promise.all(
                 chunk.map(({ code }) => getEventAwards(season, code))
             )
