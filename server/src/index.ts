@@ -34,6 +34,7 @@ import { Season } from "./ftc-api/types/Season";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
 import { getEventAwards } from "./ftc-api/get-event-awards";
+import { loadAllAwards } from "./db/load-data/load-all-awards";
 
 async function main() {
     await FTCSDataSource.initialize();
@@ -119,6 +120,8 @@ async function main() {
     if (process.argv.includes("--load-teams")) {
         loadAllTeamsIntoDatabase(CURRENT_SEASON);
     }
+
+    loadAllAwards(Season.FREIGHT_FRENZY);
 }
 
 main();
