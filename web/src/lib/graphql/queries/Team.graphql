@@ -19,6 +19,15 @@ query Team($number: Int!) {
             qualPoints
             qualAverage
             opr
+            awards {
+                season
+                eventCode
+                awardCode
+                teamNumber
+                type
+                placement
+                personName
+            }
             event {
                 season
                 code

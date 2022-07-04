@@ -17,6 +17,8 @@
         faSchool,
         faPlus,
         faTrophy,
+        faStar,
+        faMedal,
     } from "@fortawesome/free-solid-svg-icons";
     import DataFromFirst from "../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../lib/components/InfoIconRow.svelte";
@@ -27,6 +29,8 @@
     import { prettyPrintFloat } from "../../lib/util/format/pretty-print-float";
     import Loading from "../../lib/components/Loading.svelte";
     import type { ApolloQueryResult } from "@apollo/client";
+    import { prettyPrintAwardPlacement } from "../../lib/util/format/pretty-print-award";
+    import Award from "../../lib/components/Award.svelte";
 
     export let team: ApolloQueryResult<TeamQuery>;
     $: teamData = team.data.teamByNumber!;
@@ -119,6 +123,17 @@
                     {#if typeof teamEvent.qualAverage == "number"}
                         <b>{prettyPrintFloat(teamEvent.qualAverage)}</b> AVG
                     {/if}
+                </InfoIconRow>
+            {/if}
+
+            {#if teamEvent.awards.length != 0}
+                <InfoIconRow icon={faMedal}>
+                    {#each teamEvent.awards as award, i}
+                        <Award
+                            {award}
+                            comma={i != teamEvent.awards.length - 1}
+                        />
+                    {/each}
                 </InfoIconRow>
             {/if}
 

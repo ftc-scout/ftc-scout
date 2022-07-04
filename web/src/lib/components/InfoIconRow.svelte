@@ -12,7 +12,7 @@
 </script>
 
 <div class="info-icon">
-    <Fa fw icon={actualIcon} size="1x" {color} />
+    <Fa fw icon={actualIcon} size="1x" {color} style={"min-width:1.25em"} />
     <span class="content">
         <slot />
     </span>
@@ -23,6 +23,8 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        flex: 1 0 auto;
+        /* flex-shrink: 0; */
 
         margin-bottom: var(--gap);
     }

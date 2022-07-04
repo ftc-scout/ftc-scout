@@ -29,6 +29,9 @@ const cache = new InMemoryCache({
         TeamEventParticipation: {
             keyFields: ["season", "eventCode", "teamNumber"],
         },
+        Award: {
+            keyFields: ["season", "eventCode", "awardCode", "teamNumber"],
+        },
     },
 });
 
