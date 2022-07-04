@@ -34,8 +34,8 @@ export class Award extends BaseEntity {
     @PrimaryColumn()
     awardCode!: Award2021;
 
-    @Column()
-    @Index()
+    @Field(() => Int)
+    @PrimaryColumn("int")
     teamNumber!: number;
 
     @Field(() => TeamEventParticipation)
@@ -63,6 +63,10 @@ export class Award extends BaseEntity {
     }
 
     static fromApi(season: Season, api: AwardFtcApi): Award | null {
+        if (api.teamNumber == null) {
+            return null;
+        }
+
         let awardCode = awardCode2021FromFtcApi(api);
         if (awardCode) {
             return Award.create({

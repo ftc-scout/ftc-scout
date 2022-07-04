@@ -1,5 +1,6 @@
 import { DAY_MS } from "../constants";
 import { FtcApiMetadata } from "../db/entities/FtcApiMetadata";
+import { loadAllAwards } from "../db/load-data/load-all-awards";
 import { loadAllEvents as loadAllEventsIntoDatabase } from "../db/load-data/load-all-events";
 import { loadAllMatches } from "../db/load-data/load-all-matches";
 import { loadAllTeamsIntoDatabase } from "../db/load-data/load-all-teams";
@@ -22,6 +23,10 @@ export async function setupApiWatchers(seasons: Season[]) {
                 reqFunction: () => loadAllMatches(season),
                 getTimeOfLastReq: () =>
                     FtcApiMetadata.getLastMatchesReq(season),
+            },
+            {
+                reqFunction: () => loadAllAwards(season),
+                getTimeOfLastReq: () => FtcApiMetadata.getLastAwardsReq(season),
             },
         ]);
     }

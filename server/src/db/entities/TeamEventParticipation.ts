@@ -25,7 +25,7 @@ export class TeamEventParticipation extends BaseEntity {
     eventCode!: string;
 
     @Field(() => Int)
-    @PrimaryColumn("smallint")
+    @PrimaryColumn("int")
     teamNumber!: number;
 
     @Field(() => Event)

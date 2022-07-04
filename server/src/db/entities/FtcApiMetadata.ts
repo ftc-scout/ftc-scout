@@ -15,6 +15,9 @@ export class FtcApiMetadata extends BaseEntity {
     @Column({ type: "timestamptz", nullable: true })
     lastMatchesReq!: Date | null;
 
+    @Column({ type: "timestamptz", nullable: true })
+    lastAwardsReq!: Date | null;
+
     static async getLastTeamsReq(season: Season): Promise<Date | null> {
         return (
             (await FtcApiMetadata.findOneBy({ season }))?.lastTeamsReq ?? null
@@ -30,6 +33,12 @@ export class FtcApiMetadata extends BaseEntity {
     static async getLastMatchesReq(season: Season): Promise<Date | null> {
         return (
             (await FtcApiMetadata.findOneBy({ season }))?.lastMatchesReq ?? null
+        );
+    }
+
+    static async getLastAwardsReq(season: Season): Promise<Date | null> {
+        return (
+            (await FtcApiMetadata.findOneBy({ season }))?.lastAwardsReq ?? null
         );
     }
 }

@@ -83,6 +83,8 @@ export async function loadAllMatches(season: Season) {
                 lastMatchesReq: dateStartQuery,
             })
         );
+
+        console.log("Done inserting matches.");
     });
 }
 
