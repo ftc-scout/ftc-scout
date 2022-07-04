@@ -29,8 +29,6 @@
 
     $: anySurrogate = matches.some((m) => m.teams.some((t) => t.surrogate));
     $: anyDq = matches.some((m) => m.teams.some((t) => t.dq));
-
-    $: console.log(matches);
 </script>
 
 <table>
