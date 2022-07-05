@@ -5,7 +5,6 @@ import {
     Column,
     DeepPartial,
     Entity,
-    Index,
     JoinColumn,
     ManyToOne,
     PrimaryColumn,
