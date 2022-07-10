@@ -40,7 +40,8 @@
 
     :global(:root) {
         /* Colors */
-        --background-color: #f5f6f7;
+        --background-color: #f2f2f2;
+        --hover-color: #f9f9f9;
         --foreground-color: #ffffff;
         --theme-color: #2c666e;
         --darkened-theme-color: #225157;
@@ -79,6 +80,7 @@
         --small-font-size: 13px;
         --font-size: 16px;
         --large-font-size: 19px;
+        --h2-font-size: 24px;
         --h1-font-size: 32px;
 
         /* Sizes */
@@ -105,6 +107,7 @@
             --small-font-size: 11px;
             --font-size: 14px;
             --large-font-size: 16px;
+            --h2-font-size: 20px;
             --h1-font-size: 28px;
 
             /* Sizes */
@@ -129,6 +132,7 @@
             --small-font-size: 8px;
             --font-size: 11px;
             --large-font-size: 13px;
+            --h2-font-size: 18px;
             --h1-font-size: 22px;
 
             /* Sizes */
@@ -151,8 +155,6 @@
     :global(body) {
         background-color: var(--background-color);
 
-        color: var(--text-color);
-        font-family: var(--main-font);
         font-size: var(--font-size);
 
         margin: 0;
@@ -160,12 +162,18 @@
 
     :global(*) {
         box-sizing: border-box;
+        color: var(--text-color);
+        font-family: var(--main-font);
     }
 
     :global(h1) {
         font-size: var(--h1-font-size);
         margin-top: var(--large-gap);
         margin-bottom: var(--large-gap);
+    }
+
+    :global(h2) {
+        font-size: var(--h2-font-size);
     }
 
     :global(a) {

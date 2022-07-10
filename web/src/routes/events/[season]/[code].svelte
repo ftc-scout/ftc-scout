@@ -14,6 +14,8 @@
         faCalendarAlt,
         faLocationDot,
         faGlobe,
+        faTrophy,
+        faMedal,
     } from "@fortawesome/free-solid-svg-icons";
     import { prettyPrintDateRange } from "../../../lib/util/format/pretty-print-date";
     import { prettyPrintURL } from "../../../lib/util/format/pretty-print-url";
@@ -23,6 +25,7 @@
     import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
     import Loading from "../../../lib/components/Loading.svelte";
     import type { ApolloQueryResult } from "@apollo/client";
+    import TabbedCard from "../../../lib/components/TabbedCard.svelte";
 
     export let event: ApolloQueryResult<EventPageQuery>;
     $: eventData = event.data?.eventByCode!;
@@ -54,12 +57,19 @@
 
         <DataFromFirst />
     </Card>
-    <Card>
-        <h2>Matches</h2>
+    <!-- <Card> -->
+    <TabbedCard
+        names={[
+            [faTrophy, "Matches"],
+            [faMedal, "Awards"],
+        ]}
+    >
+        <!-- <h2>Matches</h2> -->
         <MatchTable
             matches={eventData.matches}
             event={eventData}
             isRemote={eventData.remote}
         />
-    </Card>
+    </TabbedCard>
+    <!-- </Card> -->
 </Loading>
