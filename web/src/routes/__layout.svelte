@@ -155,6 +155,7 @@
     :global(body) {
         background-color: var(--background-color);
 
+        color: var(--text-color);
         font-size: var(--font-size);
 
         margin: 0;
@@ -162,7 +163,6 @@
 
     :global(*) {
         box-sizing: border-box;
-        color: var(--text-color);
         font-family: var(--main-font);
     }
 

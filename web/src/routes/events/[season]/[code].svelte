@@ -34,6 +34,14 @@
     $: endDate = new Date(eventData?.end);
 </script>
 
+<svelte:head>
+    <title>
+        {!!eventData
+            ? `${eventData.name} | FTC Scout`
+            : "Event Page | Ftc Scout"}
+    </title>
+</svelte:head>
+
 <Loading store={event} width={"1250px"}>
     <Card>
         <h1>{eventData.season} {eventData.name}</h1>

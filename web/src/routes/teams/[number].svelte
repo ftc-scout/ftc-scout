@@ -42,6 +42,14 @@
     )!;
 </script>
 
+<svelte:head>
+    <title>
+        {!!teamData
+            ? `${teamData.number} ${teamData.name} | FTC Scout`
+            : "Team Page | Ftc Scout"}
+    </title>
+</svelte:head>
+
 <Loading store={team} width={"1000px"}>
     <Card>
         <h1>{teamData.number} - {teamData.name}</h1>
