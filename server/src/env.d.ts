@@ -7,5 +7,6 @@ declare namespace NodeJS {
         SESSION_SECRET: string;
         REDIS_URL: string;
         PORT: string;
+        SYNC: string;
     }
 }

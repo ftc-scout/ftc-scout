@@ -31,7 +31,7 @@ export class MatchScores2021 extends BaseEntity {
     @PrimaryColumn("smallint", { default: Season.FREIGHT_FRENZY })
     season!: Season;
 
-    @PrimaryColumn({ length: EVENT_CODE_LEN })
+    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
     eventCode!: string;
 
     @PrimaryColumn("int")
