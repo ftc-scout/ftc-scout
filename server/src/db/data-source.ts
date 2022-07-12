@@ -5,7 +5,7 @@ import { entities } from "./entities";
 const config: DataSourceOptions = {
     type: "postgres",
     url: DATABASE_URL,
-    synchronize: IS_DEV && false,
+    synchronize: IS_DEV,
     logging: LOGGING,
     entities,
 };
