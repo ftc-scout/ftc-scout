@@ -33,6 +33,7 @@ import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { Season } from "./ftc-api/types/Season";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
+import compression from "compression";
 
 async function main() {
     await FTCSDataSource.initialize();
@@ -69,6 +70,8 @@ async function main() {
             resave: false,
         })
     );
+
+    app.use(compression());
 
     // Initialize the apollo graphql server.
     const apolloServer = new ApolloServer({
