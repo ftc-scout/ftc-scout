@@ -1,6 +1,4 @@
 <script lang="ts">
-    import A from "../../routes/events/[season]/[code]/[...tab].svelte";
-
     export let teams: {
         number: number;
         name: string;

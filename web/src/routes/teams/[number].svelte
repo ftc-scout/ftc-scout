@@ -82,6 +82,7 @@
         <Card>
             <h2>
                 <a
+                    sveltekit:prefetch
                     class="event-link"
                     href={`/events/${event.season}/${event.code}`}
                 >
