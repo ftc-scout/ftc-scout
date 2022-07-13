@@ -59,7 +59,7 @@
     </title>
 </svelte:head>
 
-<Loading store={event} width={"1250px"}>
+<Loading store={event} width={"1250px"} doesNotExist={!eventData}>
     <Card>
         <h1>{eventData.season} {eventData.name}</h1>
 

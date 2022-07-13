@@ -50,7 +50,7 @@
     </title>
 </svelte:head>
 
-<Loading store={team} width={"1000px"}>
+<Loading store={team} width={"1000px"} doesNotExist={!teamData}>
     <Card>
         <h1>{teamData.number} - {teamData.name}</h1>
 
