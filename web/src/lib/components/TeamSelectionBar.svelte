@@ -38,7 +38,7 @@
 <a
     sveltekit:prefetch
     href={`/teams/${team.number}`}
-    transition:fly={{ y: 100, duration: 300 }}
+    transition:fly|local={{ y: 100, duration: 300 }}
 >
     <div class="top-row">
         <b> {team.number} - <em> {team.name} </em> </b>
