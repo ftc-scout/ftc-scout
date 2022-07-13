@@ -11,11 +11,13 @@
         team: { number: number; name: string };
     };
     export let winner: boolean;
-    export let focused = false;
+    export let selectedTeam: number | null = null;
     export let border = false;
 
     $: number = team.team.number;
     $: name = team.team.name;
+
+    $: focused = number == selectedTeam;
 
     $: color = {
         [Station.Red_1]: "red",
@@ -41,6 +43,14 @@
         (dq && !noShow ? " (Disqualified)" : "") +
         (!onField && !dq && !noShow ? " (Not on Field)" : "") +
         (surrogate ? " (Surrogate)" : "");
+
+    function handleClick() {
+        if (focused) {
+            selectedTeam = null;
+        } else {
+            selectedTeam = number;
+        }
+    }
 </script>
 
 <td
@@ -52,12 +62,13 @@
     class:not-on-field={!onField}
     style:max-width={width}
     style:min-width={width}
+    on:click={handleClick}
 >
     <div class="wrap">
-        <a href={`/teams/${number}`} {title} class:winner>
+        <div class="inner" {title} class:winner>
             <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
             <em class="maybe-hide">{name}</em>
-        </a>
+        </div>
     </div>
 </td>
 
@@ -111,7 +122,7 @@
         border-right: 2px solid var(--color-team-blue); /* This is quite the hack */
     }
 
-    a {
+    .inner {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -120,6 +131,8 @@
         color: inherit;
 
         padding: var(--small-padding);
+
+        cursor: pointer;
     }
 
     .wrap {
@@ -136,7 +149,7 @@
             display: none;
         }
 
-        a {
+        .inner {
             align-items: center;
             justify-content: center;
         }
@@ -156,11 +169,16 @@
 
     .focused.red {
         background-color: var(--color-team-red);
-        color: white;
+        color: var(--color-team-text);
     }
 
     .focused.blue {
         background-color: var(--color-team-blue);
-        color: white;
+        color: var(--color-team-text);
+    }
+
+    .focused.solo {
+        background-color: var(--color-team-neutral);
+        color: var(--color-team-text);
     }
 </style>

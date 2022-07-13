@@ -9,8 +9,17 @@
         personName?: string | null;
         team: { name: string; number: number };
     }[];
+    export let selectedTeam: number | null;
 
     $: types = [...new Set(awards.map((a) => a.type))].sort(sortAwards);
+
+    function handleClick(teamNumber: number) {
+        if (teamNumber == selectedTeam) {
+            selectedTeam = null;
+        } else {
+            selectedTeam = teamNumber;
+        }
+    }
 </script>
 
 <div>
@@ -24,12 +33,13 @@
                 <ol>
                     {#each typeAwards as award}
                         <li>
-                            <a
-                                sveltekit:prefetch
-                                href={`/teams/${award.team.number}`}
+                            <span
+                                class:selected={award.team.number ==
+                                    selectedTeam}
+                                on:click={() => handleClick(award.team.number)}
                             >
                                 {award.team.number} - {award.team.name}
-                            </a>
+                            </span>
                         </li>
                     {/each}
                 </ol>
@@ -37,13 +47,14 @@
                 <ul>
                     {#each typeAwards as award}
                         <li>
-                            <a
-                                sveltekit:prefetch
-                                href={`/teams/${award.team.number}`}
+                            <span
+                                class:selected={award.team.number ==
+                                    selectedTeam}
+                                on:click={() => handleClick(award.team.number)}
                             >
                                 {award.personName} ({award.team.number} - {award
                                     .team.name})
-                            </a>
+                            </span>
                         </li>
                     {/each}
                 </ul>
@@ -97,7 +108,7 @@
         content: counter(list) ")\a0";
     }
 
-    a {
+    span {
         color: inherit;
         text-decoration: none;
 
@@ -106,5 +117,14 @@
         height: 100%;
 
         padding: var(--padding);
+
+        border-radius: 4px;
+
+        cursor: pointer;
+    }
+
+    span.selected {
+        background: var(--color-team-neutral);
+        color: var(--color-team-text);
     }
 </style>

@@ -28,6 +28,13 @@ query EventPage($season: Int!, $code: String!) {
             season
             eventCode
             teamNumber
+            rank
+            wins
+            losses
+            ties
+            qualPoints
+            opr
+            qualAverage
             team {
                 number
                 name

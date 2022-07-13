@@ -33,6 +33,7 @@
     import { page } from "$app/stores";
     import TeamsList from "../../../../lib/components/TeamsList.svelte";
     import { goto } from "$app/navigation";
+    import TeamSelectionBar from "../../../../lib/components/TeamSelectionBar.svelte";
 
     export let event: ApolloQueryResult<EventPageQuery>;
     $: eventData = event.data?.eventByCode!;
@@ -40,15 +41,21 @@
     $: startDate = new Date(eventData?.start);
     $: endDate = new Date(eventData?.end);
 
+    function gotoSubPage(name: string | undefined) {
+        if (browser && $page.routeId == "events/[season]/[code]/[...tab]") {
+            goto(
+                `/events/${$page.params.season}/${$page.params.code}/` +
+                    name?.toLowerCase() ?? "",
+                { replaceState: true }
+            );
+        }
+    }
+
     let selectedPage: string | undefined =
         $page.params?.tab != "" ? $page.params?.tab : "matches";
-    $: if (browser) {
-        goto(
-            `/events/${$page.params.season}/${$page.params.code}/` +
-                selectedPage?.toLowerCase() ?? "",
-            { replaceState: true }
-        );
-    }
+    $: gotoSubPage(selectedPage);
+
+    let selectedTeam: number | null = null;
 </script>
 
 <svelte:head>
@@ -82,7 +89,7 @@
 
         <DataFromFirst />
     </Card>
-    <!-- <Card> -->
+
     <TabbedCard
         names={[
             [faTrophy, "Matches"],
@@ -96,20 +103,29 @@
                 matches={eventData.matches}
                 event={eventData}
                 isRemote={eventData.remote}
+                bind:selectedTeam
             />
         </TabContent>
 
         {#if eventData.awards.length}
             <TabContent name="Awards">
-                <AwardsList awards={eventData.awards} />
+                <AwardsList awards={eventData.awards} bind:selectedTeam />
             </TabContent>
         {/if}
 
         {#if eventData.teams.length}
             <TabContent name="Teams">
-                <TeamsList teams={eventData.teams.map((t) => t.team)} />
+                <TeamsList
+                    teams={eventData.teams.map((t) => t.team)}
+                    bind:selectedTeam
+                />
             </TabContent>
         {/if}
     </TabbedCard>
-    <!-- </Card> -->
+
+    {#if selectedTeam}
+        <TeamSelectionBar
+            tep={eventData.teams.filter((t) => t.teamNumber == selectedTeam)[0]}
+        />
+    {/if}
 </Loading>

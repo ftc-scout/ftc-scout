@@ -9,7 +9,7 @@
     import MatchTeam from "./MatchTeam.svelte";
 
     export let match: EventPageMatchFragment;
-    export let teamFocus: number | null = null;
+    export let selectedTeam: number | null = null;
     export let zebraStripe: boolean;
 
     $: scores = match.scores as FullMatchScores2021TraditionalFragment;
@@ -39,7 +39,7 @@
             {team}
             width={`calc((100% - 10.75em) / ${match.teams.length})`}
             winner={team.station.startsWith(winner)}
-            focused={teamFocus == team.team.number}
+            bind:selectedTeam
         />
     {/each}
 </tr>

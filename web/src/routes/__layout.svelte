@@ -50,6 +50,10 @@
         --secondary-text-color: #636466;
         --theme-text-color: #ffffff;
 
+        --inverse-background-color: #212121;
+        --inverse-text-color: #ffffff;
+        --inverse-secondary-text-color: #bdbdbd;
+
         --error-color: red;
 
         --shadow-color: #888888;
@@ -73,6 +77,7 @@
             var(--color-team-transparency)
         );
         --color-team-neutral: rgb(170, 0, 255);
+        --color-team-text: white;
         --zebra-stripe-color: rgb(245, 245, 245);
 
         /* Fonts */

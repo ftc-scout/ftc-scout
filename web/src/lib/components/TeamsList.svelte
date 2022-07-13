@@ -3,14 +3,26 @@
         number: number;
         name: string;
     }[];
+    export let selectedTeam: number | null;
+
+    function handleClick(teamNumber: number) {
+        if (teamNumber == selectedTeam) {
+            selectedTeam = null;
+        } else {
+            selectedTeam = teamNumber;
+        }
+    }
 </script>
 
 <ol>
     {#each teams.sort((a, b) => a.number - b.number) as team}
         <li>
-            <a sveltekit:prefetch href={`/teams/${team.number}`}>
+            <div
+                class:selected={team.number == selectedTeam}
+                on:click={() => handleClick(team.number)}
+            >
                 {team.number} - {team.name}
-            </a>
+            </div>
         </li>
     {/each}
 </ol>
@@ -31,7 +43,7 @@
         width: 100%;
     }
 
-    a {
+    div {
         color: inherit;
         text-decoration: none;
 
@@ -40,6 +52,15 @@
         height: 100%;
 
         padding: var(--padding);
+
+        border-radius: 4px;
+
+        cursor: pointer;
+    }
+
+    div.selected {
+        background-color: var(--color-team-neutral);
+        color: var(--color-team-text);
     }
 
     li:hover {
