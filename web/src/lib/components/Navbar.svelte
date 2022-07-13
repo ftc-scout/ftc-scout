@@ -12,16 +12,20 @@
         await logoutMutation({ refetchQueries: [{ query: MeDocument }] });
     import { goto } from "$app/navigation";
     let searchValue = "";
+
 </script>
 
 <nav>
-    <form on:submit|preventDefault={() => goto(`/teams/${searchValue}`)}>
+    <form autocomplete="off" on:submit|preventDefault={() => goto(`/teams/${searchValue}`)}>
         <input
+        class="searchCSS"
             type="search"
+            id ="searchInput"
             name="teamsearch"
             bind:value={searchValue}
-            placeholder="input team"
+            placeholder="Input team..."
         />
+        <div id="result"></div>
     </form>
     {#if meData}
         <button class="login-button" on:click={logout}>Log Out</button>
@@ -33,6 +37,15 @@
 </nav>
 
 <style>
+
+
+.searchCSS {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 9px;
+  font-size: 18px;
+  border-radius: var(--pill-border-radius);
+}
     nav {
         display: flex;
         flex-direction: row;
