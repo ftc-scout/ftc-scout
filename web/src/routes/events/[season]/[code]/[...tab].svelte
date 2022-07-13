@@ -84,7 +84,7 @@
     <TabbedCard
         names={[
             [faTrophy, "Matches"],
-            [faMedal, "Awards"],
+            [faMedal, eventData.awards.length ? "Awards" : null],
         ]}
         bind:selectedName={selectedPage}
     >
@@ -96,9 +96,11 @@
             />
         </TabContent>
 
-        <TabContent name="Awards">
-            <AwardsList awards={eventData.awards} />
-        </TabContent>
+        {#if eventData.awards.length}
+            <TabContent name="Awards">
+                <AwardsList awards={eventData.awards} />
+            </TabContent>
+        {/if}
     </TabbedCard>
     <!-- </Card> -->
 </Loading>

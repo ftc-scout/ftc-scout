@@ -8,7 +8,7 @@
     import Fa from "svelte-fa";
     import { writable, type Writable } from "svelte/store";
 
-    export let names: [IconDefinition, string?][];
+    export let names: [IconDefinition, string | null][];
     let namesFiltered: [IconDefinition, string][] = names.filter(
         (n) => !!n[1]
     ) as any;
@@ -38,7 +38,11 @@
         {/each}
     </div>
 
-    <div class="card" class:unround-top={selectedName == namesFiltered[0][1]}>
+    <div
+        class="card"
+        class:unround-top={selectedName?.toLowerCase() ==
+            namesFiltered[0][1].toLowerCase()}
+    >
         <slot />
     </div>
 </div>
