@@ -24,6 +24,15 @@ query EventPage($season: Int!, $code: String!) {
                 name
             }
         }
+        teams {
+            season
+            eventCode
+            teamNumber
+            team {
+                number
+                name
+            }
+        }
         matches {
             ...EventPageMatch
         }

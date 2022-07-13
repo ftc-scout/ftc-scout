@@ -24,7 +24,10 @@
                 <ol>
                     {#each typeAwards as award}
                         <li>
-                            <a href={`/teams/${award.team.number}`}>
+                            <a
+                                sveltekit:prefetch
+                                href={`/teams/${award.team.number}`}
+                            >
                                 {award.team.number} - {award.team.name}
                             </a>
                         </li>
@@ -34,7 +37,10 @@
                 <ul>
                     {#each typeAwards as award}
                         <li>
-                            <a href={`/teams/${award.team.number}`}>
+                            <a
+                                sveltekit:prefetch
+                                href={`/teams/${award.team.number}`}
+                            >
                                 {award.personName} ({award.team.number} - {award
                                     .team.name})
                             </a>
@@ -56,7 +62,8 @@
     }
 
     h3,
-    ol {
+    ol,
+    ul {
         margin-top: var(--small-gap);
         margin-bottom: var(--small-gap);
     }
@@ -71,9 +78,19 @@
     }
 
     li {
-        margin-top: var(--large-gap);
-        margin-bottom: var(--large-gap);
+        /* margin-top: var(--large-gap); */
+        /* margin-bottom: var(--large-gap); */
         counter-increment: list;
+
+        margin: 0;
+        padding: 0;
+
+        /* display: block; */
+        width: 100%;
+    }
+
+    li:hover {
+        background: var(--hover-color);
     }
 
     ol li::marker {
@@ -82,5 +99,12 @@
 
     a {
         color: inherit;
+        text-decoration: none;
+
+        display: block;
+        width: 100%;
+        height: 100%;
+
+        padding: var(--padding);
     }
 </style>

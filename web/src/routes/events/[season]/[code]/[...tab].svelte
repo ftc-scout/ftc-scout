@@ -16,6 +16,7 @@
         faGlobe,
         faTrophy,
         faMedal,
+        faRobot,
     } from "@fortawesome/free-solid-svg-icons";
     import { prettyPrintDateRange } from "../../../../lib/util/format/pretty-print-date";
     import { prettyPrintURL } from "../../../../lib/util/format/pretty-print-url";
@@ -30,6 +31,8 @@
     import AwardsList from "../../../../lib/components/AwardsList.svelte";
     import { browser } from "$app/env";
     import { page } from "$app/stores";
+    import TeamsList from "../../../../lib/components/TeamsList.svelte";
+    import { goto } from "$app/navigation";
 
     export let event: ApolloQueryResult<EventPageQuery>;
     $: eventData = event.data?.eventByCode!;
@@ -40,11 +43,10 @@
     let selectedPage: string | undefined =
         $page.params?.tab != "" ? $page.params?.tab : "matches";
     $: if (browser) {
-        history.replaceState(
-            null,
-            "",
+        goto(
             `/events/${$page.params.season}/${$page.params.code}/` +
-                selectedPage?.toLowerCase() ?? ""
+                selectedPage?.toLowerCase() ?? "",
+            { replaceState: true }
         );
     }
 </script>
@@ -85,6 +87,7 @@
         names={[
             [faTrophy, "Matches"],
             [faMedal, eventData.awards.length ? "Awards" : null],
+            [faRobot, eventData.teams.length ? "Teams" : null],
         ]}
         bind:selectedName={selectedPage}
     >
@@ -99,6 +102,12 @@
         {#if eventData.awards.length}
             <TabContent name="Awards">
                 <AwardsList awards={eventData.awards} />
+            </TabContent>
+        {/if}
+
+        {#if eventData.teams.length}
+            <TabContent name="Teams">
+                <TeamsList teams={eventData.teams.map((t) => t.team)} />
             </TabContent>
         {/if}
     </TabbedCard>
