@@ -90,6 +90,7 @@
         --medium-hap: 6px;
         --gap: 8px;
         --large-gap: 12px;
+        --vl-gap: 22px;
         --xl-gap: 32px;
 
         --small-padding: 4px;
@@ -117,6 +118,7 @@
             --medium-hap: 4px;
             --gap: 6px;
             --large-gap: 10px;
+            --vl-gap: 15px;
             --xl-gap: 20px;
 
             --small-padding: 2px;
@@ -142,6 +144,7 @@
             --medium-hap: 4px;
             --gap: 6px;
             --large-gap: 10px;
+            --vl-gap: 15px;
             --xl-gap: 20px;
 
             --small-padding: 2px;

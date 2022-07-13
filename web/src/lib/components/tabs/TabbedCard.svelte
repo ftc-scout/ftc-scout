@@ -1,19 +1,35 @@
+<script context="module" lang="ts">
+    export const TAB_CONTEXT = "TAB_SELECTED_CONTEXT";
+</script>
+
 <script lang="ts">
     import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+    import { setContext } from "svelte";
     import Fa from "svelte-fa";
+    import { writable, type Writable } from "svelte/store";
 
     export let names: [IconDefinition, string?][];
+    let namesFiltered: [IconDefinition, string][] = names.filter(
+        (n) => !!n[1]
+    ) as any;
+    $: namesFiltered = names.filter((n) => !!n[1]) as any;
 
-    let selected = 0;
+    export let selectedName: string | undefined;
+
+    let selectedStore: Writable<string | undefined> = writable(selectedName);
+    $: $selectedStore = selectedName;
+
+    setContext(TAB_CONTEXT, selectedStore);
 </script>
 
 <div class="wrapper">
     <div class="tabs">
-        {#each names.filter((n) => !!n[1]) as [icon, name], i}
+        {#each namesFiltered as [icon, name]}
             <button
                 class="tab"
-                class:selected={selected == i}
-                on:click={() => (selected = i)}
+                class:selected={name.toLowerCase() ==
+                    selectedName?.toLowerCase()}
+                on:click={() => (selectedName = name)}
             >
                 <Fa {icon} scale="0.75x" />
                 &nbsp;
@@ -22,7 +38,7 @@
         {/each}
     </div>
 
-    <div class="card" class:unround-top={selected == 0}>
+    <div class="card" class:unround-top={selectedName == namesFiltered[0][1]}>
         <slot />
     </div>
 </div>

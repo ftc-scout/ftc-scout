@@ -11,6 +11,19 @@ query EventPage($season: Int!, $code: String!) {
         country
         website
         remote
+        awards {
+            type
+            placement
+            personName
+            teamNumber
+            season
+            eventCode
+            awardCode
+            team {
+                number
+                name
+            }
+        }
         matches {
             ...EventPageMatch
         }

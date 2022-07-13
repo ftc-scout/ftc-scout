@@ -1,6 +1,32 @@
 import { AwardTypes2021 } from "../../graphql/generated/graphql-operations";
 import { prettyPrintOrdinal } from "./pretty-print-ordinal";
 
+export function prettyPrintAwardCategory(type: AwardTypes2021): string {
+    switch (type) {
+        case AwardTypes2021.Compass:
+        case AwardTypes2021.Connect:
+        case AwardTypes2021.Control:
+        case AwardTypes2021.Design:
+        case AwardTypes2021.Innovate:
+        case AwardTypes2021.Inspire:
+        case AwardTypes2021.JudgesChoice:
+        case AwardTypes2021.Motivate:
+        case AwardTypes2021.Promote:
+        case AwardTypes2021.Think:
+        case AwardTypes2021.DeansList:
+            return prettyPrintAwardName(type) + " Winners";
+        case AwardTypes2021.Winner:
+        case AwardTypes2021.Finalist:
+        case AwardTypes2021.DivisionFinalist:
+        case AwardTypes2021.DivisionWinner:
+        case AwardTypes2021.TopRanked:
+            return prettyPrintAwardName(type);
+        default:
+            console.error("Unknown award");
+            return "Unknown Award";
+    }
+}
+
 export function prettyPrintAwardName(type: AwardTypes2021): string {
     switch (type) {
         case AwardTypes2021.Compass:
@@ -10,7 +36,7 @@ export function prettyPrintAwardName(type: AwardTypes2021): string {
         case AwardTypes2021.Control:
             return "Control Award";
         case AwardTypes2021.DeansList:
-            return "Dean's List"; // TODO?
+            return "Dean's List Award"; // TODO?
         case AwardTypes2021.Design:
             return "Design Award";
         case AwardTypes2021.DivisionFinalist:
@@ -36,7 +62,7 @@ export function prettyPrintAwardName(type: AwardTypes2021): string {
         case AwardTypes2021.TopRanked:
             return "Top Ranked";
         default:
-            console.log("Unknown award");
+            console.error("Unknown award");
             return "Unknown Award";
     }
 }
