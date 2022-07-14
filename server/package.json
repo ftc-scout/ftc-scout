@@ -27,6 +27,8 @@
         "dotenv": "^16.0.1",
         "express": "^4.18.1",
         "express-session": "^1.17.3",
+        "fuzzyset": "^1.0.7",
+        "fuzzysort": "^2.0.1",
         "ioredis": "^4.28.5",
         "isomorphic-fetch": "^3.0.0",
         "ml-matrix": "^6.10.1",
@@ -42,6 +44,7 @@
         "@types/compression": "^1.7.2",
         "@types/connect-redis": "^0.0.18",
         "@types/express-session": "^1.17.4",
+        "@types/fuzzyset": "^1.0.4",
         "prettier": "2.6.2",
         "typescript": "^4.7.2"
     }
