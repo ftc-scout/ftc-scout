@@ -17,7 +17,6 @@
         faSchool,
         faPlus,
         faTrophy,
-        faStar,
         faMedal,
     } from "@fortawesome/free-solid-svg-icons";
     import DataFromFirst from "../../lib/components/DataFromFirst.svelte";
@@ -29,7 +28,6 @@
     import { prettyPrintFloat } from "../../lib/util/format/pretty-print-float";
     import Loading from "../../lib/components/Loading.svelte";
     import type { ApolloQueryResult } from "@apollo/client";
-    import { prettyPrintAwardPlacement } from "../../lib/util/format/pretty-print-award";
     import Award from "../../lib/components/Award.svelte";
 
     export let team: ApolloQueryResult<TeamQuery>;
