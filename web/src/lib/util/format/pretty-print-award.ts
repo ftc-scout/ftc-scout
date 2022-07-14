@@ -104,7 +104,7 @@ export function prettyPrintAwardPlacementParts(
         case AwardTypes2021.Finalist:
             return [prettyPrintAwardName(type), alliancePlacement(placement)];
         case AwardTypes2021.TopRanked:
-            return ["Top Ranked", prettyPrintOrdinal(placement)];
+            return ["Top Ranked", prettyPrintOrdinal(placement) + " Place"];
         default:
             return [prettyPrintAwardName(type), winnerOrOrdinal(placement)];
     }
