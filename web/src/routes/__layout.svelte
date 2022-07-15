@@ -10,11 +10,18 @@
     import Navbar from "$lib/components/Navbar.svelte";
     import { query, setClient, type ReadableQuery } from "svelte-apollo";
     import { apolloClient } from "../lib/graphql/client";
+    import { writable, type Writable } from "svelte/store";
+    import { setContext } from "svelte";
 
     setClient(apolloClient);
 
     export let me: ReadableQuery<MeQuery> = query(MeDocument);
     $: meData = $me?.data?.me;
+
+    let meStore: Writable<MeQuery["me"] | null> = writable(null);
+    $: $meStore = meData;
+
+    setContext("me", meStore);
 </script>
 
 <svelte:head>

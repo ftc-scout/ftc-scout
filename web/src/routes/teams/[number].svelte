@@ -1,5 +1,8 @@
 <script context="module" lang="ts">
-    import { TeamDocument } from "../../lib/graphql/generated/graphql-operations";
+    import {
+        TeamDocument,
+        type MeQuery,
+    } from "../../lib/graphql/generated/graphql-operations";
     import { queryLoad } from "../../lib/graphql/query-load";
 
     export const load = queryLoad("team", TeamDocument, ({ params }) => ({
@@ -29,6 +32,8 @@
     import Loading from "../../lib/components/Loading.svelte";
     import type { ApolloQueryResult } from "@apollo/client";
     import Award from "../../lib/components/Award.svelte";
+    import type { Readable } from "svelte/store";
+    import { getContext } from "svelte";
 
     export let team: ApolloQueryResult<TeamQuery>;
     $: teamData = team.data.teamByNumber!;
@@ -38,6 +43,8 @@
             new Date(b.event.start as string).getTime() -
             new Date(a.event.start as string).getTime()
     )!;
+
+    let me: Readable<MeQuery["me"] | null> = getContext("me");
 </script>
 
 <svelte:head>
@@ -49,6 +56,8 @@
 </svelte:head>
 
 <Loading store={team} width={"1000px"} doesNotExist={!teamData}>
+    My username: {$me?.username}
+
     <Card>
         <h1>{teamData.number} - {teamData.name}</h1>
 
