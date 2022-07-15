@@ -45,6 +45,14 @@
     )!;
 
     let me: Readable<MeQuery["me"] | null> = getContext("me");
+
+    function logger()
+    {
+        if ($me!.id = teamData.number)
+        {
+            document.getElementById("edit-box")!.contentEditable = "true";
+        }
+    }
 </script>
 
 <svelte:head>
@@ -164,9 +172,9 @@
         </Card>
     {/each}
 
-    <button class="edit-button" type="button">Edit Document</button>
+    <button onClick={() => {logger()}} id = "editor" class="edit-button" type="button">Edit Document</button>
     <Card>
-        <p1> <input type="text" disabled value="hi" /> </p1>
+        <p id="edit-box" type="text" contenteditable="false"> I am not editable </p>
     </Card>
 </Loading>
 
