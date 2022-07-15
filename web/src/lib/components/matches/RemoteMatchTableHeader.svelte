@@ -51,4 +51,10 @@
 
         box-shadow: rgb(0 0 0 / 14%) 0px -4px 4px -2px inset;
     }
+
+    @media (max-width: 550px) {
+        .q {
+            font-size: var(--small-font-size);
+        }
+    }
 </style>
