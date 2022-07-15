@@ -54,7 +54,7 @@
             {wltDot ? "·" : ""}
         {/if}
         {#if typeof tep.qualPoints == "number"}
-            RP <b>{prettyPrintFloat(tep.qualPoints)}</b>
+            RP <b>{tep.qualPoints}</b>
             {rpDot ? "·" : ""}
         {/if}
         {#if typeof tep.opr == "number"}

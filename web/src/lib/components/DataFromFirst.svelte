@@ -4,7 +4,7 @@
 </script>
 
 <InfoIconRow icon={faCircleCheck}>
-    <a href="https://ftc-events.firstinspires.org/services/API">
+    <a href="https://ftc-events.firstinspires.org/services/API" tabindex="-1">
         Data from <em>FIRST</em>
     </a>
 </InfoIconRow>

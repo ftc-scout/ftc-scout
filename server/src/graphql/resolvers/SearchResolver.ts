@@ -66,6 +66,9 @@ function resultsLax(teams: Team[], searchText: string): TeamSearchResult[] {
         let originalTeam = teams.filter(
             (t) => `${t.number} ${t.name}`.toLowerCase() == r[1]
         )[0];
-        return new TeamSearchResult(originalTeam, r[1]);
+        return new TeamSearchResult(
+            originalTeam,
+            `${originalTeam.number} ${originalTeam.name}`
+        );
     });
 }
