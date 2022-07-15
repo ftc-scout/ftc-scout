@@ -54,7 +54,7 @@
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
     <input
-        class="searchCSS"
+        class="searchbar"
         type="search"
         id="searchInput"
         name="teamsearch"
@@ -105,6 +105,11 @@
     input:focus,
     a:focus {
         outline: var(--text-color) 2px auto;
+        background: var(--hover-color);
+    }
+
+    a:hover {
+        background: var(--hover-color);
     }
 
     .result {
@@ -145,13 +150,13 @@
         color: inherit;
 
         padding: var(--padding);
+
+        text-decoration: none;
+
+        border-radius: 8px;
     }
 
-    .result li:hover {
-        background: var(--hover-color);
-    }
-
-    .searchCSS {
+    .searchbar {
         border: 1px solid transparent;
         background-color: #f1f1f1;
         padding: 9px;
