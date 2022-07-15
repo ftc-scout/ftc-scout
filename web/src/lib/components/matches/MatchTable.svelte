@@ -14,6 +14,8 @@
     export let event: { start: string };
     export let isRemote: boolean;
     export let selectedTeam: number | null = null;
+    export let frozen = false;
+    export let teamPage = false;
 
     $: qualsMatches = matches
         .filter((m) => m.tournamentLevel == TournamentLevel.Quals)
@@ -42,11 +44,21 @@
         {#if matches.length}
             {#if isRemote}
                 {#each soloMatches as oneTeamMatches, i}
-                    <RemoteMatches
-                        matches={oneTeamMatches}
-                        zebraStripe={i % 2 == 1}
-                        bind:selectedTeam
-                    />
+                    {#if !teamPage}
+                        <RemoteMatches
+                            matches={oneTeamMatches}
+                            zebraStripe={i % 2 == 1}
+                            bind:selectedTeam
+                            {frozen}
+                        />
+                    {:else}
+                        <RemoteMatches
+                            matches={oneTeamMatches}
+                            zebraStripe={i % 2 == 1}
+                            selectedTeam={null}
+                            {frozen}
+                        />
+                    {/if}
                 {/each}
             {:else}
                 {#if finalsMatches.length}
@@ -59,6 +71,7 @@
                             {match}
                             bind:selectedTeam
                             zebraStripe={i % 2 == 1}
+                            {frozen}
                         />
                     {/if}
                 {/each}
@@ -73,6 +86,7 @@
                             {match}
                             bind:selectedTeam
                             zebraStripe={i % 2 == 1}
+                            {frozen}
                         />
                     {/if}
                 {/each}
@@ -87,6 +101,7 @@
                             {match}
                             bind:selectedTeam
                             zebraStripe={i % 2 == 1}
+                            {frozen}
                         />
                     {/if}
                 {/each}

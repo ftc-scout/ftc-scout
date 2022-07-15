@@ -149,6 +149,8 @@
                 {event}
                 matches={event.matchesForTeam.map((mt) => mt.match)}
                 selectedTeam={teamData.number}
+                frozen={true}
+                teamPage={true}
             />
         </Card>
     {/each}

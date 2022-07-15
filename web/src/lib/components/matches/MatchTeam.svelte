@@ -13,6 +13,7 @@
     export let winner: boolean;
     export let selectedTeam: number | null = null;
     export let border = false;
+    export let frozen: boolean;
 
     $: number = team.team.number;
     $: name = team.team.name;
@@ -45,10 +46,12 @@
         (surrogate ? " (Surrogate)" : "");
 
     function handleClick() {
-        if (focused) {
-            selectedTeam = null;
-        } else {
-            selectedTeam = number;
+        if (!frozen) {
+            if (focused) {
+                selectedTeam = null;
+            } else {
+                selectedTeam = number;
+            }
         }
     }
 </script>
@@ -65,10 +68,27 @@
     on:click={handleClick}
 >
     <div class="wrap">
-        <div class="inner" {title} class:winner>
-            <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
-            <em class="maybe-hide">{name}</em>
-        </div>
+        {#if frozen}
+            <a
+                sveltekit:prefetch
+                href={`/teams/${number}`}
+                class="inner"
+                {title}
+                class:winner
+            >
+                <span class:dq={dq || noShow}>
+                    {number}{surrogate ? "*" : ""}
+                </span>
+                <em class="maybe-hide">{name}</em>
+            </a>
+        {:else}
+            <div class="inner" {title} class:winner>
+                <span class:dq={dq || noShow}>
+                    {number}{surrogate ? "*" : ""}
+                </span>
+                <em class="maybe-hide">{name}</em>
+            </div>
+        {/if}
     </div>
 </td>
 

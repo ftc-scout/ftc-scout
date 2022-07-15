@@ -11,6 +11,7 @@
     export let match: EventPageMatchFragment;
     export let selectedTeam: number | null = null;
     export let zebraStripe: boolean;
+    export let frozen = false;
 
     $: scores = match.scores as FullMatchScores2021TraditionalFragment;
     $: sortedTeams = [...match.teams].sort((a, b) =>
@@ -40,6 +41,7 @@
             width={`calc((100% - 10.75em) / ${match.teams.length})`}
             winner={team.station.startsWith(winner)}
             bind:selectedTeam
+            {frozen}
         />
     {/each}
 </tr>
