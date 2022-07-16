@@ -20,7 +20,7 @@ export class AwardResolver {
         };
     }
 
-    @FieldResolver(() => Team)
+    @FieldResolver(() => Event)
     @Loader<{ season: number; code: string }, Event>(async (ids, _) => {
         let teams = await Event.find({
             where: ids as { season: number; code: string }[],

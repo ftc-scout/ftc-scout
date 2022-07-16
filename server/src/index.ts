@@ -34,7 +34,6 @@ import { Season } from "./ftc-api/types/Season";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
 import compression from "compression";
-import { getAllTeams } from "./ftc-api/get-teams";
 
 async function main() {
     await FTCSDataSource.initialize();
