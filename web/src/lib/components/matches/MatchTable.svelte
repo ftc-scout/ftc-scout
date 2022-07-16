@@ -85,6 +85,7 @@
                             bind:selectedTeam
                             zebraStripe={i % 2 == 1}
                             {frozen}
+                            showScoresFn={showScores}
                         />
                     {/if}
                 {/each}
@@ -100,6 +101,7 @@
                             bind:selectedTeam
                             zebraStripe={i % 2 == 1}
                             {frozen}
+                            showScoresFn={showScores}
                         />
                     {/if}
                 {/each}
@@ -115,6 +117,7 @@
                             bind:selectedTeam
                             zebraStripe={i % 2 == 1}
                             {frozen}
+                            showScoresFn={showScores}
                         />
                     {/if}
                 {/each}

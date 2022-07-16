@@ -64,6 +64,7 @@
     class:focused
     class:not-on-field={!onField}
     style:max-width={width}
+    style:width
     style:min-width={width}
     on:click={handleClick}
 >
@@ -96,9 +97,10 @@
     td {
         outline: transparent solid 2px;
         transition: outline 0.12s ease 0s;
-        width: 100%;
+        /* overflow: hidden; */
+        /* width: 100%; */
 
-        display: inline-block;
+        display: table-cell;
     }
 
     td.red {
