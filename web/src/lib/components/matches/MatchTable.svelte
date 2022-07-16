@@ -9,6 +9,7 @@
     import RemoteMatches from "./RemoteMatches.svelte";
     import MatchTrad from "./MatchTrad.svelte";
     import RemoteMatchTableHeader from "./RemoteMatchTableHeader.svelte";
+    import ScoreModal from "./score-modals/ScoreModal.svelte";
 
     export let matches: EventPageMatchFragment[];
     export let event: { start: string };
@@ -31,7 +32,17 @@
 
     $: anySurrogate = matches.some((m) => m.teams.some((t) => t.surrogate));
     $: anyDq = matches.some((m) => m.teams.some((t) => t.dq));
+
+    let scoresShown = false;
+    let scoresShownMatch: EventPageMatchFragment | null = null;
+
+    function showScores(scores: EventPageMatchFragment) {
+        scoresShownMatch = scores;
+        scoresShown = true;
+    }
 </script>
+
+<ScoreModal bind:shown={scoresShown} matchScores={scoresShownMatch} />
 
 <table>
     {#if isRemote}
@@ -50,6 +61,7 @@
                             zebraStripe={i % 2 == 1}
                             bind:selectedTeam
                             {frozen}
+                            showScoresFn={showScores}
                         />
                     {:else}
                         <RemoteMatches
@@ -57,6 +69,7 @@
                             zebraStripe={i % 2 == 1}
                             selectedTeam={null}
                             {frozen}
+                            showScoresFn={showScores}
                         />
                     {/if}
                 {/each}

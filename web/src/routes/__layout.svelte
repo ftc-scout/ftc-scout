@@ -87,6 +87,9 @@
         --color-team-text: white;
         --zebra-stripe-color: rgb(245, 245, 245);
 
+        --modal-background-color: rgb(0, 0, 0);
+        --modal-background-color: rgba(0, 0, 0, 0.4);
+
         /* Fonts */
         --main-font: "Inter", sans-serif;
         --small-font-size: 13px;

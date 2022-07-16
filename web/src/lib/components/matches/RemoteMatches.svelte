@@ -6,6 +6,8 @@
     export let zebraStripe: boolean;
     export let selectedTeam: number | null;
     export let frozen = false;
+    export let showScoresFn: ((_: EventPageMatchFragment) => void) | null =
+        null;
 
     $: team = matches[0].teams[0];
     $: noShows = matches.map((m) => m.teams[0].noShow);
@@ -13,6 +15,10 @@
     $: totalPoints = scores.reduce((a, b) => a + b, 0);
 
     $: notReported = matches.some((m) => !m.scores);
+
+    function show(scores: EventPageMatchFragment) {
+        if (showScoresFn) showScoresFn(scores);
+    }
 </script>
 
 <tr
@@ -31,7 +37,7 @@
 
     {#if !notReported}
         {#each scores as score, i}
-            <td class:score={!noShows[i]}>
+            <td class:score={!noShows[i]} on:click={() => show(matches[i])}>
                 {#if !noShows[i]}
                     {score}
                 {/if}
