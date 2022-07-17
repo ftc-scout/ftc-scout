@@ -76,7 +76,7 @@
     }
 
     .total {
-        border-left: 2px solid lightgray;
+        border-left: 2px solid var(--neutral-separator-color);
     }
 
     .zebra-stripe {
