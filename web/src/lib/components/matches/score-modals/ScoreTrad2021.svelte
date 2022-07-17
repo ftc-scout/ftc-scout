@@ -1,121 +1,146 @@
 <script lang="ts">
+    import TradScoresHeader from "./TradScoresHeader.svelte";
+
     import type { MatchScores2021Traditional } from "../../../graphql/generated/graphql-operations";
+    import TradScoreLine from "./TradScoreLine.svelte";
+    import {
+        autoNavigationPoints2021,
+        autoBonusPoints2021,
+        endgameParkPoints2021,
+    } from "../../../util/points";
 
     export let score: MatchScores2021Traditional;
-
-    $: red = score.red;
-    $: blue = score.blue;
 </script>
 
 <table colspan="3">
-    <tr>
-        <td />
-        <td class="red-header nz">Red <br /> <b>{red.totalPoints}</b></td>
-        <td class="blue-header nz">Blue <br /> <b>{blue.totalPoints}</b></td>
-    </tr>
-    <tr class="heading">
-        <td class="name">Auto</td>
-        <td class="data red" class:nz={red.autoPoints != 0}>{red.autoPoints}</td
-        >
-        <td class="data blue" class:nz={blue.autoPoints != 0}
-            >{blue.autoPoints}</td
-        >
-    </tr>
-    <tr class="normal-row">
-        <td class="name">Freight Points</td>
-        <td class="data red" class:nz={red.autoFreightPoints != 0}
-            >{red.autoFreightPoints}</td
-        >
-        <td class="data blue" class:nz={blue.autoFreightPoints != 0}
-            >{blue.autoFreightPoints}</td
-        >
-    </tr>
-    <tr class="normal-row">
-        <td class="name">Carousel Points</td>
-        <td class="data red" class:nz={red.autoCarouselPoints != 0}
-            >{red.autoCarouselPoints}</td
-        >
-        <td class="data blue" class:nz={blue.autoCarouselPoints != 0}
-            >{blue.autoCarouselPoints}</td
-        >
-    </tr>
+    <TradScoresHeader {score} />
+
+    <TradScoreLine {score} heading name="Auto" getProp={(a) => a.autoPoints} />
+    <TradScoreLine
+        {score}
+        name="Freight Points"
+        getProp={(a) => a.autoFreightPoints}
+        subProps={[
+            ["Level 1", (a) => a.autoFreight1 * 6],
+            ["Level 2", (a) => a.autoFreight2 * 6],
+            ["Level 3", (a) => a.autoFreight3 * 6],
+            ["Storage", (a) => a.autoStorageFreight * 2],
+        ]}
+    />
+    <TradScoreLine
+        {score}
+        name="Carousel Points"
+        getProp={(a) => a.autoCarouselPoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Navigation Points"
+        getProp={(a) => a.autoNavigationPoints}
+        subProps={[
+            ["Robot 1", (a) => autoNavigationPoints2021(a.autoNavigation1)],
+            ["Robot 2", (a) => autoNavigationPoints2021(a.autoNavigation2)],
+        ]}
+    />
+    <TradScoreLine
+        {score}
+        name="Bonus Points"
+        getProp={(a) => a.autoBonusPoints}
+        subProps={[
+            [
+                "Robot 1",
+                (a) => autoBonusPoints2021(a.autoBonus1, a.barcodeElement1),
+            ],
+            [
+                "Robot 2",
+                (a) => autoBonusPoints2021(a.autoBonus2, a.barcodeElement2),
+            ],
+        ]}
+    />
+
+    <TradScoreLine
+        {score}
+        heading
+        name="Driver-Controlled"
+        getProp={(a) => a.driverControlledPoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Alliance Hub Points"
+        getProp={(a) => a.driverControlledAllianceHubPoints}
+        subProps={[
+            ["Level 1", (a) => a.driverControlledFreight1 * 2],
+            ["Level 2", (a) => a.driverControlledFreight2 * 4],
+            ["Level 3", (a) => a.driverControlledFreight3 * 6],
+        ]}
+    />
+    <TradScoreLine
+        {score}
+        name="Shared Hub Points"
+        getProp={(a) => a.driverControlledSharedHubPoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Storage Points"
+        getProp={(a) => a.driverControlledStoragePoints}
+    />
+
+    <TradScoreLine
+        {score}
+        heading
+        name="Endgame"
+        getProp={(a) => a.endgamePoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Delivery Points"
+        getProp={(a) => a.endgameDeliveryPoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Capping Points"
+        getProp={(a) => a.cappingPoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Parking Points"
+        getProp={(a) => a.endgameParkingPoints}
+        subProps={[
+            ["Robot 1", (a) => endgameParkPoints2021(a.endgamePark1)],
+            ["Robot 2", (a) => endgameParkPoints2021(a.endgamePark2)],
+        ]}
+    />
+    <TradScoreLine
+        {score}
+        name="Balanced Points"
+        getProp={(a) => a.allianceBalancedPoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Tipped Points"
+        getProp={(a) => a.sharedUnbalancedPoints}
+    />
+
+    <TradScoreLine
+        {score}
+        heading
+        name="Penalties"
+        getProp={(a) => a.penaltyPoints}
+    />
+    <TradScoreLine
+        {score}
+        name="Major Penalty Points"
+        getProp={(a) => a.majorPenalties * -30}
+    />
+    <TradScoreLine
+        {score}
+        name="Minor Penalty Points"
+        getProp={(a) => a.minorPenalties * -10}
+    />
 </table>
 
 <style>
-    * {
-        /* We don't use the global vars becuase the modal should be fullsize even on phones */
-        font-size: 16px;
-    }
-
     table {
+        display: block;
         border-collapse: collapse;
-    }
-
-    .red-header,
-    .blue-header {
-        /* display: flex; */
-        color: var(--color-team-text);
-        text-align: center;
-        padding-top: var(--small-padding);
-        padding-bottom: var(--small-padding);
-    }
-
-    .red-header b,
-    .blue-header b {
-        font-weight: 900;
-    }
-
-    .red-header {
-        background: var(--color-team-red);
-    }
-
-    .blue-header {
-        background: var(--color-team-blue);
-    }
-
-    .heading {
-        background: var(--zebra-stripe-color);
-    }
-
-    .name {
-        padding-left: 8px;
-        padding-right: 16px;
-    }
-
-    .heading .name {
-        font-weight: bold;
-    }
-
-    .normal-row .name {
-        padding-left: 24px;
-    }
-
-    .data {
-        font-weight: bold;
-        min-width: 100px;
-        text-align: center;
-    }
-
-    td {
-        padding: 8px;
-    }
-
-    .red {
-        color: var(--color-team-red);
-        background: var(--color-team-red-transparent);
-    }
-
-    .blue {
-        color: var(--color-team-blue);
-        background: var(--color-team-blue-transparent);
-    }
-
-    .data:not(.nz) {
-        font-weight: normal;
-        color: var(--grayed-out-text-color);
-    }
-
-    .heading .data:not(.nz) {
-        font-weight: bold;
     }
 </style>

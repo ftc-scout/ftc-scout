@@ -66,6 +66,8 @@
 
         --shadow-color: #888888;
 
+        --neutral-separator-color: lightgray;
+
         /* Stolen from ftcscores <3 */
         --color-team-transparency: 0.15;
         --color-team-red: rgb(244, 67, 54);
