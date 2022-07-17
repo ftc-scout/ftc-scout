@@ -71,6 +71,7 @@
         --color-team-blue-darker: var(--paper-blue-600);
         --color-team-blue-transparent: rgba(33, 150, 243, var(--color-team-transparency));
         --color-team-neutral: rgb(170, 0, 255);
+        --color-team-neutral-transparent: rgba(170, 0, 255, var(--color-team-transparency));
         --color-team-text: white;
         --zebra-stripe-color: rgb(245, 245, 245);
 

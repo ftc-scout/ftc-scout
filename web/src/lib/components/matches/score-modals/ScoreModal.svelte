@@ -4,6 +4,7 @@
     import type { EventPageMatchFragment } from "../../../graphql/generated/graphql-operations";
     import ScoreTrad2021 from "./ScoreTrad2021.svelte";
     import Fa from "svelte-fa";
+    import ScoreRemote2021 from "./ScoreRemote2021.svelte";
 
     export let matchScores: EventPageMatchFragment | null = null;
     export let shown = false;
@@ -24,6 +25,8 @@
 
         {#if matchScores.scores?.__typename == "MatchScores2021Traditional"}
             <ScoreTrad2021 score={matchScores.scores} />
+        {:else if matchScores.scores?.__typename == "MatchScores2021Remote"}
+            <ScoreRemote2021 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />
         {/if}
     </Modal>
 {/if}

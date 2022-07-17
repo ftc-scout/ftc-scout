@@ -16,7 +16,7 @@
     $: notReported = matches.some((m) => !m.scores);
 
     function show(scores: EventPageMatchFragment) {
-        if (showScoresFn) showScoresFn(scores);
+        if (showScoresFn && !scores.teams[0].noShow) showScoresFn(scores);
     }
 </script>
 
