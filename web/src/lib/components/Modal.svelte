@@ -55,7 +55,7 @@
 
     .content-wrapper {
         background: var(--foreground-color);
-        padding: var(--padding);
+        padding: var(--large-padding);
         border-radius: 8px;
 
         box-shadow: -2px 2px 10px 3px rgba(0, 0, 0, 20%);
