@@ -67,10 +67,7 @@ export function prettyPrintAwardName(type: AwardTypes2021): string {
     }
 }
 
-export function prettyPrintAwardPlacement(
-    type: AwardTypes2021,
-    placement: number
-): string {
+export function prettyPrintAwardPlacement(type: AwardTypes2021, placement: number): string {
     switch (type) {
         case AwardTypes2021.DeansList:
             return `Dean's List`;
@@ -78,15 +75,11 @@ export function prettyPrintAwardPlacement(
         case AwardTypes2021.DivisionWinner:
         case AwardTypes2021.Winner:
         case AwardTypes2021.Finalist:
-            return `${prettyPrintAwardName(type)} ${alliancePlacement(
-                placement
-            )}`;
+            return `${prettyPrintAwardName(type)} ${alliancePlacement(placement)}`;
         case AwardTypes2021.TopRanked:
             return `Top Ranked ${prettyPrintOrdinal(placement)}`;
         default:
-            return `${prettyPrintAwardName(type)} ${winnerOrOrdinal(
-                placement
-            )}`;
+            return `${prettyPrintAwardName(type)} ${winnerOrOrdinal(placement)}`;
     }
 }
 
@@ -115,7 +108,5 @@ function winnerOrOrdinal(placement: number): string {
 }
 
 function alliancePlacement(placement: number): string {
-    return placement == 1
-        ? "Captain"
-        : `${prettyPrintOrdinal(placement - 1)} Pick`;
+    return placement == 1 ? "Captain" : `${prettyPrintOrdinal(placement - 1)} Pick`;
 }

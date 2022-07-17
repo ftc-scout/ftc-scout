@@ -5,9 +5,7 @@ export enum BarcodeElement2021 {
     TSE = 1,
 }
 
-export function barcodeElementFromApi(
-    be: "DUCK" | "TEAM_SHIPPING_ELEMENT"
-): BarcodeElement2021 {
+export function barcodeElementFromApi(be: "DUCK" | "TEAM_SHIPPING_ELEMENT"): BarcodeElement2021 {
     return be == "DUCK" ? BarcodeElement2021.DUCK : BarcodeElement2021.TSE;
 }
 

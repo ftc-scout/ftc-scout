@@ -21,8 +21,7 @@ export async function setupApiWatchers(seasons: Season[]) {
             },
             {
                 reqFunction: () => loadAllMatches(season),
-                getTimeOfLastReq: () =>
-                    FtcApiMetadata.getLastMatchesReq(season),
+                getTimeOfLastReq: () => FtcApiMetadata.getLastMatchesReq(season),
             },
             {
                 reqFunction: () => loadAllAwards(season),

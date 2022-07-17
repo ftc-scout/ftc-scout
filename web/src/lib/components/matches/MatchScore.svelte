@@ -8,11 +8,7 @@
 
 <td style:width="10.75em" on:click>
     <div class="wrapper">
-        <div
-            class:red={winner == "RED"}
-            class:blue={winner == "BLUE"}
-            class:tie={winner == "TIE"}
-        >
+        <div class:red={winner == "RED"} class:blue={winner == "BLUE"} class:tie={winner == "TIE"}>
             <strong>{description}</strong>
         </div>
 
@@ -20,19 +16,11 @@
             {#if winner == "SOLO"}
                 <b>{solo}</b>
             {:else}
-                <span
-                    class="o l"
-                    class:winner={winner == "RED"}
-                    class:tie={winner == "TIE"}
-                >
+                <span class="o l" class:winner={winner == "RED"} class:tie={winner == "TIE"}>
                     {red}
                 </span>
                 <span>-</span>
-                <span
-                    class="o r"
-                    class:winner={winner == "BLUE"}
-                    class:tie={winner == "TIE"}
-                >
+                <span class="o r" class:winner={winner == "BLUE"} class:tie={winner == "TIE"}>
                     {blue}
                 </span>
             {/if}

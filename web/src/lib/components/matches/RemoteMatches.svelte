@@ -6,8 +6,7 @@
     export let zebraStripe: boolean;
     export let selectedTeam: number | null;
     export let frozen = false;
-    export let showScoresFn: ((_: EventPageMatchFragment) => void) | null =
-        null;
+    export let showScoresFn: ((_: EventPageMatchFragment) => void) | null = null;
 
     $: team = matches[0].teams[0];
     $: noShows = matches.map((m) => m.teams[0].noShow);
@@ -21,19 +20,8 @@
     }
 </script>
 
-<tr
-    class:zebra-stripe={zebraStripe}
-    class:scores-row={!notReported}
-    class:not-reported={notReported}
->
-    <MatchTeam
-        {team}
-        width=""
-        winner={false}
-        border
-        bind:selectedTeam
-        {frozen}
-    />
+<tr class:zebra-stripe={zebraStripe} class:scores-row={!notReported} class:not-reported={notReported}>
+    <MatchTeam {team} width="" winner={false} border bind:selectedTeam {frozen} />
 
     {#if !notReported}
         {#each scores as score, i}

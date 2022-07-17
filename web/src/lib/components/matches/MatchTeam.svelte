@@ -70,13 +70,7 @@
 >
     <div class="wrap">
         {#if frozen}
-            <a
-                sveltekit:prefetch
-                href={`/teams/${number}`}
-                class="inner"
-                {title}
-                class:winner
-            >
+            <a sveltekit:prefetch href={`/teams/${number}`} class="inner" {title} class:winner>
                 <span class:dq={dq || noShow}>
                     {number}{surrogate ? "*" : ""}
                 </span>

@@ -1,14 +1,6 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { TypeormLoader } from "type-graphql-dataloader";
-import {
-    BaseEntity,
-    Column,
-    CreateDateColumn,
-    Entity,
-    OneToMany,
-    PrimaryColumn,
-    UpdateDateColumn,
-} from "typeorm";
+import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { TeamEventParticipation } from "./TeamEventParticipation";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { User } from "./User";

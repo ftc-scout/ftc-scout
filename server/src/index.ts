@@ -79,22 +79,14 @@ async function main() {
             resolvers,
             validate: false,
         }),
-        context: ({
-            req,
-            res,
-        }: {
-            req: Request;
-            res: Response;
-        }): GraphQLContext => ({
+        context: ({ req, res }: { req: Request; res: Response }): GraphQLContext => ({
             man: FTCSDataSource.manager,
             req: req as Request & { session: FTCSSession },
             res,
         }),
         plugins: [
             // Give us a nice graphql playground when in dev.
-            IS_DEV
-                ? ApolloServerPluginLandingPageGraphQLPlayground()
-                : ApolloServerPluginLandingPageDisabled(),
+            IS_DEV ? ApolloServerPluginLandingPageGraphQLPlayground() : ApolloServerPluginLandingPageDisabled(),
             ApolloServerLoaderPlugin({
                 typeormGetConnection: getConnection, // for use with TypeORM
             }),

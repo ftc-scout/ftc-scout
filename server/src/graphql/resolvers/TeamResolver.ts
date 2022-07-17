@@ -7,9 +7,7 @@ import DataLoader from "dataloader";
 @Resolver(Team)
 export class TeamResolver {
     @Query(() => Team, { nullable: true })
-    teamByNumber(
-        @Arg("number", () => Int) number: number
-    ): Promise<Team | null> {
+    teamByNumber(@Arg("number", () => Int) number: number): Promise<Team | null> {
         return Team.findOneBy({ number });
     }
 
@@ -38,9 +36,7 @@ export class TeamResolver {
         return groups;
     })
     awards(@Root() team: Team, @Arg("season") season: number) {
-        return async (
-            dl: DataLoader<{ season: number; teamNumber: number }, Award[]>
-        ) => {
+        return async (dl: DataLoader<{ season: number; teamNumber: number }, Award[]>) => {
             return dl.load({ season, teamNumber: team.number });
         };
     }

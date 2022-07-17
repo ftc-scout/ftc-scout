@@ -1,8 +1,5 @@
 <script lang="ts">
-    import {
-        TournamentLevel,
-        type EventPageMatchFragment,
-    } from "../../graphql/generated/graphql-operations";
+    import { TournamentLevel, type EventPageMatchFragment } from "../../graphql/generated/graphql-operations";
     import TradMatchTableHeader from "./TradMatchTableHeader.svelte";
     import SectionRow from "./SectionRow.svelte";
     import { groupBy } from "../../util/group-by";
@@ -18,15 +15,9 @@
     export let frozen = false;
     export let teamPage = false;
 
-    $: qualsMatches = matches
-        .filter((m) => m.tournamentLevel == TournamentLevel.Quals)
-        .sort((a, b) => a.id - b.id);
-    $: semisMatches = matches.filter(
-        (m) => m.tournamentLevel == TournamentLevel.Semis
-    ); // We don't sort the semifinals because we don't know what order they were played in.
-    $: finalsMatches = matches
-        .filter((m) => m.tournamentLevel == TournamentLevel.Finals)
-        .sort((a, b) => a.id - b.id);
+    $: qualsMatches = matches.filter((m) => m.tournamentLevel == TournamentLevel.Quals).sort((a, b) => a.id - b.id);
+    $: semisMatches = matches.filter((m) => m.tournamentLevel == TournamentLevel.Semis); // We don't sort the semifinals because we don't know what order they were played in.
+    $: finalsMatches = matches.filter((m) => m.tournamentLevel == TournamentLevel.Finals).sort((a, b) => a.id - b.id);
 
     $: soloMatches = groupBy(matches, (m) => m.id - (m.id % 1000));
 
@@ -139,9 +130,7 @@
     {/if}
 
     {#if anyDq && !isRemote}
-        <div class="explain" style="text-decoration: line-through">
-            Disqualified or No Show
-        </div>
+        <div class="explain" style="text-decoration: line-through">Disqualified or No Show</div>
     {/if}
 </div>
 

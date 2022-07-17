@@ -3,10 +3,7 @@
 </script>
 
 <script lang="ts">
-    import {
-        MeDocument,
-        type MeQuery,
-    } from "../lib/graphql/generated/graphql-operations";
+    import { MeDocument, type MeQuery } from "../lib/graphql/generated/graphql-operations";
     import Navbar from "$lib/components/Navbar.svelte";
     import { query, setClient, type ReadableQuery } from "svelte-apollo";
     import { apolloClient } from "../lib/graphql/client";
@@ -27,10 +24,7 @@
 <svelte:head>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap"
-        rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
 </svelte:head>
 
 <Navbar {meData} />
@@ -72,20 +66,10 @@
         --color-team-transparency: 0.15;
         --color-team-red: rgb(244, 67, 54);
         --color-team-red-darker: var(--paper-red-600);
-        --color-team-red-transparent: rgba(
-            244,
-            67,
-            54,
-            var(--color-team-transparency)
-        );
+        --color-team-red-transparent: rgba(244, 67, 54, var(--color-team-transparency));
         --color-team-blue: rgb(33, 150, 243);
         --color-team-blue-darker: var(--paper-blue-600);
-        --color-team-blue-transparent: rgba(
-            33,
-            150,
-            243,
-            var(--color-team-transparency)
-        );
+        --color-team-blue-transparent: rgba(33, 150, 243, var(--color-team-transparency));
         --color-team-neutral: rgb(170, 0, 255);
         --color-team-text: white;
         --zebra-stripe-color: rgb(245, 245, 245);

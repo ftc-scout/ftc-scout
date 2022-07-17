@@ -1,11 +1,6 @@
 export interface MatchFtcApi {
     description: string;
-    tournamentLevel:
-        | "OTHER"
-        | "QUALIFICATION"
-        | "SEMIFINAL"
-        | "FINAL"
-        | "PLAYOFF";
+    tournamentLevel: "OTHER" | "QUALIFICATION" | "SEMIFINAL" | "FINAL" | "PLAYOFF";
     series: number;
     matchNumber: number;
     startTime: string;

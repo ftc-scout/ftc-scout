@@ -1,13 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import {
-    BaseEntity,
-    Column,
-    DeepPartial,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryColumn,
-} from "typeorm";
+import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Match } from "./Match";
 import { Team } from "./Team";
 import { EVENT_CODE_LEN } from "./Event";

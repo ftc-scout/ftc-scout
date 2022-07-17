@@ -17,10 +17,7 @@ import { Event, EVENT_CODE_LEN } from "./Event";
 import { MatchScores2021 } from "./MatchScores2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { Alliance } from "./types/Alliance";
-import {
-    TournamentLevel,
-    tournamentLevelFromApi,
-} from "./types/TournamentLevel";
+import { TournamentLevel, tournamentLevelFromApi } from "./types/TournamentLevel";
 
 @ObjectType()
 @Entity()
@@ -37,11 +34,7 @@ export class Match extends BaseEntity {
     @PrimaryColumn("int")
     id!: number;
 
-    static encodeMatchIdTraditional(
-        matchNum: number,
-        level: TournamentLevel,
-        series: number
-    ): number {
+    static encodeMatchIdTraditional(matchNum: number, level: TournamentLevel, series: number): number {
         return level.valueOf() * 10000 + series * 1000 + matchNum;
     }
 
@@ -117,8 +110,7 @@ export class Match extends BaseEntity {
 
     redTotalPoints(): number | null {
         if (this.scores2021) {
-            return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0]
-                .totalPoints;
+            return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
         } else {
             return null;
         }
@@ -126,8 +118,7 @@ export class Match extends BaseEntity {
 
     blueTotalPoints(): number | null {
         if (this.scores2021) {
-            return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0]
-                .totalPoints;
+            return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
         } else {
             return null;
         }
@@ -150,15 +141,8 @@ export class Match extends BaseEntity {
     ): Match {
         let tournamentLevel = tournamentLevelFromApi(apiMatch.tournamentLevel);
         let matchId = isRemote
-            ? Match.encodeMatchIdRemote(
-                  apiMatch.matchNumber,
-                  apiMatch.teams[0].teamNumber
-              )
-            : Match.encodeMatchIdTraditional(
-                  apiMatch.matchNumber,
-                  tournamentLevel,
-                  apiMatch.series
-              );
+            ? Match.encodeMatchIdRemote(apiMatch.matchNumber, apiMatch.teams[0].teamNumber)
+            : Match.encodeMatchIdTraditional(apiMatch.matchNumber, tournamentLevel, apiMatch.series);
         return Match.create({
             eventSeason: season,
             eventCode,

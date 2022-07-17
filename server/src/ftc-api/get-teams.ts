@@ -2,19 +2,16 @@ import { makeRequest } from "./make-request";
 import { Season } from "./types/Season";
 import { TeamFtcApi } from "./types/Team";
 
-export async function getAllTeams(
-    season: Season,
-    since: Date | null
-): Promise<TeamFtcApi[]> {
+export async function getAllTeams(season: Season, since: Date | null): Promise<TeamFtcApi[]> {
     let teams: TeamFtcApi[] = [];
 
     let currentPage: number | null = 1;
     while (currentPage !== null) {
-        let {
-            pageTeams,
-            nextPage,
-        }: { pageTeams: TeamFtcApi[]; nextPage: number | null } =
-            await getOneTeamsPage(season, currentPage, since);
+        let { pageTeams, nextPage }: { pageTeams: TeamFtcApi[]; nextPage: number | null } = await getOneTeamsPage(
+            season,
+            currentPage,
+            since
+        );
         teams = teams.concat(pageTeams);
         currentPage = nextPage;
     }
@@ -22,19 +19,17 @@ export async function getAllTeams(
     return teams;
 }
 
-export async function getTeamsAtEvent(
-    season: Season,
-    eventCode: string
-): Promise<number[]> {
+export async function getTeamsAtEvent(season: Season, eventCode: string): Promise<number[]> {
     let teams: number[] = [];
 
     let currentPage: number | null = 1;
     while (currentPage !== null) {
-        let {
-            pageTeams,
-            nextPage,
-        }: { pageTeams: TeamFtcApi[]; nextPage: number | null } =
-            await getOneTeamsPage(season, currentPage, null, eventCode);
+        let { pageTeams, nextPage }: { pageTeams: TeamFtcApi[]; nextPage: number | null } = await getOneTeamsPage(
+            season,
+            currentPage,
+            null,
+            eventCode
+        );
         teams = teams.concat(pageTeams.map((t) => t.teamNumber));
         currentPage = nextPage;
     }

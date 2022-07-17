@@ -42,23 +42,13 @@ export function calculateEventStatistics(
 
             if (match.tournamentLevel == TournamentLevel.QUALS) {
                 if (match.redTotalPoints()! > match.blueTotalPoints()!) {
-                    getRedTeams(tmps, match.id).forEach(
-                        (t) => participations[t].wins!++
-                    );
-                    getBlueTeams(tmps, match.id).forEach(
-                        (t) => participations[t].losses!++
-                    );
+                    getRedTeams(tmps, match.id).forEach((t) => participations[t].wins!++);
+                    getBlueTeams(tmps, match.id).forEach((t) => participations[t].losses!++);
                 } else if (match.blueTotalPoints()! > match.redTotalPoints()!) {
-                    getBlueTeams(tmps, match.id).forEach(
-                        (t) => participations[t].wins!++
-                    );
-                    getRedTeams(tmps, match.id).forEach(
-                        (t) => participations[t].losses!++
-                    );
+                    getBlueTeams(tmps, match.id).forEach((t) => participations[t].wins!++);
+                    getRedTeams(tmps, match.id).forEach((t) => participations[t].losses!++);
                 } else {
-                    getMatchTeams(tmps, match.id).forEach(
-                        (t) => participations[t.teamNumber].ties!++
-                    );
+                    getMatchTeams(tmps, match.id).forEach((t) => participations[t.teamNumber].ties!++);
                 }
             }
 
@@ -67,11 +57,9 @@ export function calculateEventStatistics(
                 if (match.tournamentLevel == TournamentLevel.QUALS) {
                     participations[t.teamNumber].qualMatchesPlayed!++;
                     if (stationIsRed(t.station)) {
-                        participations[t.teamNumber].qualPoints! +=
-                            match.redTotalPoints()!;
+                        participations[t.teamNumber].qualPoints! += match.redTotalPoints()!;
                     } else {
-                        participations[t.teamNumber].qualPoints! +=
-                            match.blueTotalPoints()!;
+                        participations[t.teamNumber].qualPoints! += match.blueTotalPoints()!;
                     }
                 }
                 if (t.dq) {
@@ -86,8 +74,7 @@ export function calculateEventStatistics(
             participations[t].qualAverage =
                 participations[t].qualMatchesPlayed == 0
                     ? null
-                    : participations[t].qualPoints! /
-                      participations[t].qualMatchesPlayed!;
+                    : participations[t].qualPoints! / participations[t].qualMatchesPlayed!;
         });
 
         let oprRecords = matches.flatMap((match) => {
@@ -154,8 +141,7 @@ export function calculateEventStatistics(
             participations[t].qualAverage =
                 participations[t].qualMatchesPlayed == 0
                     ? null
-                    : participations[t].qualPoints! /
-                      participations[t].qualMatchesPlayed!;
+                    : participations[t].qualPoints! / participations[t].qualMatchesPlayed!;
             participations[t].opr = participations[t].qualAverage;
         });
     }
@@ -173,26 +159,17 @@ export function calculateEventStatistics(
 
 function getRedTeams(tmps: TeamMatchParticipation[], id: number): number[] {
     return tmps
-        .filter(
-            (tmp) =>
-                tmp.matchId == id && stationIsRed(tmp.station) && tmp.onField
-        )
+        .filter((tmp) => tmp.matchId == id && stationIsRed(tmp.station) && tmp.onField)
         .map((tmp) => tmp.teamNumber);
 }
 
 function getBlueTeams(tmps: TeamMatchParticipation[], id: number): number[] {
     return tmps
-        .filter(
-            (tmp) =>
-                tmp.matchId == id && stationIsBlue(tmp.station) && tmp.onField
-        )
+        .filter((tmp) => tmp.matchId == id && stationIsBlue(tmp.station) && tmp.onField)
         .map((tmp) => tmp.teamNumber);
 }
 
-function getMatchTeams(
-    tmps: TeamMatchParticipation[],
-    id: number
-): TeamMatchParticipation[] {
+function getMatchTeams(tmps: TeamMatchParticipation[], id: number): TeamMatchParticipation[] {
     return tmps.filter((tmp) => tmp.matchId == id);
 }
 

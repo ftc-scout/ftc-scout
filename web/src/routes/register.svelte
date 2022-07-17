@@ -6,10 +6,7 @@
     import SubmitButton from "../lib/components/form/SubmitButton.svelte";
     import TextInput from "../lib/components/form/TextInput.svelte";
     import MaxWidth from "../lib/components/MaxWidth.svelte";
-    import {
-        MeDocument,
-        RegisterDocument,
-    } from "../lib/graphql/generated/graphql-operations";
+    import { MeDocument, RegisterDocument } from "../lib/graphql/generated/graphql-operations";
     import { mutation } from "svelte-apollo";
 
     let username: string = "";
@@ -51,24 +48,11 @@
     <Form {errors} {canSubmit} on:submit={login}>
         <h1>Register</h1>
 
-        <TextInput
-            label="Username"
-            placeholder="username"
-            bind:value={username}
-        />
+        <TextInput label="Username" placeholder="username" bind:value={username} />
 
-        <TextInput
-            label="Password"
-            placeholder="password"
-            password
-            bind:value={password}
-        />
+        <TextInput label="Password" placeholder="password" password bind:value={password} />
 
-        <TextInput
-            label="Team Number"
-            placeholder="12345"
-            bind:value={teamNumber}
-        />
+        <TextInput label="Team Number" placeholder="12345" bind:value={teamNumber} />
 
         <SubmitButton />
     </Form>

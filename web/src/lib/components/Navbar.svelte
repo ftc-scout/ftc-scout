@@ -1,16 +1,12 @@
 <script lang="ts">
-    import {
-        LogoutDocument,
-        MeDocument,
-    } from "$lib/graphql/generated/graphql-operations";
+    import { LogoutDocument, MeDocument } from "$lib/graphql/generated/graphql-operations";
     import { mutation } from "svelte-apollo";
     import Searchbar from "./Searchbar.svelte";
 
     export let meData: any; // TODO type
 
     const logoutMutation = mutation(LogoutDocument);
-    const logout = async () =>
-        await logoutMutation({ refetchQueries: [{ query: MeDocument }] });
+    const logout = async () => await logoutMutation({ refetchQueries: [{ query: MeDocument }] });
 </script>
 
 <nav>

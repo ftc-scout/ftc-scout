@@ -17,10 +17,7 @@
 <ol>
     {#each teams.sort((a, b) => a.number - b.number) as team}
         <li>
-            <div
-                class:selected={team.number == selectedTeam}
-                on:click={() => handleClick(team.number)}
-            >
+            <div class:selected={team.number == selectedTeam} on:click={() => handleClick(team.number)}>
                 {team.number} - {team.name}
             </div>
         </li>

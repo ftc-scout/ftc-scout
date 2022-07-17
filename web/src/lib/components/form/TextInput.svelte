@@ -11,29 +11,15 @@
     export let value: string;
 
     let errorsStore: Writable<FormError[]> = getContext("form-errors");
-    $: myErrors = $errorsStore.filter(
-        (e) => e.field.toLocaleLowerCase() === id
-    );
+    $: myErrors = $errorsStore.filter((e) => e.field.toLocaleLowerCase() === id);
 </script>
 
 <label for={id}>
     {label}
     {#if password}
-        <input
-            {id}
-            type="password"
-            bind:value
-            {placeholder}
-            class:error={myErrors.length}
-        />
+        <input {id} type="password" bind:value {placeholder} class:error={myErrors.length} />
     {:else}
-        <input
-            {id}
-            type="text"
-            bind:value
-            {placeholder}
-            class:error={myErrors.length}
-        />
+        <input {id} type="text" bind:value {placeholder} class:error={myErrors.length} />
     {/if}
 
     {#each myErrors as error}

@@ -26,19 +26,14 @@ function addDays(date: Date, days: number): Date {
 export async function loadAllMatches(season: Season) {
     console.log(`Loading all matches from season ${season}.`);
 
-    if (season != Season.FREIGHT_FRENZY)
-        throw `Cannot load match scores for season ${season}`;
+    if (season != Season.FREIGHT_FRENZY) throw `Cannot load match scores for season ${season}`;
 
     let dateStartQuery = new Date();
     let dateLastReq = await FtcApiMetadata.getLastMatchesReq(season);
 
     console.log("Getting event codes.");
 
-    let eventCodes = await getEventCodesToLoadMatchesFrom(
-        season,
-        dateStartQuery,
-        dateLastReq
-    );
+    let eventCodes = await getEventCodesToLoadMatchesFrom(season, dateStartQuery, dateLastReq);
 
     console.log("Loading matches from api.");
 
@@ -62,11 +57,10 @@ export async function loadAllMatches(season: Season) {
 
             console.log("Calculating.");
 
-            let {
-                dbMatches,
-                dbTeamMatchParticipations,
-                dbTeamEventParticipations,
-            } = createDbEntities(season, chunkEvents);
+            let { dbMatches, dbTeamMatchParticipations, dbTeamEventParticipations } = createDbEntities(
+                season,
+                chunkEvents
+            );
 
             console.log("Inserting into db.");
 
@@ -113,10 +107,7 @@ function createDbEntities(
         for (let match of matches) {
             let thisMatchScores = findMatchScoresForMatchNum(
                 remote
-                    ? Match.encodeMatchIdRemote(
-                          match.matchNumber,
-                          match.teams[0].teamNumber
-                      )
+                    ? Match.encodeMatchIdRemote(match.matchNumber, match.teams[0].teamNumber)
                     : Match.encodeMatchIdTraditional(
                           match.matchNumber,
                           tournamentLevelFromApi(match.tournamentLevel),
@@ -127,13 +118,7 @@ function createDbEntities(
 
             let hasBeenPlayed = !!match.postResultTime || !!thisMatchScores;
 
-            let dbMatch = Match.fromApi(
-                season,
-                eventCode,
-                match,
-                remote,
-                hasBeenPlayed
-            );
+            let dbMatch = Match.fromApi(season, eventCode, match, remote, hasBeenPlayed);
 
             if (thisMatchScores) {
                 if (season == Season.FREIGHT_FRENZY && !remote) {
@@ -161,12 +146,7 @@ function createDbEntities(
             for (let team of match.teams) {
                 if (!team.teamNumber) continue;
 
-                let dbTeamMatchParticipation = TeamMatchParticipation.fromApi(
-                    season,
-                    eventCode,
-                    dbMatch.id,
-                    team
-                );
+                let dbTeamMatchParticipation = TeamMatchParticipation.fromApi(season, eventCode, dbMatch.id, team);
                 dbTeamMatchParticipations.push(dbTeamMatchParticipation);
             }
         }
@@ -180,11 +160,7 @@ function createDbEntities(
             remote
         );
 
-        if (
-            dbTeamEventParticipations.some(
-                (tep) => tep.opr != null && isNaN(tep.opr)
-            )
-        ) {
+        if (dbTeamEventParticipations.some((tep) => tep.opr != null && isNaN(tep.opr))) {
             // console.log(eventCode, remote, matches, matchScores, teams);
             console.log(dbTeamEventParticipations);
             throw "No!";
@@ -202,13 +178,9 @@ function createDbEntities(
     };
 }
 
-function findMatchScoresForMatchNum(
-    matchId: number,
-    matchScores: MatchScoresFtcApi[]
-): MatchScoresFtcApi | undefined {
+function findMatchScoresForMatchNum(matchId: number, matchScores: MatchScoresFtcApi[]): MatchScoresFtcApi | undefined {
     for (let ms of matchScores) {
-        let isRemote =
-            (ms as MatchScores2021RemoteFtcApi).teamNumber != undefined;
+        let isRemote = (ms as MatchScores2021RemoteFtcApi).teamNumber != undefined;
         let msMatchId = isRemote
             ? Match.encodeMatchIdRemote(
                   (ms as MatchScores2021RemoteFtcApi).matchNumber,
@@ -216,9 +188,7 @@ function findMatchScoresForMatchNum(
               )
             : Match.encodeMatchIdTraditional(
                   (ms as MatchScores2021TradFtcApi).matchNumber,
-                  tournamentLevelFromApi(
-                      (ms as MatchScores2021TradFtcApi).matchLevel
-                  ),
+                  tournamentLevelFromApi((ms as MatchScores2021TradFtcApi).matchLevel),
                   (ms as MatchScores2021TradFtcApi).matchSeries
               );
         if (matchId == msMatchId) return ms;

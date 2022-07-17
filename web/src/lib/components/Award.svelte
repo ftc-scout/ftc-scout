@@ -9,11 +9,7 @@
     };
     export let comma: boolean;
 
-    $: [typeName, placement] = prettyPrintAwardPlacementParts(
-        award.type,
-        award.placement,
-        award.personName ?? null
-    );
+    $: [typeName, placement] = prettyPrintAwardPlacementParts(award.type, award.placement, award.personName ?? null);
 </script>
 
 <b>{typeName}</b>

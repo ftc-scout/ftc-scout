@@ -1,9 +1,7 @@
 import { FieldError } from "src/graphql/objects/FieldError";
 import { Team } from "../../db/entities/Team";
 
-export async function checkTeamNumberRequirements(
-    teamNumber: string
-): Promise<FieldError[]> {
+export async function checkTeamNumberRequirements(teamNumber: string): Promise<FieldError[]> {
     let ret: FieldError[] = [];
 
     if (teamNumber === "") {

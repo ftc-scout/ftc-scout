@@ -1,22 +1,10 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { TypeormLoader } from "type-graphql-dataloader";
-import {
-    BaseEntity,
-    Column,
-    DeepPartial,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryColumn,
-} from "typeorm";
+import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { AwardFtcApi } from "../../ftc-api/types/Award";
 import { Season } from "../../ftc-api/types/Season";
 import { TeamEventParticipation } from "./TeamEventParticipation";
-import {
-    Award2021,
-    awardCode2021FromFtcApi,
-    AwardTypes2021,
-} from "./types/2021/Award2021";
+import { Award2021, awardCode2021FromFtcApi, AwardTypes2021 } from "./types/2021/Award2021";
 
 @ObjectType()
 @Entity()

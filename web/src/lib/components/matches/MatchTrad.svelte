@@ -11,13 +11,10 @@
     export let selectedTeam: number | null = null;
     export let zebraStripe: boolean;
     export let frozen = false;
-    export let showScoresFn: ((_: EventPageMatchFragment) => void) | null =
-        null;
+    export let showScoresFn: ((_: EventPageMatchFragment) => void) | null = null;
 
     $: scores = match.scores as FullMatchScores2021TraditionalFragment;
-    $: sortedTeams = [...match.teams].sort((a, b) =>
-        sortStation(a.station, b.station)
-    );
+    $: sortedTeams = [...match.teams].sort((a, b) => sortStation(a.station, b.station));
     let winner: "RED" | "BLUE" | "TIE";
     $: winner =
         scores.red.totalPoints > scores.blue.totalPoints

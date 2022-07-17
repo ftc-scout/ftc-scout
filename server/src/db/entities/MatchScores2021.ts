@@ -1,28 +1,11 @@
-import {
-    BaseEntity,
-    Column,
-    DeepPartial,
-    Entity,
-    JoinColumn,
-    ManyToOne,
-    PrimaryColumn,
-} from "typeorm";
+import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Season } from "../../ftc-api/types/Season";
 import { EVENT_CODE_LEN } from "./Event";
 import { Match } from "./Match";
 import { Alliance, allianceFromString } from "./types/Alliance";
-import {
-    BarcodeElement2021,
-    barcodeElementFromApi,
-} from "./types/2021/BarcodeElement2021";
-import {
-    AutoNavigation2021,
-    autoNavigation2021FromApi,
-} from "./types/2021/AutoNavigation2021";
-import {
-    EndgamePark2021,
-    endgamePark2021FromApi,
-} from "./types/2021/EndgamePark2021";
+import { BarcodeElement2021, barcodeElementFromApi } from "./types/2021/BarcodeElement2021";
+import { AutoNavigation2021, autoNavigation2021FromApi } from "./types/2021/AutoNavigation2021";
+import { EndgamePark2021, endgamePark2021FromApi } from "./types/2021/EndgamePark2021";
 import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
 
@@ -186,48 +169,24 @@ export class MatchScores2021 extends BaseEntity {
         this.autoCarouselPoints = this.autoCarousel ? 10 : 0;
         this.autoNavigationPoints =
             [0, 3, 6, 5, 10][this.autoNavigation] +
-            (this.autoNavigation2 != null
-                ? [0, 3, 6, 5, 10][this.autoNavigation2]
-                : 0);
+            (this.autoNavigation2 != null ? [0, 3, 6, 5, 10][this.autoNavigation2] : 0);
         this.autoFreightPoints =
-            this.autoStorageFreight * 2 +
-            (this.autoFreight1 + this.autoFreight2 + this.autoFreight3) * 6;
+            this.autoStorageFreight * 2 + (this.autoFreight1 + this.autoFreight2 + this.autoFreight3) * 6;
         this.autoBonusPoints =
-            (this.autoBonus
-                ? this.barcodeElement == BarcodeElement2021.DUCK
-                    ? 10
-                    : 20
-                : 0) +
-            (this.autoBonus2
-                ? this.barcodeElement2 == BarcodeElement2021.DUCK
-                    ? 10
-                    : 20
-                : 0);
+            (this.autoBonus ? (this.barcodeElement == BarcodeElement2021.DUCK ? 10 : 20) : 0) +
+            (this.autoBonus2 ? (this.barcodeElement2 == BarcodeElement2021.DUCK ? 10 : 20) : 0);
         this.driverControlledAllianceHubPoints =
-            this.driverControlledFreight1 * 2 +
-            this.driverControlledFreight2 * 4 +
-            this.driverControlledFreight3 * 6;
-        this.driverControlledSharedHubPoints =
-            this.sharedFreight == null ? null : this.sharedFreight * 4;
-        this.driverControlledStoragePoints =
-            this.driverControlledStorageFreight * 1;
+            this.driverControlledFreight1 * 2 + this.driverControlledFreight2 * 4 + this.driverControlledFreight3 * 6;
+        this.driverControlledSharedHubPoints = this.sharedFreight == null ? null : this.sharedFreight * 4;
+        this.driverControlledStoragePoints = this.driverControlledStorageFreight * 1;
         this.endgameDeliveryPoints = this.endgameDucksDelivered * 6;
         this.allianceBalancedPoints = this.allianceBalanced ? 10 : 0;
-        this.sharedUnbalancedPoints =
-            this.sharedUnbalanced == null
-                ? null
-                : this.sharedUnbalanced
-                ? 20
-                : 0;
+        this.sharedUnbalancedPoints = this.sharedUnbalanced == null ? null : this.sharedUnbalanced ? 20 : 0;
         this.endgameParkingPoints =
-            [0, 3, 6][this.endgamePark] +
-            (this.endgamePark2 != null ? [0, 3, 6][this.endgamePark2] : 0);
+            [0, 3, 6][this.endgamePark] + (this.endgamePark2 != null ? [0, 3, 6][this.endgamePark2] : 0);
         this.cappingPoints = this.capped * 15;
         this.autoPoints =
-            this.autoCarouselPoints +
-            this.autoNavigationPoints +
-            this.autoFreightPoints +
-            this.autoBonusPoints;
+            this.autoCarouselPoints + this.autoNavigationPoints + this.autoFreightPoints + this.autoBonusPoints;
         this.driverControlledPoints =
             this.driverControlledAllianceHubPoints +
             this.driverControlledStoragePoints +
@@ -238,13 +197,9 @@ export class MatchScores2021 extends BaseEntity {
             (this.sharedUnbalancedPoints ?? 0) +
             this.endgameParkingPoints +
             this.cappingPoints;
-        this.penaltyPoints =
-            this.majorPenalties * -30 + this.minorPenalties * -10;
+        this.penaltyPoints = this.majorPenalties * -30 + this.minorPenalties * -10;
         this.totalPoints = Math.max(
-            this.autoPoints +
-                this.driverControlledPoints +
-                this.endgamePoints +
-                this.penaltyPoints,
+            this.autoPoints + this.driverControlledPoints + this.endgamePoints + this.penaltyPoints,
             0
         );
     }
@@ -309,8 +264,7 @@ export class MatchScores2021 extends BaseEntity {
                 autoFreight1: a.autoFreight1,
                 autoFreight2: a.autoFreight2,
                 autoFreight3: a.autoFreight3,
-                driverControlledStorageFreight:
-                    a.driverControlledStorageFreight,
+                driverControlledStorageFreight: a.driverControlledStorageFreight,
                 driverControlledFreight1: a.driverControlledFreight1,
                 driverControlledFreight2: a.driverControlledFreight2,
                 driverControlledFreight3: a.driverControlledFreight3,

@@ -21,8 +21,7 @@ export class MatchScores2021RemoteGraphql {
         this.autoFreight1 = dbScore.autoFreight1;
         this.autoFreight2 = dbScore.autoFreight2;
         this.autoFreight3 = dbScore.autoFreight3;
-        this.driverControlledStorageFreight =
-            dbScore.driverControlledStorageFreight;
+        this.driverControlledStorageFreight = dbScore.driverControlledStorageFreight;
         this.driverControlledFreight1 = dbScore.driverControlledFreight1;
         this.driverControlledFreight2 = dbScore.driverControlledFreight2;
         this.driverControlledFreight3 = dbScore.driverControlledFreight3;
@@ -36,10 +35,8 @@ export class MatchScores2021RemoteGraphql {
         this.autoNavigationPoints = dbScore.autoNavigationPoints;
         this.autoFreightPoints = dbScore.autoFreightPoints;
         this.autoBonusPoints = dbScore.autoBonusPoints;
-        this.driverControlledAllianceHubPoints =
-            dbScore.driverControlledAllianceHubPoints;
-        this.driverControlledStoragePoints =
-            dbScore.driverControlledStoragePoints;
+        this.driverControlledAllianceHubPoints = dbScore.driverControlledAllianceHubPoints;
+        this.driverControlledStoragePoints = dbScore.driverControlledStoragePoints;
         this.endgameDeliveryPoints = dbScore.endgameDeliveryPoints;
         this.allianceBalancedPoints = dbScore.allianceBalancedPoints;
         this.endgameParkingPoints = dbScore.endgameParkingPoints;

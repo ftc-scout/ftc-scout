@@ -21,10 +21,7 @@
 
     $: team = tep.team;
 
-    $: showWLT =
-        typeof tep.wins == "number" &&
-        typeof tep.losses == "number" &&
-        typeof tep.ties == "number";
+    $: showWLT = typeof tep.wins == "number" && typeof tep.losses == "number" && typeof tep.ties == "number";
     $: showRp = typeof tep.qualPoints == "number";
     $: showOpr = typeof tep.opr == "number";
     $: showAvg = typeof tep.qualAverage == "number";
@@ -35,11 +32,7 @@
     $: oprDot = showAvg;
 </script>
 
-<a
-    sveltekit:prefetch
-    href={`/teams/${team.number}`}
-    transition:fly|local={{ y: 100, duration: 300 }}
->
+<a sveltekit:prefetch href={`/teams/${team.number}`} transition:fly|local={{ y: 100, duration: 300 }}>
     <div class="top-row">
         <b> {team.number} - <em> {team.name} </em> </b>
         <span class="view-team"> View Team <Fa icon={faAngleRight} /> </span>

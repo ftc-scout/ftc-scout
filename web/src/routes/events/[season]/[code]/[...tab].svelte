@@ -43,16 +43,13 @@
 
     function gotoSubPage(name: string | undefined) {
         if (browser && $page.routeId == "events/[season]/[code]/[...tab]") {
-            goto(
-                `/events/${$page.params.season}/${$page.params.code}/` +
-                    name?.toLowerCase() ?? "",
-                { replaceState: true }
-            );
+            goto(`/events/${$page.params.season}/${$page.params.code}/` + name?.toLowerCase() ?? "", {
+                replaceState: true,
+            });
         }
     }
 
-    let selectedPage: string | undefined =
-        $page.params?.tab != "" ? $page.params?.tab : "matches";
+    let selectedPage: string | undefined = $page.params?.tab != "" ? $page.params?.tab : "matches";
     $: gotoSubPage(selectedPage);
 
     let selectedTeam: number | null = null;
@@ -60,9 +57,7 @@
 
 <svelte:head>
     <title>
-        {!!eventData
-            ? `${eventData.name} | FTC Scout`
-            : "Event Page | Ftc Scout"}
+        {!!eventData ? `${eventData.name} | FTC Scout` : "Event Page | Ftc Scout"}
     </title>
 </svelte:head>
 
@@ -99,12 +94,7 @@
         bind:selectedName={selectedPage}
     >
         <TabContent name="Matches">
-            <MatchTable
-                matches={eventData.matches}
-                event={eventData}
-                isRemote={eventData.remote}
-                bind:selectedTeam
-            />
+            <MatchTable matches={eventData.matches} event={eventData} isRemote={eventData.remote} bind:selectedTeam />
         </TabContent>
 
         {#if eventData.awards.length}
@@ -115,17 +105,12 @@
 
         {#if eventData.teams.length}
             <TabContent name="Teams">
-                <TeamsList
-                    teams={eventData.teams.map((t) => t.team)}
-                    bind:selectedTeam
-                />
+                <TeamsList teams={eventData.teams.map((t) => t.team)} bind:selectedTeam />
             </TabContent>
         {/if}
     </TabbedCard>
 
     {#if selectedTeam}
-        <TeamSelectionBar
-            tep={eventData.teams.filter((t) => t.teamNumber == selectedTeam)[0]}
-        />
+        <TeamSelectionBar tep={eventData.teams.filter((t) => t.teamNumber == selectedTeam)[0]} />
     {/if}
 </Loading>

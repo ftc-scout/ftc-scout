@@ -1,8 +1,5 @@
 <script context="module" lang="ts">
-    import {
-        TeamDocument,
-        type MeQuery,
-    } from "../../lib/graphql/generated/graphql-operations";
+    import { TeamDocument, type MeQuery } from "../../lib/graphql/generated/graphql-operations";
     import { queryLoad } from "../../lib/graphql/query-load";
 
     export const load = queryLoad("team", TeamDocument, ({ params }) => ({
@@ -39,17 +36,13 @@
     $: teamData = team.data.teamByNumber!;
 
     $: sortedEvents = [...teamData.events].sort(
-        (a, b) =>
-            new Date(b.event.start as string).getTime() -
-            new Date(a.event.start as string).getTime()
+        (a, b) => new Date(b.event.start as string).getTime() - new Date(a.event.start as string).getTime()
     )!;
 
     let me: Readable<MeQuery["me"] | null> = getContext("me");
 
-    function logger()
-    {
-        if ($me!.id = teamData.number)
-        {
+    function logger() {
+        if (($me!.id = teamData.number)) {
             document.getElementById("edit-box")!.contentEditable = "true";
         }
     }
@@ -57,9 +50,7 @@
 
 <svelte:head>
     <title>
-        {!!teamData
-            ? `${teamData.number} ${teamData.name} | FTC Scout`
-            : "Team Page | Ftc Scout"}
+        {!!teamData ? `${teamData.number} ${teamData.name} | FTC Scout` : "Team Page | Ftc Scout"}
     </title>
 </svelte:head>
 
@@ -96,11 +87,7 @@
         {@const event = teamEvent.event}
         <Card>
             <h2>
-                <a
-                    sveltekit:prefetch
-                    class="event-link"
-                    href={`/events/${event.season}/${event.code}`}
-                >
+                <a sveltekit:prefetch class="event-link" href={`/events/${event.season}/${event.code}`}>
                     {event.name}
                 </a>
             </h2>
@@ -135,14 +122,10 @@
             {#if rp || opr || avg}
                 <InfoIconRow icon={null}>
                     {#if typeof teamEvent.qualPoints == "number"}
-                        <b>{teamEvent.qualPoints}</b> RP{opr || avg
-                            ? " · "
-                            : ""}
+                        <b>{teamEvent.qualPoints}</b> RP{opr || avg ? " · " : ""}
                     {/if}
                     {#if typeof teamEvent.opr == "number" && !event.remote}
-                        <b>{prettyPrintFloat(teamEvent.opr)}</b> OPR{avg
-                            ? " · "
-                            : ""}
+                        <b>{prettyPrintFloat(teamEvent.opr)}</b> OPR{avg ? " · " : ""}
                     {/if}
                     {#if typeof teamEvent.qualAverage == "number"}
                         <b>{prettyPrintFloat(teamEvent.qualAverage)}</b> AVG
@@ -153,10 +136,7 @@
             {#if teamEvent.awards.length != 0}
                 <InfoIconRow icon={faMedal}>
                     {#each teamEvent.awards as award, i}
-                        <Award
-                            {award}
-                            comma={i != teamEvent.awards.length - 1}
-                        />
+                        <Award {award} comma={i != teamEvent.awards.length - 1} />
                     {/each}
                 </InfoIconRow>
             {/if}
@@ -172,9 +152,16 @@
         </Card>
     {/each}
 
-    <button onClick={() => {logger()}} id = "editor" class="edit-button" type="button">Edit Document</button>
+    <button
+        onClick={() => {
+            logger();
+        }}
+        id="editor"
+        class="edit-button"
+        type="button">Edit Document</button
+    >
     <Card>
-        <p id="edit-box" type="text" contenteditable="false"> I am not editable </p>
+        <p id="edit-box" type="text" contenteditable="false">I am not editable</p>
     </Card>
 </Loading>
 

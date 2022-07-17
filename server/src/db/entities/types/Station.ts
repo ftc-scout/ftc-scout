@@ -10,9 +10,7 @@ export enum Station {
     SOLO = 6,
 }
 
-export function stationFromFtcApi(
-    station: "Red1" | "Red2" | "Red3" | "Blue1" | "Blue2" | "Blue3" | "1"
-): Station {
+export function stationFromFtcApi(station: "Red1" | "Red2" | "Red3" | "Blue1" | "Blue2" | "Blue3" | "1"): Station {
     return {
         Red1: Station.RED_1,
         Red2: Station.RED_2,
@@ -25,19 +23,11 @@ export function stationFromFtcApi(
 }
 
 export function stationIsRed(station: Station) {
-    return (
-        station == Station.RED_1 ||
-        station == Station.RED_2 ||
-        station == Station.RED_3
-    );
+    return station == Station.RED_1 || station == Station.RED_2 || station == Station.RED_3;
 }
 
 export function stationIsBlue(station: Station) {
-    return (
-        station == Station.BLUE_1 ||
-        station == Station.BLUE_2 ||
-        station == Station.BLUE_3
-    );
+    return station == Station.BLUE_1 || station == Station.BLUE_2 || station == Station.BLUE_3;
 }
 
 registerEnumType(Station, {

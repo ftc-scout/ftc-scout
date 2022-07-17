@@ -1,14 +1,5 @@
 import { hash, verify } from "argon2";
-import {
-    Arg,
-    Ctx,
-    Field,
-    MaybePromise,
-    Mutation,
-    ObjectType,
-    Query,
-    Resolver,
-} from "type-graphql";
+import { Arg, Ctx, Field, MaybePromise, Mutation, ObjectType, Query, Resolver } from "type-graphql";
 import { User } from "../../db/entities/User";
 import { checkPasswordRequirements } from "../../logic/requirements/password-requirements";
 import { checkUsernameRequirements } from "../../logic/requirements/username-requirements";
@@ -49,17 +40,9 @@ export class UserResolver {
         const passwordErrors = checkPasswordRequirements(password);
         const teamNumberErrors = await checkTeamNumberRequirements(teamNumber);
 
-        if (
-            usernameErrors.length ||
-            passwordErrors.length ||
-            teamNumberErrors.length
-        ) {
+        if (usernameErrors.length || passwordErrors.length || teamNumberErrors.length) {
             return {
-                errors: [
-                    ...usernameErrors,
-                    ...passwordErrors,
-                    ...teamNumberErrors,
-                ],
+                errors: [...usernameErrors, ...passwordErrors, ...teamNumberErrors],
             };
         } else {
             try {
@@ -75,10 +58,7 @@ export class UserResolver {
 
                 return { user };
             } catch (err) {
-                if (
-                    isQueryFailedError(err) &&
-                    err.code === PG_UNIQUE_VIOLATION
-                ) {
+                if (isQueryFailedError(err) && err.code === PG_UNIQUE_VIOLATION) {
                     return {
                         errors: [
                             {

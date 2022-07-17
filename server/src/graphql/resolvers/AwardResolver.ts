@@ -26,17 +26,10 @@ export class AwardResolver {
             where: ids as { season: number; code: string }[],
         });
 
-        return ids.map(
-            (id) =>
-                teams.filter(
-                    (t) => t.season == id.season && t.code == id.code
-                )[0]
-        );
+        return ids.map((id) => teams.filter((t) => t.season == id.season && t.code == id.code)[0]);
     })
     event(@Root() award: Award) {
-        return async (
-            dl: DataLoader<{ season: number; code: string }, Event>
-        ) => {
+        return async (dl: DataLoader<{ season: number; code: string }, Event>) => {
             return dl.load({
                 season: award.season,
                 code: award.eventCode,

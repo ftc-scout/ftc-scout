@@ -86,12 +86,7 @@ export function awardCode2021FromFtcApi(award: AwardFtcApi): Award2021 | null {
     }
 }
 
-function award2021Top(
-    type: AwardTypes2021,
-    award: AwardFtcApi,
-    top: number,
-    shift: boolean = false
-): Award2021 {
+function award2021Top(type: AwardTypes2021, award: AwardFtcApi, top: number, shift: boolean = false): Award2021 {
     if (award.series <= top) {
         return type + award.series + (shift ? 1 : 0);
     } else {

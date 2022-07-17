@@ -9,9 +9,7 @@ export enum AutoNavigation2021 {
     COMPLETELY_IN_WAREHOUSE = 4,
 }
 
-export function autoNavigation2021FromApi(
-    an: AutoNavigation2021FtcApi
-): AutoNavigation2021 {
+export function autoNavigation2021FromApi(an: AutoNavigation2021FtcApi): AutoNavigation2021 {
     return {
         NONE: AutoNavigation2021.NONE,
         IN_STORAGE: AutoNavigation2021.IN_STORAGE,

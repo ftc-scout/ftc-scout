@@ -1,20 +1,12 @@
 <script lang="ts">
     import { setContext } from "svelte";
-    import {
-        derived,
-        writable,
-        type Readable,
-        type Writable,
-    } from "svelte/store";
+    import { derived, writable, type Readable, type Writable } from "svelte/store";
     import type { FormError } from "./FormError";
 
     export let errors: Writable<FormError[]> = writable([]);
     setContext("form-errors", errors);
 
-    export let canSubmit: Readable<boolean> = derived(
-        errors,
-        ($errors) => $errors.length === 0
-    );
+    export let canSubmit: Readable<boolean> = derived(errors, ($errors) => $errors.length === 0);
     setContext("form-can-submit", canSubmit);
 </script>
 

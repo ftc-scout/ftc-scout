@@ -6,10 +6,7 @@
     import SubmitButton from "../lib/components/form/SubmitButton.svelte";
     import TextInput from "../lib/components/form/TextInput.svelte";
     import MaxWidth from "../lib/components/MaxWidth.svelte";
-    import {
-        LoginDocument,
-        MeDocument,
-    } from "../lib/graphql/generated/graphql-operations";
+    import { LoginDocument, MeDocument } from "../lib/graphql/generated/graphql-operations";
     import { mutation } from "svelte-apollo";
 
     let username: string = "";
@@ -25,10 +22,7 @@
     });
 
     async function login() {
-        const response = (
-            (await loginMutation({ variables: { username, password } }))
-                .data as any
-        ).login;
+        const response = ((await loginMutation({ variables: { username, password } })).data as any).login;
         if (response?.errors) {
             $errors = response?.errors;
         } else {
@@ -45,18 +39,9 @@
     <Form {errors} {canSubmit} on:submit={login}>
         <h1>Login</h1>
 
-        <TextInput
-            label="Username"
-            placeholder="username"
-            bind:value={username}
-        />
+        <TextInput label="Username" placeholder="username" bind:value={username} />
 
-        <TextInput
-            label="Password"
-            placeholder="password"
-            password
-            bind:value={password}
-        />
+        <TextInput label="Password" placeholder="password" password bind:value={password} />
         <SubmitButton />
     </Form>
 </MaxWidth>

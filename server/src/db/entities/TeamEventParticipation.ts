@@ -1,12 +1,5 @@
 import { Field, Float, Int, ObjectType } from "type-graphql";
-import {
-    BaseEntity,
-    Column,
-    Entity,
-    ManyToOne,
-    OneToMany,
-    PrimaryColumn,
-} from "typeorm";
+import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { Team } from "./Team";
 import { Event, EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";

@@ -23,9 +23,7 @@ const NUM_RESULTS = 5;
 @Resolver()
 export class SearchResolver {
     @Query(() => [TeamSearchResult])
-    async search(
-        @Arg("searchText", () => String) searchText: string
-    ): Promise<TeamSearchResult[]> {
+    async search(@Arg("searchText", () => String) searchText: string): Promise<TeamSearchResult[]> {
         if (searchText.length > 100) return [];
 
         await updateCache();
@@ -47,10 +45,7 @@ const CACHE_UPDATE_TIME = MINUTE_MS * 5;
 
 async function updateCache() {
     let now = new Date();
-    if (
-        new Date().getTime() >
-        teamsSearchCache.lastUpdate.getTime() + CACHE_UPDATE_TIME
-    ) {
+    if (new Date().getTime() > teamsSearchCache.lastUpdate.getTime() + CACHE_UPDATE_TIME) {
         let teams = await Team.find();
 
         teams.forEach((t) => (t.number = ("" + t.number) as any));
@@ -85,19 +80,9 @@ function resultsStrict(searchText: string): TeamSearchResult[] {
 }
 
 function resultsLax(searchText: string): TeamSearchResult[] {
-    let results =
-        teamsSearchCache.fuzzyset.get(
-            searchText.toLowerCase(),
-            undefined,
-            0.25
-        ) ?? [];
+    let results = teamsSearchCache.fuzzyset.get(searchText.toLowerCase(), undefined, 0.25) ?? [];
     return results.slice(0, NUM_RESULTS).map((r) => {
-        let originalTeam = teamsSearchCache.teams.filter(
-            (t) => `${t.number} ${t.name}`.toLowerCase() == r[1]
-        )[0];
-        return new TeamSearchResult(
-            originalTeam,
-            `${originalTeam.number} ${originalTeam.name}`
-        );
+        let originalTeam = teamsSearchCache.teams.filter((t) => `${t.number} ${t.name}`.toLowerCase() == r[1])[0];
+        return new TeamSearchResult(originalTeam, `${originalTeam.number} ${originalTeam.name}`);
     });
 }

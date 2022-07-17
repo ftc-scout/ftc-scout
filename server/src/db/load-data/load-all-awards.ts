@@ -39,9 +39,7 @@ export async function loadAllAwards(season: Season) {
 
             const chunk = eventCodes.slice(i, i + chunkSize);
 
-            let apiAwards = await Promise.all(
-                chunk.map(({ code }) => getEventAwards(season, code))
-            );
+            let apiAwards = await Promise.all(chunk.map(({ code }) => getEventAwards(season, code)));
 
             console.log("Inserting into db.");
 

@@ -1,8 +1,5 @@
 <script lang="ts">
-    import {
-        SearchDocument,
-        type SearchQuery,
-    } from "$lib/graphql/generated/graphql-operations";
+    import { SearchDocument, type SearchQuery } from "$lib/graphql/generated/graphql-operations";
     import { query } from "svelte-apollo";
     import { goto, prefetch } from "$app/navigation";
 
@@ -14,9 +11,7 @@
     let searchData: SearchQuery["search"] | undefined;
     $: searchData = ($searchResults.data as any)?.search as any;
 
-    $: searchData &&
-        searchData.length &&
-        prefetch(`/teams/${searchData[0].team.number}`);
+    $: searchData && searchData.length && prefetch(`/teams/${searchData[0].team.number}`);
 
     function tryGoto() {
         if (searchData && searchData.length) {
@@ -37,10 +32,7 @@
             elements[focusNum].focus();
             e.preventDefault();
         } else if (e.key == "ArrowDown") {
-            focusNum = Math.min(
-                elements.filter((e) => e).length - 1,
-                focusNum + 1
-            );
+            focusNum = Math.min(elements.filter((e) => e).length - 1, focusNum + 1);
             elements[focusNum].focus();
             e.preventDefault();
         }
@@ -48,8 +40,7 @@
 
     let focusCount = 0;
 
-    $: showSearchResults =
-        searchText && searchData && searchData.length && focusCount;
+    $: showSearchResults = searchText && searchData && searchData.length && focusCount;
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
@@ -82,8 +73,7 @@
                                 focusCount++;
                                 prefetch(link);
                             }}
-                            on:focusout={() =>
-                                setTimeout(() => focusCount--, 1)}
+                            on:focusout={() => setTimeout(() => focusCount--, 1)}
                             on:keydown={handleType}
                             bind:this={elements[i + 1]}
                             tabindex="0"

@@ -25,11 +25,7 @@
 
 {#if shown}
     <div class="outer-wrapper" in:fade|local={{ duration: 100 }}>
-        <div
-            class="content-wrapper"
-            use:clickOutside
-            on:click_outside={() => (shown = false)}
-        >
+        <div class="content-wrapper" use:clickOutside on:click_outside={() => (shown = false)}>
             <slot />
         </div>
     </div>

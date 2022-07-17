@@ -1,8 +1,4 @@
-import type {
-    AutoNavigation2021,
-    BarcodeElement2021,
-    EndgamePark2021,
-} from "../graphql/generated/graphql-operations";
+import type { AutoNavigation2021, BarcodeElement2021, EndgamePark2021 } from "../graphql/generated/graphql-operations";
 
 export function autoNavigationPoints2021(nav: AutoNavigation2021): number {
     switch (nav) {
@@ -19,10 +15,7 @@ export function autoNavigationPoints2021(nav: AutoNavigation2021): number {
     }
 }
 
-export function autoBonusPoints2021(
-    bonus: boolean,
-    barcode: BarcodeElement2021
-): number {
+export function autoBonusPoints2021(bonus: boolean, barcode: BarcodeElement2021): number {
     if (bonus) {
         switch (barcode) {
             case "TSE":

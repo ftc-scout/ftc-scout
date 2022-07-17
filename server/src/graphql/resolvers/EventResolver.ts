@@ -51,9 +51,7 @@ export class EventResolver {
         return groups;
     })
     awards(@Root() event: Event) {
-        return async (
-            dl: DataLoader<{ season: Season; eventCode: string }, Award[]>
-        ) => {
+        return async (dl: DataLoader<{ season: Season; eventCode: string }, Award[]>) => {
             return dl.load({ season: event.season, eventCode: event.code });
         };
     }

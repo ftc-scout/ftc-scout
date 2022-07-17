@@ -34,8 +34,7 @@
                     {#each typeAwards as award}
                         <li>
                             <span
-                                class:selected={award.team.number ==
-                                    selectedTeam}
+                                class:selected={award.team.number == selectedTeam}
                                 on:click={() => handleClick(award.team.number)}
                             >
                                 {award.team.number} - {award.team.name}
@@ -48,12 +47,10 @@
                     {#each typeAwards as award}
                         <li>
                             <span
-                                class:selected={award.team.number ==
-                                    selectedTeam}
+                                class:selected={award.team.number == selectedTeam}
                                 on:click={() => handleClick(award.team.number)}
                             >
-                                {award.personName} ({award.team.number} - {award
-                                    .team.name})
+                                {award.personName} ({award.team.number} - {award.team.name})
                             </span>
                         </li>
                     {/each}

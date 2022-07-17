@@ -21,8 +21,7 @@ export async function loadAllEvents(season: Season) {
             eventId: apiEvent.eventId,
             season,
             code: apiEvent.code,
-            divisionCode:
-                apiEvent?.divisionCode === "" ? null : apiEvent.divisionCode,
+            divisionCode: apiEvent?.divisionCode === "" ? null : apiEvent.divisionCode,
             name: apiEvent.name,
             remote: apiEvent.remote,
             hybrid: apiEvent.hybrid,
@@ -31,16 +30,14 @@ export async function loadAllEvents(season: Season) {
             type: +apiEvent.type!,
             regionCode: apiEvent.regionCode,
             leagueCode: apiEvent.leagueCode,
-            districtCode:
-                apiEvent.districtCode === "" ? null : apiEvent.districtCode,
+            districtCode: apiEvent.districtCode === "" ? null : apiEvent.districtCode,
             venue: apiEvent.venue,
             address: apiEvent.address,
             country: apiEvent.country,
             stateOrProvince: apiEvent.stateprov,
             city: apiEvent.city,
             website: apiEvent.website === "" ? null : apiEvent.website,
-            liveStreamURL:
-                apiEvent.liveStreamUrl === "" ? null : apiEvent.liveStreamUrl,
+            liveStreamURL: apiEvent.liveStreamUrl === "" ? null : apiEvent.liveStreamUrl,
             webcasts: apiEvent.webcasts ?? [],
             timezone: apiEvent.timezone,
             start: new Date(apiEvent.dateStart),

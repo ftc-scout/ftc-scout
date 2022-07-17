@@ -13,10 +13,7 @@ import DataLoader from "dataloader";
 export class MatchResolver {
     // Ugly hack because type-graphql-dataloader can't deal with eager fields.
     @FieldResolver(() => MatchScoresUnion, { nullable: true })
-    @Loader<
-        { season: Season; eventCode: string; matchId: number },
-        MatchScores2021[]
-    >(async (ids, _) => {
+    @Loader<{ season: Season; eventCode: string; matchId: number }, MatchScores2021[]>(async (ids, _) => {
         let matches = await MatchScores2021.find({
             where: ids as {
                 season: Season;
@@ -30,11 +27,7 @@ export class MatchResolver {
         for (let m of matches) {
             for (let i = 0; i < ids.length; i++) {
                 let id = ids[i];
-                if (
-                    id.season == m.season &&
-                    id.eventCode == m.eventCode &&
-                    id.matchId == m.matchId
-                ) {
+                if (id.season == m.season && id.eventCode == m.eventCode && id.matchId == m.matchId) {
                     groups[i].push(m);
                     break;
                 }
@@ -44,12 +37,7 @@ export class MatchResolver {
         return groups;
     })
     async scores(@Root() _match: Match) {
-        return async (
-            dl: DataLoader<
-                { season: Season; eventCode: string; matchId: number },
-                MatchScores2021[]
-            >
-        ) => {
+        return async (dl: DataLoader<{ season: Season; eventCode: string; matchId: number }, MatchScores2021[]>) => {
             let scores = await dl.load({
                 season: _match.eventSeason,
                 eventCode: _match.eventCode,
@@ -61,15 +49,9 @@ export class MatchResolver {
                     case Alliance.SOLO:
                         return new MatchScores2021RemoteGraphql(scores[0]);
                     case Alliance.RED:
-                        return new MatchScores2021TradGraphql(
-                            scores[0],
-                            scores[1]
-                        );
+                        return new MatchScores2021TradGraphql(scores[0], scores[1]);
                     case Alliance.BLUE:
-                        return new MatchScores2021TradGraphql(
-                            scores[1],
-                            scores[0]
-                        );
+                        return new MatchScores2021TradGraphql(scores[1], scores[0]);
                 }
             } else {
                 return null;

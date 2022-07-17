@@ -14,9 +14,7 @@ export async function makeRequest(
         let now = Date.now();
 
         if (lastRequest > now - REQUEST_TIME) {
-            await new Promise((r) =>
-                setTimeout(r, lastRequest + REQUEST_TIME - now)
-            );
+            await new Promise((r) => setTimeout(r, lastRequest + REQUEST_TIME - now));
         } else {
             break;
         }
@@ -32,8 +30,7 @@ export async function makeRequest(
     let response = await fetch(fullUrl, {
         headers: {
             Authorization: `Basic ${FTC_API_KEY}`,
-            "FMS-OnlyModifiedSince":
-                sinceDate?.toLocaleDateString("en-US") ?? "",
+            "FMS-OnlyModifiedSince": sinceDate?.toLocaleDateString("en-US") ?? "",
         },
     });
 

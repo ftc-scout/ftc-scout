@@ -22,18 +22,10 @@
     $: shownList = showSub ? subProps : [];
 </script>
 
-<tr
-    class:normal-row={!heading}
-    class:heading
-    class:has-subs={!!subProps.length}
-    class:subs-shown={showSub}
->
+<tr class:normal-row={!heading} class:heading class:has-subs={!!subProps.length} class:subs-shown={showSub}>
     <td class="name" style="position: relative;">
         {#if subProps.length}
-            <ExpandButton
-                bind:open={showSub}
-                style="position:absolute; left: 0"
-            />
+            <ExpandButton bind:open={showSub} style="position:absolute; left: 0" />
         {/if}
 
         {name}

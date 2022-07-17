@@ -9,9 +9,7 @@
     import { writable, type Writable } from "svelte/store";
 
     export let names: [IconDefinition, string | null][];
-    let namesFiltered: [IconDefinition, string][] = names.filter(
-        (n) => !!n[1]
-    ) as any;
+    let namesFiltered: [IconDefinition, string][] = names.filter((n) => !!n[1]) as any;
     $: namesFiltered = names.filter((n) => !!n[1]) as any;
 
     export let selectedName: string | undefined;
@@ -27,8 +25,7 @@
         {#each namesFiltered as [icon, name]}
             <button
                 class="tab"
-                class:selected={name.toLowerCase() ==
-                    selectedName?.toLowerCase()}
+                class:selected={name.toLowerCase() == selectedName?.toLowerCase()}
                 on:click={() => (selectedName = name)}
             >
                 <Fa {icon} scale="0.75x" />
@@ -38,11 +35,7 @@
         {/each}
     </div>
 
-    <div
-        class="card"
-        class:unround-top={selectedName?.toLowerCase() ==
-            namesFiltered[0][1].toLowerCase()}
-    >
+    <div class="card" class:unround-top={selectedName?.toLowerCase() == namesFiltered[0][1].toLowerCase()}>
         <slot />
     </div>
 </div>

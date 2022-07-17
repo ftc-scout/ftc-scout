@@ -3,11 +3,7 @@
 
     import type { MatchScores2021Traditional } from "../../../graphql/generated/graphql-operations";
     import TradScoreLine from "./TradScoreLine.svelte";
-    import {
-        autoNavigationPoints2021,
-        autoBonusPoints2021,
-        endgameParkPoints2021,
-    } from "../../../util/points";
+    import { autoNavigationPoints2021, autoBonusPoints2021, endgameParkPoints2021 } from "../../../util/points";
 
     export let score: MatchScores2021Traditional;
 </script>
@@ -27,11 +23,7 @@
             ["Storage", (a) => a.autoStorageFreight * 2],
         ]}
     />
-    <TradScoreLine
-        {score}
-        name="Carousel Points"
-        getProp={(a) => a.autoCarouselPoints}
-    />
+    <TradScoreLine {score} name="Carousel Points" getProp={(a) => a.autoCarouselPoints} />
     <TradScoreLine
         {score}
         name="Navigation Points"
@@ -46,23 +38,12 @@
         name="Bonus Points"
         getProp={(a) => a.autoBonusPoints}
         subProps={[
-            [
-                "Robot 1",
-                (a) => autoBonusPoints2021(a.autoBonus1, a.barcodeElement1),
-            ],
-            [
-                "Robot 2",
-                (a) => autoBonusPoints2021(a.autoBonus2, a.barcodeElement2),
-            ],
+            ["Robot 1", (a) => autoBonusPoints2021(a.autoBonus1, a.barcodeElement1)],
+            ["Robot 2", (a) => autoBonusPoints2021(a.autoBonus2, a.barcodeElement2)],
         ]}
     />
 
-    <TradScoreLine
-        {score}
-        heading
-        name="Driver-Controlled"
-        getProp={(a) => a.driverControlledPoints}
-    />
+    <TradScoreLine {score} heading name="Driver-Controlled" getProp={(a) => a.driverControlledPoints} />
     <TradScoreLine
         {score}
         name="Alliance Hub Points"
@@ -73,33 +54,12 @@
             ["Level 3", (a) => a.driverControlledFreight3 * 6],
         ]}
     />
-    <TradScoreLine
-        {score}
-        name="Shared Hub Points"
-        getProp={(a) => a.driverControlledSharedHubPoints}
-    />
-    <TradScoreLine
-        {score}
-        name="Storage Points"
-        getProp={(a) => a.driverControlledStoragePoints}
-    />
+    <TradScoreLine {score} name="Shared Hub Points" getProp={(a) => a.driverControlledSharedHubPoints} />
+    <TradScoreLine {score} name="Storage Points" getProp={(a) => a.driverControlledStoragePoints} />
 
-    <TradScoreLine
-        {score}
-        heading
-        name="Endgame"
-        getProp={(a) => a.endgamePoints}
-    />
-    <TradScoreLine
-        {score}
-        name="Delivery Points"
-        getProp={(a) => a.endgameDeliveryPoints}
-    />
-    <TradScoreLine
-        {score}
-        name="Capping Points"
-        getProp={(a) => a.cappingPoints}
-    />
+    <TradScoreLine {score} heading name="Endgame" getProp={(a) => a.endgamePoints} />
+    <TradScoreLine {score} name="Delivery Points" getProp={(a) => a.endgameDeliveryPoints} />
+    <TradScoreLine {score} name="Capping Points" getProp={(a) => a.cappingPoints} />
     <TradScoreLine
         {score}
         name="Parking Points"
@@ -109,33 +69,12 @@
             ["Robot 2", (a) => endgameParkPoints2021(a.endgamePark2)],
         ]}
     />
-    <TradScoreLine
-        {score}
-        name="Balanced Points"
-        getProp={(a) => a.allianceBalancedPoints}
-    />
-    <TradScoreLine
-        {score}
-        name="Tipped Points"
-        getProp={(a) => a.sharedUnbalancedPoints}
-    />
+    <TradScoreLine {score} name="Balanced Points" getProp={(a) => a.allianceBalancedPoints} />
+    <TradScoreLine {score} name="Tipped Points" getProp={(a) => a.sharedUnbalancedPoints} />
 
-    <TradScoreLine
-        {score}
-        heading
-        name="Penalties"
-        getProp={(a) => a.penaltyPoints}
-    />
-    <TradScoreLine
-        {score}
-        name="Major Penalty Points"
-        getProp={(a) => a.majorPenalties * -30}
-    />
-    <TradScoreLine
-        {score}
-        name="Minor Penalty Points"
-        getProp={(a) => a.minorPenalties * -10}
-    />
+    <TradScoreLine {score} heading name="Penalties" getProp={(a) => a.penaltyPoints} />
+    <TradScoreLine {score} name="Major Penalty Points" getProp={(a) => a.majorPenalties * -30} />
+    <TradScoreLine {score} name="Minor Penalty Points" getProp={(a) => a.minorPenalties * -10} />
 </table>
 
 <style>
