@@ -4,6 +4,7 @@ fragment EventPageMatch on Match {
     id
     matchDescription
     tournamentLevel
+    scheduledStartTime
     scores {
         ...FullMatchScores
     }

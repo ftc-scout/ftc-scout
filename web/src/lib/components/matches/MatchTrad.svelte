@@ -15,29 +15,24 @@
 
     $: scores = match.scores as FullMatchScores2021TraditionalFragment;
     $: sortedTeams = [...match.teams].sort((a, b) => sortStation(a.station, b.station));
-    let winner: "RED" | "BLUE" | "TIE";
-    $: winner =
-        scores.red.totalPoints > scores.blue.totalPoints
+    let winner: "RED" | "BLUE" | "TIE" | "X";
+    $: winner = scores
+        ? scores.red.totalPoints > scores.blue.totalPoints
             ? "RED"
             : scores.blue.totalPoints > scores.red.totalPoints
             ? "BLUE"
-            : "TIE";
+            : "TIE"
+        : "X";
 
     function show() {
-        if (showScoresFn) showScoresFn(match);
+        if (showScoresFn && scores) showScoresFn(match);
     }
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
     <!-- <MatchDescription {winner} description={match.matchDescription} /> -->
 
-    <MatchScore
-        red={scores.red.totalPoints}
-        blue={scores.blue.totalPoints}
-        {winner}
-        description={match.matchDescription}
-        on:click={show}
-    />
+    <MatchScore {match} description={match.matchDescription} on:click={show} />
 
     {#each sortedTeams as team}
         <MatchTeam
