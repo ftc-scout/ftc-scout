@@ -7,6 +7,9 @@
     import MatchTrad from "./MatchTrad.svelte";
     import RemoteMatchTableHeader from "./RemoteMatchTableHeader.svelte";
     import ScoreModal from "./score-modals/ScoreModal.svelte";
+    import { page } from "$app/stores";
+    import { goto } from "$app/navigation";
+    import { browser } from "$app/env";
 
     export let matches: EventPageMatchFragment[];
     export let event: { start: string };
@@ -26,6 +29,25 @@
 
     let scoresShown = false;
     let scoresShownMatch: EventPageMatchFragment | null = null;
+
+    let initialValue = $page.url.searchParams.get("scores");
+    if (!!initialValue) {
+        scoresShownMatch = matches.find((m) => encodeURL(m) == initialValue) ?? null;
+        scoresShown = !!scoresShownMatch;
+    }
+
+    $: {
+        if (scoresShownMatch && scoresShown) {
+            $page.url.searchParams.set("scores", encodeURL(scoresShownMatch));
+        } else if (scoresShownMatch) {
+            $page.url.searchParams.delete("scores");
+        }
+        if (browser) goto(`?${$page.url.searchParams.toString()}`, { replaceState: true, noscroll: true });
+    }
+
+    function encodeURL(match: EventPageMatchFragment): string {
+        return `${match.eventCode}-${match.id}`;
+    }
 
     function showScores(scores: EventPageMatchFragment) {
         scoresShownMatch = scores;
