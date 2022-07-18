@@ -9,7 +9,7 @@
     $: rotation = open ? 90 : 0;
 </script>
 
-<button {style} on:click={() => (open = !open)}>
+<button {style} on:click>
     <Fa
         icon={faCaretRight}
         style={`transform: rotate(${rotation}deg); transition-duration: 0.25s; transition-property: transform;`}

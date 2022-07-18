@@ -22,7 +22,13 @@
     $: shownList = showSub ? subProps : [];
 </script>
 
-<tr class:normal-row={!heading} class:heading class:has-subs={!!subProps.length} class:subs-shown={showSub}>
+<tr
+    class:normal-row={!heading}
+    class:heading
+    class:has-subs={!!subProps.length}
+    class:subs-shown={showSub}
+    on:click={() => (showSub = !showSub)}
+>
     <td class="name" style="position: relative;">
         {#if subProps.length}
             <ExpandButton bind:open={showSub} style="position:absolute; left: 0" />
@@ -67,6 +73,10 @@
         padding-left: 8px;
         padding-right: 16px;
         flex-grow: 1;
+    }
+
+    .has-subs .name {
+        cursor: pointer;
     }
 
     .heading .name {
