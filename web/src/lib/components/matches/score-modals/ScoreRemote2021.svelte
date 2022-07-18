@@ -52,6 +52,5 @@
 <style>
     table {
         display: block;
-        border-collapse: collapse;
     }
 </style>

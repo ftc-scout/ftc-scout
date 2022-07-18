@@ -12,7 +12,7 @@
 
 {#if matchScores}
     <Modal bind:shown>
-        <b>
+        <b slot="title">
             <span>Match {matchScores.matchDescription}</span>
             <button
                 on:click={() => {

@@ -26,7 +26,13 @@
 {#if shown}
     <div class="outer-wrapper" in:fade|local={{ duration: 100 }}>
         <div class="content-wrapper" use:clickOutside on:click_outside={() => (shown = false)}>
-            <slot />
+            <div class="title-wrapper">
+                <slot name="title" />
+            </div>
+            <div class="scroll-wrapper">
+                <slot />
+            </div>
+            <button class="close" on:click={() => (shown = false)}> Close </button>
         </div>
     </div>
 {/if}
@@ -39,6 +45,7 @@
         top: 0;
         width: 100%;
         height: 100%;
+        max-height: 100%;
 
         z-index: 50;
 
@@ -47,15 +54,48 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        overflow-y:auto;
     }
 
     .content-wrapper {
         background: var(--foreground-color);
-        padding: var(--large-padding);
         border-radius: 8px;
 
         box-shadow: -2px 2px 10px 3px rgba(0, 0, 0, 20%);
 
+        margin: var(--gap);
+
+        display: flex;
+        flex-direction: column;
+        height: auto;
+        max-height: calc(100% - var(--large-gap) * 2);
+        position: relative;
+    }
+
+    .title-wrapper {
+        padding: var(--large-padding);
+        padding-bottom: 0;
+    }
+
+    .scroll-wrapper {
+        padding: var(--large-padding);
+
+        max-height: 100%;
+        overflow-y: auto;
+    }
+
+    .close {
+        background: var(--theme-color);
+        color: var(--theme-text-color);
+
+        border: none;
+        border-bottom-left-radius: 8px;
+        border-bottom-right-radius: 8px;
+
+        padding: var(--large-padding);
+
+        cursor: pointer;
+
+        font-weight: bold;
+        /* font-size: var(--large-font-size); */
     }
 </style>
