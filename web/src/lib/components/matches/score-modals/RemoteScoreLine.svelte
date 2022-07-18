@@ -2,6 +2,7 @@
     import type { MatchScores2021Remote } from "../../../graphql/generated/graphql-operations";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
+    import { remote2021Expansions } from "./expansions";
 
     type PropFn = (_: MatchScores2021Remote) => number;
 
@@ -11,7 +12,8 @@
     export let getProp: PropFn;
     export let subProps: [string, PropFn][] = [];
 
-    export let showSub = false;
+    export let showSub = !!$remote2021Expansions[name];
+    $: showSub = !!$remote2021Expansions[name];
 
     $: shownList = showSub ? subProps : [];
 </script>
@@ -21,7 +23,7 @@
     class:heading
     class:has-subs={!!subProps.length}
     class:subs-shown={showSub}
-    on:click={() => (showSub = !showSub)}
+    on:click={() => ($remote2021Expansions[name] = !$remote2021Expansions[name])}
 >
     <td class="name" style="position: relative;">
         {#if subProps.length}

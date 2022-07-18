@@ -5,6 +5,7 @@
     } from "../../../graphql/generated/graphql-operations";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
+    import { trad2021Expansions } from "./expansions";
 
     type PropFn = (_: MatchScores2021TraditionalAlliance) => number;
 
@@ -14,7 +15,8 @@
     export let getProp: PropFn;
     export let subProps: [string, PropFn][] = [];
 
-    export let showSub = false;
+    export let showSub = !!$trad2021Expansions[name];
+    $: showSub = !!$trad2021Expansions[name];
 
     $: red = getProp(score.red);
     $: blue = getProp(score.blue);
@@ -27,7 +29,7 @@
     class:heading
     class:has-subs={!!subProps.length}
     class:subs-shown={showSub}
-    on:click={() => (showSub = !showSub)}
+    on:click={() => ($trad2021Expansions[name] = !$trad2021Expansions[name])}
 >
     <td class="name" style="position: relative;">
         {#if subProps.length}
