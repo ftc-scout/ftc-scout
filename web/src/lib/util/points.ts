@@ -5,9 +5,9 @@ export function autoNavigationPoints2021(nav: AutoNavigation2021): number {
         case "COMPLETELY_IN_STORAGE":
             return 6;
         case "COMPLETELY_IN_WAREHOUSE":
-            return 3;
-        case "IN_STORAGE":
             return 10;
+        case "IN_STORAGE":
+            return 3;
         case "IN_WAREHOUSE":
             return 5;
         default:

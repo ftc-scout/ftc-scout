@@ -6,6 +6,8 @@
     import { autoNavigationPoints2021, autoBonusPoints2021, endgameParkPoints2021 } from "../../../util/points";
 
     export let score: MatchScores2021Traditional;
+
+    $: console.log(score);
 </script>
 
 <table colspan="3">
