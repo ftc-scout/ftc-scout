@@ -39,10 +39,11 @@
     $: {
         if (scoresShownMatch && scoresShown) {
             $page.url.searchParams.set("scores", encodeURL(scoresShownMatch));
+            if (browser) goto(`?${$page.url.searchParams.toString()}`, { replaceState: true, noscroll: true });
         } else if (scoresShownMatch) {
             $page.url.searchParams.delete("scores");
+            if (browser) goto(`?${$page.url.searchParams.toString()}`, { replaceState: true, noscroll: true });
         }
-        if (browser) goto(`?${$page.url.searchParams.toString()}`, { replaceState: true, noscroll: true });
     }
 
     function encodeURL(match: EventPageMatchFragment): string {
