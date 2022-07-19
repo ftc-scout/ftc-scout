@@ -147,15 +147,17 @@
     </tbody>
 </table>
 
-<div style="padding-top: var(--small-padding)">
-    {#if anySurrogate && !isRemote}
-        <div class="explain">* Surrogate</div>
-    {/if}
+{#if (anySurrogate || anyDq) && !isRemote}
+    <div style="padding-top: var(--small-padding)">
+        {#if anySurrogate && !isRemote}
+            <div class="explain">* Surrogate</div>
+        {/if}
 
-    {#if anyDq && !isRemote}
-        <div class="explain" style="text-decoration: line-through">Disqualified or No Show</div>
-    {/if}
-</div>
+        {#if anyDq && !isRemote}
+            <div class="explain" style="text-decoration: line-through">Disqualified or No Show</div>
+        {/if}
+    </div>
+{/if}
 
 <style>
     table {
