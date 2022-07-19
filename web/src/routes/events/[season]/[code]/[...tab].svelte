@@ -18,7 +18,7 @@
         faMedal,
         faRobot,
     } from "@fortawesome/free-solid-svg-icons";
-    import { prettyPrintDateRange } from "../../../../lib/util/format/pretty-print-date";
+    import { prettyPrintDateRangeString } from "../../../../lib/util/format/pretty-print-date";
     import { prettyPrintURL } from "../../../../lib/util/format/pretty-print-url";
     import DataFromFirst from "../../../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../../../lib/components/InfoIconRow.svelte";
@@ -37,9 +37,6 @@
 
     export let event: ApolloQueryResult<EventPageQuery>;
     $: eventData = event.data?.eventByCode!;
-
-    $: startDate = new Date(eventData?.start);
-    $: endDate = new Date(eventData?.end);
 
     function gotoSubPage(name: string | undefined) {
         if (browser && $page.routeId == "events/[season]/[code]/[...tab]") {
@@ -66,7 +63,7 @@
         <h1>{eventData.season} {eventData.name}</h1>
 
         <InfoIconRow icon={faCalendarAlt}>
-            {prettyPrintDateRange(startDate, endDate)}
+            {prettyPrintDateRangeString(eventData.start, eventData.end)}
         </InfoIconRow>
 
         {#if eventData.website}

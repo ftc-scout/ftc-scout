@@ -8,8 +8,13 @@ export function prettyPrintDateRange(start: Date, end: Date): string {
     }
 }
 
+function fromStr(date: string): Date {
+    let x = date.split("-");
+    return new Date(+x[0], +x[1] - 1, +x[2]);
+}
+
 export function prettyPrintDateRangeString(start: string, end: string): string {
-    return prettyPrintDateRange(new Date(start), new Date(end));
+    return prettyPrintDateRange(fromStr(start), fromStr(end));
 }
 
 function prettyPrintDate(date: Date): string {
