@@ -13,7 +13,7 @@ import {
 } from "typeorm";
 import { MatchFtcApi } from "../../ftc-api/types/Match";
 import { Season } from "../../ftc-api/types/Season";
-import { Event, EVENT_CODE_LEN } from "./Event";
+import { Event } from "./Event";
 import { MatchScores2021 } from "./MatchScores2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { Alliance } from "./types/Alliance";
@@ -27,7 +27,7 @@ export class Match extends BaseEntity {
     eventSeason!: Season;
 
     @Field(() => String)
-    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
+    @PrimaryColumn("varchar")
     eventCode!: string;
 
     @Field(() => Int)

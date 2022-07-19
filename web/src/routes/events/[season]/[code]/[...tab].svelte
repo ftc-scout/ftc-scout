@@ -89,7 +89,7 @@
         names={[
             [faTrophy, "Matches"],
             [faMedal, eventData.awards.length ? "Awards" : null],
-            [faRobot, eventData.teams.length ? "Teams" : null],
+            [faRobot, "Teams"],
         ]}
         bind:selectedName={selectedPage}
     >
@@ -103,11 +103,9 @@
             </TabContent>
         {/if}
 
-        {#if eventData.teams.length}
-            <TabContent name="Teams">
-                <TeamsList teams={eventData.teams.map((t) => t.team)} bind:selectedTeam />
-            </TabContent>
-        {/if}
+        <TabContent name="Teams">
+            <TeamsList teams={eventData.teams.map((t) => t.team)} bind:selectedTeam />
+        </TabContent>
     </TabbedCard>
 
     {#if selectedTeam}

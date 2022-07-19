@@ -11,6 +11,8 @@ query EventPage($season: Int!, $code: String!) {
         country
         website
         remote
+        published
+        hasStarted
         awards {
             type
             placement

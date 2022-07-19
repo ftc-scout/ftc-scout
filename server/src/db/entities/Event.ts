@@ -111,12 +111,12 @@ export class Event extends BaseEntity {
     timezone!: string;
 
     @Field()
-    @Column()
-    start!: Date;
+    @Column("date", { nullable: true })
+    start!: string;
 
     @Field()
-    @Column()
-    end!: Date;
+    @Column("date", { nullable: true })
+    end!: string;
 
     @Field()
     @CreateDateColumn()

@@ -5,6 +5,7 @@ import { Event } from "../../db/entities/Event";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { Season } from "../../ftc-api/types/Season";
 import DataLoader from "dataloader";
+import { DateTime } from "luxon";
 
 @Resolver(Event)
 export class EventResolver {
@@ -54,5 +55,12 @@ export class EventResolver {
         return async (dl: DataLoader<{ season: Season; eventCode: string }, Award[]>) => {
             return dl.load({ season: event.season, eventCode: event.code });
         };
+    }
+
+    @FieldResolver(() => Boolean)
+    hasStarted(@Root() event: Event): boolean {
+        let eventStart = DateTime.fromSQL(event.start, { zone: event.timezone });
+        let now = DateTime.now();
+        return now > eventStart;
     }
 }

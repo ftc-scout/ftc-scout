@@ -12,7 +12,7 @@
     import { browser } from "$app/env";
 
     export let matches: EventPageMatchFragment[];
-    export let event: { start: string };
+    export let event: { start: string; published: boolean; hasStarted: boolean };
     export let isRemote: boolean;
     export let selectedTeam: number | null = null;
     export let frozen = false;
@@ -136,13 +136,14 @@
                     {/if}
                 {/each}
             {/if}
+        {:else if !event.hasStarted}
+            <tr>
+                <td style="display: block; margin: auto">This event has not yet begun.</td>
+            </tr>
         {:else}
-            <!-- TODO: deal with timezones -->
-            {#if new Date() > new Date(event.start)}
-                <tr>Matches have not yet been reported for this event.</tr>
-            {:else}
-                <tr>This event has not yet begun.</tr>
-            {/if}
+            <tr>
+                <td style="display: block; margin: auto">Matches have not yet been reported for this event.</td>
+            </tr>
         {/if}
     </tbody>
 </table>

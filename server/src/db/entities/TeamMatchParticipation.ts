@@ -2,7 +2,6 @@ import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Match } from "./Match";
 import { Team } from "./Team";
-import { EVENT_CODE_LEN } from "./Event";
 import { Season } from "../../ftc-api/types/Season";
 import { Station, stationFromFtcApi } from "./types/Station";
 import { TypeormLoader } from "type-graphql-dataloader";
@@ -16,7 +15,7 @@ export class TeamMatchParticipation extends BaseEntity {
     season!: Season;
 
     @Field()
-    @PrimaryColumn({ length: EVENT_CODE_LEN })
+    @PrimaryColumn()
     eventCode!: string;
 
     @Field(() => Int)

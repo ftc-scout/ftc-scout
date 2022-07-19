@@ -14,18 +14,23 @@
     }
 </script>
 
-<ol>
-    {#each teams.sort((a, b) => a.number - b.number) as team}
-        <li>
-            <div class:selected={team.number == selectedTeam} on:click={() => handleClick(team.number)}>
-                {team.number} - {team.name}
-            </div>
-        </li>
-    {/each}
-</ol>
+{#if teams.length}
+    <ol>
+        {#each teams.sort((a, b) => a.number - b.number) as team}
+            <li>
+                <div class:selected={team.number == selectedTeam} on:click={() => handleClick(team.number)}>
+                    {team.number} - {team.name}
+                </div>
+            </li>
+        {/each}
+    </ol>
+{:else}
+    <p>Teams have not yet been reported for this event.</p>
+{/if}
 
 <style>
-    ol {
+    ol,
+    p {
         margin: var(--gap);
         padding: 0;
     }

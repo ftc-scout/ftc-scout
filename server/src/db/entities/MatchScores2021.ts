@@ -1,6 +1,5 @@
 import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Season } from "../../ftc-api/types/Season";
-import { EVENT_CODE_LEN } from "./Event";
 import { Match } from "./Match";
 import { Alliance, allianceFromString } from "./types/Alliance";
 import { BarcodeElement2021, barcodeElementFromApi } from "./types/2021/BarcodeElement2021";
@@ -11,10 +10,10 @@ import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/Matc
 
 @Entity()
 export class MatchScores2021 extends BaseEntity {
-    @PrimaryColumn("smallint", { default: Season.FREIGHT_FRENZY })
+    @PrimaryColumn("smallint")
     season!: Season;
 
-    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
+    @PrimaryColumn("varchar")
     eventCode!: string;
 
     @PrimaryColumn("int")
