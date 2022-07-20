@@ -11,3 +11,5 @@ export interface AwardFtcApi {
     fullTeamName: string;
     person: string | null;
 }
+
+export let JUDGES_CHOICE_ID_FTC_API = 1;
