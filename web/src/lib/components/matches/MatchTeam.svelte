@@ -91,8 +91,6 @@
     td {
         outline: transparent solid 2px;
         transition: outline 0.12s ease 0s;
-        /* overflow: hidden; */
-        /* width: 100%; */
 
         display: table-cell;
     }
