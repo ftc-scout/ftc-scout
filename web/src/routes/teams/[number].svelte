@@ -10,15 +10,6 @@
 <script lang="ts">
     import Card from "$lib/components/Card.svelte";
     import { prettyPrintURL } from "$lib/util/format/pretty-print-url";
-    import {
-        faGlobe,
-        faCalendarAlt,
-        faLocationDot,
-        faSchool,
-        faPlus,
-        faTrophy,
-        faMedal,
-    } from "@fortawesome/free-solid-svg-icons";
     import DataFromFirst from "../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../lib/components/InfoIconRow.svelte";
     import type { TeamQuery } from "../../lib/graphql/generated/graphql-operations";
@@ -31,6 +22,15 @@
     import Award from "../../lib/components/Award.svelte";
     import type { Readable } from "svelte/store";
     import { getContext } from "svelte";
+    import {
+        AWARDS_ICON,
+        DATE_ICON,
+        LOCATION_ICON,
+        RANKINGS_ICON,
+        ROOKIE_YEAR_ICON,
+        SCHOOL_ICON,
+        WEBSITE_ICON,
+    } from "../../lib/icons";
 
     export let team: ApolloQueryResult<TeamQuery>;
     $: teamData = team.data.teamByNumber!;
@@ -60,23 +60,23 @@
     <Card>
         <h1>{teamData.number} - {teamData.name}</h1>
 
-        <InfoIconRow icon={faSchool}>
+        <InfoIconRow icon={SCHOOL_ICON}>
             {teamData.schoolName}
         </InfoIconRow>
 
         {#if teamData.website}
-            <InfoIconRow icon={faGlobe}>
+            <InfoIconRow icon={WEBSITE_ICON}>
                 <a class="content" href={teamData.website}>
                     {prettyPrintURL(teamData.website)}
                 </a>
             </InfoIconRow>
         {/if}
 
-        <InfoIconRow icon={faLocationDot}>
+        <InfoIconRow icon={LOCATION_ICON}>
             {teamData.city}, {teamData.stateOrProvince}, {teamData.country}
         </InfoIconRow>
 
-        <InfoIconRow icon={faPlus}>
+        <InfoIconRow icon={ROOKIE_YEAR_ICON}>
             Rookie Year: {teamData.rookieYear}
         </InfoIconRow>
 
@@ -92,17 +92,17 @@
                 </a>
             </h2>
 
-            <InfoIconRow icon={faCalendarAlt}>
+            <InfoIconRow icon={DATE_ICON}>
                 {prettyPrintDateRangeString(event.start, event.end)}
             </InfoIconRow>
 
-            <InfoIconRow icon={faLocationDot}>
+            <InfoIconRow icon={LOCATION_ICON}>
                 {event.venue}, {event.city}, {event.stateOrProvince},
                 {event.country}
             </InfoIconRow>
 
             {#if teamEvent.rank}
-                <InfoIconRow icon={faTrophy}>
+                <InfoIconRow icon={RANKINGS_ICON}>
                     <b>{prettyPrintOrdinal(teamEvent.rank)}</b> place (quals)
                 </InfoIconRow>
             {/if}
@@ -134,7 +134,7 @@
             {/if}
 
             {#if teamEvent.awards.length != 0}
-                <InfoIconRow icon={faMedal}>
+                <InfoIconRow icon={AWARDS_ICON}>
                     {#each teamEvent.awards as award, i}
                         <Award {award} comma={i != teamEvent.awards.length - 1} />
                     {/each}

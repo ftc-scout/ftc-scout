@@ -10,14 +10,6 @@
 
 <script lang="ts">
     import Card from "../../../../lib/components/Card.svelte";
-    import {
-        faCalendarAlt,
-        faLocationDot,
-        faGlobe,
-        faTrophy,
-        faMedal,
-        faRobot,
-    } from "@fortawesome/free-solid-svg-icons";
     import { prettyPrintDateRangeString } from "../../../../lib/util/format/pretty-print-date";
     import { prettyPrintURL } from "../../../../lib/util/format/pretty-print-url";
     import DataFromFirst from "../../../../lib/components/DataFromFirst.svelte";
@@ -34,6 +26,14 @@
     import TeamsList from "../../../../lib/components/TeamsList.svelte";
     import { goto } from "$app/navigation";
     import TeamSelectionBar from "../../../../lib/components/TeamSelectionBar.svelte";
+    import {
+        AWARDS_ICON,
+        DATE_ICON,
+        LOCATION_ICON,
+        RANKINGS_ICON,
+        TEAMS_ICON,
+        WEBSITE_ICON,
+    } from "../../../../lib/icons";
 
     export let event: ApolloQueryResult<EventPageQuery>;
     $: eventData = event.data?.eventByCode!;
@@ -62,19 +62,19 @@
     <Card>
         <h1>{eventData.season} {eventData.name}</h1>
 
-        <InfoIconRow icon={faCalendarAlt}>
+        <InfoIconRow icon={DATE_ICON}>
             {prettyPrintDateRangeString(eventData.start, eventData.end)}
         </InfoIconRow>
 
         {#if eventData.website}
-            <InfoIconRow icon={faGlobe}>
+            <InfoIconRow icon={WEBSITE_ICON}>
                 <a href={eventData.website}>
                     {prettyPrintURL(eventData.website)}
                 </a>
             </InfoIconRow>
         {/if}
 
-        <InfoIconRow icon={faLocationDot}>
+        <InfoIconRow icon={LOCATION_ICON}>
             {eventData.venue}, {eventData.city}, {eventData.stateOrProvince},
             {eventData.country}
         </InfoIconRow>
@@ -84,9 +84,9 @@
 
     <TabbedCard
         names={[
-            [faTrophy, "Matches"],
-            [faMedal, eventData.awards.length ? "Awards" : null],
-            [faRobot, "Teams"],
+            [RANKINGS_ICON, "Matches"],
+            [AWARDS_ICON, eventData.awards.length ? "Awards" : null],
+            [TEAMS_ICON, "Teams"],
         ]}
         bind:selectedName={selectedPage}
     >
