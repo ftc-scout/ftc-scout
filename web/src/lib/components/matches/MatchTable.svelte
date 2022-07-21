@@ -140,6 +140,10 @@
             <tr>
                 <td style="display: block; margin: auto">This event has not yet begun.</td>
             </tr>
+        {:else if teamPage && event.published && matches.length}
+            <tr>
+                <td style="display: block; margin: auto">This team did not play any matches at this event.</td>
+            </tr>
         {:else}
             <tr>
                 <td style="display: block; margin: auto">Matches have not yet been reported for this event.</td>
