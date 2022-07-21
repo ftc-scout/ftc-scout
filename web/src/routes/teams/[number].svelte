@@ -55,8 +55,6 @@
 </svelte:head>
 
 <Loading store={team} width={"1000px"} doesNotExist={!teamData}>
-    My username: {$me?.username}
-
     <Card>
         <h1>{teamData.number} - {teamData.name}</h1>
 
