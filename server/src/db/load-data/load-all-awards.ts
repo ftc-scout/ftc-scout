@@ -5,7 +5,6 @@ import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { LessThanOrEqual, MoreThanOrEqual, DeepPartial } from "typeorm";
 import { Award } from "../entities/Award";
 import { FTCSDataSource } from "../data-source";
-import { JUDGES_CHOICE_ID_FTC_API } from "../../ftc-api/types/Award";
 
 export async function loadAllAwards(season: Season) {
     console.log(`Loading all awards from season ${season}.`);
