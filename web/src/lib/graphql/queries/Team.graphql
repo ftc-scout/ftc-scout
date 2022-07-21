@@ -41,6 +41,9 @@ query Team($number: Int!) {
                 city
                 stateOrProvince
                 country
+                published
+                hasStarted
+                timezone
                 matchesForTeam(teamNumber: $number) {
                     season
                     eventCode
