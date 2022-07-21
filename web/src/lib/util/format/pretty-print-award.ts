@@ -2,7 +2,6 @@ import { AwardTypes2021 } from "../../graphql/generated/graphql-operations";
 import { prettyPrintOrdinal } from "./pretty-print-ordinal";
 
 export function prettyPrintAwardCategory(type: AwardTypes2021): string {
-    console.log(type);
     switch (type) {
         case AwardTypes2021.Compass:
         case AwardTypes2021.Connect:
