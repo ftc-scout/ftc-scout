@@ -2,6 +2,7 @@ import {
     faCalendarAlt,
     faCircleCheck,
     faHashtag,
+    faHeart,
     faLink,
     faLocationDot,
     faMedal,
@@ -19,3 +20,4 @@ export let RANKINGS_ICON = faTrophy;
 export let AWARDS_ICON = faMedal;
 export let TEAMS_ICON = faHashtag;
 export let DATA_FROM_FIRST_ICON = faCircleCheck;
+export let SPONSOR_ICON = faHeart;

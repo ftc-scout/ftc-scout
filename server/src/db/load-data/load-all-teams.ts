@@ -24,10 +24,26 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
                     return null;
                 }
 
+                let schoolName: string | null;
+                let sponsors: string[];
+
+                if (apiTeam.nameFull?.includes("&")) {
+                    let index = apiTeam.nameFull.lastIndexOf("&");
+                    let teamNamePart = apiTeam.nameFull.slice(index + 1);
+                    let sponsorsPart = apiTeam.nameFull.slice(0, index);
+
+                    schoolName = teamNamePart.trim();
+                    sponsors = sponsorsPart.split("/").map((s) => s.trim());
+                } else {
+                    schoolName = apiTeam.nameFull?.trim() ?? null;
+                    sponsors = [];
+                }
+
                 return Team.create({
                     number: apiTeam.teamNumber,
                     name: apiTeam.nameShort,
-                    schoolName: apiTeam.nameFull,
+                    schoolName,
+                    sponsors,
                     country: apiTeam.country,
                     stateOrProvince: apiTeam.stateProv,
                     city: apiTeam.city,

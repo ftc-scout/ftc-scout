@@ -29,6 +29,7 @@
         RANKINGS_ICON,
         ROOKIE_YEAR_ICON,
         SCHOOL_ICON,
+        SPONSOR_ICON,
         WEBSITE_ICON,
     } from "../../lib/icons";
 
@@ -61,6 +62,12 @@
         <InfoIconRow icon={SCHOOL_ICON}>
             {teamData.schoolName}
         </InfoIconRow>
+
+        {#if teamData.sponsors.length}
+            <InfoIconRow icon={SPONSOR_ICON}>
+                {teamData.sponsors.join(", ")}
+            </InfoIconRow>
+        {/if}
 
         {#if teamData.website}
             <InfoIconRow icon={WEBSITE_ICON}>

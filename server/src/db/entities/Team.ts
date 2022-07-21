@@ -20,6 +20,10 @@ export class Team extends BaseEntity {
     @Column()
     schoolName?: string;
 
+    @Field(() => [String])
+    @Column("varchar", { array: true, default: [] })
+    sponsors!: string[];
+
     @Field(() => String)
     @Column()
     country?: string;
