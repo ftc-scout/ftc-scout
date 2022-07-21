@@ -36,6 +36,8 @@ export class UserResolver {
         @Arg("teamNumber") teamNumber: string,
         @Ctx() { req }: GraphQLContext
     ): Promise<UserErrorResponse> {
+        username = username.trim();
+
         const usernameErrors = checkUsernameRequirements(username);
         const passwordErrors = checkPasswordRequirements(password);
         const teamNumberErrors = await checkTeamNumberRequirements(teamNumber);
@@ -79,6 +81,8 @@ export class UserResolver {
         @Arg("password") password: string,
         @Ctx() { req }: GraphQLContext
     ): Promise<UserErrorResponse> {
+        username = username.trim();
+
         const user = await User.findOneBy({ username });
 
         if (!user) {

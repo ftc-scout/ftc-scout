@@ -41,14 +41,14 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
 
                 return Team.create({
                     number: apiTeam.teamNumber,
-                    name: apiTeam.nameShort,
+                    name: apiTeam.nameShort.trim(),
                     schoolName,
                     sponsors,
                     country: apiTeam.country,
                     stateOrProvince: apiTeam.stateProv,
                     city: apiTeam.city,
                     rookieYear: apiTeam.rookieYear,
-                    website: apiTeam.website,
+                    website: apiTeam.website?.trim(),
                 } as DeepPartial<Team>);
             })
         )

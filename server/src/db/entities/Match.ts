@@ -87,7 +87,7 @@ export class Match extends BaseEntity {
             case TournamentLevel.QUALS:
                 return `Q-${this.matchNum}`;
             case TournamentLevel.SEMIS:
-                return `SF-${this.series}-${this.matchNum}`;
+                return `SF${this.series}-${this.matchNum}`;
             case TournamentLevel.FINALS:
                 return `F-${this.matchNum}`;
         }

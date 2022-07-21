@@ -61,7 +61,7 @@ export class Award extends BaseEntity {
                 eventCode: api.eventCode,
                 awardCode,
                 teamNumber: api.teamNumber,
-                personName: api.person,
+                personName: api.person?.trim(),
             } as DeepPartial<Award>);
         } else {
             return null;
