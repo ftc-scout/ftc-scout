@@ -4,22 +4,24 @@ import { AwardFtcApi as AwardFtcApi } from "../../../../ftc-api/types/Award";
 export type Award2021 = number;
 
 export enum AwardTypes2021 {
-    DEANS_LIST = 0,
-    JUDGES_CHOICE = 100,
-    DIVISION_FINALIST = 300,
-    DIVISION_WINNER = 400,
-    COMPASS = 700,
-    PROMOTE = 800,
-    CONTROL = 900,
-    MOTIVATE = 1000,
-    DESIGN = 1100,
-    INNOVATE = 1200,
-    CONNECT = 1300,
-    THINK = 1400,
-    TOP_RANKED = 1500,
-    INSPIRE = 1800,
-    WINNER = 1900,
-    FINALIST = 2000,
+    DEANS_LIST_FINALIST = 0,
+    DEANS_LIST_SEMI_FINALIST = 100,
+    DEANS_LIST_WINNER = 200,
+    JUDGES_CHOICE = 300,
+    DIVISION_FINALIST = 400,
+    DIVISION_WINNER = 500,
+    COMPASS = 600,
+    PROMOTE = 700,
+    CONTROL = 800,
+    MOTIVATE = 900,
+    DESIGN = 1000,
+    INNOVATE = 1100,
+    CONNECT = 1200,
+    THINK = 1300,
+    TOP_RANKED = 1400,
+    INSPIRE = 1500,
+    WINNER = 1600,
+    FINALIST = 1700,
 }
 
 registerEnumType(AwardTypes2021, {
@@ -47,7 +49,15 @@ export function awardCode2021FromFtcApi(award: AwardFtcApi): Award2021 | null {
         case 9: // Think
             return award2021Top(AwardTypes2021.THINK, award, 3);
         case 10: // Dean's List
-            return award2021Top(AwardTypes2021.DEANS_LIST, award, 100);
+            if (award.name == "Dean's List Finalists") {
+                return award2021Top(AwardTypes2021.DEANS_LIST_FINALIST, award, 100);
+            } else if (award.name == "Dean's List Semi-Finalists") {
+                return award2021Top(AwardTypes2021.DEANS_LIST_SEMI_FINALIST, award, 100);
+            } else if (award.name == "Dean's List Winner") {
+                return award2021Top(AwardTypes2021.DEANS_LIST_WINNER, award, 100);
+            } else {
+                throw `Can't handle Dean's List named '${award.name}'`;
+            }
         case 11: // Inspire
             return award2021Top(AwardTypes2021.INSPIRE, award, 3);
         case 13: // Winning Alliance

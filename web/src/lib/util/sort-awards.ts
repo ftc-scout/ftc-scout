@@ -21,6 +21,8 @@ export function awardRank(type: AwardTypes2021): number {
         "PROMOTE",
         "COMPASS",
         "JUDGES_CHOICE",
-        "DEANS_LIST",
+        "DEANS_LIST_WINNER",
+        "DEANS_LIST_FINALIST",
+        "DEANS_LIST_SEMI_FINALIST",
     ].indexOf(type);
 }

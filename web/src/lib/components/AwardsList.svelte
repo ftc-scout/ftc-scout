@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { AwardTypes2021 } from "../graphql/generated/graphql-operations";
-    import { prettyPrintAwardCategory } from "../util/format/pretty-print-award";
+    import { awardHasName, prettyPrintAwardCategory } from "../util/format/pretty-print-award";
     import { sortAwards } from "../util/sort-awards";
 
     export let awards: {
@@ -9,6 +9,7 @@
         personName?: string | null;
         team: { name: string; number: number };
     }[];
+
     export let selectedTeam: number | null;
 
     $: types = [...new Set(awards.map((a) => a.type))].sort(sortAwards);
@@ -29,7 +30,7 @@
         <section>
             <h3>{prettyPrintAwardCategory(type)}</h3>
 
-            {#if type != "DEANS_LIST"}
+            {#if !awardHasName(type)}
                 <ol>
                     {#each typeAwards as award}
                         <li>
