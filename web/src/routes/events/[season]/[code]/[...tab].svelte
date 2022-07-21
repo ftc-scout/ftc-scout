@@ -30,7 +30,7 @@
         AWARDS_ICON,
         DATE_ICON,
         LOCATION_ICON,
-        RANKINGS_ICON,
+        MATCHES_ICON,
         TEAMS_ICON,
         WEBSITE_ICON,
     } from "../../../../lib/icons";
@@ -84,7 +84,7 @@
 
     <TabbedCard
         names={[
-            [RANKINGS_ICON, "Matches"],
+            [MATCHES_ICON, "Matches"],
             [AWARDS_ICON, eventData.awards.length ? "Awards" : null],
             [TEAMS_ICON, "Teams"],
         ]}

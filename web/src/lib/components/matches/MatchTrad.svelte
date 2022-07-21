@@ -43,8 +43,6 @@
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
-    <!-- <MatchDescription {winner} description={match.matchDescription} /> -->
-
     <MatchScore {match} description={match.matchDescription} on:click={show} />
 
     {#each sortedTeams as team}
