@@ -21,7 +21,7 @@ import {
     REDIS_URL,
 } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
-import { FTCSDataSource } from "./db/data-source";
+import { DATA_SOURCE } from "./db/data-source";
 import session from "express-session";
 import connectRedis from "connect-redis";
 import Redis from "ioredis";
@@ -36,7 +36,7 @@ import { getConnection } from "typeorm";
 import compression from "compression";
 
 async function main() {
-    await FTCSDataSource.initialize();
+    await DATA_SOURCE.initialize();
 
     const app = express();
 
@@ -80,7 +80,7 @@ async function main() {
             validate: false,
         }),
         context: ({ req, res }: { req: Request; res: Response }): GraphQLContext => ({
-            man: FTCSDataSource.manager,
+            man: DATA_SOURCE.manager,
             req: req as Request & { session: FTCSSession },
             res,
         }),

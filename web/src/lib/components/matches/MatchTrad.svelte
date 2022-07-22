@@ -3,9 +3,7 @@
         Station,
         type EventPageMatchFragment,
         type FullMatchScores2021TraditionalFragment,
-        type Team,
     } from "../../graphql/generated/graphql-operations";
-    import { sortStation } from "../../util/station-ordering";
     import MatchScore from "./MatchScore.svelte";
     import MatchTeam from "./MatchTeam.svelte";
     import PlaceholderMatchTeam from "./PlaceholderMatchTeam.svelte";

@@ -1,6 +1,6 @@
 import { getAllEvents } from "../../ftc-api/get-events";
 import { Season } from "../../ftc-api/types/Season";
-import { FTCSDataSource } from "../data-source";
+import { DATA_SOURCE } from "../data-source";
 import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { Event } from "../../db/entities/Event";
 import { DeepPartial } from "typeorm";
@@ -45,7 +45,7 @@ export async function loadAllEvents(season: Season) {
         } as DeepPartial<Event>);
     });
 
-    await FTCSDataSource.transaction(async (em) => {
+    await DATA_SOURCE.transaction(async (em) => {
         await em.save(dbEvents);
         await em.save(
             FtcApiMetadata.create({

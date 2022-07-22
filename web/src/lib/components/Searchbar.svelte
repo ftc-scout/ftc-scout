@@ -61,7 +61,7 @@
         class="searchbar"
         type="search"
         id="searchInput"
-        name="teamsearch"
+        name="team-search"
         bind:value={searchText}
         placeholder="Input team..."
         on:focus={() => focusCount++}

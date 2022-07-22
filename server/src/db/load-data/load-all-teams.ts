@@ -1,7 +1,7 @@
 import { DeepPartial } from "typeorm";
 import { getAllTeams } from "../../ftc-api/get-teams";
 import { Season } from "../../ftc-api/types/Season";
-import { FTCSDataSource } from "../data-source";
+import { DATA_SOURCE } from "../data-source";
 import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { Team } from "../entities/Team";
 
@@ -54,7 +54,7 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
         )
     ).filter((x): x is Team => !!x);
 
-    await FTCSDataSource.transaction(async (em) => {
+    await DATA_SOURCE.transaction(async (em) => {
         await em.save(dbTeams);
         await em.save(
             FtcApiMetadata.create({

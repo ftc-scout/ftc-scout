@@ -10,5 +10,5 @@ const config: DataSourceOptions = {
     entities,
 };
 
-export const FTCSDataSource = new DataSource(config);
+export const DATA_SOURCE = new DataSource(config);
 createConnection(config);

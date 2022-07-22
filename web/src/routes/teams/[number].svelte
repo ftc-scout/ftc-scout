@@ -192,7 +192,7 @@
     }
 
     .edit-button:hover {
-        /* maybe like add a fade in transition to the hover colours */
+        /* maybe like add a fade in transition to the hover colors */
         background-color: var(--theme-color);
         color: var(--theme-text-color);
     }

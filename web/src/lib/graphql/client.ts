@@ -1,6 +1,5 @@
 import { HttpLink, InMemoryCache, ApolloClient } from "@apollo/client/core";
 import { IS_DEV, SERVER_ORIGIN } from "../constants";
-import { SearchDocument } from "./generated/graphql-operations";
 
 const link = new HttpLink({
     uri: SERVER_ORIGIN,

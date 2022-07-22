@@ -1,7 +1,7 @@
 import { Between, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { getMatches } from "../../ftc-api/get-matches";
 import { Season } from "../../ftc-api/types/Season";
-import { FTCSDataSource } from "../data-source";
+import { DATA_SOURCE } from "../data-source";
 import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { Match } from "../entities/Match";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
@@ -37,7 +37,7 @@ export async function loadAllMatches(season: Season) {
 
     console.log("Loading matches from api.");
 
-    await FTCSDataSource.transaction(async (em) => {
+    await DATA_SOURCE.transaction(async (em) => {
         // lets do this 25 at a time so we don't get rate limited or run out of memory.
         const chunkSize = 25;
         for (let i = 0; i < eventCodes.length; i += chunkSize) {

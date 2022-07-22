@@ -4,7 +4,7 @@ import { Event } from "../entities/Event";
 import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { LessThanOrEqual, MoreThanOrEqual, DeepPartial } from "typeorm";
 import { Award } from "../entities/Award";
-import { FTCSDataSource } from "../data-source";
+import { DATA_SOURCE } from "../data-source";
 
 export async function loadAllAwards(season: Season) {
     console.log(`Loading all awards from season ${season}.`);
@@ -31,7 +31,7 @@ export async function loadAllAwards(season: Season) {
 
     console.log(`${eventCodes.length} events to fetch awards from.`);
 
-    await FTCSDataSource.transaction(async (em) => {
+    await DATA_SOURCE.transaction(async (em) => {
         const chunkSize = 25;
         for (let i = 0; i < eventCodes.length; i += chunkSize) {
             console.log(`Starting chunk starting at ${i}.`);
