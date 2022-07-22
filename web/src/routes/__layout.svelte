@@ -1,7 +1,3 @@
-<script context="module" lang="ts">
-    // export let load = queryLoad("me", MeDocument, {});
-</script>
-
 <script lang="ts">
     import { MeDocument, type MeQuery } from "../lib/graphql/generated/graphql-operations";
     import Navbar from "$lib/components/Navbar.svelte";

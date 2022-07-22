@@ -4,6 +4,7 @@
     import { prettyPrintFloat } from "../util/format/pretty-print-float";
     import { prettyPrintOrdinal } from "../util/format/pretty-print-ordinal";
     import { fly } from "svelte/transition";
+    import { prefetch } from "$app/navigation";
 
     export let tep: {
         rank?: number | null;
@@ -20,6 +21,7 @@
     };
 
     $: team = tep.team;
+    $: prefetch(`/teams/${team.number}`);
 
     $: showWLT = typeof tep.wins == "number" && typeof tep.losses == "number" && typeof tep.ties == "number";
     $: showRp = typeof tep.qualPoints == "number";

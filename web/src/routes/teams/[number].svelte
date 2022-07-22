@@ -33,12 +33,14 @@
         WEBSITE_ICON,
     } from "../../lib/icons";
 
-    export let team: ApolloQueryResult<TeamQuery>;
-    $: teamData = team.data.teamByNumber!;
+    export let team: Readable<ApolloQueryResult<TeamQuery> | null>;
+    $: teamData = $team?.data?.teamByNumber!;
 
-    $: sortedEvents = [...teamData.events].sort(
-        (a, b) => new Date(b.event.start as string).getTime() - new Date(a.event.start as string).getTime()
-    )!;
+    $: sortedEvents = $team
+        ? [...teamData.events].sort(
+              (a, b) => new Date(b.event.start as string).getTime() - new Date(a.event.start as string).getTime()
+          )!
+        : [];
 
     let me: Readable<MeQuery["me"] | null> = getContext("me");
 
@@ -55,7 +57,7 @@
     </title>
 </svelte:head>
 
-<Loading store={team} width={"1000px"} doesNotExist={!teamData}>
+<Loading store={$team} width={"1000px"} doesNotExist={!teamData}>
     <Card>
         <h1>{teamData.number} - {teamData.name}</h1>
 

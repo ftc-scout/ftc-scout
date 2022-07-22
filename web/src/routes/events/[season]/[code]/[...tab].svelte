@@ -34,9 +34,10 @@
         TEAMS_ICON,
         WEBSITE_ICON,
     } from "../../../../lib/icons";
+    import type { Readable } from "svelte/store";
 
-    export let event: ApolloQueryResult<EventPageQuery>;
-    $: eventData = event.data?.eventByCode!;
+    export let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
+    $: eventData = $event?.data?.eventByCode!;
 
     function gotoSubPage(name: string | undefined) {
         if (browser && $page.routeId == "events/[season]/[code]/[...tab]") {
@@ -58,7 +59,7 @@
     </title>
 </svelte:head>
 
-<Loading store={event} width={"1250px"} doesNotExist={!eventData}>
+<Loading store={$event} width={"1250px"} doesNotExist={!eventData}>
     <Card>
         <h1>{eventData.season} {eventData.name}</h1>
 

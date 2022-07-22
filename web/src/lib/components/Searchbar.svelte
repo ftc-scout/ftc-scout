@@ -8,8 +8,6 @@
     let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, { variables: { searchText } });
     $: searchResults = query(SearchDocument, { variables: { searchText } });
 
-    $: console.log($searchResults);
-
     let teamsSearchData: SearchQuery["search"]["teams"];
     $: teamsSearchData = $searchResults.data?.search.teams ?? [];
     let eventsSearchData: SearchQuery["search"]["events"];
