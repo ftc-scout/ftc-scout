@@ -123,8 +123,12 @@ function teamResultsLax(searchText: string): TeamSearchResult[] {
     let names = cachedTeams.map((t) => t.name);
 
     let distances = names.map((t) => {
-        let searchSlice = t.slice(0, searchText.length);
-        return levenshtein.get(searchSlice, searchText, { useCollator: true });
+        let bestDistance = levenshtein.get(t, searchText, { useCollator: true });
+        for (let i = 0; i <= t.length - searchText.length; i++) {
+            let searchSlice = t.slice(i, i + searchText.length);
+            bestDistance = Math.min(bestDistance, levenshtein.get(searchSlice, searchText, { useCollator: true }));
+        }
+        return bestDistance;
     });
 
     let top = [...distances.entries()]
@@ -161,8 +165,12 @@ function eventResultsLax(searchText: string): EventSearchResult[] {
     let names = cachedEvents.map((e) => e.name);
 
     let distances = names.map((t) => {
-        let searchSlice = t.slice(0, searchText.length + 3);
-        return levenshtein.get(searchSlice, searchText, { useCollator: true });
+        let bestDistance = levenshtein.get(t, searchText, { useCollator: true });
+        for (let i = 0; i <= t.length - searchText.length; i++) {
+            let searchSlice = t.slice(i, i + searchText.length);
+            bestDistance = Math.min(bestDistance, levenshtein.get(searchSlice, searchText, { useCollator: true }));
+        }
+        return bestDistance;
     });
 
     let top = [...distances.entries()]
