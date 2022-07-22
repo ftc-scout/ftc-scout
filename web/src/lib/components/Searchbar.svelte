@@ -1,38 +1,53 @@
 <script lang="ts">
     import { SearchDocument, type SearchQuery } from "$lib/graphql/generated/graphql-operations";
-    import { query } from "svelte-apollo";
+    import { query, type ReadableQuery } from "svelte-apollo";
     import { goto, prefetch } from "$app/navigation";
 
     let searchText = "";
 
-    let searchResults = query(SearchDocument, { variables: { searchText } });
-    $: searchResults.refetch({ searchText });
+    let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, { variables: { searchText } });
+    $: searchResults = query(SearchDocument, { variables: { searchText } });
 
-    let searchData: SearchQuery["search"] | undefined;
-    $: searchData = ($searchResults.data as any)?.search as any;
+    $: console.log($searchResults);
 
-    $: searchData && searchData.length && prefetch(`/teams/${searchData[0].team.number}`);
+    let teamsSearchData: SearchQuery["search"]["teams"];
+    $: teamsSearchData = $searchResults.data?.search.teams ?? [];
+    let eventsSearchData: SearchQuery["search"]["events"];
+    $: eventsSearchData = $searchResults.data?.search.events ?? [];
+
+    $: teamsSearchData.length && prefetch(`/teams/${teamsSearchData[0].team.number}`);
+    $: !teamsSearchData.length &&
+        eventsSearchData.length &&
+        prefetch(`/events/${eventsSearchData[0].event.season}/${eventsSearchData[0].event.code}`);
 
     function tryGoto() {
-        if (searchData && searchData.length) {
-            goto(`/teams/${searchData[0].team.number}`);
+        if (teamsSearchData.length) {
+            goto(`/teams/${teamsSearchData[0].team.number}`);
+            searchText = "";
+        } else if (eventsSearchData.length) {
+            goto(`/events/${eventsSearchData[0].event.season}/${eventsSearchData[0].event.code}`);
             searchText = "";
         }
     }
 
-    let elements: HTMLElement[] = [];
+    let barElement: HTMLElement;
+    let teamElements: HTMLElement[] = [];
+    let eventElements: HTMLElement[] = [];
+    $: elements = [barElement, ...teamElements.filter((e) => e), ...eventElements.filter((e) => e)];
 
     function handleType(e: KeyboardEvent) {
         let active = document.activeElement;
         if (!active) return;
+
         let focusNum = elements.indexOf(active as HTMLElement);
         if (focusNum == -1) return;
+
         if (e.key == "ArrowUp") {
             focusNum = Math.max(0, focusNum - 1);
             elements[focusNum].focus();
             e.preventDefault();
         } else if (e.key == "ArrowDown") {
-            focusNum = Math.min(elements.filter((e) => e).length - 1, focusNum + 1);
+            focusNum = Math.min(elements.length - 1, focusNum + 1);
             elements[focusNum].focus();
             e.preventDefault();
         }
@@ -40,7 +55,7 @@
 
     let focusCount = 0;
 
-    $: showSearchResults = searchText && searchData && searchData.length && focusCount;
+    $: showSearchResults = searchText && (teamsSearchData.length || eventsSearchData.length) && focusCount;
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
@@ -54,14 +69,17 @@
         on:focus={() => focusCount++}
         on:focusout={() => setTimeout(() => focusCount--, 1)}
         on:keydown={handleType}
-        bind:this={elements[0]}
+        bind:this={barElement}
         tabindex="0"
     />
-    {#if showSearchResults && searchData}
+    {#if showSearchResults}
         <div class="result">
-            <div class="header">Teams</div>
+            {#if teamsSearchData.length}
+                <div class="header">Teams</div>
+            {/if}
+
             <ol>
-                {#each searchData as oneSearchRes, i}
+                {#each teamsSearchData as oneSearchRes, i}
                     {@const link = `/teams/${oneSearchRes.team.number}`}
 
                     <li>
@@ -75,8 +93,36 @@
                             }}
                             on:focusout={() => setTimeout(() => focusCount--, 1)}
                             on:keydown={handleType}
-                            bind:this={elements[i + 1]}
+                            bind:this={teamElements[i]}
                             tabindex="0"
+                        >
+                            {@html oneSearchRes.highlighted}
+                        </a>
+                    </li>
+                {/each}
+            </ol>
+
+            {#if eventsSearchData.length}
+                <div class="header">Events</div>
+            {/if}
+
+            <ol>
+                {#each eventsSearchData as oneSearchRes, i}
+                    {@const link = `/events/${oneSearchRes.event.season}/${oneSearchRes.event.code}`}
+
+                    <li>
+                        <a
+                            sveltekit:prefetch
+                            href={link}
+                            on:click={() => (searchText = "")}
+                            on:focus={() => {
+                                focusCount++;
+                                prefetch(link);
+                            }}
+                            on:focusout={() => setTimeout(() => focusCount--, 1)}
+                            on:keydown={handleType}
+                            tabindex="0"
+                            bind:this={eventElements[i]}
                         >
                             {@html oneSearchRes.highlighted}
                         </a>

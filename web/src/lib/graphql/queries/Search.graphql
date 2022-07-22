@@ -1,9 +1,20 @@
 query Search($searchText: String!) {
     search(searchText: $searchText) {
-        team {
-            name
-            number
+        searchText
+        teams {
+            searchText
+            team {
+                number
+            }
+            highlighted
         }
-        highlighted
+        events {
+            searchText
+            event {
+                code
+                season
+            }
+            highlighted
+        }
     }
 }

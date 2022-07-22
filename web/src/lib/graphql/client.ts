@@ -1,5 +1,6 @@
 import { HttpLink, InMemoryCache, ApolloClient } from "@apollo/client/core";
 import { IS_DEV, SERVER_ORIGIN } from "../constants";
+import { SearchDocument } from "./generated/graphql-operations";
 
 const link = new HttpLink({
     uri: SERVER_ORIGIN,
@@ -23,15 +24,12 @@ const cache = new InMemoryCache({
         // MatchScores2021Remote: {
         //     keyFields: ["season", "eventCode", "matchId"],
         // },
-        TeamMatchParticipation: {
-            keyFields: ["season", "eventCode", "matchId", "teamNumber"],
-        },
-        TeamEventParticipation: {
-            keyFields: ["season", "eventCode", "teamNumber"],
-        },
-        Award: {
-            keyFields: ["season", "eventCode", "awardCode", "teamNumber"],
-        },
+        TeamMatchParticipation: { keyFields: ["season", "eventCode", "matchId", "teamNumber"] },
+        TeamEventParticipation: { keyFields: ["season", "eventCode", "teamNumber"] },
+        Award: { keyFields: ["season", "eventCode", "awardCode", "teamNumber"] },
+        SearchResults: { keyFields: ["searchText"] },
+        TeamSearchResult: { keyFields: ["searchText", "highlighted"] },
+        EventSearchResult: { keyFields: ["searchText", "highlighted"] },
     },
 });
 
