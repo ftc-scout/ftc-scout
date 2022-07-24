@@ -1,20 +1,14 @@
-<script>
-    import Card from "./Card.svelte";
+<script lang="ts">
     import { clickOutside } from "../util/directives";
     import { fade } from "svelte/transition";
     import { browser } from "$app/env";
 
     export let shown = false;
 
-    $: if (browser) {
-        if (shown) {
-            let width = document.body.clientWidth;
-            document.body.style.overflow = "hidden";
-            document.body.style.width = `${width}px`;
-        } else {
-            document.body.style.overflow = "auto";
-            document.body.style.width = "auto";
-        }
+    let element: HTMLElement;
+
+    $: if (browser && shown) {
+        setTimeout(() => element?.focus(), 1);
     }
 </script>
 
@@ -24,7 +18,7 @@
     }} />
 
 {#if shown}
-    <div class="outer-wrapper" in:fade|local={{ duration: 100 }}>
+    <div bind:this={element} class="outer-wrapper" in:fade|local={{ duration: 100 }}>
         <div class="content-wrapper" use:clickOutside on:click_outside={() => (shown = false)}>
             <div class="title-wrapper">
                 <slot name="title" />

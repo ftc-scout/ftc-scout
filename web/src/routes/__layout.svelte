@@ -41,6 +41,11 @@
     .content {
         margin-top: var(--navbar-size);
         padding: var(--padding);
+
+        overflow: auto;
+        max-height: calc(100vh - var(--navbar-size));
+        scrollbar-gutter: stable both-edges;
+        /* position: relative; */
     }
 
     :global(:root) {
