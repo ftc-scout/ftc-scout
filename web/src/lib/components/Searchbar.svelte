@@ -2,6 +2,8 @@
     import { SearchDocument, type SearchQuery } from "$lib/graphql/generated/graphql-operations";
     import { query, type ReadableQuery } from "svelte-apollo";
     import { goto, prefetch } from "$app/navigation";
+    import SkeletonRow from "./skeleton/SkeletonRow.svelte";
+    import Skeleton from "./skeleton/Skeleton.svelte";
 
     let searchText = "";
 
@@ -54,6 +56,15 @@
     let focusCount = 0;
 
     $: showSearchResults = searchText && (teamsSearchData.length || eventsSearchData.length) && focusCount;
+    $: showSkeleton = searchText && focusCount && $searchResults.loading;
+
+    let resultElement: HTMLElement | null;
+    let lastResultHeight: number | null = null;
+    $: lastResultHeight = resultElement
+        ? resultElement.clientHeight
+        : (teamsSearchData.length || eventsSearchData.length) == 0 && !$searchResults.loading
+        ? null
+        : lastResultHeight;
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
@@ -71,7 +82,7 @@
         tabindex="0"
     />
     {#if showSearchResults}
-        <div class="result">
+        <div bind:this={resultElement} class="result">
             {#if teamsSearchData.length}
                 <div class="header">Teams</div>
             {/if}
@@ -127,6 +138,15 @@
                     </li>
                 {/each}
             </ol>
+        </div>
+    {:else if showSkeleton && lastResultHeight}
+        <div
+            class="result"
+            style:height={`${lastResultHeight}px`}
+            style:max-height={`${lastResultHeight}px`}
+            style:overflow="hidden"
+        >
+            <SkeletonRow rows={20} card={false} header={false} />
         </div>
     {/if}
 </form>
