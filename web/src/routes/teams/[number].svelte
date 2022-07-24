@@ -108,34 +108,34 @@
                 {event.country}
             </InfoIconRow>
 
-            {#if teamEvent.rank}
+            {#if teamEvent.stats?.rank}
                 <InfoIconRow icon={RANKINGS_ICON}>
-                    <b>{prettyPrintOrdinal(teamEvent.rank)}</b> place (quals)
+                    <b>{prettyPrintOrdinal(teamEvent.stats.rank)}</b> place (quals)
                 </InfoIconRow>
             {/if}
 
-            {#if typeof teamEvent.wins == "number" && typeof teamEvent.losses == "number" && typeof teamEvent.ties == "number"}
+            {#if teamEvent.stats?.__typename == "TeamEventStats2021Traditional"}
                 <InfoIconRow icon={null}>
                     W-L-T: <b>
-                        {teamEvent.wins}-{teamEvent.losses}-{teamEvent.ties}
+                        {teamEvent.stats.wins}-{teamEvent.stats.losses}-{teamEvent.stats.ties}
                     </b>
                 </InfoIconRow>
             {/if}
 
-            {@const rp = typeof teamEvent.qualPoints == "number"}
-            {@const opr = typeof teamEvent.opr == "number" && !event.remote}
-            {@const avg = typeof teamEvent.qualAverage == "number"}
+            {@const rp = typeof teamEvent.stats?.rp == "number"}
+            {@const opr = typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
+            {@const avg = typeof teamEvent.stats?.average?.totalPoints == "number"}
 
             {#if rp || opr || avg}
                 <InfoIconRow icon={null}>
-                    {#if typeof teamEvent.qualPoints == "number"}
-                        <b>{teamEvent.qualPoints}</b> RP{opr || avg ? " · " : ""}
+                    {#if typeof teamEvent.stats?.rp == "number"}
+                        <b>{teamEvent.stats.rp}</b> RP{opr || avg ? " · " : ""}
                     {/if}
-                    {#if typeof teamEvent.opr == "number" && !event.remote}
-                        <b>{prettyPrintFloat(teamEvent.opr)}</b> OPR{avg ? " · " : ""}
+                    {#if typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
+                        <b>{prettyPrintFloat(teamEvent.stats?.opr?.totalPoints)}</b> OPR{avg ? " · " : ""}
                     {/if}
-                    {#if typeof teamEvent.qualAverage == "number"}
-                        <b>{prettyPrintFloat(teamEvent.qualAverage)}</b> AVG
+                    {#if typeof teamEvent.stats?.average?.totalPoints == "number"}
+                        <b>{prettyPrintFloat(teamEvent.stats?.average?.totalPoints)}</b> AVG
                     {/if}
                 </InfoIconRow>
             {/if}

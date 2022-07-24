@@ -198,7 +198,7 @@ class TeamEventStats2021Remote {
 }
 
 const TeamEventStats2021Union = createUnionType({
-    name: "TeamEventStats2021Union",
+    name: "TeamEventStats2021",
     types: () => [TeamEventStats2021Traditional, TeamEventStats2021Remote] as const,
 });
 

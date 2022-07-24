@@ -51,6 +51,21 @@
     $: gotoSubPage(selectedPage);
 
     let selectedTeam: number | null = null;
+    let selectedTeamStats: {
+        rank: number;
+        rp: number;
+        wins?: number;
+        losses?: number;
+        ties?: number;
+        opr?: {
+            totalPoints: number;
+        };
+        average: {
+            totalPoints: number;
+        };
+    } | null;
+    $: selectedTeamName = eventData?.teams?.find((t) => t.teamNumber == selectedTeam)?.team?.name!;
+    $: selectedTeamStats = eventData?.teams?.find((t) => t.teamNumber == selectedTeam)?.stats ?? null;
 </script>
 
 <svelte:head>
@@ -107,6 +122,6 @@
     </TabbedCard>
 
     {#if selectedTeam}
-        <TeamSelectionBar tep={eventData.teams.filter((t) => t.teamNumber == selectedTeam)[0]} />
+        <TeamSelectionBar tep={selectedTeamStats} number={selectedTeam} name={selectedTeamName} />
     {/if}
 </Loading>

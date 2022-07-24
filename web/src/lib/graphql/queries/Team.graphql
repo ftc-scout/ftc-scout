@@ -13,13 +13,32 @@ query Team($number: Int!) {
             season
             eventCode
             teamNumber
-            rank
-            wins
-            losses
-            ties
-            qualPoints
-            qualAverage
-            opr
+            __typename
+            stats {
+                ... on TeamEventStats2021Traditional {
+                    rank
+                    wins
+                    losses
+                    ties
+                    rp
+                    opr {
+                        totalPoints
+                    }
+                    average {
+                        totalPoints
+                    }
+                }
+                ... on TeamEventStats2021Remote {
+                    rank
+                    rp
+                    opr {
+                        totalPoints
+                    }
+                    average {
+                        totalPoints
+                    }
+                }
+            }
             awards {
                 season
                 eventCode

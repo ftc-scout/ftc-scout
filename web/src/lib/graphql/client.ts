@@ -9,6 +9,7 @@ const link = new HttpLink({
 const cache = new InMemoryCache({
     possibleTypes: {
         MatchScores: ["MatchScores2021Remote", "MatchScores2021Traditional"],
+        TeamEventStats2021: ["TeamEventStats2021Traditional", "TeamEventStats2021Remote"],
     },
     typePolicies: {
         Team: { keyFields: ["number"] },

@@ -271,7 +271,7 @@ function calculateStatsTraditional(
         allDataPoints.endgamePoints.push(ts.endgamePoints);
         allDataPoints.penaltyPoints.push(ts.penaltyPoints);
         allDataPoints.totalPoints.push(ts.totalPoints);
-        allDataPoints.totalPoints.push(ts.totalPointsNp);
+        allDataPoints.totalPointsNp.push(ts.totalPointsNp);
     });
 
     return {
@@ -373,7 +373,7 @@ function calculateStatsRemote(
         allDataPoints.endgamePoints.push(ts.endgamePoints);
         allDataPoints.penaltyPoints.push(ts.penaltyPoints);
         allDataPoints.totalPoints.push(ts.totalPoints);
-        allDataPoints.totalPoints.push(ts.totalPointsNp);
+        allDataPoints.totalPointsNp.push(ts.totalPointsNp);
     });
 
     return {

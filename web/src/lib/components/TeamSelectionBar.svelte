@@ -7,26 +7,27 @@
     import { prefetch } from "$app/navigation";
 
     export let tep: {
-        rank?: number | null;
-        wins?: number | null;
-        losses?: number | null;
-        ties?: number | null;
-        qualPoints?: number | null;
-        opr?: number | null;
-        qualAverage?: number | null;
-        team: {
-            number: number;
-            name: string;
+        rank: number;
+        rp: number;
+        wins?: number;
+        losses?: number;
+        ties?: number;
+        opr?: {
+            totalPoints: number;
         };
-    };
+        average: {
+            totalPoints: number;
+        };
+    } | null;
+    export let number: number;
+    export let name: string;
 
-    $: team = tep.team;
-    $: prefetch(`/teams/${team.number}`);
+    $: prefetch(`/teams/${number}`);
 
-    $: showWLT = typeof tep.wins == "number" && typeof tep.losses == "number" && typeof tep.ties == "number";
-    $: showRp = typeof tep.qualPoints == "number";
-    $: showOpr = typeof tep.opr == "number";
-    $: showAvg = typeof tep.qualAverage == "number";
+    $: showWLT = typeof tep?.wins == "number" && typeof tep?.losses == "number" && typeof tep?.ties == "number";
+    $: showRp = typeof tep?.rp == "number";
+    $: showOpr = typeof tep?.opr == "number";
+    $: showAvg = typeof tep?.average?.totalPoints == "number";
 
     $: rankDot = showWLT || showRp || showOpr || showAvg;
     $: wltDot = showRp || showOpr || showAvg;
@@ -34,32 +35,34 @@
     $: oprDot = showAvg;
 </script>
 
-<a sveltekit:prefetch href={`/teams/${team.number}`} transition:fly|local={{ y: 100, duration: 300 }}>
+<a sveltekit:prefetch href={`/teams/${number}`} transition:fly|local={{ y: 100, duration: 300 }}>
     <div class="top-row">
-        <b> {team.number} - <em> {team.name} </em> </b>
+        <b> {number} - <em> {name} </em> </b>
         <span class="view-team"> View Team <Fa icon={faAngleRight} /> </span>
     </div>
-    <div class="bottom-row">
-        {#if typeof tep.rank == "number"}
-            <b>{prettyPrintOrdinal(tep.rank)}</b> place
-            {rankDot ? "·" : ""}
-        {/if}
-        {#if typeof tep.wins == "number" && typeof tep.losses == "number" && typeof tep.ties == "number"}
-            W-L-T <b>{tep.wins}-{tep.losses}-{tep.ties}</b>
-            {wltDot ? "·" : ""}
-        {/if}
-        {#if typeof tep.qualPoints == "number"}
-            RP <b>{tep.qualPoints}</b>
-            {rpDot ? "·" : ""}
-        {/if}
-        {#if typeof tep.opr == "number"}
-            OPR <b>{prettyPrintFloat(tep.opr)}</b>
-            {oprDot ? "·" : ""}
-        {/if}
-        {#if typeof tep.qualAverage == "number"}
-            AVG <b>{prettyPrintFloat(tep.qualAverage)}</b>
-        {/if}
-    </div>
+    {#if tep}
+        <div class="bottom-row">
+            {#if typeof tep.rank == "number"}
+                <b>{prettyPrintOrdinal(tep.rank)}</b> place
+                {rankDot ? "·" : ""}
+            {/if}
+            {#if typeof tep.wins == "number" && typeof tep.losses == "number" && typeof tep.ties == "number"}
+                W-L-T <b>{tep.wins}-{tep.losses}-{tep.ties}</b>
+                {wltDot ? "·" : ""}
+            {/if}
+            {#if typeof tep.rp == "number"}
+                RP <b>{tep.rp}</b>
+                {rpDot ? "·" : ""}
+            {/if}
+            {#if typeof tep.opr == "number"}
+                OPR <b>{prettyPrintFloat(tep.opr)}</b>
+                {oprDot ? "·" : ""}
+            {/if}
+            {#if typeof tep.average.totalPoints == "number"}
+                AVG <b>{prettyPrintFloat(tep.average.totalPoints)}</b>
+            {/if}
+        </div>
+    {/if}
 </a>
 
 <style>
