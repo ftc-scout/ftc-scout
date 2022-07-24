@@ -153,7 +153,7 @@ function calculateWLTDq(
     let qualMatchesPlayed = 0;
 
     matches.forEach((match) => {
-        if (!match.teams.some((t) => t.teamNumber == teamNumber)) return;
+        if (!match.teams.some((t) => t.teamNumber == teamNumber && !t.surrogate)) return;
 
         let alliance = teamsAlliance(teamNumber, match);
         let winningAlliance = winner(match);
@@ -559,13 +559,13 @@ function getTeamsScoresTrad(teamNumber: number, matches: Match[]): [MatchScores2
             let b1 = m.teams.find((t) => t.station == Station.BLUE_1)!;
             let b2 = m.teams.find((t) => t.station == Station.BLUE_2)!;
 
-            if (teamNumber == r1.teamNumber) {
+            if (teamNumber == r1.teamNumber && !r1.surrogate) {
                 return [[rScore, 0] as [MatchScores2021, 0 | 1]];
-            } else if (teamNumber == r2.teamNumber) {
+            } else if (teamNumber == r2.teamNumber && !r2.surrogate) {
                 return [[rScore, 1] as [MatchScores2021, 0 | 1]];
-            } else if (teamNumber == b1.teamNumber) {
+            } else if (teamNumber == b1.teamNumber && !b1.surrogate) {
                 return [[bScore, 0] as [MatchScores2021, 0 | 1]];
-            } else if (teamNumber == b2.teamNumber) {
+            } else if (teamNumber == b2.teamNumber && !b2.surrogate) {
                 return [[bScore, 1] as [MatchScores2021, 0 | 1]];
             } else {
                 return [];
