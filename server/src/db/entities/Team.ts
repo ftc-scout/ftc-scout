@@ -1,7 +1,7 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { TypeormLoader } from "type-graphql-dataloader";
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
-import { TeamEventParticipation } from "./TeamEventParticipation";
+import { TeamEventParticipation2021 } from "./team-event-participation/TeamEventParticipation2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { User } from "./User";
 
@@ -54,10 +54,10 @@ export class Team extends BaseEntity {
     @TypeormLoader()
     matches!: TeamMatchParticipation[];
 
-    @Field(() => [TeamEventParticipation])
-    @OneToMany(() => TeamEventParticipation, (tep) => tep.team)
+    @Field(() => [TeamEventParticipation2021])
+    @OneToMany(() => TeamEventParticipation2021, (tep) => tep.team)
     @TypeormLoader()
-    events!: TeamEventParticipation[];
+    events!: TeamEventParticipation2021[];
 
     @Field()
     @CreateDateColumn()

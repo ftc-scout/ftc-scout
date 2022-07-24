@@ -2,7 +2,13 @@ import { Matrix, SingularValueDecomposition } from "ml-matrix";
 
 // Based on this guide for OPR calculation: https://blog.thebluealliance.com/2017/10/05/the-math-behind-opr-an-introduction/
 
-export function calculateOPR(scores: { team1: number; team2: number; result: number }[]): Record<number, number> {
+export interface OprData {
+    team1: number;
+    team2: number;
+    result: number;
+}
+
+export function calculateOPR(scores: OprData[]): Record<number, number> {
     if (scores.length == 0) return [];
 
     let allTeams = [...new Set(scores.flatMap((s) => [s.team1, s.team2]))];

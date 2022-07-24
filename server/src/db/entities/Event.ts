@@ -3,7 +3,7 @@ import { TypeormLoader } from "type-graphql-dataloader";
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
 import { Season } from "../../ftc-api/types/Season";
 import { Match } from "./Match";
-import { TeamEventParticipation } from "./TeamEventParticipation";
+import { TeamEventParticipation2021 } from "./team-event-participation/TeamEventParticipation2021";
 import { EventType } from "./types/EventType";
 
 export const EVENT_CODE_LEN = 16;
@@ -29,10 +29,10 @@ export class Event extends BaseEntity {
     // @TypeormLoader()
     // teamMatches!: TeamMatchParticipation[];
 
-    @Field(() => [TeamEventParticipation])
-    @OneToMany(() => TeamEventParticipation, (tep) => tep.event)
+    @Field(() => [TeamEventParticipation2021])
+    @OneToMany(() => TeamEventParticipation2021, (tep) => tep.event)
     @TypeormLoader()
-    teams!: TeamEventParticipation[];
+    teams!: TeamEventParticipation2021[];
 
     @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })

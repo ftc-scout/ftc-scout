@@ -1,14 +1,15 @@
-import { Field, Float, Int, ObjectType } from "type-graphql";
+import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
-import { Team } from "./Team";
-import { Event } from "./Event";
-import { Season } from "../../ftc-api/types/Season";
+import { Team } from "../Team";
+import { Event } from "../Event";
+import { Season } from "../../../ftc-api/types/Season";
 import { TypeormLoader } from "type-graphql-dataloader";
-import { Award } from "./Award";
+import { Award } from "../Award";
+import { TepStats2021 } from "./TepStats2021";
 
 @ObjectType()
 @Entity()
-export class TeamEventParticipation extends BaseEntity {
+export class TeamEventParticipation2021 extends BaseEntity {
     @Field(() => Int, { name: "season" })
     @PrimaryColumn("smallint")
     eventSeason!: Season;
@@ -37,6 +38,18 @@ export class TeamEventParticipation extends BaseEntity {
     team!: Team;
 
     @Field(() => Int, { nullable: true })
+    @Column("int", { nullable: true })
+    rp!: number | null;
+
+    @Field(() => Int, { nullable: true })
+    @Column("int", { nullable: true })
+    tb1!: number | null;
+
+    @Field(() => Int, { nullable: true })
+    @Column("int", { nullable: true })
+    tb2!: number | null;
+
+    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     rank!: number | null;
 
@@ -53,14 +66,6 @@ export class TeamEventParticipation extends BaseEntity {
     ties!: number | null;
 
     @Field(() => Int, { nullable: true })
-    @Column("int", { nullable: true })
-    qualPoints!: number | null;
-
-    @Field(() => Float, { nullable: true })
-    @Column("float", { nullable: true })
-    qualAverage!: number | null;
-
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     dq!: number | null;
 
@@ -68,11 +73,24 @@ export class TeamEventParticipation extends BaseEntity {
     @Column("int8", { nullable: true })
     qualMatchesPlayed!: number | null;
 
-    @Field(() => Int, { nullable: true })
-    @Column("int8", { nullable: true })
-    matchesPlayed!: number | null;
+    @Column()
+    hasStats!: boolean;
 
-    @Field(() => Float, { nullable: true })
-    @Column("float", { nullable: true })
-    opr!: number | null;
+    @Column(() => TepStats2021)
+    tot!: TepStats2021;
+
+    @Column(() => TepStats2021)
+    avg!: TepStats2021;
+
+    @Column(() => TepStats2021)
+    min!: TepStats2021;
+
+    @Column(() => TepStats2021)
+    max!: TepStats2021;
+
+    @Column(() => TepStats2021)
+    dev!: TepStats2021;
+
+    @Column(() => TepStats2021)
+    opr!: TepStats2021;
 }

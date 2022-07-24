@@ -164,6 +164,21 @@ export class MatchScores2021 extends BaseEntity {
     @Column("smallint")
     totalPoints!: number;
 
+    @Column("smallint")
+    totalPointsNp!: number;
+
+    static calcAutoNavigationPoints(nav: AutoNavigation2021): number {
+        return [0, 3, 6, 5, 10][nav];
+    }
+
+    static calcAutoBonusPoints(bonus: boolean, barcode: BarcodeElement2021): number {
+        return bonus ? (barcode == BarcodeElement2021.DUCK ? 10 : 20) : 0;
+    }
+
+    static calcParkPoints(park: EndgamePark2021): number {
+        return [0, 3, 6][park];
+    }
+
     addGeneratedProps() {
         this.autoCarouselPoints = this.autoCarousel ? 10 : 0;
         this.autoNavigationPoints =
@@ -201,6 +216,7 @@ export class MatchScores2021 extends BaseEntity {
             this.autoPoints + this.driverControlledPoints + this.endgamePoints + this.penaltyPoints,
             0
         );
+        this.totalPointsNp = this.autoPoints + this.driverControlledPoints + this.endgamePoints;
     }
 
     static fromApiRemote(

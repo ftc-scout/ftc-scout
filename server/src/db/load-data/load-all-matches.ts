@@ -13,9 +13,9 @@ import { getMatchScores } from "../../ftc-api/get-match-scores";
 import { MatchScoresFtcApi } from "../../ftc-api/types/match-scores/MatchScores";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
 import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
-import { TeamEventParticipation } from "../entities/TeamEventParticipation";
+import { TeamEventParticipation2021 } from "../entities/team-event-participation/TeamEventParticipation2021";
 import { getTeamsAtEvent } from "../../ftc-api/get-teams";
-import { calculateEventStatistics } from "../../logic/calculate-event-statistics";
+import { calculateEventStatistics2021 } from "../../logic/calculate-event-statistics";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -66,7 +66,7 @@ export async function loadAllMatches(season: Season) {
 
             await em.save(dbMatches, { chunk: 500 });
             await em.save(dbTeamMatchParticipations, { chunk: 500 });
-            await em.save(dbTeamEventParticipations, { chunk: 500 });
+            await em.save(dbTeamEventParticipations, { chunk: 100 }); // These are really big so lower chunk size
 
             console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
         }
@@ -94,11 +94,11 @@ function createDbEntities(
 ): {
     dbMatches: Match[];
     dbTeamMatchParticipations: TeamMatchParticipation[];
-    dbTeamEventParticipations: TeamEventParticipation[];
+    dbTeamEventParticipations: TeamEventParticipation2021[];
 } {
     let dbMatchesAll: Match[] = [];
     let dbTeamMatchParticipationsAll: TeamMatchParticipation[] = [];
-    let dbTeamEventParticipationsAll: TeamEventParticipation[] = [];
+    let dbTeamEventParticipationsAll: TeamEventParticipation2021[] = [];
 
     for (let { eventCode, remote, matches, matchScores, teams } of apiEvents) {
         let dbMatches: Match[] = [];
@@ -143,28 +143,18 @@ function createDbEntities(
             }
             dbMatches.push(dbMatch);
 
+            dbMatch.teams = [];
+
             for (let team of match.teams) {
                 if (!team.teamNumber) continue;
 
                 let dbTeamMatchParticipation = TeamMatchParticipation.fromApi(season, eventCode, dbMatch.id, team);
                 dbTeamMatchParticipations.push(dbTeamMatchParticipation);
+                dbMatch.teams.push(dbTeamMatchParticipation);
             }
         }
 
-        let dbTeamEventParticipations = calculateEventStatistics(
-            season,
-            eventCode,
-            teams,
-            dbMatches,
-            dbTeamMatchParticipations,
-            remote
-        );
-
-        if (dbTeamEventParticipations.some((tep) => tep.opr != null && isNaN(tep.opr))) {
-            // console.log(eventCode, remote, matches, matchScores, teams);
-            console.log(dbTeamEventParticipations);
-            throw "No!";
-        }
+        let dbTeamEventParticipations = calculateEventStatistics2021(season, eventCode, teams, dbMatches, remote);
 
         dbMatchesAll.push(...dbMatches);
         dbTeamMatchParticipationsAll.push(...dbTeamMatchParticipations);
