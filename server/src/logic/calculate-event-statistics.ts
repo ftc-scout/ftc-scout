@@ -98,9 +98,9 @@ export function calculateEventStatistics2021(
 
     let rankedTeams = Object.entries(participations)
         .filter(([_, v]) => v.hasStats)
-        .sort(([_1, v1], [_2, v2]) => v1.tb2! - v2.tb2!)
-        .sort(([_1, v1], [_2, v2]) => v1.tb1! - v2.tb1!)
-        .sort(([_1, v1], [_2, v2]) => v1.rp! - v2.rp!);
+        .sort(([_1, v1], [_2, v2]) => v2.tb2! - v1.tb2!)
+        .sort(([_1, v1], [_2, v2]) => v2.tb1! - v1.tb1!)
+        .sort(([_1, v1], [_2, v2]) => v2.rp! - v1.rp!);
 
     for (let rank = 0; rank < rankedTeams.length; rank++) {
         participations[+rankedTeams[rank][0]].rank = rank + 1;
