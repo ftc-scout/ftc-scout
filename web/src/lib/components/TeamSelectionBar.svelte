@@ -40,26 +40,27 @@
         <b> {number} - <em> {name} </em> </b>
         <span class="view-team"> View Team <Fa icon={faAngleRight} /> </span>
     </div>
-    {#if tep}
+
+    {#if tep && (showWLT || showRp || showOpr || showAvg)}
         <div class="bottom-row">
             {#if typeof tep.rank == "number"}
                 <b>{prettyPrintOrdinal(tep.rank)}</b> place
                 {rankDot ? "·" : ""}
             {/if}
             {#if typeof tep.wins == "number" && typeof tep.losses == "number" && typeof tep.ties == "number"}
-                W-L-T <b>{tep.wins}-{tep.losses}-{tep.ties}</b>
+                <b>{tep.wins}-{tep.losses}-{tep.ties}</b> W-L-T
                 {wltDot ? "·" : ""}
             {/if}
             {#if typeof tep.rp == "number"}
-                RP <b>{tep.rp}</b>
+                <b>{tep.rp}</b> RP
                 {rpDot ? "·" : ""}
             {/if}
             {#if typeof tep.opr == "number"}
-                OPR <b>{prettyPrintFloat(tep.opr)}</b>
+                <b>{prettyPrintFloat(tep.opr)}</b> OPR
                 {oprDot ? "·" : ""}
             {/if}
             {#if typeof tep.average.totalPoints == "number"}
-                AVG <b>{prettyPrintFloat(tep.average.totalPoints)}</b>
+                <b>{prettyPrintFloat(tep.average.totalPoints)}</b> AVG
             {/if}
         </div>
     {/if}
@@ -91,11 +92,11 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-
-        margin-bottom: var(--gap);
     }
 
     .bottom-row {
+        margin-top: var(--gap);
+
         font-size: var(--font-size);
         color: var(--inverse-secondary-text-color);
     }
