@@ -32,29 +32,7 @@ query EventPage($season: Int!, $code: String!) {
             eventCode
             teamNumber
             stats {
-                ... on TeamEventStats2021Traditional {
-                    rank
-                    wins
-                    losses
-                    ties
-                    rp
-                    opr {
-                        totalPoints
-                    }
-                    average {
-                        totalPoints
-                    }
-                }
-                ... on TeamEventStats2021Remote {
-                    rank
-                    rp
-                    opr {
-                        totalPoints
-                    }
-                    average {
-                        totalPoints
-                    }
-                }
+                ...FullStats
             }
             team {
                 number

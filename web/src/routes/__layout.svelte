@@ -38,6 +38,8 @@
 </div>
 
 <style>
+    @import "/static/css/colors.css";
+
     .content {
         margin-top: var(--navbar-size);
         padding: var(--padding);
@@ -73,13 +75,11 @@
 
         /* Stolen from ftcscores <3 */
         --color-team-transparency: 0.15;
-        --color-team-red: rgb(244, 67, 54);
-        --color-team-red-darker: var(--paper-red-600);
+        --color-team-red: var(--paper-red-500);
         --color-team-red-transparent: rgba(244, 67, 54, var(--color-team-transparency));
-        --color-team-blue: rgb(33, 150, 243);
-        --color-team-blue-darker: var(--paper-blue-600);
+        --color-team-blue: var(--paper-blue-500);
         --color-team-blue-transparent: rgba(33, 150, 243, var(--color-team-transparency));
-        --color-team-neutral: rgb(170, 0, 255);
+        --color-team-neutral: var(--paper-purple-a700);
         --color-team-neutral-transparent: rgba(170, 0, 255, var(--color-team-transparency));
         --color-team-text: white;
         --zebra-stripe-color: rgb(245, 245, 245);

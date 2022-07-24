@@ -1,0 +1,56 @@
+fragment FullStats on TeamEventStats2021 {
+    ... on TeamEventStats2021Traditional {
+        rank
+        rp
+        tb1
+        tb2
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        total {
+            ...FullStatsGroup2021Trad
+        }
+        average {
+            ...FullStatsGroup2021Trad
+        }
+        opr {
+            ...FullStatsGroup2021Trad
+        }
+        min {
+            ...FullStatsGroup2021Trad
+        }
+        max {
+            ...FullStatsGroup2021Trad
+        }
+        standardDev {
+            ...FullStatsGroup2021Trad
+        }
+    }
+    ... on TeamEventStats2021Remote {
+        rank
+        rp
+        tb1
+        tb2
+        qualMatchesPlayed
+        total {
+            ...FullStatsGroup2021Remote
+        }
+        average {
+            ...FullStatsGroup2021Remote
+        }
+        opr {
+            ...FullStatsGroup2021Remote
+        }
+        min {
+            ...FullStatsGroup2021Remote
+        }
+        max {
+            ...FullStatsGroup2021Remote
+        }
+        standardDev {
+            ...FullStatsGroup2021Remote
+        }
+    }
+}

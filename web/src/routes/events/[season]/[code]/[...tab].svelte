@@ -1,5 +1,5 @@
 <script context="module" lang="ts">
-    import { EventPageDocument } from "../../../../lib/graphql/generated/graphql-operations";
+    import { EventPageDocument, type FullStatsFragment } from "../../../../lib/graphql/generated/graphql-operations";
     import { queryLoad } from "../../../../lib/graphql/query-load";
 
     export const load = queryLoad("event", EventPageDocument, ({ params }) => ({
@@ -31,10 +31,12 @@
         DATE_ICON,
         LOCATION_ICON,
         MATCHES_ICON,
+        RANKINGS_ICON,
         TEAMS_ICON,
         WEBSITE_ICON,
     } from "../../../../lib/icons";
     import type { Readable } from "svelte/store";
+    import EventStats from "../../../../lib/components/event-stats/EventStats.svelte";
 
     export let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
     $: eventData = $event?.data?.eventByCode!;
@@ -66,6 +68,16 @@
     } | null;
     $: selectedTeamName = eventData?.teams?.find((t) => t.teamNumber == selectedTeam)?.team?.name!;
     $: selectedTeamStats = eventData?.teams?.find((t) => t.teamNumber == selectedTeam)?.stats ?? null;
+
+    let stats: {
+        team: {
+            number: number;
+            name: string;
+        };
+        stats: FullStatsFragment;
+    }[];
+    $: stats = (eventData?.teams?.filter((t) => t.stats) as any) ?? [];
+    $: hasStats = !!stats.length;
 </script>
 
 <svelte:head>
@@ -101,6 +113,7 @@
     <TabbedCard
         names={[
             [MATCHES_ICON, "Matches"],
+            [RANKINGS_ICON, hasStats ? "Rankings" : null],
             [AWARDS_ICON, eventData.awards.length ? "Awards" : null],
             [TEAMS_ICON, "Teams"],
         ]}
@@ -109,6 +122,12 @@
         <TabContent name="Matches">
             <MatchTable matches={eventData.matches} event={eventData} isRemote={eventData.remote} bind:selectedTeam />
         </TabContent>
+
+        {#if hasStats}
+            <TabContent name="Rankings">
+                <EventStats {stats} />
+            </TabContent>
+        {/if}
 
         {#if eventData.awards.length}
             <TabContent name="Awards">

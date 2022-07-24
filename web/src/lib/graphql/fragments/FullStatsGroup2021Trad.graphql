@@ -1,0 +1,30 @@
+fragment FullStatsGroup2021Trad on TeamEventStatGroup2021Traditional {
+    autoCarouselPoints
+    autoNavigationPoints
+    autoNavigationPointsIndividual
+    autoFreightPoints
+    autoFreightPointsLevel1
+    autoFreightPointsLevel2
+    autoFreightPointsLevel3
+    autoFreightPointsStorage
+    autoBonusPoints
+    autoBonusPointsIndividual
+    driverControlledAllianceHubPoints
+    driverControlledAllianceHubPointsLevel1
+    driverControlledAllianceHubPointsLevel2
+    driverControlledAllianceHubPointsLevel3
+    driverControlledSharedHubPoints
+    driverControlledStoragePoints
+    endgameDeliveryPoints
+    allianceBalancedPoints
+    sharedUnbalancedPoints
+    endgameParkingPoints
+    endgameParkingPointsIndividual
+    cappingPoints
+    autoPoints
+    driverControlledPoints
+    endgamePoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}

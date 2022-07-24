@@ -2,7 +2,7 @@ import { createUnionType, Field, FieldResolver, Float, Int, ObjectType, Resolver
 import { TeamEventParticipation2021 } from "../../db/entities/team-event-participation/TeamEventParticipation2021";
 
 @ObjectType()
-class TeamEvenStatGroup2021Traditional {
+class TeamEventStatGroup2021Traditional {
     constructor(obj: any) {
         Object.assign(this, obj);
     }
@@ -66,7 +66,7 @@ class TeamEvenStatGroup2021Traditional {
 }
 
 @ObjectType()
-class TeamEvenStatGroup2021Remote {
+class TeamEventStatGroup2021Remote {
     constructor(obj: any) {
         Object.assign(this, obj);
     }
@@ -153,18 +153,18 @@ class TeamEventStats2021Traditional {
     dqs!: number;
     @Field(() => Int)
     qualMatchesPlayed!: number;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    total!: TeamEvenStatGroup2021Traditional;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    average!: TeamEvenStatGroup2021Traditional;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    min!: TeamEvenStatGroup2021Traditional;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    max!: TeamEvenStatGroup2021Traditional;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    standardDev!: TeamEvenStatGroup2021Traditional;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    opr!: TeamEvenStatGroup2021Traditional;
+    @Field(() => TeamEventStatGroup2021Traditional)
+    total!: TeamEventStatGroup2021Traditional;
+    @Field(() => TeamEventStatGroup2021Traditional)
+    average!: TeamEventStatGroup2021Traditional;
+    @Field(() => TeamEventStatGroup2021Traditional)
+    min!: TeamEventStatGroup2021Traditional;
+    @Field(() => TeamEventStatGroup2021Traditional)
+    max!: TeamEventStatGroup2021Traditional;
+    @Field(() => TeamEventStatGroup2021Traditional)
+    standardDev!: TeamEventStatGroup2021Traditional;
+    @Field(() => TeamEventStatGroup2021Traditional)
+    opr!: TeamEventStatGroup2021Traditional;
 }
 
 @ObjectType()
@@ -183,18 +183,18 @@ class TeamEventStats2021Remote {
     tb2!: number;
     @Field(() => Int)
     qualMatchesPlayed!: number;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    total!: TeamEvenStatGroup2021Remote;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    average!: TeamEvenStatGroup2021Remote;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    min!: TeamEvenStatGroup2021Remote;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    max!: TeamEvenStatGroup2021Remote;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    standardDev!: TeamEvenStatGroup2021Remote;
-    @Field(() => TeamEvenStatGroup2021Traditional)
-    opr!: TeamEvenStatGroup2021Remote;
+    @Field(() => TeamEventStatGroup2021Remote)
+    total!: TeamEventStatGroup2021Remote;
+    @Field(() => TeamEventStatGroup2021Remote)
+    average!: TeamEventStatGroup2021Remote;
+    @Field(() => TeamEventStatGroup2021Remote)
+    min!: TeamEventStatGroup2021Remote;
+    @Field(() => TeamEventStatGroup2021Remote)
+    max!: TeamEventStatGroup2021Remote;
+    @Field(() => TeamEventStatGroup2021Remote)
+    standardDev!: TeamEventStatGroup2021Remote;
+    @Field(() => TeamEventStatGroup2021Remote)
+    opr!: TeamEventStatGroup2021Remote;
 }
 
 const TeamEventStats2021Union = createUnionType({
@@ -215,12 +215,12 @@ export class TeamEventParticipation2021Resolver {
                 tb1: tep.tb1,
                 tb2: tep.tb2,
                 qualMatchesPlayed: tep.qualMatchesPlayed,
-                total: new TeamEvenStatGroup2021Remote(tep.tot),
-                average: new TeamEvenStatGroup2021Remote(tep.avg),
-                min: new TeamEvenStatGroup2021Remote(tep.min),
-                max: new TeamEvenStatGroup2021Remote(tep.max),
-                standardDev: new TeamEvenStatGroup2021Remote(tep.dev),
-                opr: new TeamEvenStatGroup2021Remote(tep.opr),
+                total: new TeamEventStatGroup2021Remote(tep.tot),
+                average: new TeamEventStatGroup2021Remote(tep.avg),
+                min: new TeamEventStatGroup2021Remote(tep.min),
+                max: new TeamEventStatGroup2021Remote(tep.max),
+                standardDev: new TeamEventStatGroup2021Remote(tep.dev),
+                opr: new TeamEventStatGroup2021Remote(tep.opr),
             } as TeamEventStats2021Remote);
         } else {
             return new TeamEventStats2021Traditional({
@@ -233,12 +233,12 @@ export class TeamEventParticipation2021Resolver {
                 ties: tep.ties,
                 dqs: tep.dq,
                 qualMatchesPlayed: tep.qualMatchesPlayed,
-                total: new TeamEvenStatGroup2021Traditional(tep.tot),
-                average: new TeamEvenStatGroup2021Traditional(tep.avg),
-                min: new TeamEvenStatGroup2021Traditional(tep.min),
-                max: new TeamEvenStatGroup2021Traditional(tep.max),
-                standardDev: new TeamEvenStatGroup2021Traditional(tep.dev),
-                opr: new TeamEvenStatGroup2021Traditional(tep.opr),
+                total: new TeamEventStatGroup2021Traditional(tep.tot),
+                average: new TeamEventStatGroup2021Traditional(tep.avg),
+                min: new TeamEventStatGroup2021Traditional(tep.min),
+                max: new TeamEventStatGroup2021Traditional(tep.max),
+                standardDev: new TeamEventStatGroup2021Traditional(tep.dev),
+                opr: new TeamEventStatGroup2021Traditional(tep.opr),
             } as TeamEventStats2021Traditional);
         }
     }
