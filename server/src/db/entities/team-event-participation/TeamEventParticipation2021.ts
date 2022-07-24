@@ -37,39 +37,30 @@ export class TeamEventParticipation2021 extends BaseEntity {
     @TypeormLoader()
     team!: Team;
 
-    @Field(() => Int, { nullable: true })
     @Column("int", { nullable: true })
     rp!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int", { nullable: true })
     tb1!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int", { nullable: true })
     tb2!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     rank!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     wins!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     losses!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     ties!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     dq!: number | null;
 
-    @Field(() => Int, { nullable: true })
     @Column("int8", { nullable: true })
     qualMatchesPlayed!: number | null;
 
