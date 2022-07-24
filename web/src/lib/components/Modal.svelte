@@ -1,8 +1,7 @@
 <script lang="ts">
     import { clickOutside } from "../util/directives";
-    import { fade } from "svelte/transition";
     import { browser } from "$app/env";
-
+    import { fly } from 'svelte/transition';
     export let shown = false;
 
     let element: HTMLElement;
@@ -18,7 +17,7 @@
     }} />
 
 {#if shown}
-    <div bind:this={element} class="outer-wrapper" in:fade|local={{ duration: 100 }}>
+    <div transition:fly="{{ y: 200, duration: 1000 }}" bind:this={element} class="outer-wrapper" >
         <div class="content-wrapper" use:clickOutside on:click_outside={() => (shown = false)}>
             <div class="title-wrapper">
                 <slot name="title" />
@@ -43,7 +42,7 @@
 
         z-index: 50;
 
-        background: var(--modal-background-color);
+        /* background: var(--modal-background-color); */
 
         display: flex;
         justify-content: center;
