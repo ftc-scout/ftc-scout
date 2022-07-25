@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { onMount } from "svelte";
+    import { array_move } from "../../util/array-move";
     import type { Stat, StatList } from "../../util/stats/Stat";
     import SortButton, { toggleSortType, SortType } from "../SortButton.svelte";
 
@@ -22,26 +24,71 @@
         };
     }
 
-    function draggable(element: HTMLElement) {
+    function getOffsetAndWidth(element: HTMLElement | null): [number, number] {
+        if (!element) return [100000, 100000];
+
+        let pos = element.getBoundingClientRect();
+        let parentPos = element.parentElement!.getBoundingClientRect();
+        return [pos.left - parentPos.left, pos.right - pos.left];
+    }
+
+    let elements: HTMLElement[] = [];
+    let offsetsAndWidths: [number, number][] = [];
+    function recalcOffsets() {
+        offsetsAndWidths = elements.map(getOffsetAndWidth);
+    }
+    onMount(recalcOffsets);
+
+    function draggable(element: HTMLElement, i: number) {
         let moving = false;
-        let mousePos = { x: 0, y: 0 };
-        let placeholder: HTMLElement | null = null;
-        let parent: HTMLElement | null = null;
+        let xOffset = 0;
+        let mouseXOffset = 0;
+        let placeholder: HTMLElement;
+        let shadow: HTMLElement;
+        let moveIndicator: HTMLElement;
+        let parent: HTMLElement = element.parentElement!;
+
+        function calcNewPosition(): number {
+            for (let j = 0; j < shownStats.length; j++) {
+                let [offset, width] = offsetsAndWidths[j];
+                let left = offset;
+                let middle = offset + width / 2;
+                let right = offset + width;
+                if (mouseXOffset >= left && mouseXOffset < middle) {
+                    return j == i ? i : j == i + 1 ? j + 1 : j;
+                } else if (mouseXOffset >= middle && mouseXOffset < right) {
+                    return j == i ? i : j == i - 1 ? j : j + 1;
+                }
+            }
+            return i;
+        }
 
         function moveTo() {
-            element.style.left = `${mousePos.x}px`;
-            element.style.top = `${mousePos.y}px`;
+            element.style.left = `${xOffset}px`;
+            shadow.style.left = `${xOffset}px`;
+            let newPos = calcNewPosition();
+            if (newPos != i) {
+                let offset =
+                    newPos == shownStats.length
+                        ? offsetsAndWidths[newPos - 1][0] + offsetsAndWidths[newPos - 1][1] - 2
+                        : Math.max(offsetsAndWidths[newPos][0] - 1, 0);
+                moveIndicator.style.left = `${offset}px`;
+            } else {
+                moveIndicator.style.left = `-1000px`;
+            }
         }
 
         function down(e: MouseEvent) {
             if (e.target == element) {
                 moving = true;
 
+                parent = element.parentElement!;
                 let pos = element.getBoundingClientRect();
+                let parentPos = parent.getBoundingClientRect();
                 let width = pos.right - pos.left; // using these of clientWidth/Height gives values to the exact subpixels.
                 let height = pos.bottom - pos.top;
-                parent = element.parentElement!;
-                mousePos = { x: pos.left, y: pos.top };
+                xOffset = pos.left - parentPos.left;
+                mouseXOffset = e.x - parentPos.left;
 
                 placeholder = document.createElement("td");
                 placeholder.style.minWidth = `${width}px`;
@@ -49,7 +96,23 @@
                 placeholder.style.background = "var(--neutral-separator-color)";
                 parent.replaceChild(placeholder, element);
 
-                document.body.appendChild(element);
+                shadow = document.createElement("div");
+                shadow.style.position = "absolute";
+                shadow.style.background = "#00000030";
+                shadow.style.width = `${width}px`;
+                shadow.style.top = `${height}px`;
+                shadow.style.bottom = "0";
+                parent.parentElement?.appendChild(shadow);
+
+                moveIndicator = document.createElement("div");
+                moveIndicator.style.position = "absolute";
+                moveIndicator.style.background = "gray";
+                moveIndicator.style.width = `2px`;
+                moveIndicator.style.top = `${height}px`;
+                moveIndicator.style.bottom = "0";
+                parent.parentElement?.appendChild(moveIndicator);
+
+                parent.appendChild(element);
                 element.style.position = "absolute";
                 element.style.display = "block";
                 element.style.width = `${width}px`;
@@ -61,23 +124,29 @@
 
         function move(e: MouseEvent) {
             if (moving) {
-                mousePos.x += e.movementX;
-                mousePos.y += e.movementY;
+                xOffset += e.movementX;
+                mouseXOffset += e.movementX;
                 moveTo();
             }
         }
 
         function up() {
             if (moving) {
+                let newPosition = calcNewPosition();
+                shownStats = array_move(shownStats, i, newPosition - 1);
+
                 moving = false;
                 element.style.position = "";
                 element.style.left = "";
-                element.style.top = "";
                 element.style.width = "";
                 element.style.height = "";
                 element.style.display = "";
                 element.style.cursor = "";
-                parent?.replaceChild(element, placeholder!);
+                parent.replaceChild(element, placeholder!);
+                parent.parentElement!.removeChild(shadow!);
+                parent.parentElement!.removeChild(moveIndicator!);
+
+                setTimeout(recalcOffsets, 1);
             }
         }
 
@@ -96,15 +165,15 @@
 </script>
 
 <thead>
-    {#each shownStats as shownStat}
+    {#each shownStats as shownStat, i}
         {@const mySort = shownStat == sort?.stat ? sort.type : SortType.NONE}
         {#if shownStat == "team"}
-            <th class="team white" use:draggable>
+            <th class="team white" use:draggable={i} bind:this={elements[i]}>
                 Team
                 <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
             </th>
         {:else}
-            <th class={shownStat.color} title={shownStat.longName} use:draggable>
+            <th class={shownStat.color} title={shownStat.longName} use:draggable={i} bind:this={elements[i]}>
                 {shownStat.shortName}
                 <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
             </th>
@@ -113,6 +182,11 @@
 </thead>
 
 <style>
+    thead {
+        position: relative;
+        overflow: hidden;
+    }
+
     th {
         padding: var(--large-padding);
         font-weight: bold;

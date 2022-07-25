@@ -70,7 +70,7 @@
 </script>
 
 <table>
-    <StatHeaders {shownStats} bind:sort {defaultSort} />
+    <StatHeaders bind:shownStats bind:sort {defaultSort} />
     <tbody>
         {#each sorted as team, i (team.team.number)}
             <StatRow {team} {shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />
@@ -89,5 +89,7 @@
         width: 100%;
         max-width: 100%;
         overflow: auto;
+
+        position: relative;
     }
 </style>
