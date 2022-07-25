@@ -26,7 +26,7 @@
 {:else}
     {@const value = stat.read(data.stats)}
 
-    <td class={stat.color}>
+    <td class={stat.color} title={stat.longName}>
         {#if stat.displayType == StatDisplayType.INTEGER}
             {value}
         {:else if stat.displayType == StatDisplayType.DECIMAL}

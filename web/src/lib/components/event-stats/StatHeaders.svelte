@@ -99,21 +99,21 @@
     {#each shownStats as shownStat}
         {@const mySort = shownStat == sort?.stat ? sort.type : SortType.NONE}
         {#if shownStat == "team"}
-            <td class="team white" use:draggable>
+            <th class="team white" use:draggable>
                 Team
                 <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
-            </td>
+            </th>
         {:else}
-            <td class={shownStat.color} title={shownStat.longName} use:draggable>
+            <th class={shownStat.color} title={shownStat.longName} use:draggable>
                 {shownStat.shortName}
                 <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
-            </td>
+            </th>
         {/if}
     {/each}
 </thead>
 
 <style>
-    td {
+    th {
         padding: var(--large-padding);
         font-weight: bold;
         text-align: center;
@@ -122,65 +122,49 @@
         user-select: none;
 
         cursor: grab;
+
+        position: sticky;
     }
 
-    td.team {
+    .team {
         width: 100%;
     }
 
-    td.white {
+    .white {
         background: var(--foreground-color);
         box-shadow: rgb(0 0 0 / 14%) 0px -4px 4px -2px inset;
     }
 
-    td.red {
+    .red {
         background: var(--red-stat-color);
         color: var(--stat-heading-text-color);
     }
 
-    td.blue {
+    .blue {
         background: var(--blue-stat-color);
         color: var(--stat-heading-text-color);
     }
 
-    td.light-blue {
+    .light-blue {
         background: var(--light-blue-stat-color);
         color: var(--stat-heading-text-color);
     }
 
-    td.green {
+    .green {
         background: var(--green-stat-color);
         color: var(--stat-heading-text-color);
     }
 
-    td.purple {
+    .purple {
         background: var(--purple-stat-color);
         color: var(--stat-heading-text-color);
     }
 
-    td.moving {
+    .moving {
         content: "";
         background: var(--neutral-separator-color);
         box-shadow: none;
         color: transparent;
         cursor: grabbing;
     }
-
-    #moving-element {
-        position: absolute;
-        left: 100px;
-        top: 100px;
-        padding: var(--small-padding);
-        background-color: red;
-        color: white;
-        /* cursor: grabbing; */
-    }
-
-    /* :global(.something-moving > *) {
-        cursor: grabbing !important;
-    } */
-
-    /* td.moving :global(*) {
-        display: none;
-    } */
 </style>
