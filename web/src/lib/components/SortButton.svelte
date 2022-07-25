@@ -5,14 +5,14 @@
         HIGH_LOW,
     }
 
-    export function cycleSortType(sortType: SortType) {
+    export function toggleSortType(sortType: SortType) {
         switch (sortType) {
             case SortType.NONE:
                 return SortType.HIGH_LOW;
             case SortType.HIGH_LOW:
                 return SortType.LOW_HIGH;
             default:
-                return SortType.NONE;
+                return SortType.HIGH_LOW;
         }
     }
 </script>

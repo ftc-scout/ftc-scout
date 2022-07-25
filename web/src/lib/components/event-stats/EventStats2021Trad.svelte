@@ -37,18 +37,16 @@
 
     export let selectedTeam: number | null = null;
 
-    export let defaultSort: {
+    type ChosenSort = {
         stat: Stat<FullStats_TeamEventStats2021Traditional_Fragment>;
         type: SortType.HIGH_LOW | SortType.LOW_HIGH;
-    } = {
+    };
+
+    export let defaultSort: ChosenSort = {
         stat: RANK_STAT,
         type: SortType.LOW_HIGH,
     };
-
-    let sort: {
-        stat: Stat<FullStats_TeamEventStats2021Traditional_Fragment> | "team";
-        type: SortType.HIGH_LOW | SortType.LOW_HIGH;
-    } | null = null;
+    let sort: ChosenSort = defaultSort;
 
     function makeSortFunction(sort: {
         stat: Stat<FullStats_TeamEventStats2021Traditional_Fragment> | "team";
@@ -72,7 +70,7 @@
 </script>
 
 <table>
-    <StatHeaders {shownStats} bind:sort />
+    <StatHeaders {shownStats} bind:sort {defaultSort} />
     <tbody>
         {#each sorted as team, i (team.team.number)}
             <StatRow {team} {shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />

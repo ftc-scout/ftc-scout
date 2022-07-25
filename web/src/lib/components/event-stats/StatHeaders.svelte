@@ -1,26 +1,25 @@
 <script lang="ts">
     import type { Stat, StatList } from "../../util/stats/Stat";
-    import SortButton, { cycleSortType, SortType } from "../SortButton.svelte";
+    import SortButton, { toggleSortType, SortType } from "../SortButton.svelte";
 
     export let shownStats: StatList<unknown>;
 
-    export let sort: {
+    type ChosenSort = {
         stat: Stat<unknown> | "team";
         type: SortType.HIGH_LOW | SortType.LOW_HIGH;
-    } | null = null;
+    };
+
+    export let defaultSort: ChosenSort;
+    export let sort: ChosenSort = defaultSort;
 
     function handleClick(stat: Stat<unknown> | "team") {
         let currentSort = sort?.stat == stat ? sort.type : SortType.NONE;
-        let newSort = cycleSortType(currentSort);
+        let newSort = toggleSortType(currentSort);
 
-        if (newSort == SortType.NONE) {
-            sort = null;
-        } else {
-            sort = {
-                stat,
-                type: newSort,
-            };
-        }
+        sort = {
+            stat,
+            type: newSort,
+        };
     }
 
     function draggable(element: HTMLElement) {
