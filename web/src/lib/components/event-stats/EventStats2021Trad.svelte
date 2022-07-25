@@ -1,7 +1,7 @@
 <script lang="ts">
     import StatRow from "./StatRow.svelte";
-    import StatHeader from "./StatHeader.svelte";
-    import type { StatList } from "../../util/stats/Stat";
+    import StatHeaders from "./StatHeaders.svelte";
+    import type { Stat, StatList } from "../../util/stats/Stat";
     import {
         AVG_STAT,
         OPR_STAT,
@@ -12,14 +12,17 @@
         TBP_STAT,
         type FullStats_TeamEventStats2021Traditional_Fragment,
     } from "../../util/stats/StatsTrad2021";
+    import { SortType } from "../SortButton.svelte";
 
-    export let stats: {
+    type StatData = {
         team: {
             number: number;
             name: string;
         };
         stats: FullStats_TeamEventStats2021Traditional_Fragment;
-    }[];
+    };
+
+    export let stats: StatData[];
 
     let shownStats: StatList<FullStats_TeamEventStats2021Traditional_Fragment> = [
         RANK_STAT,
@@ -34,13 +37,44 @@
 
     export let selectedTeam: number | null = null;
 
-    $: sorted = stats.sort((a, b) => a.stats.rank - b.stats.rank);
+    export let defaultSort: {
+        stat: Stat<FullStats_TeamEventStats2021Traditional_Fragment>;
+        type: SortType.HIGH_LOW | SortType.LOW_HIGH;
+    } = {
+        stat: RANK_STAT,
+        type: SortType.LOW_HIGH,
+    };
+
+    let sort: {
+        stat: Stat<FullStats_TeamEventStats2021Traditional_Fragment> | "team";
+        type: SortType.HIGH_LOW | SortType.LOW_HIGH;
+    } | null = null;
+
+    function makeSortFunction(sort: {
+        stat: Stat<FullStats_TeamEventStats2021Traditional_Fragment> | "team";
+        type: SortType.HIGH_LOW | SortType.LOW_HIGH;
+    }) {
+        return (a: StatData, b: StatData) => {
+            let { stat, type } = sort;
+            let dataA = stat == "team" ? a.team.number : stat.read(a.stats);
+            let dataB = stat == "team" ? b.team.number : stat.read(b.stats);
+
+            if (type == SortType.LOW_HIGH) {
+                return dataA - dataB;
+            } else {
+                return dataB - dataA;
+            }
+        };
+    }
+
+    // Sort by default first for consistent ordering.
+    $: sorted = stats.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(sort ?? defaultSort));
 </script>
 
 <table>
-    <StatHeader {shownStats} />
+    <StatHeaders {shownStats} bind:sort />
     <tbody>
-        {#each sorted as team, i}
+        {#each sorted as team, i (team.team.number)}
             <StatRow {team} {shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />
         {/each}
     </tbody>
