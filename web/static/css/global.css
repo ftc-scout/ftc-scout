@@ -32,6 +32,20 @@
     --color-team-text: white;
     --zebra-stripe-color: rgb(245, 245, 245);
 
+    /* Stat colors */
+    --stat-transparency: 0.15;
+    --stat-heading-text-color: white;
+    --red-stat-color: var(--paper-red-500);
+    --red-stat-color-transparent: rgba(244, 67, 54, var(--stat-transparency));
+    --blue-stat-color: var(--paper-blue-700);
+    --blue-stat-color-transparent: rgba(25, 118, 210, var(--stat-transparency));
+    --light-blue-stat-color: var(--paper-blue-500);
+    --light-blue-stat-color-transparent: rgba(33, 150, 243, var(--stat-transparency));
+    --green-stat-color: var(--paper-green-600);
+    --green-stat-color-transparent: rgba(67, 160, 71, var(--stat-transparency));
+    --purple-stat-color: var(--paper-purple-a700);
+    --purple-stat-color-transparent: rgba(170, 0, 255, var(--stat-transparency));
+
     --modal-background-color: rgb(0, 0, 0);
     --modal-background-color: rgba(0, 0, 0, 0.4);
 

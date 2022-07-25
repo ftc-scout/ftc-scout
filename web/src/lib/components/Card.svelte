@@ -11,5 +11,7 @@
         padding: var(--large-padding);
         margin: var(--large-gap);
         margin-bottom: var(--xl-gap);
+
+        position: relative;
     }
 </style>

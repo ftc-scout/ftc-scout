@@ -10,6 +10,8 @@
         stats: FullStatsFragment;
     }[];
 
+    export let selectedTeam: number | null = null;
+
     let type: "TeamEventStats2021Traditional" | "TeamEventStats2021Remote" | null;
     $: type = stats.length == 0 ? null : stats[0].stats.__typename ?? null;
 
@@ -19,7 +21,7 @@
 </script>
 
 {#if type == "TeamEventStats2021Traditional"}
-    <EventStats2021Trad stats={force(stats)} />
+    <EventStats2021Trad stats={force(stats)} bind:selectedTeam />
 {:else if type == "TeamEventStats2021Remote"}
     TODO
 {/if}

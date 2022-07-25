@@ -1,3 +1,8 @@
 export enum StatColor {
-    RED,
+    WHITE = "white",
+    RED = "red",
+    BLUE = "blue",
+    LIGHT_BLUE = "light-blue",
+    GREEN = "green",
+    PURPLE = "purple",
 }
