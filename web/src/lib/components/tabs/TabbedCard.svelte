@@ -29,8 +29,7 @@
                 on:click={() => (selectedName = name)}
             >
                 <Fa {icon} scale="0.75x" />
-                &nbsp;
-                {name}
+                <span class="maybe-hide" style="padding-left: 1ch">{name}</span>
             </button>
         {/each}
     </div>
@@ -100,5 +99,15 @@
 
         box-shadow: -2px 2px 10px 3px #e0e0e0;
         clip-path: inset(-10px -10px 0 -10px);
+    }
+
+    @media (max-width: 650px) {
+        button:not(.selected) .maybe-hide {
+            display: none;
+        }
+
+        .tab {
+            min-width: 0;
+        }
     }
 </style>
