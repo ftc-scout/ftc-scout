@@ -22,7 +22,7 @@
 </script>
 
 {#if type == "TeamEventStats2021Traditional"}
-    <EventStats2021Trad stats={force(stats)} bind:selectedTeam />
+    <EventStats2021Trad data={force(stats)} bind:selectedTeam />
 {:else if type == "TeamEventStats2021Remote"}
     <EventStats2021Remote stats={force(stats)} bind:selectedTeam />
 {/if}

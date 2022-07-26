@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { StatList } from "../../util/stats/Stat";
+    import type { Stat } from "../../util/stats/Stat";
     import {
         AVG_STAT,
         PLAYED_STAT,
@@ -7,21 +7,22 @@
         RP_STAT,
         TBP2_STAT,
         TBP_STAT,
-        type FullStats_TeamEventStats2021Remote_Fragment,
+        TEAM_STAT,
+        type FullTep2021Remote,
     } from "../../util/stats/StatsRemote2021";
     import { SortType } from "../SortButton.svelte";
-    import EventStatsImpl, { type ChosenSort, type StatData } from "./EventStatsImpl.svelte";
+    import EventStatsImpl, { type ChosenSort } from "./EventStatsImpl.svelte";
 
-    type S = FullStats_TeamEventStats2021Remote_Fragment;
+    type S = FullTep2021Remote;
 
-    const defaultStats: StatList<S> = [RANK_STAT, "team", RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT, AVG_STAT];
+    const defaultStats: Stat<S>[] = [RANK_STAT, TEAM_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT, AVG_STAT];
     const defaultSort: ChosenSort<S> = {
         stat: RANK_STAT,
         type: SortType.LOW_HIGH,
     };
 
-    export let stats: StatData<S>[];
+    export let stats: Stat<S>[];
     export let selectedTeam: number | null = null;
 </script>
 
-<EventStatsImpl {stats} shownStats={defaultStats} {defaultSort} bind:selectedTeam />
+<EventStatsImpl data={stats} shownStats={defaultStats} {defaultSort} bind:selectedTeam />

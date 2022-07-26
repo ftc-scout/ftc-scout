@@ -1,12 +1,4 @@
 <script lang="ts" context="module">
-    export type StatData<T> = {
-        team: {
-            number: number;
-            name: string;
-        };
-        stats: T;
-    };
-
     export type ChosenSort<T> = {
         stat: Stat<T>;
         type: SortType.HIGH_LOW | SortType.LOW_HIGH;
@@ -16,23 +8,25 @@
 <script lang="ts">
     import StatRow from "./StatRow.svelte";
     import StatHeaders from "./StatHeaders.svelte";
-    import type { Stat, StatList } from "../../util/stats/Stat";
+    import type { Stat } from "../../util/stats/Stat";
     import { SortType } from "../SortButton.svelte";
 
     type T = $$Generic;
 
-    export let stats: StatData<T>[];
-    export let shownStats: StatList<T>;
+    export let data: T[];
+    export let shownStats: Stat<T>[];
     export let selectedTeam: number | null = null;
 
     export let defaultSort: ChosenSort<T>;
-    let sort: ChosenSort<T> = defaultSort;
+    let currentSort: ChosenSort<T> = defaultSort;
 
-    function makeSortFunction(sort: { stat: Stat<T> | "team"; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
-        return (a: StatData<T>, b: StatData<T>) => {
+    function makeSortFunction(sort: { stat: Stat<T>; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
+        return (a: T, b: T) => {
             let { stat, type } = sort;
-            let dataA = stat == "team" ? a.team.number : stat.read(a.stats);
-            let dataB = stat == "team" ? b.team.number : stat.read(b.stats);
+            let readA = stat.read(a);
+            let readB = stat.read(b);
+            let dataA = typeof readA == "object" ? readA.number : readA;
+            let dataB = typeof readB == "object" ? readB.number : readB;
 
             if (type == SortType.LOW_HIGH) {
                 return dataA - dataB;
@@ -43,14 +37,14 @@
     }
 
     // Sort by default first for consistent ordering.
-    $: sorted = stats.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(sort ?? defaultSort));
+    $: sorted = data.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(currentSort ?? defaultSort));
 </script>
 
 <table>
-    <StatHeaders bind:shownStats bind:sort {defaultSort} />
+    <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
     <tbody>
-        {#each sorted as team, i (team.team.number)}
-            <StatRow {team} {shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />
+        {#each sorted as dataRow, i}
+            <StatRow {dataRow} {shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />
         {/each}
     </tbody>
 </table>

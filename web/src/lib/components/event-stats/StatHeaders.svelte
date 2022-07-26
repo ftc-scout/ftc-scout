@@ -1,29 +1,32 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { array_move } from "../../util/array-move";
-    import type { Stat, StatList } from "../../util/stats/Stat";
+    import type { Stat } from "../../util/stats/Stat";
+    import { StatDisplayType } from "../../util/stats/stat-display-type";
     import SortButton, { cycleSortType, SortType } from "../SortButton.svelte";
 
-    export let shownStats: StatList<unknown>;
+    type T = $$Generic;
+
+    export let shownStats: Stat<T>[];
 
     type ChosenSort = {
-        stat: Stat<unknown> | "team";
+        stat: Stat<T>;
         type: SortType.HIGH_LOW | SortType.LOW_HIGH;
     };
 
     export let defaultSort: ChosenSort;
     export let sort: ChosenSort = defaultSort;
 
-    function handleClick(stat: Stat<unknown> | "team") {
+    function handleClick(stat: Stat<T>) {
         let currentSort = sort?.stat == stat ? sort.type : SortType.NONE;
         let newSort = cycleSortType(currentSort);
 
-        if (newSort == SortType.NONE) {
+        if (newSort == SortType.NONE && (stat != defaultSort.stat || currentSort != defaultSort.type)) {
             sort = defaultSort;
         } else {
             sort = {
                 stat,
-                type: newSort,
+                type: newSort == SortType.NONE ? SortType.HIGH_LOW : newSort,
             };
         }
     }
@@ -171,17 +174,16 @@
 <thead>
     {#each shownStats as shownStat, i}
         {@const mySort = shownStat == sort?.stat ? sort.type : SortType.NONE}
-        {#if shownStat == "team"}
-            <th class="team white" use:draggable={i} bind:this={elements[i]}>
-                Team
-                <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
-            </th>
-        {:else}
-            <th class={shownStat.color} title={shownStat.longName} use:draggable={i} bind:this={elements[i]}>
-                {shownStat.shortName}
-                <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
-            </th>
-        {/if}
+        <th
+            class={shownStat.color}
+            class:team={shownStat.displayType == StatDisplayType.TEAM}
+            title={shownStat.longName}
+            use:draggable={i}
+            bind:this={elements[i]}
+        >
+            {shownStat.shortName}
+            <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
+        </th>
     {/each}
 </thead>
 

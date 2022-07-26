@@ -4,23 +4,15 @@
 
     type T = $$Generic;
 
-    export let team: {
-        team: {
-            number: number;
-            name: string;
-        };
-        stats: T;
-    };
+    export let dataRow: T;
     export let shownStats: StatList<T>;
-
     export let zebraStripe = false;
-
     export let selectedTeam: number | null = null;
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
     {#each shownStats as shownStat}
-        <StatData stat={shownStat} data={team} bind:selectedTeam />
+        <StatData stat={shownStat} data={dataRow} bind:selectedTeam />
     {/each}
 </tr>
 

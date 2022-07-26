@@ -8,24 +8,18 @@
 
     type T = $$Generic;
 
-    export let stat: Stat<T> | "team";
-    export let data: {
-        team: {
-            number: number;
-            name: string;
-        };
-        stats: T;
-    };
+    export let stat: Stat<T>;
+    export let data: T;
     export let selectedTeam: number | null = null;
 
-    $: team = data.team;
+    $: read = stat.read(data);
+    $: team = read as { number: number; name: string };
+    $: value = read as number;
 </script>
 
-{#if stat == "team"}
+{#if stat.displayType == StatDisplayType.TEAM}
     <StatTeam {team} bind:selectedTeam />
 {:else}
-    {@const value = stat.read(data.stats)}
-
     <td class={stat.color} title={stat.longName} use:dragScroll>
         {#if stat.displayType == StatDisplayType.INTEGER}
             {value}
