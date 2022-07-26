@@ -1,10 +1,10 @@
 <script lang="ts">
     import { prettyPrintFloat } from "../../util/format/pretty-print-float";
     import { prettyPrintOrdinal } from "../../util/format/pretty-print-ordinal";
-
     import type { Stat } from "../../util/stats/Stat";
     import { StatDisplayType } from "../../util/stats/stat-display-type";
     import StatTeam from "./StatTeam.svelte";
+    import { dragScroll } from "../../util/actions/drag-scroll";
 
     type T = $$Generic;
 
@@ -26,7 +26,7 @@
 {:else}
     {@const value = stat.read(data.stats)}
 
-    <td class={stat.color} title={stat.longName}>
+    <td class={stat.color} title={stat.longName} use:dragScroll>
         {#if stat.displayType == StatDisplayType.INTEGER}
             {value}
         {:else if stat.displayType == StatDisplayType.DECIMAL}
