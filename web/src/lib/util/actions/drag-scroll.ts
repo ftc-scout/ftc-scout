@@ -5,18 +5,20 @@ export function dragScroll(element: Element) {
     let scrollLeft = 0;
 
     function startDragging(e: MouseEvent) {
-        mouseDown = true;
-        startX = e.pageX - slider.offsetLeft;
-        scrollLeft = slider.scrollLeft;
+        if (slider.scrollWidth > slider.clientWidth) {
+            mouseDown = true;
+            startX = e.pageX - slider.offsetLeft;
+            scrollLeft = slider.scrollLeft;
+        }
     }
     function stopDragging(_: MouseEvent) {
         mouseDown = false;
     }
     function mouseMove(e: MouseEvent) {
-        e.preventDefault();
         if (!mouseDown) {
             return;
         }
+        e.preventDefault();
         const x = e.pageX - slider.offsetLeft;
         const scroll = x - startX;
         slider.scrollLeft = scrollLeft - scroll;
