@@ -10,8 +10,14 @@
     import StatHeaders from "./StatHeaders.svelte";
     import type { Stat } from "../../util/stats/Stat";
     import { SortType } from "../SortButton.svelte";
+    import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
+    import FaButton from "../FaButton.svelte";
+    import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+    import type { StatsSet } from "../../util/stats/StatsSet";
 
     type T = $$Generic;
+
+    export let statSet: StatsSet<T, unknown>;
 
     export let data: T[];
     export let shownStats: Stat<T>[];
@@ -38,7 +44,17 @@
 
     // Sort by default first for consistent ordering.
     $: sorted = data.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(currentSort ?? defaultSort));
+
+    let modalShown = false;
 </script>
+
+<FaButton
+    icon={faPlusCircle}
+    on:click={() => (modalShown = !modalShown)}
+    buttonStyle="font-size: var(--medium-font-size); padding: var(--padding);">Add Stats</FaButton
+>
+
+<ChooseStatsModal bind:shown={modalShown} {statSet} />
 
 <table>
     <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />

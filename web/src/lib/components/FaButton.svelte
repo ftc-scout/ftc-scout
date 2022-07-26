@@ -4,10 +4,13 @@
     import Fa from "svelte-fa";
 
     export let icon: IconDefinition;
+
+    export let buttonStyle = "";
 </script>
 
-<button on:click>
+<button on:click style={buttonStyle}>
     <Fa {icon} />
+    <slot />
 </button>
 
 <style>

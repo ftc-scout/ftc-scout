@@ -1,7 +1,8 @@
 import type { FullStatsGroup2021TradFragment } from "../../graphql/generated/graphql-operations";
-import type { Stat } from "./Stat";
+import { makeStat, type Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
+import type { StatsSet } from "./StatsSet";
 
 export type FullTep2021Traditional = {
     team: {
@@ -28,7 +29,7 @@ export type FullTep2021Traditional = {
     };
 };
 
-export let TEAM_STAT: Stat<FullTep2021Traditional> = {
+export const TEAM_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.WHITE,
     displayType: StatDisplayType.TEAM,
     longName: "Team",
@@ -36,7 +37,7 @@ export let TEAM_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.team,
 };
 
-export let RP_STAT: Stat<FullTep2021Traditional> = {
+export const RP_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.RED,
     displayType: StatDisplayType.INTEGER,
     longName: "Ranking Points (RP)",
@@ -44,7 +45,7 @@ export let RP_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.stats.rp,
 };
 
-export let RANK_STAT: Stat<FullTep2021Traditional> = {
+export const RANK_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.WHITE,
     displayType: StatDisplayType.RANK,
     longName: "Ranking",
@@ -52,7 +53,7 @@ export let RANK_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.stats.rank,
 };
 
-export let TBP_STAT: Stat<FullTep2021Traditional> = {
+export const TBP_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.LIGHT_BLUE,
     displayType: StatDisplayType.INTEGER,
     longName: "Tie Breaker Points (TBP)",
@@ -60,7 +61,7 @@ export let TBP_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.stats.tb1,
 };
 
-export let TBP2_STAT: Stat<FullTep2021Traditional> = {
+export const TBP2_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.BLUE,
     displayType: StatDisplayType.INTEGER,
     longName: "Tie Breaker Points 2 (TBP2)",
@@ -68,7 +69,7 @@ export let TBP2_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.stats.tb2,
 };
 
-export let PLAYED_STAT: Stat<FullTep2021Traditional> = {
+export const PLAYED_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
     longName: "Matches Played",
@@ -76,7 +77,39 @@ export let PLAYED_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.stats.qualMatchesPlayed,
 };
 
-export let AVG_STAT: Stat<FullTep2021Traditional> = {
+export const WINS_STAT: Stat<FullTep2021Traditional> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    longName: "Wins",
+    shortName: "Wins",
+    read: (s) => s.stats.wins,
+};
+
+export const lOSSES_STAT: Stat<FullTep2021Traditional> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    longName: "Losses",
+    shortName: "Losses",
+    read: (s) => s.stats.losses,
+};
+
+export const TIES_STAT: Stat<FullTep2021Traditional> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    longName: "Ties",
+    shortName: "Ties",
+    read: (s) => s.stats.ties,
+};
+
+export const DQ_STAT: Stat<FullTep2021Traditional> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    longName: "Disqualifications (DQs)",
+    shortName: "DQs",
+    read: (s) => s.stats.ties,
+};
+
+export const AVG_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.PURPLE,
     displayType: StatDisplayType.DECIMAL,
     longName: "Average Score",
@@ -84,10 +117,121 @@ export let AVG_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.stats.average.totalPoints,
 };
 
-export let OPR_STAT: Stat<FullTep2021Traditional> = {
+export const OPR_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.PURPLE,
     displayType: StatDisplayType.DECIMAL,
     longName: "Offensive Power Rating (OPR)",
     shortName: "OPR",
     read: (s) => s.stats.opr.totalPoints,
+};
+
+type Group = FullTep2021Traditional["stats"]["total"];
+
+const TOTAL_STAT: Stat<Group> = makeStat("totalPoints", "Total Points", "");
+const TOTAL_NP_STAT: Stat<Group> = makeStat("totalPointsNp", "Total Points No Penalties", "np");
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+const AUTO_STAT: Stat<Group> = makeStat("autoPoints", "Auto Points", "Auto");
+
+const AUTO_FREIGHT_STAT: Stat<Group> = makeStat("autoFreightPoints", "Auto Freight Points", "Auto Freight");
+const AUTO_FREIGHT1_STAT: Stat<Group> = makeStat("autoFreightPointsLevel1", "Level 1", "Auto Freight 1");
+const AUTO_FREIGHT2_STAT: Stat<Group> = makeStat("autoFreightPointsLevel2", "Level 2", "Auto Freight 2");
+const AUTO_FREIGHT3_STAT: Stat<Group> = makeStat("autoFreightPointsLevel3", "Level 3", "Auto Freight 3");
+
+const AUTO_CAROUSEL_STAT: Stat<Group> = makeStat("autoCarouselPoints", "Auto Carousel Points", "Auto Carousel");
+
+export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
+    standalone: [
+        TEAM_STAT,
+        RANK_STAT,
+        RP_STAT,
+        TBP_STAT,
+        TBP2_STAT,
+        PLAYED_STAT,
+        WINS_STAT,
+        lOSSES_STAT,
+        TIES_STAT,
+        DQ_STAT,
+    ],
+    groups: [
+        {
+            longName: "Total",
+            shortName: "TOT",
+            description: "The sum of all points scored in the category.",
+            color: StatColor.RED,
+            get: (s) => s.stats.total,
+        },
+        {
+            longName: "Average",
+            shortName: "AVG",
+            description: "The average number of points scored in the category.",
+            color: StatColor.BLUE,
+            get: (s) => s.stats.total,
+        },
+        {
+            longName: "OPR",
+            shortName: "OPR",
+            description: "Offensive Power Rating.",
+            color: StatColor.PURPLE,
+            get: (s) => s.stats.total,
+        },
+        {
+            longName: "Minimum",
+            shortName: "MIN",
+            description: "The lowest number of points scored in the category.",
+            color: StatColor.GREEN,
+            get: (s) => s.stats.total,
+        },
+        {
+            longName: "Maximum",
+            shortName: "MAX",
+            description: "The highest number of points scored in the category.",
+            color: StatColor.GREEN,
+            get: (s) => s.stats.total,
+        },
+        {
+            longName: "Std. Dev.",
+            shortName: "DEV",
+            description: "The standard deviation of scores in the category.",
+            color: StatColor.LIGHT_BLUE,
+            get: (s) => s.stats.total,
+        },
+    ],
+    groupStats: [
+        {
+            stat: TOTAL_STAT,
+            nestedStats: [],
+        },
+        {
+            stat: TOTAL_NP_STAT,
+            nestedStats: [],
+        },
+        {
+            stat: AUTO_STAT,
+            nestedStats: [
+                {
+                    stat: AUTO_FREIGHT_STAT,
+                    nestedStats: [
+                        {
+                            stat: AUTO_FREIGHT1_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_FREIGHT2_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_FREIGHT3_STAT,
+                            nestedStats: [],
+                        },
+                    ],
+                },
+                {
+                    stat: AUTO_CAROUSEL_STAT,
+                    nestedStats: [],
+                },
+            ],
+        },
+    ],
 };

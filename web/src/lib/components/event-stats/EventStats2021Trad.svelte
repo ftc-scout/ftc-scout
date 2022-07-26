@@ -7,6 +7,7 @@
         PLAYED_STAT,
         RANK_STAT,
         RP_STAT,
+        STAT_SET_2021_TRAD,
         TBP2_STAT,
         TBP_STAT,
         TEAM_STAT,
@@ -36,4 +37,4 @@
     export let selectedTeam: number | null = null;
 </script>
 
-<EventStatsImpl {data} shownStats={defaultStats} {defaultSort} bind:selectedTeam />
+<EventStatsImpl {data} shownStats={defaultStats} {defaultSort} bind:selectedTeam statSet={STAT_SET_2021_TRAD} />

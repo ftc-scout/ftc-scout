@@ -1,5 +1,5 @@
-import type { StatColor } from "./stat-color";
-import type { StatDisplayType } from "./stat-display-type";
+import { StatColor } from "./stat-color";
+import { StatDisplayType } from "./stat-display-type";
 
 export interface Stat<T> {
     displayType: StatDisplayType;
@@ -23,5 +23,21 @@ export function statFromGroup<U, T>(
         shortName,
         longName,
         read: (u: U) => read(u[group] as unknown as T),
+    };
+}
+
+export function makeStat<T>(
+    key: keyof T,
+    longName: string,
+    shortName: string,
+    color: StatColor = StatColor.PURPLE,
+    displayType: StatDisplayType = StatDisplayType.INTEGER
+): Stat<T> {
+    return {
+        color,
+        displayType,
+        longName,
+        shortName,
+        read: (s) => s[key] as any,
     };
 }

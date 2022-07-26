@@ -1,7 +1,8 @@
 <script lang="ts">
     import { clickOutside } from "../util/directives";
     import { browser } from "$app/env";
-    import { fly } from 'svelte/transition';
+    import { fade } from "svelte/transition";
+
     export let shown = false;
 
     let element: HTMLElement;
@@ -9,6 +10,8 @@
     $: if (browser && shown) {
         setTimeout(() => element?.focus(), 1);
     }
+
+    const hide = () => (shown = false);
 </script>
 
 <svelte:body
@@ -17,15 +20,15 @@
     }} />
 
 {#if shown}
-    <div transition:fly="{{ y: 200, duration: 1000 }}" bind:this={element} class="outer-wrapper" >
-        <div class="content-wrapper" use:clickOutside on:click_outside={() => (shown = false)}>
+    <div transition:fade|local={{ duration: 100 }} bind:this={element} class="outer-wrapper">
+        <div class="content-wrapper" use:clickOutside on:click_outside={hide}>
             <div class="title-wrapper">
                 <slot name="title" />
             </div>
             <div class="scroll-wrapper">
                 <slot />
             </div>
-            <button class="close" on:click={() => (shown = false)}> Close </button>
+            <button class="close" on:click={hide}> Close </button>
         </div>
     </div>
 {/if}
@@ -42,7 +45,7 @@
 
         z-index: 50;
 
-        /* background: var(--modal-background-color); */
+        background: var(--modal-background-color);
 
         display: flex;
         justify-content: center;
