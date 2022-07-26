@@ -41,5 +41,7 @@
         color: inherit;
 
         cursor: pointer;
+
+        font-size: inherit;
     }
 </style>

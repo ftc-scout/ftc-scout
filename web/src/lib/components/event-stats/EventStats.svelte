@@ -1,6 +1,7 @@
 <script lang="ts">
     import type { FullStatsFragment } from "../../graphql/generated/graphql-operations";
     import EventStats2021Trad from "./EventStats2021Trad.svelte";
+    import EventStats2021Remote from "./EventStats2021Remote.svelte";
 
     export let stats: {
         team: {
@@ -23,5 +24,5 @@
 {#if type == "TeamEventStats2021Traditional"}
     <EventStats2021Trad stats={force(stats)} bind:selectedTeam />
 {:else if type == "TeamEventStats2021Remote"}
-    TODO
+    <EventStats2021Remote stats={force(stats)} bind:selectedTeam />
 {/if}
