@@ -21,5 +21,6 @@
         background: none;
         border: none;
         cursor: pointer;
+        font-size: inherit;
     }
 </style>

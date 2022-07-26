@@ -54,6 +54,8 @@
         flex-direction: row;
 
         width: 100%;
+
+        white-space: nowrap;
     }
 
     tr.is-header {
@@ -73,6 +75,7 @@
     }
 
     td.group {
+        min-width: 75px;
         width: 75px;
     }
 

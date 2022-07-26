@@ -52,5 +52,7 @@
     table {
         border-spacing: 0;
         display: block;
+
+        width: fit-content;
     }
 </style>

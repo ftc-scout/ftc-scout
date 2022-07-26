@@ -28,6 +28,7 @@
     }
 
     th {
+        min-width: 75px;
         width: 75px;
         padding: var(--padding);
         font-weight: bold;

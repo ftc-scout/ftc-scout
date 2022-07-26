@@ -64,6 +64,7 @@
         flex-direction: column;
         height: auto;
         max-height: calc(100% - var(--large-gap) * 2);
+        max-width: 100%;
         position: relative;
     }
 
@@ -76,7 +77,7 @@
         padding: var(--large-padding);
 
         max-height: 100%;
-        overflow-y: auto;
+        overflow: auto;
     }
 
     .close {

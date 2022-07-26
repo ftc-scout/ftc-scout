@@ -5,16 +5,12 @@
     import Checkbox from "./Checkbox.svelte";
 
     export let statSet: StatsSet<unknown, unknown>;
-
-    const groupWidth = 75;
-    $: groupCount = statSet.groups.length;
-    $: fullStatsWidth = `${groupCount * groupWidth}px`;
 </script>
 
 <ul>
     <li>
         <span />
-        <div class="header" style:min-width={fullStatsWidth} title="Choose which statistics are shown.">
+        <div class="header" title="Choose which statistics are shown.">
             Show Statistic
             <span style:font-size="var(--tiny-font-size)">
                 <Fa icon={faQuestionCircle} />
@@ -25,7 +21,7 @@
     {#each statSet.standalone as stat, i}
         <li class:zebra-stripe={i % 2 == 1}>
             <span class="name">{stat.longName}</span>
-            <div style:min-width={fullStatsWidth}>
+            <div>
                 <Checkbox />
             </div>
         </li>
@@ -39,11 +35,15 @@
         padding: 0;
 
         margin-bottom: var(--vl-gap);
+
+        max-width: 100%;
+        /* width: fit-content; */
     }
 
     li {
         display: flex;
         justify-content: space-between;
+        white-space: nowrap;
     }
 
     .zebra-stripe {
@@ -53,6 +53,8 @@
     .name {
         padding: var(--padding);
         font-weight: bold;
+
+        flex-grow: 1;
     }
 
     .header {
@@ -73,5 +75,13 @@
         align-items: center;
         justify-content: center;
         background: var(--purple-stat-color-transparent);
+
+        min-width: 200px;
+    }
+
+    @media (max-width: 500px) {
+        li div {
+            min-width: 100px;
+        }
     }
 </style>
