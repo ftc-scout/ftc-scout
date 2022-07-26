@@ -2,7 +2,7 @@
     import { onMount } from "svelte";
     import { array_move } from "../../util/array-move";
     import type { Stat, StatList } from "../../util/stats/Stat";
-    import SortButton, { toggleSortType, SortType } from "../SortButton.svelte";
+    import SortButton, { cycleSortType, SortType } from "../SortButton.svelte";
 
     export let shownStats: StatList<unknown>;
 
@@ -16,12 +16,16 @@
 
     function handleClick(stat: Stat<unknown> | "team") {
         let currentSort = sort?.stat == stat ? sort.type : SortType.NONE;
-        let newSort = toggleSortType(currentSort);
+        let newSort = cycleSortType(currentSort);
 
-        sort = {
-            stat,
-            type: newSort,
-        };
+        if (newSort == SortType.NONE) {
+            sort = defaultSort;
+        } else {
+            sort = {
+                stat,
+                type: newSort,
+            };
+        }
     }
 
     function getOffsetAndWidth(element: HTMLElement | null): [number, number] {
