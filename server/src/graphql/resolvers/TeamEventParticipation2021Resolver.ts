@@ -52,6 +52,10 @@ class TeamEventStatGroup2021Traditional {
     @Field(() => Float)
     cappingPoints!: number;
     @Field(() => Float)
+    majorPenaltyPoints!: number;
+    @Field(() => Float)
+    minorPenaltyPoints!: number;
+    @Field(() => Float)
     autoPoints!: number;
     @Field(() => Float)
     driverControlledPoints!: number;
@@ -115,6 +119,10 @@ class TeamEventStatGroup2021Remote {
     endgameParkingPointsIndividual!: number;
     @Field(() => Float)
     cappingPoints!: number;
+    @Field(() => Float)
+    majorPenaltyPoints!: number;
+    @Field(() => Float)
+    minorPenaltyPoints!: number;
     @Field(() => Float)
     autoPoints!: number;
     @Field(() => Float)

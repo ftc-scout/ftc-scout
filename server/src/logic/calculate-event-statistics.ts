@@ -132,6 +132,8 @@ const EMPTY_TEP_STATS = {
     endgameParkingPoints: 0,
     endgameParkingPointsIndividual: 0,
     cappingPoints: 0,
+    majorPenaltyPoints: 0,
+    minorPenaltyPoints: 0,
     autoPoints: 0,
     driverControlledPoints: 0,
     endgamePoints: 0,
@@ -226,6 +228,8 @@ function calculateStatsTraditional(
         endgameParkingPoints: [] as number[],
         endgameParkingPointsIndividual: [] as number[],
         cappingPoints: [] as number[],
+        majorPenaltyPoints: [] as number[],
+        minorPenaltyPoints: [] as number[],
         autoPoints: [] as number[],
         driverControlledPoints: [] as number[],
         endgamePoints: [] as number[],
@@ -266,6 +270,8 @@ function calculateStatsTraditional(
         let endgameParkIndividual = MatchScores2021.calcParkPoints(station == 0 ? ts.endgamePark : ts.endgamePark2!);
         allDataPoints.endgameParkingPointsIndividual.push(endgameParkIndividual);
         allDataPoints.cappingPoints.push(ts.cappingPoints);
+        allDataPoints.majorPenaltyPoints.push(ts.majorPenalties * -30);
+        allDataPoints.minorPenaltyPoints.push(ts.minorPenalties * -10);
         allDataPoints.autoPoints.push(ts.autoPoints);
         allDataPoints.driverControlledPoints.push(ts.driverControlledPoints);
         allDataPoints.endgamePoints.push(ts.endgamePoints);
@@ -303,6 +309,8 @@ function calculateStatsTraditional(
         endgameParkingPoints: aggregationFunction(allDataPoints.endgameParkingPoints),
         endgameParkingPointsIndividual: aggregationFunction(allDataPoints.endgameParkingPointsIndividual),
         cappingPoints: aggregationFunction(allDataPoints.cappingPoints),
+        majorPenaltyPoints: aggregationFunction(allDataPoints.majorPenaltyPoints),
+        minorPenaltyPoints: aggregationFunction(allDataPoints.minorPenaltyPoints),
         autoPoints: aggregationFunction(allDataPoints.autoPoints),
         driverControlledPoints: aggregationFunction(allDataPoints.driverControlledPoints),
         endgamePoints: aggregationFunction(allDataPoints.endgamePoints),
@@ -338,6 +346,8 @@ function calculateStatsRemote(
         endgameParkingPoints: [] as number[],
         endgameParkingPointsIndividual: [] as number[],
         cappingPoints: [] as number[],
+        majorPenaltyPoints: [] as number[],
+        minorPenaltyPoints: [] as number[],
         autoPoints: [] as number[],
         driverControlledPoints: [] as number[],
         endgamePoints: [] as number[],
@@ -368,6 +378,8 @@ function calculateStatsRemote(
         allDataPoints.endgameParkingPoints.push(ts.endgameParkingPoints);
         allDataPoints.endgameParkingPointsIndividual.push(ts.endgameParkingPoints);
         allDataPoints.cappingPoints.push(ts.cappingPoints);
+        allDataPoints.majorPenaltyPoints.push(ts.majorPenalties * -30);
+        allDataPoints.minorPenaltyPoints.push(ts.minorPenalties * -10);
         allDataPoints.autoPoints.push(ts.autoPoints);
         allDataPoints.driverControlledPoints.push(ts.driverControlledPoints);
         allDataPoints.endgamePoints.push(ts.endgamePoints);
@@ -405,6 +417,8 @@ function calculateStatsRemote(
         endgameParkingPoints: aggregationFunction(allDataPoints.endgameParkingPoints),
         endgameParkingPointsIndividual: aggregationFunction(allDataPoints.endgameParkingPointsIndividual),
         cappingPoints: aggregationFunction(allDataPoints.cappingPoints),
+        majorPenaltyPoints: aggregationFunction(allDataPoints.majorPenaltyPoints),
+        minorPenaltyPoints: aggregationFunction(allDataPoints.minorPenaltyPoints),
         autoPoints: aggregationFunction(allDataPoints.autoPoints),
         driverControlledPoints: aggregationFunction(allDataPoints.driverControlledPoints),
         endgamePoints: aggregationFunction(allDataPoints.endgamePoints),
@@ -444,6 +458,8 @@ function calculateAllOprs(
         endgameParkingPoints: [] as OprData[],
         // endgameParkingPointsIndividual: [] as OprData[], // opr doesn't make sense for these
         cappingPoints: [] as OprData[],
+        majorPenaltyPoints: [] as OprData[],
+        minorPenaltyPoints: [] as OprData[],
         autoPoints: [] as OprData[],
         driverControlledPoints: [] as OprData[],
         endgamePoints: [] as OprData[],
@@ -496,6 +512,8 @@ function calculateAllOprs(
     assignOprStat(allDataPoints, ret, "sharedUnbalancedPoints");
     assignOprStat(allDataPoints, ret, "endgameParkingPoints");
     assignOprStat(allDataPoints, ret, "cappingPoints");
+    assignOprStat(allDataPoints, ret, "majorPenaltyPoints");
+    assignOprStat(allDataPoints, ret, "minorPenaltyPoints");
     assignOprStat(allDataPoints, ret, "autoPoints");
     assignOprStat(allDataPoints, ret, "driverControlledPoints");
     assignOprStat(allDataPoints, ret, "endgamePoints");
@@ -538,6 +556,8 @@ function loadOprDataPoints(data: Record<string, OprData[]>, scores: MatchScores2
     data.endgameParkingPoints.push({ team1, team2, result: scores.endgameParkingPoints });
     // data.endgameParkingPointsIndividual.push({ team1, team2, result: scores });
     data.cappingPoints.push({ team1, team2, result: scores.cappingPoints });
+    data.majorPenaltyPoints.push({ team1, team2, result: scores.majorPenalties * -30 });
+    data.minorPenaltyPoints.push({ team1, team2, result: scores.minorPenalties * -10 });
     data.autoPoints.push({ team1, team2, result: scores.autoPoints });
     data.driverControlledPoints.push({ team1, team2, result: scores.driverControlledPoints });
     data.endgamePoints.push({ team1, team2, result: scores.endgamePoints });
