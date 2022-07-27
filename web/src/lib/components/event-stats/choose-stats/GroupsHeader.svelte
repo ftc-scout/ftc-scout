@@ -35,6 +35,13 @@
         user-select: none;
     }
 
+    @media (max-width: 700px) {
+        th {
+            min-width: 50px;
+            width: 50px;
+        }
+    }
+
     .center {
         display: flex;
         align-items: center;

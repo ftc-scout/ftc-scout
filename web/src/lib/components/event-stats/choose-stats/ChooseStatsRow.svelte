@@ -82,41 +82,4 @@
     .has-nested {
         cursor: pointer;
     }
-
-    td.group {
-        min-width: 75px;
-        width: 75px;
-    }
-
-    td.group div {
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .white {
-        font-weight: bold;
-    }
-
-    .red {
-        background: var(--red-stat-color-transparent);
-    }
-
-    .blue {
-        background: var(--blue-stat-color-transparent);
-    }
-
-    .light-blue {
-        background: var(--light-blue-stat-color-transparent);
-    }
-
-    .green {
-        background: var(--green-stat-color-transparent);
-    }
-
-    .purple {
-        background: var(--purple-stat-color-transparent);
-    }
 </style>

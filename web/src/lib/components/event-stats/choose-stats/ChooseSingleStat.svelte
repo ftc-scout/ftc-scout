@@ -36,6 +36,13 @@
         width: 75px;
     }
 
+    @media (max-width: 700px) {
+        td.group {
+            min-width: 50px;
+            width: 50px;
+        }
+    }
+
     td.group div {
         width: 100%;
         height: 100%;
