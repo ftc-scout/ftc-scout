@@ -25,7 +25,7 @@
     export let selectedTeam: number | null = null;
 
     export let defaultSort: ChosenSort<T>;
-    let currentSort: ChosenSort<T> = defaultSort;
+    export let currentSort: ChosenSort<T> = defaultSort;
 
     function makeSortFunction(sort: { stat: Stat<T>; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
         return (a: T, b: T) => {
