@@ -1,10 +1,14 @@
+<script lang="ts" context="module">
+    let openTabs: Writable<Set<string>> = writable(new Set());
+</script>
+
 <script lang="ts">
     import ChooseSingleStat from "./ChooseSingleStat.svelte";
 
     import type { NestedStat, StatGroup } from "../../../util/stats/StatsSet";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
-    import type { Writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
     import type { Stat } from "../../../util/stats/Stat";
 
     type T = $$Generic;
@@ -15,10 +19,19 @@
     export let nestingDepth = 0;
     export let shown = true;
 
-    let open = false;
-
     $: stat = myNestedStat.stat;
     $: nested = myNestedStat.nestedStats;
+    $: open = $openTabs.has(stat.longName);
+
+    function toggle() {
+        if (open) {
+            $openTabs.delete(stat.longName);
+            $openTabs = $openTabs;
+        } else {
+            $openTabs.add(stat.longName);
+            $openTabs = $openTabs;
+        }
+    }
 </script>
 
 {#if shown}
@@ -31,9 +44,7 @@
             class="name"
             class:has-nested={nested.length}
             style={`padding-left: calc(${nestingDepth * 4 + 3} * var(--gap));`}
-            on:click={() => {
-                open = !open;
-            }}
+            on:click={toggle}
         >
             {#if nested.length}
                 <ExpandButton bind:open style={`position:absolute; left: calc(${nestingDepth * 4} * var(--gap))`} />
