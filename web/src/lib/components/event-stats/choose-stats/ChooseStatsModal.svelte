@@ -5,7 +5,7 @@
     import ChooseStatsRow from "./ChooseStatsRow.svelte";
     import Fa from "svelte-fa";
     import { faXmark } from "@fortawesome/free-solid-svg-icons";
-    import ChooseStandaloneStat from "./ChooseStandaloneStat.svelte";
+    import ChooseStandaloneStats from "./ChooseStandaloneStats.svelte";
 
     export let statSet: StatsSet<unknown, unknown>;
     export let shown = false;
@@ -23,7 +23,7 @@
         </button>
     </b>
 
-    <ChooseStandaloneStat {statSet} />
+    <ChooseStandaloneStats {statSet} />
 
     <table>
         <GroupsHeader groups={statSet.groups} />

@@ -1,8 +1,9 @@
 <script lang="ts">
+    import StandaloneStat from "./StandaloneStat.svelte";
+
     import Fa from "svelte-fa";
     import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import type { StatsSet } from "../../../util/stats/StatsSet";
-    import Checkbox from "./Checkbox.svelte";
 
     export let statSet: StatsSet<unknown, unknown>;
 </script>
@@ -19,12 +20,7 @@
     </li>
 
     {#each statSet.standalone as stat, i}
-        <li class:zebra-stripe={i % 2 == 1}>
-            <span class="name">{stat.longName}</span>
-            <div>
-                <Checkbox />
-            </div>
-        </li>
+        <StandaloneStat zebraStripe={i % 2 == 0} {stat} />
     {/each}
 </ul>
 
@@ -44,17 +40,6 @@
         display: flex;
         justify-content: space-between;
         white-space: nowrap;
-    }
-
-    .zebra-stripe {
-        background-color: var(--zebra-stripe-color);
-    }
-
-    .name {
-        padding: var(--padding);
-        font-weight: bold;
-
-        flex-grow: 1;
     }
 
     .header {

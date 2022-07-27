@@ -1,4 +1,8 @@
-<input type="checkbox" />
+<script lang="ts">
+    export let checked = false;
+</script>
+
+<input type="checkbox" bind:checked />
 
 <style>
     input {

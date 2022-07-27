@@ -1,8 +1,9 @@
 <script lang="ts">
+    import ChooseSingleStat from "./ChooseSingleStat.svelte";
+
     import type { NestedStat, StatGroup } from "../../../util/stats/StatsSet";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
-    import Checkbox from "./Checkbox.svelte";
 
     export let groups: StatGroup<unknown, unknown>[];
     export let stat: NestedStat<unknown>;
@@ -35,11 +36,7 @@
             {stat.stat.longName}
         </td>
         {#each groups as group}
-            <td class={`${group.color} group`}>
-                <div>
-                    <Checkbox />
-                </div>
-            </td>
+            <ChooseSingleStat {group} />
         {/each}
     </tr>
 {/if}
