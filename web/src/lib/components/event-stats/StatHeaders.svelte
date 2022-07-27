@@ -1,5 +1,8 @@
 <script lang="ts">
-    import { onMount } from "svelte";
+    import { browser } from "$app/env";
+
+    import { onDestroy, onMount } from "svelte";
+    import type { Writable } from "svelte/store";
     import { array_move } from "../../util/array-move";
     import type { Stat } from "../../util/stats/Stat";
     import { StatDisplayType } from "../../util/stats/stat-display-type";
@@ -7,7 +10,7 @@
 
     type T = $$Generic;
 
-    export let shownStats: Stat<T>[];
+    export let shownStats: Writable<Stat<T>[]>;
 
     type ChosenSort = {
         stat: Stat<T>;
@@ -42,9 +45,20 @@
     let elements: HTMLElement[] = [];
     let offsetsAndWidths: [number, number][] = [];
     function recalcOffsets() {
+        console.log("recalc");
         offsetsAndWidths = elements.map(getOffsetAndWidth);
     }
     onMount(recalcOffsets);
+    $: {
+        $shownStats;
+        setTimeout(recalcOffsets, 1);
+    }
+    onMount(() => {
+        browser && window.addEventListener("resize", recalcOffsets);
+    });
+    onDestroy(() => {
+        browser && window.removeEventListener("resize", recalcOffsets);
+    });
 
     function draggable(element: HTMLElement, i: number) {
         let moving = false;
@@ -56,7 +70,7 @@
         let parent: HTMLElement = element.parentElement!;
 
         function calcNewPosition(): number {
-            for (let j = 0; j < shownStats.length; j++) {
+            for (let j = 0; j < $shownStats.length; j++) {
                 let [offset, width] = offsetsAndWidths[j];
                 let left = offset;
                 let middle = offset + width / 2;
@@ -76,7 +90,7 @@
             let newPos = calcNewPosition();
             if (newPos != i) {
                 let offset =
-                    newPos == shownStats.length
+                    newPos == $shownStats.length
                         ? offsetsAndWidths[newPos - 1][0] + offsetsAndWidths[newPos - 1][1] - 2
                         : Math.max(offsetsAndWidths[newPos][0] - 1, 0);
                 moveIndicator.style.left = `${offset}px`;
@@ -140,7 +154,7 @@
         function up() {
             if (moving) {
                 let newPosition = calcNewPosition();
-                shownStats = array_move(shownStats, i, newPosition - 1);
+                $shownStats = array_move($shownStats, i, newPosition - 1);
 
                 moving = false;
                 element.style.position = "";
@@ -172,7 +186,7 @@
 </script>
 
 <thead>
-    {#each shownStats as shownStat, i}
+    {#each $shownStats as shownStat, i}
         {@const mySort = shownStat == sort?.stat ? sort.type : SortType.NONE}
         <th
             class={shownStat.color}

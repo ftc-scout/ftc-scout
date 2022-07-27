@@ -109,22 +109,6 @@ export const DQ_STAT: Stat<FullTep2021Traditional> = {
     read: (s) => s.stats.ties,
 };
 
-export const AVG_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.PURPLE,
-    displayType: StatDisplayType.DECIMAL,
-    longName: "Average Score",
-    shortName: "AVG",
-    read: (s) => s.stats.average.totalPoints,
-};
-
-export const OPR_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.PURPLE,
-    displayType: StatDisplayType.DECIMAL,
-    longName: "Offensive Power Rating (OPR)",
-    shortName: "OPR",
-    read: (s) => s.stats.opr.totalPoints,
-};
-
 type Group = FullTep2021Traditional["stats"]["total"];
 
 const TOTAL_STAT: Stat<Group> = makeStat("totalPoints", "Total Points", "");
@@ -140,6 +124,23 @@ const AUTO_FREIGHT2_STAT: Stat<Group> = makeStat("autoFreightPointsLevel2", "Lev
 const AUTO_FREIGHT3_STAT: Stat<Group> = makeStat("autoFreightPointsLevel3", "Level 3", "Auto Freight 3");
 
 const AUTO_CAROUSEL_STAT: Stat<Group> = makeStat("autoCarouselPoints", "Auto Carousel Points", "Auto Carousel");
+
+function groupGetter<T, U>(
+    getInner: (t2: T) => U,
+    stat: Stat<U>,
+    color: StatColor,
+    shortNameAdd: string,
+    longNameAdd: string,
+    displayTypeOverride: StatDisplayType | null = null
+): Stat<T> {
+    return {
+        read: (t: T) => stat.read(getInner(t)),
+        shortName: `${stat.shortName} ${shortNameAdd}`,
+        longName: `${stat.longName} ${longNameAdd}`,
+        displayType: displayTypeOverride ?? stat.displayType,
+        color,
+    };
+}
 
 export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
     standalone: [
@@ -160,42 +161,51 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
             shortName: "TOT",
             description: "The sum of all points scored in the category.",
             color: StatColor.RED,
-            get: (s) => s.stats.total,
+            get: (s) => groupGetter((t) => t.stats.total, s, StatColor.RED, "TOT", "Total"),
         },
         {
             longName: "Average",
             shortName: "AVG",
             description: "The average number of points scored in the category.",
             color: StatColor.BLUE,
-            get: (s) => s.stats.total,
+            get: (s) =>
+                groupGetter((t) => t.stats.average, s, StatColor.BLUE, "AVG", "Average", StatDisplayType.DECIMAL),
         },
         {
             longName: "OPR",
             shortName: "OPR",
             description: "Offensive Power Rating.",
             color: StatColor.PURPLE,
-            get: (s) => s.stats.total,
+            get: (s) => groupGetter((t) => t.stats.opr, s, StatColor.PURPLE, "OPR", "OPR", StatDisplayType.DECIMAL),
         },
         {
             longName: "Minimum",
             shortName: "MIN",
             description: "The lowest number of points scored in the category.",
             color: StatColor.GREEN,
-            get: (s) => s.stats.total,
+            get: (s) => groupGetter((t) => t.stats.min, s, StatColor.GREEN, "MIN", "Minimum"),
         },
         {
             longName: "Maximum",
             shortName: "MAX",
             description: "The highest number of points scored in the category.",
             color: StatColor.GREEN,
-            get: (s) => s.stats.total,
+            get: (s) => groupGetter((t) => t.stats.max, s, StatColor.GREEN, "MAX", "Maximum"),
         },
         {
             longName: "Std. Dev.",
             shortName: "DEV",
             description: "The standard deviation of scores in the category.",
             color: StatColor.LIGHT_BLUE,
-            get: (s) => s.stats.total,
+            get: (s) =>
+                groupGetter(
+                    (t) => t.stats.standardDev,
+                    s,
+                    StatColor.GREEN,
+                    "DEV",
+                    "Std. Dev.",
+                    StatDisplayType.DECIMAL
+                ),
         },
     ],
     groupStats: [

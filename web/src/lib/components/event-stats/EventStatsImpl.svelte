@@ -14,13 +14,14 @@
     import FaButton from "../FaButton.svelte";
     import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
     import type { StatsSet } from "../../util/stats/StatsSet";
+    import type { Writable } from "svelte/store";
 
     type T = $$Generic;
 
     export let statSet: StatsSet<T, unknown>;
 
     export let data: T[];
-    export let shownStats: Stat<T>[];
+    export let shownStats: Writable<Stat<T>[]>;
     export let selectedTeam: number | null = null;
 
     export let defaultSort: ChosenSort<T>;
@@ -54,13 +55,13 @@
     buttonStyle="font-size: var(--medium-font-size); padding: var(--padding);">Add Stats</FaButton
 >
 
-<ChooseStatsModal bind:shown={modalShown} {statSet} />
+<ChooseStatsModal bind:shown={modalShown} {statSet} bind:chosenStats={shownStats} />
 
 <table>
     <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
     <tbody>
         {#each sorted as dataRow, i}
-            <StatRow {dataRow} {shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />
+            <StatRow {dataRow} shownStats={$shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />
         {/each}
     </tbody>
 </table>

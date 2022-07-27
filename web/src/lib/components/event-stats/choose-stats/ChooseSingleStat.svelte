@@ -1,15 +1,32 @@
 <script lang="ts">
+    import type { Writable } from "svelte/store";
+    import type { Stat } from "../../../util/stats/Stat";
     import type { StatGroup } from "../../../util/stats/StatsSet";
     import Checkbox from "./Checkbox.svelte";
 
-    export let group: StatGroup<unknown, unknown>;
+    type T = $$Generic;
 
-    let checked = false;
+    export let chosenStats: Writable<Stat<T>[]>;
+    export let group: StatGroup<T, unknown>;
+    export let stat: Stat<T>;
+
+    $: checked = $chosenStats.some((s) => s.longName == stat.longName);
+
+    function handleClick() {
+        console.log("click", checked);
+        if (checked) {
+            console.log("subtracting");
+            $chosenStats = $chosenStats.filter((s) => s.longName != stat.longName);
+        } else {
+            console.log("adding");
+            $chosenStats = [...$chosenStats, stat];
+        }
+    }
 </script>
 
-<td class={`${group.color} group`} on:click={() => (checked = !checked)}>
+<td class={`${group.color} group`} on:click={handleClick}>
     <div>
-        <Checkbox bind:checked />
+        <Checkbox {checked} />
     </div>
 </td>
 

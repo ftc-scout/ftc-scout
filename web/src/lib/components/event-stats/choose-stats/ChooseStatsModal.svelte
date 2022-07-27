@@ -6,7 +6,12 @@
     import Fa from "svelte-fa";
     import { faXmark } from "@fortawesome/free-solid-svg-icons";
     import ChooseStandaloneStats from "./ChooseStandaloneStats.svelte";
+    import type { Writable } from "svelte/store";
+    import type { Stat } from "../../../util/stats/Stat";
 
+    type T = $$Generic;
+
+    export let chosenStats: Writable<Stat<T>[]>;
     export let statSet: StatsSet<unknown, unknown>;
     export let shown = false;
 </script>
@@ -23,12 +28,12 @@
         </button>
     </b>
 
-    <ChooseStandaloneStats {statSet} />
+    <ChooseStandaloneStats {statSet} {chosenStats} />
 
     <table>
         <GroupsHeader groups={statSet.groups} />
         {#each statSet.groupStats as groupStat}
-            <ChooseStatsRow stat={groupStat} groups={statSet.groups} />
+            <ChooseStatsRow myNestedStat={groupStat} groups={statSet.groups} {chosenStats} />
         {/each}
     </table>
 </Modal>

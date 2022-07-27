@@ -4,8 +4,13 @@
     import Fa from "svelte-fa";
     import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { Writable } from "svelte/store";
+    import type { Stat } from "../../../util/stats/Stat";
 
-    export let statSet: StatsSet<unknown, unknown>;
+    type T = $$Generic;
+
+    export let chosenStats: Writable<Stat<T>[]>;
+    export let statSet: StatsSet<T, unknown>;
 </script>
 
 <ul>
@@ -20,7 +25,7 @@
     </li>
 
     {#each statSet.standalone as stat, i}
-        <StandaloneStat zebraStripe={i % 2 == 0} {stat} />
+        <StandaloneStat zebraStripe={i % 2 == 0} {stat} {chosenStats} />
     {/each}
 </ul>
 

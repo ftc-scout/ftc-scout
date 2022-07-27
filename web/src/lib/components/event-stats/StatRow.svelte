@@ -1,11 +1,11 @@
 <script lang="ts">
-    import type { StatList } from "../../util/stats/Stat";
+    import type { Stat } from "../../util/stats/Stat";
     import StatData from "./StatData.svelte";
 
     type T = $$Generic;
 
     export let dataRow: T;
-    export let shownStats: StatList<T>;
+    export let shownStats: Stat<T>[];
     export let zebraStripe = false;
     export let selectedTeam: number | null = null;
 </script>

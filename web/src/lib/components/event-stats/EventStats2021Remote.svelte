@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { writable, type Writable } from "svelte/store";
+
     import type { Stat } from "../../util/stats/Stat";
     import {
         AVG_STAT,
@@ -15,7 +17,15 @@
 
     type S = FullTep2021Remote;
 
-    const defaultStats: Stat<S>[] = [RANK_STAT, TEAM_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT, AVG_STAT];
+    const defaultStats: Writable<Stat<S>[]> = writable([
+        RANK_STAT,
+        TEAM_STAT,
+        RP_STAT,
+        TBP_STAT,
+        TBP2_STAT,
+        PLAYED_STAT,
+        AVG_STAT,
+    ]);
     const defaultSort: ChosenSort<S> = {
         stat: RANK_STAT,
         type: SortType.LOW_HIGH,

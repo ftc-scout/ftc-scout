@@ -2,7 +2,7 @@
     export let checked = false;
 </script>
 
-<input type="checkbox" bind:checked />
+<input type="checkbox" bind:checked on:click />
 
 <style>
     input {

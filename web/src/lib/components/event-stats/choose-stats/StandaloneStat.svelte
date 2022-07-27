@@ -1,17 +1,29 @@
 <script lang="ts">
     import Checkbox from "./Checkbox.svelte";
     import type { Stat } from "../../../util/stats/Stat";
+    import type { Writable } from "svelte/store";
 
-    export let stat: Stat<unknown>;
+    type T = $$Generic;
+
+    export let chosenStats: Writable<Stat<T>[]>;
+    export let stat: Stat<T>;
     export let zebraStripe = false;
 
-    let checked = false;
+    $: checked = $chosenStats.includes(stat);
+
+    function handleClick() {
+        if (checked) {
+            $chosenStats = $chosenStats.filter((s) => s != stat);
+        } else {
+            $chosenStats = [...$chosenStats, stat];
+        }
+    }
 </script>
 
 <li class:zebra-stripe={zebraStripe}>
     <span class="name">{stat.longName}</span>
-    <div on:click={() => (checked = !checked)}>
-        <Checkbox bind:checked />
+    <div on:click={handleClick}>
+        <Checkbox {checked} />
     </div>
 </li>
 

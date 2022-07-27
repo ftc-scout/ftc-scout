@@ -11,7 +11,7 @@ export interface StatGroup<T, U> {
     shortName: string;
     description: string;
     color: StatColor;
-    get(_: T): U;
+    get(_: Stat<U>): Stat<T>;
 }
 
 export interface StatsSet<T, U> {

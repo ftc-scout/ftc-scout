@@ -4,7 +4,6 @@
     import type { Stat } from "../../util/stats/Stat";
     import { StatDisplayType } from "../../util/stats/stat-display-type";
     import StatTeam from "./StatTeam.svelte";
-    import { dragScroll } from "../../util/actions/drag-scroll";
 
     type T = $$Generic;
 
@@ -20,7 +19,7 @@
 {#if stat.displayType == StatDisplayType.TEAM}
     <StatTeam {team} bind:selectedTeam />
 {:else}
-    <td class={stat.color} title={stat.longName} use:dragScroll>
+    <td class={stat.color} title={stat.longName}>
         {#if stat.displayType == StatDisplayType.INTEGER}
             {value}
         {:else if stat.displayType == StatDisplayType.DECIMAL}

@@ -4,15 +4,21 @@
     import type { NestedStat, StatGroup } from "../../../util/stats/StatsSet";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
+    import type { Writable } from "svelte/store";
+    import type { Stat } from "../../../util/stats/Stat";
 
-    export let groups: StatGroup<unknown, unknown>[];
-    export let stat: NestedStat<unknown>;
+    type T = $$Generic;
+
+    export let chosenStats: Writable<Stat<T>[]>;
+    export let groups: StatGroup<T, unknown>[];
+    export let myNestedStat: NestedStat<T>;
     export let nestingDepth = 0;
     export let shown = true;
 
     let open = false;
 
-    $: nested = stat.nestedStats;
+    $: stat = myNestedStat.stat;
+    $: nested = myNestedStat.nestedStats;
 </script>
 
 {#if shown}
@@ -33,16 +39,22 @@
                 <ExpandButton bind:open style={`position:absolute; left: calc(${nestingDepth * 4} * var(--gap))`} />
             {/if}
 
-            {stat.stat.longName}
+            {stat.longName}
         </td>
         {#each groups as group}
-            <ChooseSingleStat {group} />
+            <ChooseSingleStat {group} stat={group.get(stat)} {chosenStats} />
         {/each}
     </tr>
 {/if}
 
 {#each nested as nestedStat (nestedStat.stat.longName)}
-    <svelte:self stat={nestedStat} {groups} nestingDepth={nestingDepth + 1} shown={open && shown} />
+    <svelte:self
+        myNestedStat={nestedStat}
+        {groups}
+        nestingDepth={nestingDepth + 1}
+        shown={open && shown}
+        {chosenStats}
+    />
 {/each}
 
 <style>
