@@ -15,6 +15,7 @@
     import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
     import type { StatsSet } from "../../util/stats/StatsSet";
     import type { Writable } from "svelte/store";
+    import ShowStatsModal from "./show-stats/ShowStatsModal.svelte";
 
     type T = $$Generic;
 
@@ -46,22 +47,24 @@
     // Sort by default first for consistent ordering.
     $: sorted = data.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(currentSort ?? defaultSort));
 
-    let modalShown = false;
+    let chooseStatsModalShown = false;
+    let seeStatsData: T | null = null;
 </script>
 
 <FaButton
     icon={faPlusCircle}
-    on:click={() => (modalShown = !modalShown)}
+    on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
     buttonStyle="font-size: var(--medium-font-size); padding: var(--padding);">Add Stats</FaButton
 >
 
-<ChooseStatsModal bind:shown={modalShown} {statSet} bind:chosenStats={shownStats} />
+<ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
+{#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table>
     <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
     <tbody>
         {#each sorted as dataRow, i}
-            <StatRow {dataRow} shownStats={$shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam />
+            <StatRow {dataRow} shownStats={$shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam bind:seeStatsData />
         {/each}
     </tbody>
 </table>
@@ -69,6 +72,7 @@
 <style>
     table {
         border-spacing: 0;
+        border-collapse: collapse;
 
         border: 1px solid lightgray;
         border-radius: 8px;

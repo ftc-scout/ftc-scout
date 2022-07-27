@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     export let team: {
         number: number;
         name: string;
@@ -13,14 +15,17 @@
 
     $: title = `${number} ${name}`;
 
+    const dispatch = createEventDispatcher();
+
     function handleClick() {
-        if (!frozen) {
-            if (focused) {
-                selectedTeam = null;
-            } else {
-                selectedTeam = number;
-            }
-        }
+        dispatch("show-data");
+        // if (!frozen) {
+        //     if (focused) {
+        //         selectedTeam = null;
+        //     } else {
+        //         selectedTeam = number;
+        //     }
+        // }
     }
 </script>
 
@@ -42,13 +47,13 @@
 
 <style>
     td {
-        border: transparent solid 2px;
-        transition: border 0.12s ease 0s;
+        outline: transparent solid 2px;
+        transition: outline 0.12s ease 0s;
     }
 
     td:hover {
-        z-index: 10;
-        border: 2px solid var(--color-team-neutral);
+        z-index: 20;
+        outline: 2px solid var(--color-team-neutral);
     }
 
     .inner {

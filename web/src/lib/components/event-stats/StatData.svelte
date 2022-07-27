@@ -17,7 +17,7 @@
 </script>
 
 {#if stat.displayType == StatDisplayType.TEAM}
-    <StatTeam {team} bind:selectedTeam />
+    <StatTeam {team} bind:selectedTeam on:show-data />
 {:else}
     <td class={stat.color} title={stat.longName}>
         {#if stat.displayType == StatDisplayType.INTEGER}

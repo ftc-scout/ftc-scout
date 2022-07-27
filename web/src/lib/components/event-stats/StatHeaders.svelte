@@ -45,7 +45,6 @@
     let elements: HTMLElement[] = [];
     let offsetsAndWidths: [number, number][] = [];
     function recalcOffsets() {
-        console.log("recalc");
         offsetsAndWidths = elements.map(getOffsetAndWidth);
     }
     onMount(recalcOffsets);
