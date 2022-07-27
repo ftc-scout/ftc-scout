@@ -122,8 +122,57 @@ const AUTO_FREIGHT_STAT: Stat<Group> = makeStat("autoFreightPoints", "Auto Freig
 const AUTO_FREIGHT1_STAT: Stat<Group> = makeStat("autoFreightPointsLevel1", "Level 1", "Auto Freight 1");
 const AUTO_FREIGHT2_STAT: Stat<Group> = makeStat("autoFreightPointsLevel2", "Level 2", "Auto Freight 2");
 const AUTO_FREIGHT3_STAT: Stat<Group> = makeStat("autoFreightPointsLevel3", "Level 3", "Auto Freight 3");
+const AUTO_FREIGHT_STORAGE_STAT: Stat<Group> = makeStat("autoFreightPointsStorage", "Storage", "Auto Storage");
 
 const AUTO_CAROUSEL_STAT: Stat<Group> = makeStat("autoCarouselPoints", "Auto Carousel Points", "Auto Carousel");
+
+const AUTO_NAV_STAT: Stat<Group> = makeStat("autoNavigationPoints", "Auto Navigation Points", "Auto Nav");
+const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
+    "autoNavigationPointsIndividual",
+    "Individual",
+    "Auto Nav Individual"
+);
+
+const AUTO_BONUS_STAT: Stat<Group> = makeStat("autoBonusPoints", "Auto Bonus Points", "Bonus");
+const AUTO_BONUS_INDIVIDUAL_STAT: Stat<Group> = makeStat("autoBonusPointsIndividual", "Individual", "Bonus Individual");
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+const DC_STAT: Stat<Group> = makeStat("driverControlledPoints", "Driver Controlled Points", "Teleop");
+
+const DC_ALLIANCE_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPoints", "Alliance Hub Points", "Hub");
+const DC_ALLIANCE1_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPointsLevel1", "Level 1", "Hub 1");
+const DC_ALLIANCE2_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPointsLevel2", "Level 2", "Hub 2");
+const DC_ALLIANCE3_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPointsLevel3", "Level 3", "Hub 3");
+
+const DC_SHARED_STAT: Stat<Group> = makeStat("driverControlledSharedHubPoints", "Shared Hub Points", "Shared");
+
+const DC_STORAGE_STAT: Stat<Group> = makeStat("driverControlledStoragePoints", "Storage Points", "Storage");
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+const ENDGAME_STAT: Stat<Group> = makeStat("endgamePoints", "Endgame Points", "Endgame");
+
+const ENDGAME_DELIVERY_STAT: Stat<Group> = makeStat("endgameDeliveryPoints", "Delivery Points", "Delivery");
+
+const ENDGAME_CAPPING_STAT: Stat<Group> = makeStat("cappingPoints", "Capping Points", "Capping");
+
+const ENDGAME_PARKING_STAT: Stat<Group> = makeStat("endgameParkingPoints", "Parking Points", "Endgame Park");
+const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
+    "endgameParkingPointsIndividual",
+    "Individual",
+    "Endgame Park Individual"
+);
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+const PENALTIES_STAT: Stat<Group> = makeStat("penaltyPoints", "Penalty Points", "Penalties");
+
+const PENALTIES_MAJOR_STAT: Stat<Group> = makeStat("majorPenaltyPoints", "Major Penalty Points", "Majors");
+
+const PENALTIES_MINOR_STAT: Stat<Group> = makeStat("minorPenaltyPoints", "Minor Penalty Points", "Minors");
+
+// ------------------------------------------------------------------------------------------------------------------------
 
 function groupGetter<T, U>(
     getInner: (t2: T) => U,
@@ -235,10 +284,97 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
                             stat: AUTO_FREIGHT3_STAT,
                             nestedStats: [],
                         },
+                        {
+                            stat: AUTO_FREIGHT_STORAGE_STAT,
+                            nestedStats: [],
+                        },
                     ],
                 },
                 {
                     stat: AUTO_CAROUSEL_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: AUTO_NAV_STAT,
+                    nestedStats: [
+                        {
+                            stat: AUTO_NAV_INDIVIDUAL_STAT,
+                            nestedStats: [],
+                        },
+                    ],
+                },
+                {
+                    stat: AUTO_BONUS_STAT,
+                    nestedStats: [
+                        {
+                            stat: AUTO_BONUS_INDIVIDUAL_STAT,
+                            nestedStats: [],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            stat: DC_STAT,
+            nestedStats: [
+                {
+                    stat: DC_ALLIANCE_STAT,
+                    nestedStats: [
+                        {
+                            stat: DC_ALLIANCE1_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_ALLIANCE2_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_ALLIANCE3_STAT,
+                            nestedStats: [],
+                        },
+                    ],
+                },
+                {
+                    stat: DC_SHARED_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: DC_STORAGE_STAT,
+                    nestedStats: [],
+                },
+            ],
+        },
+        {
+            stat: ENDGAME_STAT,
+            nestedStats: [
+                {
+                    stat: ENDGAME_DELIVERY_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: ENDGAME_CAPPING_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: ENDGAME_PARKING_STAT,
+                    nestedStats: [
+                        {
+                            stat: ENDGAME_PARKING_INDIVIDUAL_STAT,
+                            nestedStats: [],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            stat: PENALTIES_STAT,
+            nestedStats: [
+                {
+                    stat: PENALTIES_MAJOR_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: PENALTIES_MINOR_STAT,
                     nestedStats: [],
                 },
             ],

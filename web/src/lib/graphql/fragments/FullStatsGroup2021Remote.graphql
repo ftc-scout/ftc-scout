@@ -19,6 +19,8 @@ fragment FullStatsGroup2021Remote on TeamEventStatGroup2021Remote {
     endgameParkingPoints
     endgameParkingPointsIndividual
     cappingPoints
+    majorPenaltyPoints
+    minorPenaltyPoints
     autoPoints
     driverControlledPoints
     endgamePoints

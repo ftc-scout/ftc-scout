@@ -21,6 +21,8 @@ fragment FullStatsGroup2021Trad on TeamEventStatGroup2021Traditional {
     endgameParkingPoints
     endgameParkingPointsIndividual
     cappingPoints
+    majorPenaltyPoints
+    minorPenaltyPoints
     autoPoints
     driverControlledPoints
     endgamePoints
