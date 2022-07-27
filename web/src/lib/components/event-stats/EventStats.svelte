@@ -12,6 +12,7 @@
     }[];
 
     export let selectedTeam: number | null = null;
+    export let eventName: string;
 
     let type: "TeamEventStats2021Traditional" | "TeamEventStats2021Remote" | null;
     $: type = stats.length == 0 ? null : stats[0].stats.__typename ?? null;
@@ -22,7 +23,7 @@
 </script>
 
 {#if type == "TeamEventStats2021Traditional"}
-    <EventStats2021Trad data={force(stats)} bind:selectedTeam />
+    <EventStats2021Trad data={force(stats)} bind:selectedTeam {eventName} />
 {:else if type == "TeamEventStats2021Remote"}
-    <EventStats2021Remote stats={force(stats)} bind:selectedTeam />
+    <EventStats2021Remote stats={force(stats)} bind:selectedTeam {eventName} />
 {/if}

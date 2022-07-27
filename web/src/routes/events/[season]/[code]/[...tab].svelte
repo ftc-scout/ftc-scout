@@ -125,7 +125,7 @@
 
         {#if hasStats}
             <TabContent name="Rankings">
-                <EventStats {stats} bind:selectedTeam />
+                <EventStats {stats} bind:selectedTeam eventName={eventData.name} />
             </TabContent>
         {/if}
 

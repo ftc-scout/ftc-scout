@@ -12,10 +12,11 @@
     import { SortType } from "../SortButton.svelte";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
     import FaButton from "../FaButton.svelte";
-    import { faPlusCircle } from "@fortawesome/free-solid-svg-icons";
+    import { faEdit, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
     import type { StatsSet } from "../../util/stats/StatsSet";
     import type { Writable } from "svelte/store";
     import ShowStatsModal from "./show-stats/ShowStatsModal.svelte";
+    import { exportStatsCSV } from "../../util/stats/export-stats-csv";
 
     type T = $$Generic;
 
@@ -27,6 +28,8 @@
 
     export let defaultSort: ChosenSort<T>;
     export let currentSort: ChosenSort<T> = defaultSort;
+
+    export let eventName: string;
 
     function makeSortFunction(sort: { stat: Stat<T>; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
         return (a: T, b: T) => {
@@ -45,17 +48,25 @@
     }
 
     // Sort by default first for consistent ordering.
-    $: sorted = data.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(currentSort ?? defaultSort));
+    $: sortedData = data.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(currentSort ?? defaultSort));
 
     let chooseStatsModalShown = false;
     let seeStatsData: T | null = null;
 </script>
 
-<FaButton
-    icon={faPlusCircle}
-    on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
-    buttonStyle="font-size: var(--medium-font-size); padding: var(--padding);">Add Stats</FaButton
->
+<div class="options">
+    <FaButton
+        icon={faEdit}
+        on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
+        buttonStyle="font-size: var(--medium-font-size);">Add Stats</FaButton
+    >
+
+    <FaButton
+        icon={faFileArrowDown}
+        on:click={() => exportStatsCSV(eventName, sortedData, $shownStats)}
+        buttonStyle="font-size: var(--medium-font-size);">Export CSV</FaButton
+    >
+</div>
 
 <ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
@@ -63,13 +74,21 @@
 <table>
     <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
     <tbody>
-        {#each sorted as dataRow, i}
+        {#each sortedData as dataRow, i}
             <StatRow {dataRow} shownStats={$shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam bind:seeStatsData />
         {/each}
     </tbody>
 </table>
 
 <style>
+    .options {
+        margin-bottom: var(--large-gap);
+
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
     table {
         border-spacing: 0;
         border-collapse: collapse;

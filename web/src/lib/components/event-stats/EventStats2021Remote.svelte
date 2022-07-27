@@ -33,6 +33,7 @@
 
     export let stats: Stat<S>[];
     export let selectedTeam: number | null = null;
+    export let eventName: string;
 </script>
 
-<EventStatsImpl data={stats} shownStats={defaultStats} {defaultSort} bind:selectedTeam />
+<EventStatsImpl data={stats} shownStats={defaultStats} {defaultSort} bind:selectedTeam {eventName} />
