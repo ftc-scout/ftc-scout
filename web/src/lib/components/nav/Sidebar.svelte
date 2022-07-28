@@ -6,8 +6,8 @@
 
 <div class="sidebar normal"><SidebarContent /></div>
 {#if $sidebarOpen}
-    <div class="background-cover" on:click={() => ($sidebarOpen = false)} transition:fade={{ duration: 400 }} />
-    <div class="sidebar small" transition:fly={{ duration: 400, x: -300, opacity: 1 }}><SidebarContent /></div>
+    <div class="background-cover" on:click={() => ($sidebarOpen = false)} transition:fade={{ duration: 300 }} />
+    <div class="sidebar small" transition:fly={{ duration: 300, x: -300, opacity: 1 }}><SidebarContent /></div>
 {/if}
 
 <style>
@@ -23,6 +23,7 @@
         margin-top: var(--navbar-size);
 
         padding: var(--padding);
+        padding-top: calc(var(--padding) + 4px);
 
         box-shadow: 4px 0 4px -4px var(--shadow-color);
 
@@ -37,6 +38,7 @@
         right: 0;
         background: var(--modal-background-color);
         z-index: 1400;
+        display: none;
     }
 
     .sidebar.small {
@@ -51,6 +53,10 @@
         }
 
         .sidebar.small {
+            display: block;
+        }
+
+        .background-cover {
             display: block;
         }
     }

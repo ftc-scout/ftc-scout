@@ -1,10 +1,10 @@
 <script lang="ts">
     import Modal from "$lib/components/Modal.svelte";
-    import { faXmark } from "@fortawesome/free-solid-svg-icons";
     import type { EventPageMatchFragment } from "../../../graphql/generated/graphql-operations";
     import ScoreTrad2021 from "./ScoreTrad2021.svelte";
     import Fa from "svelte-fa";
     import ScoreRemote2021 from "./ScoreRemote2021.svelte";
+    import { CLOSE_ICON } from "../../../icons";
 
     export let matchScores: EventPageMatchFragment | null = null;
     export let shown = false;
@@ -19,7 +19,7 @@
                     shown = false;
                 }}
             >
-                <Fa icon={faXmark} size="1.5x" />
+                <Fa icon={CLOSE_ICON} size="1.5x" />
             </button>
         </b>
 

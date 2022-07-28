@@ -2,24 +2,40 @@ import {
     faBolt,
     faCalendarAlt,
     faCircleCheck,
+    faCode,
+    faGlobeAmericas,
     faHashtag,
     faHeart,
+    faHome,
+    faInfoCircle,
     faLink,
     faLocationDot,
     faMedal,
+    faRightToBracket,
     faSchool,
     faTree,
     faTrophy,
+    faUserAlt,
+    faXmark,
 } from "@fortawesome/free-solid-svg-icons";
 
-export let WEBSITE_ICON = faLink;
-export let DATE_ICON = faCalendarAlt;
-export let LOCATION_ICON = faLocationDot;
-export let SCHOOL_ICON = faSchool;
-export let ROOKIE_YEAR_ICON = faTree;
-export let RANKINGS_ICON = faTrophy;
-export let AWARDS_ICON = faMedal;
-export let TEAMS_ICON = faHashtag;
-export let DATA_FROM_FIRST_ICON = faCircleCheck;
-export let SPONSOR_ICON = faHeart;
-export let MATCHES_ICON = faBolt;
+export const WEBSITE_ICON = faLink;
+export const DATE_ICON = faCalendarAlt;
+export const LOCATION_ICON = faLocationDot;
+export const SCHOOL_ICON = faSchool;
+export const ROOKIE_YEAR_ICON = faTree;
+export const RANKINGS_ICON = faTrophy;
+export const AWARDS_ICON = faMedal;
+export const TEAMS_ICON = faHashtag;
+export const EVENTS_ICON = faCalendarAlt;
+export const DATA_FROM_FIRST_ICON = faCircleCheck;
+export const SPONSOR_ICON = faHeart;
+export const MATCHES_ICON = faBolt;
+export const HOME_ICON = faHome;
+export const ABOUT_ICON = faInfoCircle;
+export const USER_ICON = faUserAlt;
+export const LOGIN_ICON = faRightToBracket;
+export const API_ICON = faCode;
+export const CLOSE_ICON = faXmark;
+export const REGIONS_ICON = faGlobeAmericas;
+export const SEASON_RECORDS_ICON = faTrophy;

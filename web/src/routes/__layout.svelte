@@ -12,7 +12,7 @@
     export let me: ReadableQuery<MeQuery> = query(MeDocument);
     $: meData = $me?.data?.me;
 
-    let meStore: Writable<MeQuery["me"] | null> = writable(null);
+    let meStore: Writable<MeQuery["me"] | null | undefined> = writable(undefined);
     $: $meStore = meData;
 
     setContext("me", meStore);
