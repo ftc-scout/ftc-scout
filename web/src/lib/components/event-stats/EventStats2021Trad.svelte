@@ -4,7 +4,15 @@
         stat: RANK_STAT,
         type: SortType.LOW_HIGH,
     };
-    let shownStats: Writable<Stat<S>[]> = writable([RANK_STAT, TEAM_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT]);
+    let shownStats: Writable<Stat<S>[]> = writable([
+        RANK_STAT,
+        TEAM_STAT,
+        RP_STAT,
+        PLAYED_STAT,
+        AVERAGE_STAT,
+        OPR_STAT,
+        MAX_STAT,
+    ]);
     let currentSort = defaultSort;
 </script>
 
@@ -18,10 +26,11 @@
         RANK_STAT,
         RP_STAT,
         STAT_SET_2021_TRAD,
-        TBP2_STAT,
-        TBP_STAT,
         TEAM_STAT,
+        AVERAGE_STAT,
         type FullTep2021Traditional,
+        MAX_STAT,
+        OPR_STAT,
     } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
     import EventStatsImpl, { type ChosenSort } from "./EventStatsImpl.svelte";

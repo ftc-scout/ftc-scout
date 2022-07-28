@@ -216,9 +216,9 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
             longName: "Average",
             shortName: "AVG",
             description: "The average number of points scored in the category.",
-            color: StatColor.BLUE,
+            color: StatColor.PURPLE,
             get: (s) =>
-                groupGetter((t) => t.stats.average, s, StatColor.BLUE, "AVG", "Average", StatDisplayType.DECIMAL),
+                groupGetter((t) => t.stats.average, s, StatColor.PURPLE, "AVG", "Average", StatDisplayType.DECIMAL),
         },
         {
             longName: "OPR",
@@ -231,21 +231,21 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
             longName: "Minimum",
             shortName: "MIN",
             description: "The lowest number of points scored in the category.",
-            color: StatColor.GREEN,
-            get: (s) => groupGetter((t) => t.stats.min, s, StatColor.GREEN, "MIN", "Minimum"),
+            color: StatColor.LIGHT_BLUE,
+            get: (s) => groupGetter((t) => t.stats.min, s, StatColor.LIGHT_BLUE, "MIN", "Minimum"),
         },
         {
             longName: "Maximum",
             shortName: "MAX",
             description: "The highest number of points scored in the category.",
-            color: StatColor.GREEN,
-            get: (s) => groupGetter((t) => t.stats.max, s, StatColor.GREEN, "MAX", "Maximum"),
+            color: StatColor.BLUE,
+            get: (s) => groupGetter((t) => t.stats.max, s, StatColor.BLUE, "MAX", "Maximum"),
         },
         {
             longName: "Std. Dev.",
             shortName: "DEV",
             description: "The standard deviation of scores in the category.",
-            color: StatColor.LIGHT_BLUE,
+            color: StatColor.GREEN,
             get: (s) =>
                 groupGetter(
                     (t) => t.stats.standardDev,
@@ -381,3 +381,7 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
         },
     ],
 };
+
+export const AVERAGE_STAT = STAT_SET_2021_TRAD.groups.find((g) => g.shortName == "AVG")!.get(TOTAL_STAT);
+export const MAX_STAT = STAT_SET_2021_TRAD.groups.find((g) => g.shortName == "MAX")!.get(TOTAL_STAT);
+export const OPR_STAT = STAT_SET_2021_TRAD.groups.find((g) => g.shortName == "OPR")!.get(TOTAL_STAT);
