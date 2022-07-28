@@ -67,6 +67,8 @@
         let shadow: HTMLElement;
         let moveIndicator: HTMLElement;
         let parent: HTMLElement = element.parentElement!;
+        let table: HTMLElement = element.parentElement!.parentElement!;
+        let lastScroll = 0;
 
         function calcNewPosition(): number {
             for (let j = 0; j < $shownStats.length; j++) {
@@ -81,6 +83,13 @@
                 }
             }
             return i;
+        }
+
+        function watchScroll(_: Event) {
+            mouseXOffset += table.scrollLeft - lastScroll;
+            xOffset += table.scrollLeft - lastScroll;
+            lastScroll = table.scrollLeft;
+            moveTo();
         }
 
         function moveTo() {
@@ -103,6 +112,7 @@
                 moving = true;
 
                 parent = element.parentElement!;
+                table = parent.parentElement!;
                 let pos = element.getBoundingClientRect();
                 let parentPos = parent.getBoundingClientRect();
                 let width = pos.right - pos.left; // using these of clientWidth/Height gives values to the exact subpixels.
@@ -139,6 +149,10 @@
                 element.style.height = `${height}px`;
                 element.style.cursor = "grabbing";
                 moveTo();
+
+                console.log("add listener", table);
+                table.addEventListener("scroll", watchScroll);
+                lastScroll = table.scrollLeft;
             }
         }
 
@@ -165,6 +179,7 @@
                 parent.replaceChild(element, placeholder!);
                 parent.parentElement!.removeChild(shadow!);
                 parent.parentElement!.removeChild(moveIndicator!);
+                table.removeEventListener("scroll", watchScroll);
 
                 setTimeout(recalcOffsets, 1);
             }
