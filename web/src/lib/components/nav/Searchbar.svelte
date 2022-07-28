@@ -2,8 +2,7 @@
     import { SearchDocument, type SearchQuery } from "$lib/graphql/generated/graphql-operations";
     import { query, type ReadableQuery } from "svelte-apollo";
     import { goto, prefetch } from "$app/navigation";
-    import SkeletonRow from "./skeleton/SkeletonRow.svelte";
-    import Skeleton from "./skeleton/Skeleton.svelte";
+    import SkeletonRow from "../skeleton/SkeletonRow.svelte";
 
     let searchText = "";
 

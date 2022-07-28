@@ -1,23 +1,15 @@
 <script lang="ts">
-    import { LogoutDocument, MeDocument } from "$lib/graphql/generated/graphql-operations";
-    import { mutation } from "svelte-apollo";
+    import HamburgerButton from "./HamburgerButton.svelte";
+
     import Searchbar from "./Searchbar.svelte";
-
-    export let meData: any; // TODO type
-
-    const logoutMutation = mutation(LogoutDocument);
-    const logout = async () => await logoutMutation({ refetchQueries: [{ query: MeDocument }] });
 </script>
 
 <nav>
+    <HamburgerButton />
+
+    <div class="placeholder" />
+
     <Searchbar />
-    {#if meData}
-        <button class="login-button" on:click={logout}>Log Out</button>
-        <p>{meData.username}</p>
-    {:else}
-        <a class="login-button" href="/login">Log In</a>
-        <a class="login-button" href="/register">Register</a>
-    {/if}
 </nav>
 
 <style>
@@ -25,7 +17,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
-        justify-content: right;
+        justify-content: space-between;
 
         position: fixed;
         top: 0;
@@ -39,7 +31,7 @@
 
         box-shadow: 0 4px 4px -4px var(--shadow-color);
 
-        z-index: 10;
+        z-index: 1000;
     }
 
     .login-button {

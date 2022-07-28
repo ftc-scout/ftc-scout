@@ -1,10 +1,11 @@
 <script lang="ts">
     import { MeDocument, type MeQuery } from "../lib/graphql/generated/graphql-operations";
-    import Navbar from "$lib/components/Navbar.svelte";
+    import Navbar from "$lib/components/nav/Navbar.svelte";
     import { query, setClient, type ReadableQuery } from "svelte-apollo";
     import { apolloClient } from "../lib/graphql/client";
     import { writable, type Writable } from "svelte/store";
     import { setContext } from "svelte";
+    import Sidebar from "../lib/components/nav/Sidebar.svelte";
 
     setClient(apolloClient);
 
@@ -31,7 +32,8 @@
     <meta name="theme-color" content="#ffffff" />
 </svelte:head>
 
-<Navbar {meData} />
+<Navbar />
+<Sidebar />
 
 <div class="content">
     <slot />
@@ -43,11 +45,18 @@
 
     .content {
         margin-top: var(--navbar-size);
+        margin-left: var(--sidebar-size);
         padding: var(--padding);
 
         overflow: auto;
         max-height: calc(100vh - var(--navbar-size));
         scrollbar-gutter: stable both-edges;
         /* position: relative; */
+    }
+
+    @media (max-width: 1600px) {
+        .content {
+            margin-left: 0;
+        }
     }
 </style>

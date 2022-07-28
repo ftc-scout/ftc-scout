@@ -60,6 +60,7 @@
 
     /* Sizes */
     --navbar-size: 60px;
+    --sidebar-size: 300px;
 
     --small-gap: 4px;
     --medium-hap: 6px;
@@ -88,7 +89,7 @@
         --h1-font-size: 28px;
 
         /* Sizes */
-        --navbar-size: 60px;
+        --navbar-size: 50px;
 
         --small-gap: 2px;
         --medium-hap: 4px;
