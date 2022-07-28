@@ -3,11 +3,14 @@
     import { query, type ReadableQuery } from "svelte-apollo";
     import { goto, prefetch } from "$app/navigation";
     import SkeletonRow from "../skeleton/SkeletonRow.svelte";
+    import SearchbarInput from "./SearchbarInput.svelte";
 
     let searchText = "";
 
-    let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, { variables: { searchText } });
-    $: searchResults = query(SearchDocument, { variables: { searchText } });
+    let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, {
+        variables: { searchText: searchText.trim() },
+    });
+    $: searchResults = query(SearchDocument, { variables: { searchText: searchText.trim() } });
 
     let teamsSearchData: SearchQuery["search"]["teams"];
     $: teamsSearchData = $searchResults.data?.search.teams ?? [];
@@ -29,10 +32,10 @@
         }
     }
 
-    let barElement: HTMLElement;
+    let barElement: HTMLElement | null = null;
     let teamElements: HTMLElement[] = [];
     let eventElements: HTMLElement[] = [];
-    $: elements = [barElement, ...teamElements.filter((e) => e), ...eventElements.filter((e) => e)];
+    $: elements = [barElement!, ...teamElements.filter((e) => e), ...eventElements.filter((e) => e)];
 
     function handleType(e: KeyboardEvent) {
         let active = document.activeElement;
@@ -53,6 +56,9 @@
     }
 
     let focusCount = 0;
+    let barShown = false;
+
+    $: if (focusCount == 0) barShown = false;
 
     $: showSearchResults = searchText && (teamsSearchData.length || eventsSearchData.length) && focusCount;
     $: showSkeleton = searchText && focusCount && $searchResults.loading;
@@ -67,21 +73,18 @@
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
-    <input
-        class="searchbar"
-        type="search"
-        id="searchInput"
-        name="team-search"
+    <SearchbarInput
         bind:value={searchText}
-        placeholder="Input team..."
         on:focus={() => focusCount++}
         on:focusout={() => setTimeout(() => focusCount--, 1)}
         on:keydown={handleType}
-        bind:this={barElement}
-        tabindex="0"
+        bind:this_={barElement}
+        bind:shown={barShown}
+        {focusCount}
     />
+
     {#if showSearchResults}
-        <div bind:this={resultElement} class="result">
+        <div bind:this={resultElement} class="result" class:bar-shown={barShown}>
             {#if teamsSearchData.length}
                 <div class="header">Teams</div>
             {/if}
@@ -144,6 +147,7 @@
             style:height={`${lastResultHeight}px`}
             style:max-height={`${lastResultHeight}px`}
             style:overflow="hidden"
+            class:bar-shown={barShown}
         >
             <SkeletonRow rows={20} card={false} header={false} />
         </div>
@@ -155,7 +159,6 @@
         position: relative;
     }
 
-    input:focus,
     a:focus {
         outline: var(--text-color) 2px auto;
         background: var(--hover-color);
@@ -176,6 +179,19 @@
         border-radius: 8px;
 
         box-shadow: -2px 2px 10px 3px #e0e0e0;
+    }
+
+    @media (max-width: 850px) {
+        .result {
+            position: fixed;
+            width: calc(100% - 2 * var(--gap));
+            left: var(--gap);
+            right: var(--gap);
+        }
+
+        .result:not(.bar-shown) {
+            display: none;
+        }
     }
 
     .result .header {
@@ -207,13 +223,5 @@
         text-decoration: none;
 
         border-radius: 8px;
-    }
-
-    .searchbar {
-        border: 1px solid transparent;
-        background-color: #f1f1f1;
-        padding: 9px;
-        font-size: 18px;
-        border-radius: var(--pill-border-radius);
     }
 </style>

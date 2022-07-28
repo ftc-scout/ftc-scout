@@ -30,9 +30,9 @@
     .hamburger-button {
         margin-left: var(--large-gap);
 
-        background: var(--foreground-color);
+        background: var(--theme-color);
         border: none;
-        color: var(--theme-color);
+        color: var(--theme-text-color);
         float: left;
 
         cursor: pointer;
@@ -42,11 +42,7 @@
     }
 
     .hamburger-button:hover {
-        filter: brightness(0.95);
-    }
-
-    .hamburger-button:active {
-        filter: brightness(0.9);
+        background: var(--darkened-theme-color);
     }
 
     @media (min-width: 1600px) {
