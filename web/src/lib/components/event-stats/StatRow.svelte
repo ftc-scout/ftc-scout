@@ -20,5 +20,6 @@
 <style>
     .zebra-stripe {
         background-color: var(--zebra-stripe-color);
+        mix-blend-mode: multiply;
     }
 </style>

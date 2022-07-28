@@ -215,8 +215,6 @@
         user-select: none;
 
         cursor: grab;
-
-        position: sticky;
     }
 
     .team {

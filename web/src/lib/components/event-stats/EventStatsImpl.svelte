@@ -102,5 +102,17 @@
         overflow: auto;
 
         position: relative;
+
+        /* Adapted from: https://lea.verou.me/2012/04/background-attachment-local/ */
+        background: linear-gradient(to right, white 30%, rgba(255, 255, 255, 0)),
+            linear-gradient(to left, white, rgba(255, 255, 255, 0)) 100% 0,
+            linear-gradient(to right, rgba(0, 0, 0, 0.2), white),
+            linear-gradient(to left, rgba(0, 0, 0, 0.2), white) 100% 0;
+        background-repeat: no-repeat;
+        background-color: white;
+        background-size: 60px 100%, 60px 100%, 25px 100%, 25px 100%;
+
+        /* Opera doesn't support this in the shorthand */
+        background-attachment: local, local, scroll, scroll;
     }
 </style>
