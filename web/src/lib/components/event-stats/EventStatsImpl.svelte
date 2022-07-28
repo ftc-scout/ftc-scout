@@ -71,7 +71,7 @@
 <ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
-<table>
+<table tabindex="-1">
     <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
     <tbody>
         {#each sortedData as dataRow, i}
@@ -114,5 +114,10 @@
 
         /* Opera doesn't support this in the shorthand */
         background-attachment: local, local, scroll, scroll;
+    }
+
+    table:focus-visible {
+        outline: none;
+        border: 1px solid black;
     }
 </style>

@@ -11,7 +11,7 @@
     export let seeStatsData: T | null = null;
 </script>
 
-<tr class:zebra-stripe={zebraStripe} on:click={() => (seeStatsData = dataRow)}>
+<tr class:zebra-stripe={zebraStripe}>
     {#each shownStats as shownStat}
         <StatData stat={shownStat} data={dataRow} bind:selectedTeam on:show-data={() => (seeStatsData = dataRow)} />
     {/each}
