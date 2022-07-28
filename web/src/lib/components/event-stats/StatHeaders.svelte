@@ -150,7 +150,6 @@
                 element.style.cursor = "grabbing";
                 moveTo();
 
-                console.log("add listener", table);
                 table.addEventListener("scroll", watchScroll);
                 lastScroll = table.scrollLeft;
             }

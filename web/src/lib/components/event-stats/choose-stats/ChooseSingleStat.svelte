@@ -13,12 +13,9 @@
     $: checked = $chosenStats.some((s) => s.longName == stat.longName);
 
     function handleClick() {
-        console.log("click", checked);
         if (checked) {
-            console.log("subtracting");
             $chosenStats = $chosenStats.filter((s) => s.longName != stat.longName);
         } else {
-            console.log("adding");
             $chosenStats = [...$chosenStats, stat];
         }
     }
