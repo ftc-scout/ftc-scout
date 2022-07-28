@@ -64,32 +64,36 @@ export type FullTep2021Traditional = {
 export const WINS_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
-    longName: "Wins",
-    shortName: "Wins",
+    listName: "Wins",
+    columnName: "Wins",
+    identifierName: "Wins",
     read: (s) => s.stats.wins,
 };
 
 export const lOSSES_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
-    longName: "Losses",
-    shortName: "Losses",
+    listName: "Losses",
+    columnName: "Losses",
+    identifierName: "Losses",
     read: (s) => s.stats.losses,
 };
 
 export const TIES_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
-    longName: "Ties",
-    shortName: "Ties",
+    listName: "Ties",
+    columnName: "Ties",
+    identifierName: "Ties",
     read: (s) => s.stats.ties,
 };
 
 export const DQ_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
-    longName: "Disqualifications (DQs)",
-    shortName: "DQs",
+    listName: "Disqualifications (DQs)",
+    columnName: "DQs",
+    identifierName: "Disqualifications (DQs)",
     read: (s) => s.stats.ties,
 };
 
@@ -100,21 +104,33 @@ type Group = FullTep2021Traditional["stats"]["total"];
 const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "autoNavigationPointsIndividual",
     "Individual",
-    "Auto Nav Individual"
+    "Auto Nav Individual",
+    "Auto Navigation Points Individual"
 );
 
-const AUTO_BONUS_INDIVIDUAL_STAT: Stat<Group> = makeStat("autoBonusPointsIndividual", "Individual", "Bonus Individual");
+const AUTO_BONUS_INDIVIDUAL_STAT: Stat<Group> = makeStat(
+    "autoBonusPointsIndividual",
+    "Individual",
+    "Bonus Individual",
+    "Auto Bonus Points Individual"
+);
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const DC_SHARED_STAT: Stat<Group> = makeStat("driverControlledSharedHubPoints", "Shared Hub Points", "Shared");
+const DC_SHARED_STAT: Stat<Group> = makeStat(
+    "driverControlledSharedHubPoints",
+    "Shared Hub Points",
+    "Shared",
+    "Driver Controlled Shared Hub Points"
+);
 
 // ------------------------------------------------------------------------------------------------------------------------
 
 const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "endgameParkingPointsIndividual",
     "Individual",
-    "Endgame Park Individual"
+    "Endgame Park Individual",
+    "Endgame Parking Points Individual"
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -138,7 +154,7 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
             shortName: "TOT",
             description: "The sum of all points scored in the category.",
             color: StatColor.RED,
-            get: (s) => groupGetter((t) => t.stats.total, s, StatColor.RED, "TOT", "Total"),
+            get: (s) => groupGetter((t) => t.stats.total, s, StatColor.RED, "TOT", "Total", "Total"),
         },
         {
             longName: "Average",
@@ -146,28 +162,37 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
             description: "The average number of points scored in the category.",
             color: StatColor.PURPLE,
             get: (s) =>
-                groupGetter((t) => t.stats.average, s, StatColor.PURPLE, "AVG", "Average", StatDisplayType.DECIMAL),
+                groupGetter(
+                    (t) => t.stats.average,
+                    s,
+                    StatColor.PURPLE,
+                    "AVG",
+                    "Average",
+                    "Average",
+                    StatDisplayType.DECIMAL
+                ),
         },
         {
             longName: "OPR",
             shortName: "OPR",
             description: "Offensive Power Rating.",
             color: StatColor.PURPLE,
-            get: (s) => groupGetter((t) => t.stats.opr, s, StatColor.PURPLE, "OPR", "OPR", StatDisplayType.DECIMAL),
+            get: (s) =>
+                groupGetter((t) => t.stats.opr, s, StatColor.PURPLE, "OPR", "OPR", "OPR", StatDisplayType.DECIMAL),
         },
         {
             longName: "Minimum",
             shortName: "MIN",
             description: "The lowest number of points scored in the category.",
             color: StatColor.LIGHT_BLUE,
-            get: (s) => groupGetter((t) => t.stats.min, s, StatColor.LIGHT_BLUE, "MIN", "Minimum"),
+            get: (s) => groupGetter((t) => t.stats.min, s, StatColor.LIGHT_BLUE, "MIN", "Minimum", "Minimum"),
         },
         {
             longName: "Maximum",
             shortName: "MAX",
             description: "The highest number of points scored in the category.",
             color: StatColor.BLUE,
-            get: (s) => groupGetter((t) => t.stats.max, s, StatColor.BLUE, "MAX", "Maximum"),
+            get: (s) => groupGetter((t) => t.stats.max, s, StatColor.BLUE, "MAX", "Maximum", "Maximum"),
         },
         {
             longName: "Std. Dev.",
@@ -181,6 +206,7 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
                     StatColor.GREEN,
                     "DEV",
                     "Std. Dev.",
+                    "Standard Deviation",
                     StatDisplayType.DECIMAL
                 ),
         },

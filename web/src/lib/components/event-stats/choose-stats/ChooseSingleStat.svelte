@@ -10,11 +10,11 @@
     export let group: StatGroup<T, unknown>;
     export let stat: Stat<T>;
 
-    $: checked = $chosenStats.some((s) => s.longName == stat.longName);
+    $: checked = $chosenStats.some((s) => s.identifierName == stat.identifierName);
 
     function handleClick() {
         if (checked) {
-            $chosenStats = $chosenStats.filter((s) => s.longName != stat.longName);
+            $chosenStats = $chosenStats.filter((s) => s.identifierName != stat.identifierName);
         } else {
             $chosenStats = [...$chosenStats, stat];
         }

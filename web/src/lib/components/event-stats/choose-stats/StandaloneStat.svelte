@@ -21,7 +21,7 @@
 </script>
 
 <li class:zebra-stripe={zebraStripe}>
-    <span class="name">{stat.longName}</span>
+    <span class="name">{stat.listName}</span>
     <div on:click={handleClick}>
         <Checkbox {checked} />
     </div>

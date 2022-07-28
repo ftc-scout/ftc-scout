@@ -7,7 +7,7 @@ export function exportStatsCSV<T>(eventName: string, data: T[], stats: Stat<T>[]
         stats.forEach((s) => {
             let value = s.read(d);
             value = typeof value == "number" ? value : value.number;
-            obj[s.longName] = value;
+            obj[s.listName] = value;
         });
         return obj;
     });

@@ -21,14 +21,14 @@
 
     $: stat = myNestedStat.stat;
     $: nested = myNestedStat.nestedStats;
-    $: open = $openTabs.has(stat.longName);
+    $: open = $openTabs.has(stat.identifierName);
 
     function toggle() {
         if (open) {
-            $openTabs.delete(stat.longName);
+            $openTabs.delete(stat.identifierName);
             $openTabs = $openTabs;
         } else {
-            $openTabs.add(stat.longName);
+            $openTabs.add(stat.identifierName);
             $openTabs = $openTabs;
         }
     }
@@ -50,7 +50,7 @@
                 <ExpandButton bind:open style={`position:absolute; left: calc(${nestingDepth * 4} * var(--gap))`} />
             {/if}
 
-            {stat.longName}
+            {stat.listName}
         </td>
         {#each groups as group}
             <ChooseSingleStat {group} stat={group.get(stat)} {chosenStats} />
@@ -58,7 +58,7 @@
     </tr>
 {/if}
 
-{#each nested as nestedStat (nestedStat.stat.longName)}
+{#each nested as nestedStat (nestedStat.stat.identifierName)}
     <svelte:self
         myNestedStat={nestedStat}
         {groups}

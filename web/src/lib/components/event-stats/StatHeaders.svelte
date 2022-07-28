@@ -204,11 +204,11 @@
         <th
             class={shownStat.color}
             class:team={shownStat.displayType == StatDisplayType.TEAM}
-            title={shownStat.longName}
+            title={shownStat.identifierName}
             use:draggable={i}
             bind:this={elements[i]}
         >
-            {shownStat.shortName}
+            {shownStat.columnName}
             <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
         </th>
     {/each}

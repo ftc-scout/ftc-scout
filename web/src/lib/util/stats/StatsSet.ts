@@ -21,12 +21,14 @@ export function groupGetter<T, U>(
     color: StatColor,
     shortNameAdd: string,
     longNameAdd: string,
+    identifierNameAdd: string,
     displayTypeOverride: StatDisplayType | null = null
 ): Stat<T> {
     return {
         read: (t: T) => stat.read(getInner(t)),
-        shortName: `${stat.shortName} ${shortNameAdd}`,
-        longName: `${stat.longName} ${longNameAdd}`,
+        columnName: `${stat.columnName} ${shortNameAdd}`,
+        listName: `${stat.listName} ${longNameAdd}`,
+        identifierName: `${stat.identifierName} ${identifierNameAdd}`,
         displayType: displayTypeOverride ?? stat.displayType,
         color,
     };

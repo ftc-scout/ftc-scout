@@ -19,7 +19,7 @@
 {#if stat.displayType == StatDisplayType.TEAM}
     <StatTeam {team} bind:selectedTeam on:show-data />
 {:else}
-    <td class={stat.color} title={stat.longName}>
+    <td class={stat.color} title={stat.identifierName}>
         {#if stat.displayType == StatDisplayType.INTEGER}
             {value}
         {:else if stat.displayType == StatDisplayType.DECIMAL}
