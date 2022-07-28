@@ -1,39 +1,44 @@
+<script lang="ts" context="module">
+    type S = FullTep2021Remote;
+    const defaultSort: ChosenSort<S> = {
+        stat: RANK_STAT,
+        type: SortType.LOW_HIGH,
+    };
+    let shownStats: Writable<Stat<S>[]> = writable([
+        RANK_STAT,
+        TEAM_STAT,
+        RP_STAT,
+        PLAYED_STAT,
+        AVERAGE_STAT,
+        MAX_STAT,
+    ]);
+    let currentSort = defaultSort;
+</script>
+
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
-
     import type { Stat } from "../../util/stats/Stat";
+    import { PLAYED_STAT, RANK_STAT, RP_STAT, TEAM_STAT } from "../../util/stats/StatsShared2021";
     import {
-        AVG_STAT,
-        PLAYED_STAT,
-        RANK_STAT,
-        RP_STAT,
-        TBP2_STAT,
-        TBP_STAT,
-        TEAM_STAT,
+        AVERAGE_STAT,
+        MAX_STAT,
+        STAT_SET_2021_REMOTE,
         type FullTep2021Remote,
     } from "../../util/stats/StatsRemote2021";
     import { SortType } from "../SortButton.svelte";
     import EventStatsImpl, { type ChosenSort } from "./EventStatsImpl.svelte";
 
-    type S = FullTep2021Remote;
-
-    const defaultStats: Writable<Stat<S>[]> = writable([
-        RANK_STAT,
-        TEAM_STAT,
-        RP_STAT,
-        TBP_STAT,
-        TBP2_STAT,
-        PLAYED_STAT,
-        AVG_STAT,
-    ]);
-    const defaultSort: ChosenSort<S> = {
-        stat: RANK_STAT,
-        type: SortType.LOW_HIGH,
-    };
-
-    export let stats: Stat<S>[];
+    export let data: S[];
     export let selectedTeam: number | null = null;
     export let eventName: string;
 </script>
 
-<EventStatsImpl data={stats} shownStats={defaultStats} {defaultSort} bind:selectedTeam {eventName} />
+<EventStatsImpl
+    {data}
+    {shownStats}
+    {defaultSort}
+    bind:currentSort
+    bind:selectedTeam
+    statSet={STAT_SET_2021_REMOTE}
+    {eventName}
+/>

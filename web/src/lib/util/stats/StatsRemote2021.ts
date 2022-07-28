@@ -1,7 +1,40 @@
-import type { FullStatsGroup2021TradFragment } from "../../graphql/generated/graphql-operations";
+import type { FullStatsGroup2021RemoteFragment } from "../../graphql/generated/graphql-operations";
 import type { Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
+import { groupGetter, type StatsSet } from "./StatsSet";
+import {
+    AUTO_BONUS_STAT,
+    AUTO_CAROUSEL_STAT,
+    AUTO_FREIGHT1_STAT,
+    AUTO_FREIGHT2_STAT,
+    AUTO_FREIGHT3_STAT,
+    AUTO_FREIGHT_STAT,
+    AUTO_FREIGHT_STORAGE_STAT,
+    AUTO_NAV_STAT,
+    AUTO_STAT,
+    DC_ALLIANCE1_STAT,
+    DC_ALLIANCE2_STAT,
+    DC_ALLIANCE3_STAT,
+    DC_ALLIANCE_STAT,
+    DC_STAT,
+    DC_STORAGE_STAT,
+    ENDGAME_CAPPING_STAT,
+    ENDGAME_DELIVERY_STAT,
+    ENDGAME_PARKING_STAT,
+    ENDGAME_STAT,
+    PENALTIES_MAJOR_STAT,
+    PENALTIES_MINOR_STAT,
+    PENALTIES_STAT,
+    PLAYED_STAT,
+    RANK_STAT,
+    RP_STAT,
+    TBP2_STAT,
+    TBP_STAT,
+    TEAM_STAT,
+    TOTAL_NP_STAT,
+    TOTAL_STAT,
+} from "./StatsShared2021";
 
 export type FullTep2021Remote = {
     team: {
@@ -15,66 +48,169 @@ export type FullTep2021Remote = {
         tb1: number;
         tb2: number;
         qualMatchesPlayed: number;
-        total: FullStatsGroup2021TradFragment;
-        average: FullStatsGroup2021TradFragment;
-        min: FullStatsGroup2021TradFragment;
-        max: FullStatsGroup2021TradFragment;
-        standardDev: FullStatsGroup2021TradFragment;
+        total: FullStatsGroup2021RemoteFragment;
+        average: FullStatsGroup2021RemoteFragment;
+        min: FullStatsGroup2021RemoteFragment;
+        max: FullStatsGroup2021RemoteFragment;
+        standardDev: FullStatsGroup2021RemoteFragment;
     };
 };
 
-export let TEAM_STAT: Stat<FullTep2021Remote> = {
-    color: StatColor.WHITE,
-    displayType: StatDisplayType.TEAM,
-    longName: "Team",
-    shortName: "Team",
-    read: (s) => s.team,
+type Group = FullTep2021Remote["stats"]["total"];
+
+export let STAT_SET_2021_REMOTE: StatsSet<FullTep2021Remote, Group> = {
+    standalone: [TEAM_STAT, RANK_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT],
+    groups: [
+        {
+            longName: "Total",
+            shortName: "TOT",
+            description: "The sum of all points scored in the category.",
+            color: StatColor.RED,
+            get: (s) => groupGetter((t) => t.stats.total, s, StatColor.RED, "TOT", "Total"),
+        },
+        {
+            longName: "Average",
+            shortName: "AVG",
+            description: "The average number of points scored in the category.",
+            color: StatColor.PURPLE,
+            get: (s) =>
+                groupGetter((t) => t.stats.average, s, StatColor.PURPLE, "AVG", "Average", StatDisplayType.DECIMAL),
+        },
+        {
+            longName: "Minimum",
+            shortName: "MIN",
+            description: "The lowest number of points scored in the category.",
+            color: StatColor.LIGHT_BLUE,
+            get: (s) => groupGetter((t) => t.stats.min, s, StatColor.LIGHT_BLUE, "MIN", "Minimum"),
+        },
+        {
+            longName: "Maximum",
+            shortName: "MAX",
+            description: "The highest number of points scored in the category.",
+            color: StatColor.BLUE,
+            get: (s) => groupGetter((t) => t.stats.max, s, StatColor.BLUE, "MAX", "Maximum"),
+        },
+        {
+            longName: "Std. Dev.",
+            shortName: "DEV",
+            description: "The standard deviation of scores in the category.",
+            color: StatColor.GREEN,
+            get: (s) =>
+                groupGetter(
+                    (t) => t.stats.standardDev,
+                    s,
+                    StatColor.GREEN,
+                    "DEV",
+                    "Std. Dev.",
+                    StatDisplayType.DECIMAL
+                ),
+        },
+    ],
+    groupStats: [
+        {
+            stat: TOTAL_STAT,
+            nestedStats: [],
+        },
+        {
+            stat: TOTAL_NP_STAT,
+            nestedStats: [],
+        },
+        {
+            stat: AUTO_STAT,
+            nestedStats: [
+                {
+                    stat: AUTO_FREIGHT_STAT,
+                    nestedStats: [
+                        {
+                            stat: AUTO_FREIGHT1_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_FREIGHT2_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_FREIGHT3_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_FREIGHT_STORAGE_STAT,
+                            nestedStats: [],
+                        },
+                    ],
+                },
+                {
+                    stat: AUTO_CAROUSEL_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: AUTO_NAV_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: AUTO_BONUS_STAT,
+                    nestedStats: [],
+                },
+            ],
+        },
+        {
+            stat: DC_STAT,
+            nestedStats: [
+                {
+                    stat: DC_ALLIANCE_STAT,
+                    nestedStats: [
+                        {
+                            stat: DC_ALLIANCE1_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_ALLIANCE2_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_ALLIANCE3_STAT,
+                            nestedStats: [],
+                        },
+                    ],
+                },
+                {
+                    stat: DC_STORAGE_STAT,
+                    nestedStats: [],
+                },
+            ],
+        },
+        {
+            stat: ENDGAME_STAT,
+            nestedStats: [
+                {
+                    stat: ENDGAME_DELIVERY_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: ENDGAME_CAPPING_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: ENDGAME_PARKING_STAT,
+                    nestedStats: [],
+                },
+            ],
+        },
+        {
+            stat: PENALTIES_STAT,
+            nestedStats: [
+                {
+                    stat: PENALTIES_MAJOR_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: PENALTIES_MINOR_STAT,
+                    nestedStats: [],
+                },
+            ],
+        },
+    ],
 };
 
-export let RP_STAT: Stat<FullTep2021Remote> = {
-    color: StatColor.RED,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Ranking Points (RP)",
-    shortName: "RP",
-    read: (s) => s.stats.rp,
-};
-
-export let RANK_STAT: Stat<FullTep2021Remote> = {
-    color: StatColor.WHITE,
-    displayType: StatDisplayType.RANK,
-    longName: "Ranking",
-    shortName: "Rank",
-    read: (s) => s.stats.rank,
-};
-
-export let TBP_STAT: Stat<FullTep2021Remote> = {
-    color: StatColor.LIGHT_BLUE,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Tie Breaker Points (TBP)",
-    shortName: "TBP",
-    read: (s) => s.stats.tb1,
-};
-
-export let TBP2_STAT: Stat<FullTep2021Remote> = {
-    color: StatColor.BLUE,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Tie Breaker Points 2 (TBP2)",
-    shortName: "TBP2",
-    read: (s) => s.stats.tb2,
-};
-
-export let PLAYED_STAT: Stat<FullTep2021Remote> = {
-    color: StatColor.GREEN,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Matches Played",
-    shortName: "Played",
-    read: (s) => s.stats.qualMatchesPlayed,
-};
-
-export let AVG_STAT: Stat<FullTep2021Remote> = {
-    color: StatColor.PURPLE,
-    displayType: StatDisplayType.DECIMAL,
-    longName: "Average Score",
-    shortName: "AVG",
-    read: (s) => s.stats.average.totalPoints,
-};
+export const AVERAGE_STAT = STAT_SET_2021_REMOTE.groups.find((g) => g.shortName == "AVG")!.get(TOTAL_STAT);
+export const MAX_STAT = STAT_SET_2021_REMOTE.groups.find((g) => g.shortName == "MAX")!.get(TOTAL_STAT);

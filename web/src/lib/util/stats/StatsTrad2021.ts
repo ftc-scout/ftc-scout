@@ -2,7 +2,39 @@ import type { FullStatsGroup2021TradFragment } from "../../graphql/generated/gra
 import { makeStat, type Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
-import type { StatsSet } from "./StatsSet";
+import { groupGetter, type StatsSet } from "./StatsSet";
+import {
+    AUTO_BONUS_STAT,
+    AUTO_CAROUSEL_STAT,
+    AUTO_FREIGHT1_STAT,
+    AUTO_FREIGHT2_STAT,
+    AUTO_FREIGHT3_STAT,
+    AUTO_FREIGHT_STAT,
+    AUTO_FREIGHT_STORAGE_STAT,
+    AUTO_NAV_STAT,
+    AUTO_STAT,
+    DC_ALLIANCE1_STAT,
+    DC_ALLIANCE2_STAT,
+    DC_ALLIANCE3_STAT,
+    DC_ALLIANCE_STAT,
+    DC_STAT,
+    DC_STORAGE_STAT,
+    ENDGAME_CAPPING_STAT,
+    ENDGAME_DELIVERY_STAT,
+    ENDGAME_PARKING_STAT,
+    ENDGAME_STAT,
+    PENALTIES_MAJOR_STAT,
+    PENALTIES_MINOR_STAT,
+    PENALTIES_STAT,
+    PLAYED_STAT,
+    RANK_STAT,
+    RP_STAT,
+    TBP2_STAT,
+    TBP_STAT,
+    TEAM_STAT,
+    TOTAL_NP_STAT,
+    TOTAL_STAT,
+} from "./StatsShared2021";
 
 export type FullTep2021Traditional = {
     team: {
@@ -27,54 +59,6 @@ export type FullTep2021Traditional = {
         max: FullStatsGroup2021TradFragment;
         standardDev: FullStatsGroup2021TradFragment;
     };
-};
-
-export const TEAM_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.WHITE,
-    displayType: StatDisplayType.TEAM,
-    longName: "Team",
-    shortName: "Team",
-    read: (s) => s.team,
-};
-
-export const RP_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.RED,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Ranking Points (RP)",
-    shortName: "RP",
-    read: (s) => s.stats.rp,
-};
-
-export const RANK_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.WHITE,
-    displayType: StatDisplayType.RANK,
-    longName: "Ranking",
-    shortName: "Rank",
-    read: (s) => s.stats.rank,
-};
-
-export const TBP_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.LIGHT_BLUE,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Tie Breaker Points (TBP)",
-    shortName: "TBP",
-    read: (s) => s.stats.tb1,
-};
-
-export const TBP2_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.BLUE,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Tie Breaker Points 2 (TBP2)",
-    shortName: "TBP2",
-    read: (s) => s.stats.tb2,
-};
-
-export const PLAYED_STAT: Stat<FullTep2021Traditional> = {
-    color: StatColor.GREEN,
-    displayType: StatDisplayType.INTEGER,
-    longName: "Matches Played",
-    shortName: "Played",
-    read: (s) => s.stats.qualMatchesPlayed,
 };
 
 export const WINS_STAT: Stat<FullTep2021Traditional> = {
@@ -111,53 +95,22 @@ export const DQ_STAT: Stat<FullTep2021Traditional> = {
 
 type Group = FullTep2021Traditional["stats"]["total"];
 
-const TOTAL_STAT: Stat<Group> = makeStat("totalPoints", "Total Points", "");
-const TOTAL_NP_STAT: Stat<Group> = makeStat("totalPointsNp", "Total Points No Penalties", "np");
-
 // ------------------------------------------------------------------------------------------------------------------------
 
-const AUTO_STAT: Stat<Group> = makeStat("autoPoints", "Auto Points", "Auto");
-
-const AUTO_FREIGHT_STAT: Stat<Group> = makeStat("autoFreightPoints", "Auto Freight Points", "Auto Freight");
-const AUTO_FREIGHT1_STAT: Stat<Group> = makeStat("autoFreightPointsLevel1", "Level 1", "Auto Freight 1");
-const AUTO_FREIGHT2_STAT: Stat<Group> = makeStat("autoFreightPointsLevel2", "Level 2", "Auto Freight 2");
-const AUTO_FREIGHT3_STAT: Stat<Group> = makeStat("autoFreightPointsLevel3", "Level 3", "Auto Freight 3");
-const AUTO_FREIGHT_STORAGE_STAT: Stat<Group> = makeStat("autoFreightPointsStorage", "Storage", "Auto Storage");
-
-const AUTO_CAROUSEL_STAT: Stat<Group> = makeStat("autoCarouselPoints", "Auto Carousel Points", "Auto Carousel");
-
-const AUTO_NAV_STAT: Stat<Group> = makeStat("autoNavigationPoints", "Auto Navigation Points", "Auto Nav");
 const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "autoNavigationPointsIndividual",
     "Individual",
     "Auto Nav Individual"
 );
 
-const AUTO_BONUS_STAT: Stat<Group> = makeStat("autoBonusPoints", "Auto Bonus Points", "Bonus");
 const AUTO_BONUS_INDIVIDUAL_STAT: Stat<Group> = makeStat("autoBonusPointsIndividual", "Individual", "Bonus Individual");
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const DC_STAT: Stat<Group> = makeStat("driverControlledPoints", "Driver Controlled Points", "Teleop");
-
-const DC_ALLIANCE_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPoints", "Alliance Hub Points", "Hub");
-const DC_ALLIANCE1_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPointsLevel1", "Level 1", "Hub 1");
-const DC_ALLIANCE2_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPointsLevel2", "Level 2", "Hub 2");
-const DC_ALLIANCE3_STAT: Stat<Group> = makeStat("driverControlledAllianceHubPointsLevel3", "Level 3", "Hub 3");
-
 const DC_SHARED_STAT: Stat<Group> = makeStat("driverControlledSharedHubPoints", "Shared Hub Points", "Shared");
-
-const DC_STORAGE_STAT: Stat<Group> = makeStat("driverControlledStoragePoints", "Storage Points", "Storage");
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const ENDGAME_STAT: Stat<Group> = makeStat("endgamePoints", "Endgame Points", "Endgame");
-
-const ENDGAME_DELIVERY_STAT: Stat<Group> = makeStat("endgameDeliveryPoints", "Delivery Points", "Delivery");
-
-const ENDGAME_CAPPING_STAT: Stat<Group> = makeStat("cappingPoints", "Capping Points", "Capping");
-
-const ENDGAME_PARKING_STAT: Stat<Group> = makeStat("endgameParkingPoints", "Parking Points", "Endgame Park");
 const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "endgameParkingPointsIndividual",
     "Individual",
@@ -165,31 +118,6 @@ const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
-
-const PENALTIES_STAT: Stat<Group> = makeStat("penaltyPoints", "Penalty Points", "Penalties");
-
-const PENALTIES_MAJOR_STAT: Stat<Group> = makeStat("majorPenaltyPoints", "Major Penalty Points", "Majors");
-
-const PENALTIES_MINOR_STAT: Stat<Group> = makeStat("minorPenaltyPoints", "Minor Penalty Points", "Minors");
-
-// ------------------------------------------------------------------------------------------------------------------------
-
-function groupGetter<T, U>(
-    getInner: (t2: T) => U,
-    stat: Stat<U>,
-    color: StatColor,
-    shortNameAdd: string,
-    longNameAdd: string,
-    displayTypeOverride: StatDisplayType | null = null
-): Stat<T> {
-    return {
-        read: (t: T) => stat.read(getInner(t)),
-        shortName: `${stat.shortName} ${shortNameAdd}`,
-        longName: `${stat.longName} ${longNameAdd}`,
-        displayType: displayTypeOverride ?? stat.displayType,
-        color,
-    };
-}
 
 export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
     standalone: [

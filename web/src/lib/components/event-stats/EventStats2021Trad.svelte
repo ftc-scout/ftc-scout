@@ -18,15 +18,10 @@
 
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
-
     import type { Stat } from "../../util/stats/Stat";
-
+    import { PLAYED_STAT, RANK_STAT, RP_STAT, TEAM_STAT } from "../../util/stats/StatsShared2021";
     import {
-        PLAYED_STAT,
-        RANK_STAT,
-        RP_STAT,
         STAT_SET_2021_TRAD,
-        TEAM_STAT,
         AVERAGE_STAT,
         type FullTep2021Traditional,
         MAX_STAT,

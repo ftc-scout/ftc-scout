@@ -25,5 +25,5 @@
 {#if type == "TeamEventStats2021Traditional"}
     <EventStats2021Trad data={force(stats)} bind:selectedTeam {eventName} />
 {:else if type == "TeamEventStats2021Remote"}
-    <EventStats2021Remote stats={force(stats)} bind:selectedTeam {eventName} />
+    <EventStats2021Remote data={force(stats)} bind:selectedTeam {eventName} />
 {/if}
