@@ -29,7 +29,7 @@
     <ShowStandaloneStats {statSet} {data} />
 
     <table>
-        <GroupsHeader groups={statSet.groups} {data} />
+        <GroupsHeader groups={statSet.groups} />
         {#each statSet.groupStats as groupStat}
             <ShowStatsRow myNestedStat={groupStat} groups={statSet.groups} {data} />
         {/each}
