@@ -74,9 +74,9 @@
         position: fixed;
         bottom: 0;
         margin: var(--gap);
-        left: max(0px, calc(50% - 350px));
-        right: max(0px, calc(50% + 350px));
-        width: min(700px, calc(100% - var(--gap) * 2));
+        left: max(0px, calc(50% + var(--sidebar-size) / 2 - 350px));
+        right: max(0px, calc(50% + var(--sidebar-size) / 2 + 350px));
+        width: min(700px, calc(100% - var(--gap) * 2 - var(--sidebar-size)));
 
         background: var(--inverse-background-color);
         color: var(--inverse-text-color);
@@ -86,6 +86,14 @@
         padding: var(--large-padding);
 
         border-radius: 5px;
+    }
+
+    @media (max-width: 1600px) {
+        a {
+            left: max(0px, calc(50% - 350px));
+            right: max(0px, calc(50% + 350px));
+            width: min(700px, calc(100% - var(--gap) * 2));
+        }
     }
 
     .top-row {
