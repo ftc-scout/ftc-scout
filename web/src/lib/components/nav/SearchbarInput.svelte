@@ -65,6 +65,8 @@
         display: none;
         color: var(--theme-text-color);
         padding: var(--padding);
+        padding-right: 0;
+        margin-right: 12px;
 
         cursor: pointer;
         background: none;
