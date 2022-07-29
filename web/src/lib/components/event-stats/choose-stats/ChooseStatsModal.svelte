@@ -8,12 +8,23 @@
     import ChooseStandaloneStats from "./ChooseStandaloneStats.svelte";
     import type { Writable } from "svelte/store";
     import type { Stat } from "../../../util/stats/Stat";
+    import { createEventDispatcher } from "svelte";
 
     type T = $$Generic;
 
     export let chosenStats: Writable<Stat<T>[]>;
     export let statSet: StatsSet<unknown, unknown>;
+    export let oneOnly = false;
     export let shown = false;
+
+    let dispatch = createEventDispatcher();
+
+    function change() {
+        if (oneOnly) {
+            shown = false;
+        }
+        dispatch("stat-change");
+    }
 </script>
 
 <Modal bind:shown>
@@ -28,12 +39,18 @@
         </button>
     </b>
 
-    <ChooseStandaloneStats {statSet} {chosenStats} />
+    <ChooseStandaloneStats {statSet} {chosenStats} {oneOnly} on:stat-change={change} />
 
     <table>
         <GroupsHeader groups={statSet.groups} />
         {#each statSet.groupStats as groupStat}
-            <ChooseStatsRow myNestedStat={groupStat} groups={statSet.groups} {chosenStats} />
+            <ChooseStatsRow
+                myNestedStat={groupStat}
+                groups={statSet.groups}
+                {chosenStats}
+                {oneOnly}
+                on:stat-change={change}
+            />
         {/each}
     </table>
 </Modal>

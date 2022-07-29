@@ -2,21 +2,26 @@
     import Checkbox from "./Checkbox.svelte";
     import type { Stat } from "../../../util/stats/Stat";
     import type { Writable } from "svelte/store";
+    import { createEventDispatcher } from "svelte";
 
     type T = $$Generic;
 
     export let chosenStats: Writable<Stat<T>[]>;
     export let stat: Stat<T>;
+    export let oneOnly: boolean;
     export let zebraStripe = false;
 
     $: checked = $chosenStats.includes(stat);
+
+    let dispatch = createEventDispatcher();
 
     function handleClick() {
         if (checked) {
             $chosenStats = $chosenStats.filter((s) => s != stat);
         } else {
-            $chosenStats = [...$chosenStats, stat];
+            $chosenStats = oneOnly ? [stat] : [...$chosenStats, stat];
         }
+        dispatch("stat-change");
     }
 </script>
 

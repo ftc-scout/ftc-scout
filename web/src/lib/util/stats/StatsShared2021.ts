@@ -72,7 +72,7 @@ export const TOTAL_NP_STAT: Stat<Group> = makeStat(
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const AUTO_STAT: Stat<Group> = makeStat("autoPoints", "Auto Points", "Auto", "auto_points");
+export const AUTO_STAT: Stat<Group> = makeStat("autoPoints", "Auto Points", "Auto", "Auto Points");
 
 export const AUTO_FREIGHT_STAT: Stat<Group> = makeStat(
     "autoFreightPoints",

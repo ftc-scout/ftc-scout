@@ -12,6 +12,7 @@
         AVERAGE_STAT,
         MAX_STAT,
     ]);
+    let currentFilters: Writable<StatFilterOrGroup<S>> = writable([]);
     let currentSort = defaultSort;
 </script>
 
@@ -27,6 +28,7 @@
     } from "../../util/stats/StatsRemote2021";
     import { SortType } from "../SortButton.svelte";
     import EventStatsImpl, { type ChosenSort } from "./EventStatsImpl.svelte";
+    import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
 
     export let data: S[];
     export let selectedTeam: number | null = null;
@@ -37,6 +39,7 @@
     {data}
     {shownStats}
     {defaultSort}
+    bind:currentFilters={$currentFilters}
     bind:currentSort
     bind:selectedTeam
     statSet={STAT_SET_2021_REMOTE}

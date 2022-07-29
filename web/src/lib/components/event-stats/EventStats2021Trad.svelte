@@ -13,12 +13,14 @@
         OPR_STAT,
         MAX_STAT,
     ]);
+    let currentFilters: Writable<StatFilterOrGroup<S>> = writable([]);
     let currentSort = defaultSort;
 </script>
 
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
     import type { Stat } from "../../util/stats/Stat";
+    import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
     import { PLAYED_STAT, RANK_STAT, RP_STAT, TEAM_STAT } from "../../util/stats/StatsShared2021";
     import {
         STAT_SET_2021_TRAD,
@@ -40,6 +42,7 @@
     {shownStats}
     {defaultSort}
     bind:currentSort
+    bind:currentFilters={$currentFilters}
     bind:selectedTeam
     statSet={STAT_SET_2021_TRAD}
     {eventName}

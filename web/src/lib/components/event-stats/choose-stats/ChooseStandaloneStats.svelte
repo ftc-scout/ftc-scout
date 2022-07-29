@@ -11,6 +11,7 @@
 
     export let chosenStats: Writable<Stat<T>[]>;
     export let statSet: StatsSet<T, unknown>;
+    export let oneOnly: boolean;
 </script>
 
 <ul>
@@ -25,7 +26,7 @@
     </li>
 
     {#each statSet.standalone as stat, i}
-        <StandaloneStat zebraStripe={i % 2 == 0} {stat} {chosenStats} />
+        <StandaloneStat zebraStripe={i % 2 == 0} {stat} {chosenStats} {oneOnly} on:stat-change />
     {/each}
 </ul>
 

@@ -12,11 +12,13 @@
     import { SortType } from "../SortButton.svelte";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
     import FaButton from "../FaButton.svelte";
-    import { faEdit, faFileArrowDown } from "@fortawesome/free-solid-svg-icons";
+    import { faEdit, faFileArrowDown, faFilter } from "@fortawesome/free-solid-svg-icons";
     import type { StatsSet } from "../../util/stats/StatsSet";
     import type { Writable } from "svelte/store";
     import ShowStatsModal from "./show-stats/ShowStatsModal.svelte";
     import { exportStatsCSV } from "../../util/stats/export-stats-csv";
+    import EditFiltersModal from "./edit-filters/EditFiltersModal.svelte";
+    import { filterStatDataList, type StatFilterOrGroup } from "../../util/stats/StatFilter";
 
     type T = $$Generic;
 
@@ -28,6 +30,7 @@
 
     export let defaultSort: ChosenSort<T>;
     export let currentSort: ChosenSort<T> = defaultSort;
+    export let currentFilters: StatFilterOrGroup<T> = [];
 
     export let eventName: string;
 
@@ -48,18 +51,28 @@
     }
 
     // Sort by default first for consistent ordering.
-    $: sortedData = data.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(currentSort ?? defaultSort));
+    $: sortedData = filterStatDataList(data, currentFilters)
+        .sort(makeSortFunction(defaultSort))
+        .sort(makeSortFunction(currentSort ?? defaultSort));
 
     let chooseStatsModalShown = false;
+    let editFiltersModalShown = false;
     let seeStatsData: T | null = null;
 </script>
 
 <div class="options">
-    <FaButton
-        icon={faEdit}
-        on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
-        buttonStyle="font-size: var(--medium-font-size);">Add Stats</FaButton
-    >
+    <div>
+        <FaButton
+            icon={faEdit}
+            on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
+            buttonStyle="font-size: var(--medium-font-size);">Choose Statistics</FaButton
+        >
+        <FaButton
+            icon={faFilter}
+            on:click={() => (editFiltersModalShown = !editFiltersModalShown)}
+            buttonStyle="font-size: var(--medium-font-size); margin-left: var(--gap);">Edit Filters</FaButton
+        >
+    </div>
 
     <FaButton
         icon={faFileArrowDown}
@@ -69,15 +82,28 @@
 </div>
 
 <ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
+<EditFiltersModal bind:shown={editFiltersModalShown} bind:currentFilters {statSet} />
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table tabindex="-1">
     <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
-    <tbody>
-        {#each sortedData as dataRow, i}
-            <StatRow {dataRow} shownStats={$shownStats} zebraStripe={i % 2 == 1} bind:selectedTeam bind:seeStatsData />
-        {/each}
-    </tbody>
+    {#if sortedData.length}
+        <tbody>
+            {#each sortedData as dataRow, i}
+                <StatRow
+                    {dataRow}
+                    shownStats={$shownStats}
+                    zebraStripe={i % 2 == 1}
+                    bind:selectedTeam
+                    bind:seeStatsData
+                />
+            {/each}
+        </tbody>
+    {:else}
+        <tr style:display="flex" style:width="100%" style:align-items="center" style:justify-content="center">
+            <td style:display="block" style:padding="var(--padding)"> No items match your current filters. </td>
+        </tr>
+    {/if}
 </table>
 
 <style>

@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     import type { Writable } from "svelte/store";
     import type { Stat } from "../../../util/stats/Stat";
     import type { StatGroup } from "../../../util/stats/StatsSet";
@@ -9,15 +11,19 @@
     export let chosenStats: Writable<Stat<T>[]>;
     export let group: StatGroup<T, unknown>;
     export let stat: Stat<T>;
+    export let oneOnly = false;
 
     $: checked = $chosenStats.some((s) => s.identifierName == stat.identifierName);
+
+    let dispatch = createEventDispatcher();
 
     function handleClick() {
         if (checked) {
             $chosenStats = $chosenStats.filter((s) => s.identifierName != stat.identifierName);
         } else {
-            $chosenStats = [...$chosenStats, stat];
+            $chosenStats = oneOnly ? [stat] : [...$chosenStats, stat];
         }
+        dispatch("stat-change");
     }
 </script>
 

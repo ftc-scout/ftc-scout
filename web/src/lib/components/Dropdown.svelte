@@ -1,35 +1,35 @@
 <script lang="ts">
-    import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
+    export let items: string[];
+    export let value: string | null = null;
 
-    import Fa from "svelte-fa";
-
-    export let icon: IconDefinition;
-    export let buttonStyle = "";
-    export let fw = false;
+    export let style = "";
 </script>
 
-<button on:click style={buttonStyle}>
-    <Fa {icon} {fw} />
-    <slot />
-</button>
+<select {style} bind:value>
+    {#each items as item}
+        <option>{item}</option>
+    {/each}
+</select>
 
 <style>
-    button {
+    select {
+        font: var(--main-font);
+
         background: var(--foreground-color);
         border: none;
         color: inherit;
         cursor: pointer;
 
-        padding: var(--padding);
+        padding: var(--small-padding);
         box-shadow: var(--shadow-color) 0px 2px 5px -1px, var(--shadow-color) 0px 1px 3px -1px;
         border-radius: 8px;
     }
 
-    button:hover {
+    select:hover {
         filter: brightness(0.95);
     }
 
-    button:active {
+    select:active {
         filter: brightness(0.9);
     }
 </style>

@@ -15,6 +15,7 @@
 
     export let chosenStats: Writable<Stat<T>[]>;
     export let groups: StatGroup<T, unknown>[];
+    export let oneOnly = false;
     export let myNestedStat: NestedStat<T>;
     export let nestingDepth = 0;
     export let shown = true;
@@ -53,7 +54,7 @@
             {stat.listName}
         </td>
         {#each groups as group}
-            <ChooseSingleStat {group} stat={group.get(stat)} {chosenStats} />
+            <ChooseSingleStat {group} stat={group.get(stat)} {chosenStats} {oneOnly} on:stat-change />
         {/each}
     </tr>
 {/if}
@@ -65,6 +66,8 @@
         nestingDepth={nestingDepth + 1}
         shown={open && shown}
         {chosenStats}
+        {oneOnly}
+        on:stat-change
     />
 {/each}
 
