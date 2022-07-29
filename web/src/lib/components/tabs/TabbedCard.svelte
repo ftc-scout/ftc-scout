@@ -18,9 +18,15 @@
     $: $selectedStore = selectedName;
 
     setContext(TAB_CONTEXT, selectedStore);
+
+    import { getContext } from "svelte";
+    import type { Readable } from "svelte/store";
+
+    let requestedWidth: Readable<string> = getContext("REQUESTED_WIDTH");
+    $: minWidth = `min(${$requestedWidth}, 100% - 2 * var(--large-gap))`;
 </script>
 
-<div class="wrapper">
+<div class="wrapper" style:min-width={minWidth}>
     <div class="tabs">
         {#each namesFiltered as [icon, name]}
             <button
@@ -53,8 +59,11 @@
     }
 
     .wrapper {
-        margin: var(--large-gap);
+        margin: var(--large-gap) auto;
         margin-bottom: var(--xl-gap);
+
+        max-width: calc(100% - 2 * var(--large-gap));
+        width: min-content;
     }
 
     .tabs {
@@ -66,7 +75,6 @@
 
     .tab {
         min-width: 10ch;
-        /* width: min(calc(100% / 3), 50ch); */
 
         display: flex;
         justify-content: center;
@@ -95,7 +103,6 @@
 
     .selected {
         background: var(--foreground-color);
-        /* border-bottom: var(--small-gap) solid var(--foreground-color); */
 
         box-shadow: -2px 2px 10px 3px #e0e0e0;
         clip-path: inset(-10px -10px 0 -10px);

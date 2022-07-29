@@ -5,7 +5,7 @@
     import type { FormError } from "../lib/components/form/FormError";
     import SubmitButton from "../lib/components/form/SubmitButton.svelte";
     import TextInput from "../lib/components/form/TextInput.svelte";
-    import MaxWidth from "../lib/components/MaxWidth.svelte";
+    import MaxWidth from "../lib/components/WidthProvider.svelte";
     import { LoginDocument, MeDocument } from "../lib/graphql/generated/graphql-operations";
     import { mutation } from "svelte-apollo";
 

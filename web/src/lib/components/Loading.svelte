@@ -1,5 +1,5 @@
 <script lang="ts">
-    import MaxWidth from "./MaxWidth.svelte";
+    import WidthProvider from "./WidthProvider.svelte";
     import Skeleton from "./skeleton/Skeleton.svelte";
     import type { ApolloQueryResult } from "@apollo/client";
 
@@ -8,7 +8,7 @@
     export let doesNotExist: boolean;
 </script>
 
-<MaxWidth {width}>
+<WidthProvider {width}>
     {#if !store}
         <Skeleton />
     {:else if doesNotExist}
@@ -16,4 +16,4 @@
     {:else}
         <slot />
     {/if}
-</MaxWidth>
+</WidthProvider>
