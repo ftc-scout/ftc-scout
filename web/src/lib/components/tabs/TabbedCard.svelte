@@ -98,7 +98,7 @@
     }
 
     .tab:hover:not(.selected) {
-        background: var(--hover-color);
+        background: var(--tab-hover-color);
     }
 
     .selected {
