@@ -42,7 +42,7 @@
     $: eventData = $event?.data?.eventByCode!;
 
     function gotoSubPage(name: string | undefined) {
-        if (browser && $page.routeId == "events/[season]/[code]/[...tab]") {
+        if (browser && $page.routeId == "events/[season=season]/[code]/[...tab=event_tab]") {
             goto(`/events/${$page.params.season}/${$page.params.code}/` + name?.toLowerCase() ?? "", {
                 replaceState: true,
             });
