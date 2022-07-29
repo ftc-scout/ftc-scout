@@ -70,8 +70,16 @@
         <FaButton
             icon={faFilter}
             on:click={() => (editFiltersModalShown = !editFiltersModalShown)}
-            buttonStyle="font-size: var(--medium-font-size); margin-left: var(--gap);">Edit Filters</FaButton
+            buttonStyle="font-size: var(--medium-font-size); margin-left: var(--gap);"
+            iconColor={currentFilters.length ? "var(--theme-color)" : ""}
         >
+            Edit Filters
+            {#if currentFilters.length}
+                <span style:color="var(--secondary-text-color)" style:font-weight="bold">
+                    ({currentFilters.length})
+                </span>
+            {/if}
+        </FaButton>
     </div>
 
     <FaButton

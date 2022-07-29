@@ -5,11 +5,12 @@
 
     export let icon: IconDefinition;
     export let buttonStyle = "";
+    export let iconColor = "";
     export let fw = false;
 </script>
 
 <button on:click style={buttonStyle}>
-    <Fa {icon} {fw} />
+    <Fa {icon} {fw} color={iconColor} />
     <slot />
 </button>
 
