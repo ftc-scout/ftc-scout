@@ -138,6 +138,8 @@
     }
 
     .inner {
+        height: 100%;
+
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -157,6 +159,7 @@
         display: block;
 
         width: 100%;
+        height: 100%;
     }
 
     @media (max-width: 1000px) {

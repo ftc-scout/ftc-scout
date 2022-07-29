@@ -19,7 +19,7 @@
 
     tr {
         display: grid;
-        grid-template-columns: minmax(0, 1.5fr) repeat(7, minmax(0, 1fr));
+        grid-template-columns: minmax(0, 3fr) repeat(7, minmax(0, 1fr));
 
         background-color: var(--color-team-neutral);
         border-top-left-radius: 7.3px;
@@ -28,6 +28,12 @@
         width: 100%;
         max-width: 100%;
         min-width: 100%;
+    }
+
+    @media (max-width: 1000px) {
+        tr {
+            grid-template-columns: minmax(0, 1.5fr) repeat(7, minmax(0, 1fr));
+        }
     }
 
     .team {
