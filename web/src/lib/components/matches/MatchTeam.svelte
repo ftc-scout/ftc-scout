@@ -12,6 +12,7 @@
     };
     export let winner: boolean;
     export let selectedTeam: number | null = null;
+    export let eventCode: string;
     export let border = false;
     export let frozen: boolean;
 
@@ -70,7 +71,7 @@
 >
     <div class="wrap">
         {#if frozen}
-            <a sveltekit:prefetch href={`/teams/${number}`} class="inner" {title} class:winner>
+            <a sveltekit:prefetch href={`/teams/${number}#${eventCode}`} class="inner" {title} class:winner>
                 <span class:dq={dq || noShow}>
                     {number}{surrogate ? "*" : ""}
                 </span>

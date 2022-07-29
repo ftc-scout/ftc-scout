@@ -13,6 +13,7 @@
     export let zebraStripe: boolean;
     export let frozen = false;
     export let showScoresFn: ((_: EventPageMatchFragment) => void) | null = null;
+    export let eventCode: string;
 
     $: scores = match.scores as FullMatchScores2021TraditionalFragment;
     // $: sortedTeams = [...match.teams].sort((a, b) => sortStation(a.station, b.station));
@@ -47,7 +48,7 @@
         {#if team == "red" || team == "blue"}
             <PlaceholderMatchTeam {width} color={team} />
         {:else if typeof team == "object"}
-            <MatchTeam {team} {width} winner={team.station.startsWith(winner)} bind:selectedTeam {frozen} />
+            <MatchTeam {team} {width} winner={team.station.startsWith(winner)} bind:selectedTeam {frozen} {eventCode} />
         {/if}
     {/each}
 </tr>

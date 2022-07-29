@@ -93,7 +93,7 @@
     {#each sortedEvents as teamEvent}
         {@const event = teamEvent.event}
         <Card>
-            <h2>
+            <h2 id={event.code}>
                 <a sveltekit:prefetch class="event-link" href={`/events/${event.season}/${event.code}`}>
                     {event.name}
                 </a>

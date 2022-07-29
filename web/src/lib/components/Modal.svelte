@@ -43,7 +43,7 @@
         height: 100%;
         max-height: 100%;
 
-        z-index: 50;
+        z-index: 1050;
 
         background: var(--modal-background-color);
 

@@ -7,6 +7,7 @@
     export let selectedTeam: number | null;
     export let frozen = false;
     export let showScoresFn: ((_: EventPageMatchFragment) => void) | null = null;
+    export let eventCode: string;
 
     $: team = matches[0].teams[0];
     $: noShows = matches.map((m) => m.teams[0].noShow);
@@ -21,7 +22,7 @@
 </script>
 
 <tr class:zebra-stripe={zebraStripe} class:scores-row={!notReported} class:not-reported={notReported}>
-    <MatchTeam {team} width="" winner={false} border bind:selectedTeam {frozen} />
+    <MatchTeam {team} width="" winner={false} border bind:selectedTeam {frozen} {eventCode} />
 
     {#if !notReported}
         {#each scores as score, i}

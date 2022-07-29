@@ -12,7 +12,7 @@
     import { browser } from "$app/env";
 
     export let matches: EventPageMatchFragment[];
-    export let event: { start: string; published: boolean; hasStarted: boolean };
+    export let event: { start: string; published: boolean; hasStarted: boolean; code: string };
     export let isRemote: boolean;
     export let selectedTeam: number | null = null;
     export let frozen = false;
@@ -76,6 +76,7 @@
                             bind:selectedTeam
                             {frozen}
                             showScoresFn={showScores}
+                            eventCode={event.code}
                         />
                     {:else}
                         <RemoteMatches
@@ -84,6 +85,7 @@
                             selectedTeam={null}
                             {frozen}
                             showScoresFn={showScores}
+                            eventCode={event.code}
                         />
                     {/if}
                 {/each}
@@ -100,6 +102,7 @@
                             zebraStripe={i % 2 == 1}
                             {frozen}
                             showScoresFn={showScores}
+                            eventCode={event.code}
                         />
                     {/if}
                 {/each}
@@ -116,6 +119,7 @@
                             zebraStripe={i % 2 == 1}
                             {frozen}
                             showScoresFn={showScores}
+                            eventCode={event.code}
                         />
                     {/if}
                 {/each}
@@ -132,6 +136,7 @@
                             zebraStripe={i % 2 == 1}
                             {frozen}
                             showScoresFn={showScores}
+                            eventCode={event.code}
                         />
                     {/if}
                 {/each}
