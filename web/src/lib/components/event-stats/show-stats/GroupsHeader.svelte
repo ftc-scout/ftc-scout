@@ -5,7 +5,6 @@
 
     type T = $$Generic;
 
-    export let data: T;
     export let groups: StatGroup<T, unknown>[];
 </script>
 

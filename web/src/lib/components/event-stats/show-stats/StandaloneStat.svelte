@@ -10,7 +10,7 @@
 </script>
 
 <li class:zebra-stripe={zebraStripe}>
-    <span class="name">{stat.longName}</span>
+    <span class="name">{stat.listName}</span>
     <div>
         <ShowData {stat} {data} />
     </div>
