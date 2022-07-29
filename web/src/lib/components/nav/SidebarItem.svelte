@@ -40,6 +40,7 @@
         cursor: pointer;
 
         color: var(--secondary-text-color);
+        font-size: 16px;
     }
 
     .wrap:hover {

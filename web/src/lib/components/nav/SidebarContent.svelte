@@ -20,7 +20,7 @@
 </script>
 
 <b>
-    <span>Navigate</span>
+    <span>Navigate:</span>
     <button on:click={() => ($sidebarOpen = false)}>
         <Fa icon={CLOSE_ICON} size="1.5x" />
     </button>
