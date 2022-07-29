@@ -41,15 +41,13 @@
     export let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
     $: eventData = $event?.data?.eventByCode!;
 
-    function gotoSubPage(name: string | undefined) {
-        if (browser && $page.routeId == "events/[season=season]/[code]/[...tab=event_tab]") {
-            goto(`/events/${$page.params.season}/${$page.params.code}/` + name?.toLowerCase() ?? "", {
-                replaceState: true,
-            });
+    function gotoSubPage(name: string) {
+        if (browser && $page.routeId == "events/[season=season]/[code]/[tab=event_tab]") {
+            goto(`/events/${$page.params.season}/${$page.params.code}/${name.toLowerCase()}`, { replaceState: true });
         }
     }
 
-    let selectedPage: string | undefined = $page.params?.tab != "" ? $page.params?.tab : "matches";
+    let selectedPage: string = $page.params.tab;
     $: gotoSubPage(selectedPage);
 
     let selectedTeam: number | null = null;
