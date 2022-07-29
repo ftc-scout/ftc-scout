@@ -86,6 +86,8 @@
         padding: var(--large-padding);
 
         border-radius: 5px;
+
+        z-index: 5;
     }
 
     @media (max-width: 1600px) {
