@@ -1,8 +1,5 @@
 <thead>
-    <td class="m">Match</td>
-    <td class="s">Score</td>
-    <td class="r" style:width={``}>Red Alliance</td>
-    <td class="b">Blue Alliance</td>
+    <td class="m">Match</td><td class="s">Score</td><td class="r">Red Alliance</td><td class="b">Blue Alliance</td>
 </thead>
 
 <style>

@@ -20,11 +20,11 @@
 <style>
     .zebra-stripe {
         background-color: var(--zebra-stripe-color);
-        mix-blend-mode: multiply;
+        /* mix-blend-mode: multiply; */
     }
 
     /* FIXME: Horrible hack due to weird rendering bug with mix-blend-mode and border-radius */
-    .zebra-stripe:last-child {
+    /* .zebra-stripe:last-child {
         mix-blend-mode: normal;
-    }
+    } */
 </style>
