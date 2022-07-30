@@ -1,5 +1,5 @@
 import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, Index, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
 import { Team } from "../Team";
 import { Event } from "../Event";
 import { Season } from "../../../ftc-api/types/Season";
@@ -38,6 +38,7 @@ export class TeamEventParticipation2021 extends BaseEntity {
     team!: Team;
 
     @Column("int", { nullable: true })
+    @Index()
     rp!: number | null;
 
     @Column("int", { nullable: true })
@@ -47,6 +48,7 @@ export class TeamEventParticipation2021 extends BaseEntity {
     tb2!: number | null;
 
     @Column("int8", { nullable: true })
+    @Index()
     rank!: number | null;
 
     @Column("int8", { nullable: true })
@@ -62,9 +64,11 @@ export class TeamEventParticipation2021 extends BaseEntity {
     dq!: number | null;
 
     @Column("int8", { nullable: true })
+    @Index()
     qualMatchesPlayed!: number | null;
 
     @Column()
+    @Index()
     hasStats!: boolean;
 
     @Column(() => TepStats2021)

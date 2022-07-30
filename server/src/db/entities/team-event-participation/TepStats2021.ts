@@ -1,4 +1,4 @@
-import { Column } from "typeorm";
+import { Column, Index } from "typeorm";
 
 export class TepStats2021 {
     @Column("float")
@@ -69,20 +69,26 @@ export class TepStats2021 {
     minorPenaltyPoints!: number;
 
     @Column("float")
+    @Index()
     autoPoints!: number;
 
     @Column("float")
+    @Index()
     driverControlledPoints!: number;
 
     @Column("float")
+    @Index()
     endgamePoints!: number;
 
     @Column("float")
+    @Index()
     penaltyPoints!: number;
 
     @Column("float")
+    @Index()
     totalPoints!: number;
 
     @Column("float")
+    @Index()
     totalPointsNp!: number;
 }
