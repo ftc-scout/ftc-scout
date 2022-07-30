@@ -13,12 +13,13 @@
 </script>
 
 <div class="wrapper" class:shown class:focus={focusCount}>
-    <span class="icon">
+    <!-- <span class="icon">
         <Fa icon={faSearch} />
-    </span>
+    </span> -->
+    <button class="search-button" type="submit"><Fa icon={faSearch} /></button>
     <input
         type="search"
-        placeholder="Search for teams and events."
+        placeholder="Search for teams and events"
         bind:value
         on:focus
         on:focusout={() => {
@@ -41,7 +42,7 @@
         setTimeout(() => this_?.focus(), 1);
     }}
 >
-    <Fa icon={faSearch} size="1.25x" />
+    <!-- <Fa icon={faSearch} size="1.25x" /> -->
 </button>
 
 <style>
@@ -60,7 +61,11 @@
         transition: width 300ms, border 300ms;
         position: relative;
     }
-
+    .search-button {
+        background-color: transparent;
+        border: 0px solid;
+        size: 50px;
+    }
     .only-icon {
         display: none;
         color: var(--theme-text-color);
