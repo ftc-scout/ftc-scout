@@ -13,11 +13,6 @@
 </tr>
 
 <style>
-    * {
-        /* We don't use the global vars because the modal should be full size even on phones */
-        font-size: 16px;
-    }
-
     tr {
         width: 100%;
         display: flex;
@@ -32,6 +27,13 @@
         padding-top: var(--small-padding);
         padding-bottom: var(--small-padding);
         width: 100px;
+    }
+
+    @media (max-width: 800px) {
+        .red-header,
+        .blue-header {
+            width: 80px;
+        }
     }
 
     .red-header b,

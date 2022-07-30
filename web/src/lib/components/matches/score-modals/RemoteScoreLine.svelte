@@ -43,11 +43,6 @@
 {/each}
 
 <style>
-    * {
-        /* We don't use the global vars because the modal should be full size even on phones */
-        font-size: 16px;
-    }
-
     tr {
         width: 100%;
         display: flex;
@@ -61,8 +56,8 @@
     }
 
     .name {
-        padding-left: 8px;
-        padding-right: 16px;
+        padding-left: var(--gap);
+        padding-right: calc(var(--gap) * 2);
         flex-grow: 1;
     }
 
@@ -75,11 +70,11 @@
     }
 
     .normal-row .name {
-        padding-left: 24px;
+        padding-left: calc(var(--gap) * 3);
     }
 
     .sub-row .name {
-        padding-left: 48px;
+        padding-left: calc(var(--gap) * 6);
     }
 
     .data {
@@ -90,13 +85,19 @@
         background: var(--color-team-neutral-transparent);
     }
 
+    @media (max-width: 800px) {
+        .data {
+            min-width: 100px;
+        }
+    }
+
     .sub-row .data {
         font-weight: normal;
     }
 
     td {
         display: block;
-        padding: 8px;
+        padding: var(--padding);
     }
 
     .data:not(.nz) {
