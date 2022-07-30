@@ -45,8 +45,12 @@
     let me: Readable<MeQuery["me"] | null> = getContext("me");
 
     function logger() {
-        if (($me!.id = teamData.number)) {
+        if (($me!.id == teamData.number)) {
+            console.log("Right team!");
             document.getElementById("edit-box")!.contentEditable = "true";
+        }
+        else {
+            console.log("Wrong team!");
         }
     }
 </script>
