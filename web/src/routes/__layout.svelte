@@ -1,13 +1,25 @@
+<script lang="ts" context="module">
+    export function load({ fetch }: { fetch: NonNullable<HttpOptions["fetch"]> }) {
+        return {
+            props: {
+                f: fetch,
+            },
+        };
+    }
+</script>
+
 <script lang="ts">
     import { MeDocument, type MeQuery } from "../lib/graphql/generated/graphql-operations";
     import Navbar from "$lib/components/nav/Navbar.svelte";
     import { query, setClient, type ReadableQuery } from "svelte-apollo";
-    import { apolloClient } from "../lib/graphql/client";
+    import { getMyClient } from "../lib/graphql/client";
     import { writable, type Writable } from "svelte/store";
     import { setContext } from "svelte";
     import Sidebar from "../lib/components/nav/Sidebar.svelte";
+    import type { HttpOptions } from "@apollo/client";
 
-    setClient(apolloClient);
+    export let f: NonNullable<HttpOptions["fetch"]>;
+    setClient(getMyClient(f));
 
     export let me: ReadableQuery<MeQuery> = query(MeDocument);
     $: meData = $me?.data?.me;
@@ -47,11 +59,11 @@
         margin-top: var(--navbar-size);
         margin-left: var(--sidebar-size);
         padding: var(--padding);
+        padding-bottom: 80px; /* Make room on safari */
 
         overflow: auto;
         max-height: calc(100vh - var(--navbar-size));
         scrollbar-gutter: stable both-edges;
-        /* position: relative; */
     }
 
     @media (max-width: 1600px) {

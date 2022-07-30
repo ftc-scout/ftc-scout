@@ -131,7 +131,6 @@
         border-radius: 8px;
 
         display: block;
-        /* width: 100%; */
         min-width: 100%;
         width: min-content;
         max-width: 100%;

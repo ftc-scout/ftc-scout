@@ -4,7 +4,7 @@ import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { Load, LoadEvent } from "@sveltejs/kit";
 import type { DocumentNode } from "graphql";
 import { writable, type Writable } from "svelte/store";
-import { apolloClient } from "./client";
+import { getMyClient } from "./client";
 
 let firstPage = true;
 
@@ -19,7 +19,7 @@ export function queryLoad<Data = any, Variables = object>(
                 ? (variablesProducer as (event: LoadEvent) => Variables)(event)
                 : variablesProducer;
 
-        let queryResult = apolloClient.query({
+        let queryResult = getMyClient(event.fetch).query({
             query,
             variables,
         });

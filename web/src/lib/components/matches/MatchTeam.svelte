@@ -65,7 +65,6 @@
     class:focused
     class:not-on-field={!onField}
     style:max-width={width}
-    style:width
     style:min-width={width}
     on:click={handleClick}
 >

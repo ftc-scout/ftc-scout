@@ -80,6 +80,22 @@
     --pill-border-radius: 999999px; /* Using an overly large value produces a pill shape. */
 }
 
+/* Resets */
+
+button {
+    color: inherit;
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    position: fixed;
+}
+
 @media (max-width: 800px) {
     :root {
         --tiny-font-size: 8px;

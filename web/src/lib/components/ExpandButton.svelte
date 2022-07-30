@@ -19,6 +19,9 @@
 <style>
     button {
         background: none;
+        color: inherit;
+        padding: 0;
+        margin: 0;
         border: none;
         cursor: pointer;
         font-size: inherit;
