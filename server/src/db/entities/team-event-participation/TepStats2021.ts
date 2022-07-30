@@ -62,10 +62,10 @@ export class TepStats2021 {
     @Column("float")
     cappingPoints!: number;
 
-    @Column("float", { default: 0 })
+    @Column("float")
     majorPenaltyPoints!: number;
 
-    @Column("float", { default: 0 })
+    @Column("float")
     minorPenaltyPoints!: number;
 
     @Column("float")
