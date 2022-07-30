@@ -13,9 +13,6 @@
 </script>
 
 <div class="wrapper" class:shown class:focus={focusCount}>
-    <!-- <span class="icon">
-        <Fa icon={faSearch} />
-    </span> -->
     <button class="search-button" type="submit"><Fa icon={faSearch} /></button>
     <input
         type="search"
@@ -42,7 +39,6 @@
         setTimeout(() => this_?.focus(), 1);
     }}
 >
-    <!-- <Fa icon={faSearch} size="1.25x" /> -->
 </button>
 
 <style>
