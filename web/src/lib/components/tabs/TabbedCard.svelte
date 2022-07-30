@@ -74,6 +74,8 @@
     }
 
     .tab {
+        color: inherit;
+
         min-width: 10ch;
 
         display: flex;
