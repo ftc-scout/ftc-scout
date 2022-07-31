@@ -30,14 +30,15 @@
         OPR_STAT,
     } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
-    import EventStatsImpl, { type ChosenSort } from "./EventStatsImpl.svelte";
+    import LocallyResolvedStatsTable from "../stats/LocallyResolvedStatsTable.svelte";
+    import type { ChosenSort } from "../stats/StatsTable.svelte";
 
     export let data: S[];
     export let selectedTeam: number | null = null;
     export let eventName: string;
 </script>
 
-<EventStatsImpl
+<LocallyResolvedStatsTable
     {data}
     {shownStats}
     {defaultSort}

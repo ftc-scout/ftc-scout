@@ -9,7 +9,6 @@
     import StatRow from "./StatRow.svelte";
     import StatHeaders from "./StatHeaders.svelte";
     import type { Stat } from "../../util/stats/Stat";
-    import { SortType } from "../SortButton.svelte";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
     import FaButton from "../FaButton.svelte";
     import { faEdit, faFileArrowDown, faFilter } from "@fortawesome/free-solid-svg-icons";
@@ -18,7 +17,8 @@
     import ShowStatsModal from "./show-stats/ShowStatsModal.svelte";
     import { exportStatsCSV } from "../../util/stats/export-stats-csv";
     import EditFiltersModal from "./edit-filters/EditFiltersModal.svelte";
-    import { filterStatDataList, type StatFilterOrGroup } from "../../util/stats/StatFilter";
+    import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
+    import type { SortType } from "../SortButton.svelte";
 
     type T = $$Generic;
 
@@ -33,27 +33,6 @@
     export let currentFilters: StatFilterOrGroup<T> = [];
 
     export let eventName: string;
-
-    function makeSortFunction(sort: { stat: Stat<T>; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
-        return (a: T, b: T) => {
-            let { stat, type } = sort;
-            let readA = stat.read(a);
-            let readB = stat.read(b);
-            let dataA = typeof readA == "object" ? readA.number : readA;
-            let dataB = typeof readB == "object" ? readB.number : readB;
-
-            if (type == SortType.LOW_HIGH) {
-                return dataA - dataB;
-            } else {
-                return dataB - dataA;
-            }
-        };
-    }
-
-    // Sort by default first for consistent ordering.
-    $: sortedData = filterStatDataList(data, currentFilters)
-        .sort(makeSortFunction(defaultSort))
-        .sort(makeSortFunction(currentSort ?? defaultSort));
 
     let chooseStatsModalShown = false;
     let editFiltersModalShown = false;
@@ -84,7 +63,7 @@
 
     <FaButton
         icon={faFileArrowDown}
-        on:click={() => exportStatsCSV(eventName, sortedData, $shownStats)}
+        on:click={() => exportStatsCSV(eventName, data, $shownStats)}
         buttonStyle="font-size: var(--medium-font-size);">Export CSV</FaButton
     >
 </div>
@@ -95,9 +74,9 @@
 
 <table tabindex="-1">
     <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
-    {#if sortedData.length}
+    {#if data.length}
         <tbody>
-            {#each sortedData as dataRow, i}
+            {#each data as dataRow, i}
                 <StatRow
                     {dataRow}
                     shownStats={$shownStats}
