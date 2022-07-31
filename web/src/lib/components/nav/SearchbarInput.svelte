@@ -38,8 +38,7 @@
         shown = !shown;
         setTimeout(() => this_?.focus(), 1);
     }}
->
-</button>
+/>
 
 <style>
     .wrapper {
@@ -57,11 +56,13 @@
         transition: width 300ms, border 300ms;
         position: relative;
     }
+
     .search-button {
         background-color: transparent;
         border: 0px solid;
         size: 50px;
     }
+
     .only-icon {
         display: none;
         color: var(--theme-text-color);

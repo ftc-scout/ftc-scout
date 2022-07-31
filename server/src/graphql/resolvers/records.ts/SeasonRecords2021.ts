@@ -1,9 +1,12 @@
-import { Arg, Field, InputType, Int, ObjectType, Query, registerEnumType, Resolver } from "type-graphql";
-import { FindManyOptions, FindOptionsOrder } from "typeorm";
+import { Arg, Field, Float, InputType, Int, ObjectType, Query, registerEnumType, Resolver } from "type-graphql";
+import { FindManyOptions, FindOptionsOrder, FindOptionsWhere, Raw } from "typeorm";
 import { TeamEventParticipation2021 } from "../../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { TepStats2021 } from "../../../db/entities/team-event-participation/TepStats2021";
+import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { EventTypes, getWhereClauseForEventTypes } from "./EventTypes";
 import { Order } from "./Order";
+
+// I hate everything in this file
 
 @ObjectType()
 class TEP2021Records {
@@ -139,6 +142,10 @@ function getFieldNameGroup(fn: TEP2021FieldName): string | null {
 
 registerEnumType(TEP2021FieldName, { name: "TEP2021FieldName" });
 
+function capitalizeFirstLetter(string: string): string {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 @InputType()
 class TEP2021Field {
     @Field(() => TEP2021Group, { nullable: true })
@@ -146,6 +153,19 @@ class TEP2021Field {
 
     @Field(() => TEP2021FieldName)
     fieldName!: TEP2021FieldName;
+
+    toSqlName(): string | null {
+        if (this.group) {
+            let groupName = getGroupName(this.group);
+            let fieldName = getFieldNameGroup(this.fieldName);
+
+            if (!groupName || !fieldName) return null;
+
+            return groupName + capitalizeFirstLetter(fieldName.toLowerCase());
+        } else {
+            return getFieldNameSingular(this.fieldName);
+        }
+    }
 }
 
 @InputType()
@@ -180,42 +200,134 @@ class TEP2021Ordering {
     }
 }
 
+@InputType()
+class TEP2021Value {
+    @Field(() => Float, { nullable: true })
+    value!: number | null;
+
+    @Field(() => TEP2021Field, { nullable: true })
+    field!: TEP2021Field | null;
+}
+
+@InputType()
+class TEP2021Condition {
+    @Field(() => TEP2021Value)
+    lhs!: TEP2021Value;
+
+    @Field(() => CompareOperator)
+    compareOperator!: CompareOperator;
+
+    @Field(() => TEP2021Value)
+    rhs!: TEP2021Value;
+
+    toWhereClause(): FindOptionsWhere<TeamEventParticipation2021> {
+        if (this.lhs.value == null && this.lhs.field == null && this.rhs.value == null && this.rhs.field == null)
+            return {};
+
+        let lhs: TEP2021Field;
+        let rhs: string;
+
+        let opSql = compareOpToSql(this.compareOperator);
+
+        if (typeof this.rhs.value == "number" && typeof this.lhs.value == "number") {
+            return {
+                rp: Raw((_) => `${this.lhs.value} ${opSql} ${this.rhs.value}`),
+            };
+        } else if (typeof this.lhs.value == "number") {
+            lhs = this.rhs.field as TEP2021Field;
+            rhs = "" + this.lhs.value;
+        } else if (typeof this.rhs.value == "number") {
+            lhs = this.lhs.field as TEP2021Field;
+            rhs = "" + this.rhs.value;
+        } else {
+            lhs = this.lhs.field as TEP2021Field;
+            let temp = this.rhs.field!.toSqlName();
+            if (temp == null) return {};
+            rhs = temp;
+        }
+
+        if (lhs.group == null) {
+            let fn = getFieldNameSingular(lhs.fieldName);
+            return fn ? { [fn]: Raw((a) => `${a} ${opSql} ${rhs}`) } : {};
+        } else {
+            let group = getGroupName(lhs.group);
+            let fn = getFieldNameGroup(lhs.fieldName);
+            return fn ? { [group]: { [fn]: Raw((a) => `${a} ${opSql} ${rhs}`) } } : {};
+        }
+    }
+}
+
+@InputType()
+class TEP2021AndGroup {
+    @Field(() => [TEP2021Condition])
+    conditions!: TEP2021Condition[];
+
+    toWhereClause(eventTypes: EventTypes): FindOptionsWhere<TeamEventParticipation2021> {
+        let ret = this.conditions.slice(0, 10).reduce(
+            (a, b) => ({
+                ...a,
+                ...b.toWhereClause(),
+            }),
+            { hasStats: true } as FindOptionsWhere<TeamEventParticipation2021>
+        );
+
+        let event = getWhereClauseForEventTypes(eventTypes);
+        if (event) ret.event = event;
+
+        return ret;
+    }
+}
+
+@InputType()
+class TEP2021OrGroup {
+    @Field(() => [TEP2021AndGroup])
+    andGroups!: TEP2021AndGroup[];
+
+    toWhereClause(eventTypes: EventTypes): FindOptionsWhere<TeamEventParticipation2021>[] {
+        return this.andGroups.slice(0, 10).map((g) => g.toWhereClause(eventTypes));
+    }
+}
+
 @Resolver()
 export class SeasonRecords2021Resolver {
     @Query(() => TEP2021Records)
     async teamRecords2021(
         @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
         @Arg("order", () => [TEP2021Ordering]) orderIn: TEP2021Ordering[],
+        @Arg("filter", () => TEP2021OrGroup) filters: TEP2021OrGroup,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<TEP2021Records> {
-        let take = Math.min(takeIn, 50);
+        try {
+            let take = Math.min(takeIn, 50);
 
-        let options: FindManyOptions<TeamEventParticipation2021> = {
-            relations: {
-                event: true,
-            },
-            where: {
-                hasStats: true,
-            },
-            take,
-            skip,
-        };
+            let options: FindManyOptions<TeamEventParticipation2021> = {
+                relations: {
+                    event: true,
+                },
+                where: filters.toWhereClause(eventTypes),
+                take,
+                skip,
+            };
 
-        let event = getWhereClauseForEventTypes(eventTypes);
-        if (event) (options as any).where.event = event;
+            let order = TEP2021Ordering.toFindOptions(orderIn.slice(0, 5));
+            if (order) {
+                options.order = order;
+            }
 
-        let order = TEP2021Ordering.toFindOptions(orderIn.slice(0, 5));
-        if (order) {
-            options.order = order;
+            let [teps, count] = await TeamEventParticipation2021.findAndCount(options);
+
+            return {
+                teps,
+                offset: skip,
+                count,
+            };
+        } catch (e) {
+            return {
+                teps: [],
+                offset: skip,
+                count: 0,
+            };
         }
-
-        let [teps, count] = await TeamEventParticipation2021.findAndCount(options);
-
-        return {
-            teps,
-            offset: skip,
-            count,
-        };
     }
 }

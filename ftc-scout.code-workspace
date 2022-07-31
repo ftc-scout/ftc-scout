@@ -11,6 +11,16 @@
         }
     ],
     "settings": {
-        "cSpell.words": ["fuzzyset", "fuzzysort", "Oprs", "QUALS", "stateprov", "timestamptz", "tmps", "typeorm"]
+        "cSpell.words": [
+            "fuzzyset",
+            "fuzzysort",
+            "Oprs",
+            "QUALS",
+            "stateprov",
+            "teps",
+            "timestamptz",
+            "tmps",
+            "typeorm"
+        ]
     }
 }
