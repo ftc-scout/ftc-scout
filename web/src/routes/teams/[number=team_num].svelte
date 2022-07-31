@@ -45,11 +45,20 @@
     let me: Readable<MeQuery["me"] | null> = getContext("me");
 
     function logger() {
-        if (($me!.id == teamData.number)) {
+        if (($me!.id == teamData.number)) 
+        {
             console.log("Right team!");
-            document.getElementById("edit-box")!.contentEditable = "true";
+            if (document.getElementById("edit-box")!.contentEditable == "true")
+            {
+                document.getElementById("edit-box")!.contentEditable = "false"
+            }
+            else 
+            {
+                document.getElementById("edit-box")!.contentEditable = "true"
+            }
         }
-        else {
+        else 
+        {
             console.log("Wrong team!");
         }
     }
@@ -164,20 +173,23 @@
     {/each}
 
     <button
-        onClick={() => {
-            logger();
-        }}
+    on:click={logger}
         id="editor"
         class="edit-button"
         type="button">Edit Document</button
     >
     <Card>
-        <p id="edit-box" type="text" contenteditable="false">I am not editable</p>
+        <p class = "team-box" id="edit-box" type="text" contenteditable="false">I am not editable</p>
     </Card>
 </Loading>
 
 <style>
-    /* Change this so im not plagiarizing off of someone else who may be working on this project */
+    .team-box {
+        border: none;
+    background-color: transparent;
+    resize: none;
+    outline: none;
+    }
     .edit-button {
         border: var(--theme-color) 2px solid;
         text-decoration: none;
