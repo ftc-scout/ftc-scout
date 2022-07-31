@@ -38,7 +38,9 @@
         shown = !shown;
         setTimeout(() => this_?.focus(), 1);
     }}
-/>
+>
+    <Fa icon={faSearch} size="1.25x" />
+</button>
 
 <style>
     .wrapper {
@@ -61,6 +63,8 @@
         background-color: transparent;
         border: 0px solid;
         size: 50px;
+
+        padding: var(--padding);
     }
 
     .only-icon {
@@ -91,6 +95,8 @@
         background: none;
         font-size: inherit;
         flex-grow: 1;
+
+        padding: var(--padding);
     }
 
     input:focus,
