@@ -7,9 +7,10 @@
     export let buttonStyle = "";
     export let iconColor = "";
     export let fw = false;
+    export let disabled: string | null = null;
 </script>
 
-<button on:click style={buttonStyle}>
+<button on:click style={buttonStyle} disabled={!!disabled} title={disabled ?? ""}>
     <Fa {icon} {fw} color={iconColor} />
     <slot />
 </button>
@@ -32,5 +33,10 @@
 
     button:active {
         filter: brightness(0.9);
+    }
+
+    button:disabled {
+        filter: brightness(0.8);
+        cursor: not-allowed;
     }
 </style>

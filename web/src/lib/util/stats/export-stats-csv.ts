@@ -2,6 +2,8 @@ import type { Stat } from "./Stat";
 import { ExportToCsv } from "export-to-csv";
 
 export function exportStatsCSV<T>(eventName: string, data: T[], stats: Stat<T>[]) {
+    if (stats.length == 0 || data.length == 0) return;
+
     let jsonData = data.map((d) => {
         let obj: Record<string, number> = {};
         stats.forEach((s) => {
