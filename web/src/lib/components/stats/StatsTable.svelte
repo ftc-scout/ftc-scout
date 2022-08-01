@@ -32,7 +32,7 @@
     export let currentSort: ChosenSort<T> = defaultSort;
     export let currentFilters: StatFilterOrGroup<T> = [];
 
-    export let eventName: string;
+    export let fileName: string;
 
     let chooseStatsModalShown = false;
     let editFiltersModalShown = false;
@@ -63,7 +63,7 @@
 
     <FaButton
         icon={faFileArrowDown}
-        on:click={() => exportStatsCSV(eventName, data, $shownStats)}
+        on:click={() => exportStatsCSV(fileName, data, $shownStats)}
         buttonStyle="font-size: var(--medium-font-size);">Export CSV</FaButton
     >
 </div>

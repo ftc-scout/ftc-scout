@@ -18,6 +18,7 @@ import {
     DC_ALLIANCE_STAT,
     DC_STAT,
     DC_STORAGE_STAT,
+    ENDGAME_BALANCED_STAT,
     ENDGAME_CAPPING_STAT,
     ENDGAME_DELIVERY_STAT,
     ENDGAME_PARKING_STAT,
@@ -49,6 +50,7 @@ export type FullTep2021Remote = {
         qualMatchesPlayed: number;
         total: FullStatsGroup2021RemoteFragment;
         average: FullStatsGroup2021RemoteFragment;
+        opr: FullStatsGroup2021RemoteFragment;
         min: FullStatsGroup2021RemoteFragment;
         max: FullStatsGroup2021RemoteFragment;
         standardDev: FullStatsGroup2021RemoteFragment;
@@ -196,6 +198,10 @@ export let STAT_SET_2021_REMOTE: StatsSet<FullTep2021Remote, Group> = {
                 },
                 {
                     stat: ENDGAME_CAPPING_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: ENDGAME_BALANCED_STAT,
                     nestedStats: [],
                 },
                 {

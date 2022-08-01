@@ -4,9 +4,11 @@
     import { page } from "$app/stores";
     import Card from "../../../lib/components/Card.svelte";
     import Dropdown from "../../../lib/components/Dropdown.svelte";
+    import TeamSeasonRecords2021 from "../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
     import TabbedCard from "../../../lib/components/tabs/TabbedCard.svelte";
     import TabContent from "../../../lib/components/tabs/TabContent.svelte";
     import WidthProvider from "../../../lib/components/WidthProvider.svelte";
+    import { EventTypes } from "../../../lib/graphql/generated/graphql-operations";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../lib/icons";
     import { prettyPrintSeason } from "../../../lib/util/format/pretty-print-season";
 
@@ -50,6 +52,8 @@
     >
         <TabContent name="Matches">Matches</TabContent>
 
-        <TabContent name="Teams">Teams</TabContent>
+        <TabContent name="Teams">
+            <TeamSeasonRecords2021 eventTypes={EventTypes.TradAndRemote} data={[]} />
+        </TabContent>
     </TabbedCard>
 </WidthProvider>

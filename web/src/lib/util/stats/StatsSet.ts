@@ -39,3 +39,18 @@ export interface StatsSet<T, U> {
     groups: StatGroup<T, U>[];
     groupStats: NestedStat<U>[];
 }
+
+function nestedStatContains<T, U>(group: StatGroup<T, U>, nestedStat: NestedStat<U>, stat: Stat<T>): boolean {
+    return (
+        group.get(nestedStat.stat).identifierName == stat.identifierName ||
+        nestedStat.nestedStats.some((ns) => nestedStatContains(group, ns, stat))
+    );
+}
+
+export function filterStatSet<T, U>(statSet: StatsSet<T, U>, filterList: Stat<T>[]): Stat<T>[] {
+    return filterList.filter(
+        (s) =>
+            statSet.standalone.some((ss) => ss.identifierName == s.identifierName) ||
+            statSet.groups.some((g) => statSet.groupStats.some((gs) => nestedStatContains(g, gs, s)))
+    );
+}

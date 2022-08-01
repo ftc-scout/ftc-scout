@@ -4,6 +4,7 @@ import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
 import { groupGetter, type StatsSet } from "./StatsSet";
 import {
+    AUTO_BONUS_INDIVIDUAL_STAT,
     AUTO_BONUS_STAT,
     AUTO_CAROUSEL_STAT,
     AUTO_FREIGHT1_STAT,
@@ -11,6 +12,7 @@ import {
     AUTO_FREIGHT3_STAT,
     AUTO_FREIGHT_STAT,
     AUTO_FREIGHT_STORAGE_STAT,
+    AUTO_NAV_INDIVIDUAL_STAT,
     AUTO_NAV_STAT,
     AUTO_STAT,
     DC_ALLIANCE1_STAT,
@@ -19,8 +21,10 @@ import {
     DC_ALLIANCE_STAT,
     DC_STAT,
     DC_STORAGE_STAT,
+    ENDGAME_BALANCED_STAT,
     ENDGAME_CAPPING_STAT,
     ENDGAME_DELIVERY_STAT,
+    ENDGAME_PARKING_INDIVIDUAL_STAT,
     ENDGAME_PARKING_STAT,
     ENDGAME_STAT,
     PENALTIES_MAJOR_STAT,
@@ -99,21 +103,6 @@ export const DQ_STAT: Stat<FullTep2021Traditional> = {
 
 type Group = FullTep2021Traditional["stats"]["total"];
 
-// ------------------------------------------------------------------------------------------------------------------------
-
-const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
-    "autoNavigationPointsIndividual",
-    "Individual",
-    "Auto Nav Individual",
-    "Auto Navigation Points Individual"
-);
-
-const AUTO_BONUS_INDIVIDUAL_STAT: Stat<Group> = makeStat(
-    "autoBonusPointsIndividual",
-    "Individual",
-    "Bonus Individual",
-    "Auto Bonus Points Individual"
-);
 
 // ------------------------------------------------------------------------------------------------------------------------
 
@@ -126,11 +115,11 @@ const DC_SHARED_STAT: Stat<Group> = makeStat(
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
-    "endgameParkingPointsIndividual",
-    "Individual",
-    "Endgame Park Individual",
-    "Endgame Parking Points Individual"
+export const ENDGAME_TIPPED_STAT: Stat<Group> = makeStat(
+    "sharedUnbalancedPoints",
+    "Shared Tipped Points",
+    "Shared Tipped ",
+    "Endgame Shared Hub Tipped Points"
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -307,6 +296,14 @@ export let STAT_SET_2021_TRAD: StatsSet<FullTep2021Traditional, Group> = {
                 },
                 {
                     stat: ENDGAME_CAPPING_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: ENDGAME_TIPPED_STAT,
+                    nestedStats: [],
+                },
+                {
+                    stat: ENDGAME_BALANCED_STAT,
                     nestedStats: [],
                 },
                 {
