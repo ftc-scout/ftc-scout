@@ -283,6 +283,11 @@ export class SeasonRecords2021Resolver {
             .limit(limit)
             .offset(skip);
 
+        if (orderIn.length == 0) {
+            // In case they didn't provide an order
+            query = query.orderBy("tep.oprTotalpoints", "DESC");
+        }
+
         if (eventTypes == EventTypes.REMOTE) {
             query = query.andWhere("e.remote");
         } else if (eventTypes == EventTypes.TRAD) {
