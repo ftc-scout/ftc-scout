@@ -254,7 +254,7 @@ class TEP2021OrGroup {
     ): SelectQueryBuilder<TeamEventParticipation2021> {
         return query.andWhere(
             new Brackets((qb) => {
-                let query = qb.where("FALSE");
+                let query = qb.where(this.andGroups.length == 0 ? "TRUE" : "FALSE");
                 for (let and of this.andGroups.slice(0, 10)) {
                     query = query.orWhere(and.toQueryBrackets());
                 }

@@ -4,6 +4,7 @@
         name: string;
     };
     export let selectedTeam: number | null = null;
+    export let selectedTeamName: string | null = null;
     export let frozen = false;
 
     $: number = team.number;
@@ -17,8 +18,10 @@
         if (!frozen) {
             if (focused) {
                 selectedTeam = null;
+                selectedTeamName = null;
             } else {
                 selectedTeam = number;
+                selectedTeamName = name;
             }
         }
     }

@@ -1,7 +1,16 @@
 <script lang="ts" context="module">
     type Data = FullTep2021Traditional | FullTep2021Remote;
 
-    let shownStats: Writable<Stat<Data>[]> = writable([]);
+    let shownStats: Writable<Stat<Data>[]> = writable([
+        TEAM_STAT,
+        OPR_STAT,
+        NP_OPR_STAT,
+        AUTO_OPR_STAT,
+        TELEOP_OPR_STAT,
+        ENDGAME_OPR_STAT,
+        AVERAGE_STAT,
+        RANK_STAT,
+    ]);
     let currentFilters: Writable<StatFilterOrGroup<Data>> = writable([]);
 </script>
 
@@ -11,11 +20,22 @@
     import type { Stat } from "../../util/stats/Stat";
     import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
     import { STAT_SET_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemote2021";
-    import { OPR_STAT, STAT_SET_2021_SHARED } from "../../util/stats/StatsShared2021";
+    import {
+        AUTO_OPR_STAT,
+        AVERAGE_STAT,
+        ENDGAME_OPR_STAT,
+        NP_OPR_STAT,
+        OPR_STAT,
+        RANK_STAT,
+        STAT_SET_2021_SHARED,
+        TEAM_STAT,
+        TELEOP_OPR_STAT,
+    } from "../../util/stats/StatsShared2021";
     import { STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
     import { filterStatSet } from "../../util/stats/StatsSet";
+    import TeamSelectionBar from "../TeamSelectionBar.svelte";
 
     export let eventTypes: EventTypes;
     export let data: Data[];
@@ -33,13 +53,19 @@
     let currentSort: ChosenSort<Data> = defaultSort;
 
     let selectedTeam: number | null = null;
+    let selectedTeamName: string | null = null;
 </script>
+
+{#if selectedTeam && selectedTeamName}
+    <TeamSelectionBar tep={null} number={selectedTeam} name={selectedTeamName} />
+{/if}
 
 <StatsTable
     {statSet}
     {data}
     {shownStats}
     bind:selectedTeam
+    bind:selectedTeamName
     {defaultSort}
     {currentSort}
     bind:currentFilters={$currentFilters}

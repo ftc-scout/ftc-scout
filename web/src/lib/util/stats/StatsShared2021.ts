@@ -435,3 +435,7 @@ export let STAT_SET_2021_SHARED: StatsSet<FullTep2021Traditional, Group> = {
 export const AVERAGE_STAT = STAT_SET_2021_SHARED.groups.find((g) => g.shortName == "AVG")!.get(TOTAL_STAT);
 export const MAX_STAT = STAT_SET_2021_SHARED.groups.find((g) => g.shortName == "MAX")!.get(TOTAL_STAT);
 export const OPR_STAT = STAT_SET_2021_SHARED.groups.find((g) => g.shortName == "OPR")!.get(TOTAL_STAT);
+export const NP_OPR_STAT = STAT_SET_2021_SHARED.groups.find((g) => g.shortName == "OPR")!.get(TOTAL_NP_STAT);
+export const AUTO_OPR_STAT = STAT_SET_2021_SHARED.groups.find((g) => g.shortName == "OPR")!.get(AUTO_STAT);
+export const TELEOP_OPR_STAT = STAT_SET_2021_SHARED.groups.find((g) => g.shortName == "OPR")!.get(DC_STAT);
+export const ENDGAME_OPR_STAT = STAT_SET_2021_SHARED.groups.find((g) => g.shortName == "OPR")!.get(ENDGAME_STAT);

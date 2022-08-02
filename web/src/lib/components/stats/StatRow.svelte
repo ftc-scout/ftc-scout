@@ -8,12 +8,19 @@
     export let shownStats: Stat<T>[];
     export let zebraStripe = false;
     export let selectedTeam: number | null = null;
+    export let selectedTeamName: string | null = null;
     export let seeStatsData: T | null = null;
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
     {#each shownStats as shownStat}
-        <StatData stat={shownStat} data={dataRow} bind:selectedTeam on:show-data={() => (seeStatsData = dataRow)} />
+        <StatData
+            stat={shownStat}
+            data={dataRow}
+            bind:selectedTeam
+            bind:selectedTeamName
+            on:show-data={() => (seeStatsData = dataRow)}
+        />
     {/each}
 </tr>
 

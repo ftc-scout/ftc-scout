@@ -10,6 +10,7 @@
     export let stat: Stat<T>;
     export let data: T;
     export let selectedTeam: number | null = null;
+    export let selectedTeamName: string | null = null;
 
     $: read = stat.read(data);
     $: team = read as { number: number; name: string };
@@ -17,7 +18,7 @@
 </script>
 
 {#if stat.displayType == StatDisplayType.TEAM}
-    <StatTeam {team} bind:selectedTeam on:show-data />
+    <StatTeam {team} bind:selectedTeam bind:selectedTeamName on:show-data />
 {:else}
     <td class={stat.color} title={stat.identifierName}>
         {#if stat.displayType == StatDisplayType.INTEGER}

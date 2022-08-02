@@ -27,6 +27,7 @@
     export let data: T[];
     export let shownStats: Writable<Stat<T>[]>;
     export let selectedTeam: number | null = null;
+    export let selectedTeamName: string | null = null;
 
     export let defaultSort: ChosenSort<T>;
     export let currentSort: ChosenSort<T> = defaultSort;
@@ -85,6 +86,7 @@
                     shownStats={$shownStats}
                     zebraStripe={i % 2 == 1}
                     bind:selectedTeam
+                    bind:selectedTeamName
                     bind:seeStatsData
                 />
             {/each}
