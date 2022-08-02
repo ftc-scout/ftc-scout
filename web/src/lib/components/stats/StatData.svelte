@@ -40,6 +40,12 @@
         padding: var(--small-padding);
     }
 
+    @media(max-width: 600px) {
+        td {
+            min-width: 50px;
+        }
+    }
+
     td.white {
         font-weight: bold;
     }
