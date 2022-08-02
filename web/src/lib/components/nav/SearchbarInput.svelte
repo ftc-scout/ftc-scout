@@ -142,10 +142,6 @@
         }
     }
 
-    .icon {
-        padding: var(--padding);
-    }
-
     /* clears the ‘X’ from Internet Explorer */
     input[type="search"]::-ms-clear {
         display: none;
