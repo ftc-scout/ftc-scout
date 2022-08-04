@@ -139,6 +139,11 @@
     </TabbedCard>
 
     {#if selectedTeam}
-        <TeamSelectionBar tep={selectedTeamStats} number={selectedTeam} name={selectedTeamName} />
+        <TeamSelectionBar
+            tep={selectedTeamStats}
+            number={selectedTeam}
+            name={selectedTeamName}
+            eventCode={eventData.code}
+        />
     {/if}
 </Loading>

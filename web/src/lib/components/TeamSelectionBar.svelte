@@ -21,8 +21,10 @@
     } | null;
     export let number: number;
     export let name: string;
+    export let eventCode: string | null = null;
 
-    $: prefetch(`/teams/${number}`);
+    $: url = eventCode ? `/teams/${number}#${eventCode}` : `/teams/${number}`;
+    $: prefetch(url);
 
     $: showWLT = typeof tep?.wins == "number" && typeof tep?.losses == "number" && typeof tep?.ties == "number";
     $: showRp = typeof tep?.rp == "number";
@@ -35,7 +37,7 @@
     $: oprDot = showAvg;
 </script>
 
-<a sveltekit:prefetch href={`/teams/${number}`} transition:fly|local={{ y: 100, duration: 300 }}>
+<a sveltekit:prefetch href={url} transition:fly|local={{ y: 100, duration: 300 }}>
     <div class="top-row">
         <b> {number} - <em> {name} </em> </b>
         <span class="view-team"> View Team <Fa icon={faAngleRight} /> </span>
