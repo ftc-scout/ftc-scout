@@ -66,7 +66,11 @@
         icon={faFileArrowDown}
         on:click={() => exportStatsCSV(fileName, data, $shownStats)}
         buttonStyle="font-size: var(--medium-font-size);"
-        disabled={$shownStats.length == 0 ? "Select statistics to export csv." : (data.length == 0 ? "Select data to export csv." : null)}
+        disabled={$shownStats.length == 0
+            ? "Select statistics to export csv."
+            : data.length == 0
+            ? "Select data to export csv."
+            : null}
     >
         Export CSV
     </FaButton>

@@ -45,20 +45,14 @@
     let me: Readable<MeQuery["me"] | null> = getContext("me");
 
     function logger() {
-        if (($me!.id == teamData.number)) 
-        {
+        if ($me!.id == teamData.number) {
             console.log("Right team!");
-            if (document.getElementById("edit-box")!.contentEditable == "true")
-            {
-                document.getElementById("edit-box")!.contentEditable = "false"
+            if (document.getElementById("edit-box")!.contentEditable == "true") {
+                document.getElementById("edit-box")!.contentEditable = "false";
+            } else {
+                document.getElementById("edit-box")!.contentEditable = "true";
             }
-            else 
-            {
-                document.getElementById("edit-box")!.contentEditable = "true"
-            }
-        }
-        else 
-        {
+        } else {
             console.log("Wrong team!");
         }
     }
@@ -172,23 +166,18 @@
         </Card>
     {/each}
 
-    <button
-    on:click={logger}
-        id="editor"
-        class="edit-button"
-        type="button">Edit Document</button
-    >
+    <button on:click={logger} id="editor" class="edit-button" type="button">Edit Document</button>
     <Card>
-        <p class = "team-box" id="edit-box" type="text" contenteditable="false">I am not editable</p>
+        <p class="team-box" id="edit-box" type="text" contenteditable="false">I am not editable</p>
     </Card>
 </Loading>
 
 <style>
     .team-box {
         border: none;
-    background-color: transparent;
-    resize: none;
-    outline: none;
+        background-color: transparent;
+        resize: none;
+        outline: none;
     }
     .edit-button {
         border: var(--theme-color) 2px solid;

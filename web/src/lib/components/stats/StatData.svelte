@@ -18,7 +18,7 @@
 </script>
 
 {#if stat.displayType == StatDisplayType.TEAM}
-    <StatTeam {team} bind:selectedTeam bind:selectedTeamName on:hover-team on:un-hover-team/>
+    <StatTeam {team} bind:selectedTeam bind:selectedTeamName on:hover-team on:un-hover-team />
 {:else}
     <td class={stat.color} title={stat.identifierName}>
         {#if stat.displayType == StatDisplayType.INTEGER}
@@ -40,7 +40,7 @@
         padding: var(--small-padding);
     }
 
-    @media(max-width: 600px) {
+    @media (max-width: 600px) {
         td {
             min-width: 50px;
         }

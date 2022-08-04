@@ -103,7 +103,6 @@ export const DQ_STAT: Stat<FullTep2021Traditional> = {
 
 type Group = FullTep2021Traditional["stats"]["total"];
 
-
 // ------------------------------------------------------------------------------------------------------------------------
 
 const DC_SHARED_STAT: Stat<Group> = makeStat(
