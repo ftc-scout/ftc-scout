@@ -116,7 +116,7 @@
     }
 
     @media (max-width: 650px) {
-        button:not(.selected) .maybe-hide {
+        .tab:not(.selected) .maybe-hide {
             display: none;
         }
 
