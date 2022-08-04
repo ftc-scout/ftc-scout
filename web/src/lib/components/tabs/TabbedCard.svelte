@@ -29,14 +29,15 @@
 <div class="wrapper" style:min-width={minWidth}>
     <div class="tabs">
         {#each namesFiltered as [icon, name]}
-            <button
+            <a
                 class="tab"
                 class:selected={name.toLowerCase() == selectedName?.toLowerCase()}
-                on:click={() => (selectedName = name)}
+                on:click|preventDefault={() => (selectedName = name)}
+                href={name.toLowerCase()}
             >
                 <Fa {icon} scale="0.75x" />
                 <span class="maybe-hide" style="padding-left: 1ch">{name}</span>
-            </button>
+            </a>
         {/each}
     </div>
 
@@ -97,6 +98,10 @@
         border-top-right-radius: 8px;
 
         transform: translate(0, var(--small-gap));
+    }
+
+    .tab:hover {
+        text-decoration: none;
     }
 
     .tab:hover:not(.selected) {
