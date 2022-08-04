@@ -66,7 +66,7 @@
         padding-left: var(--padding);
     }
 
-    section {
+    section:not(:last-of-type) {
         margin-bottom: var(--vl-gap);
     }
 
