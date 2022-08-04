@@ -10,9 +10,11 @@
     export let selectedTeam: number | null = null;
     export let selectedTeamName: string | null = null;
     export let seeStatsData: T | null = null;
+
+    let teamHovered = false;
 </script>
 
-<tr class:zebra-stripe={zebraStripe}>
+<tr class:zebra-stripe={zebraStripe} class:team-hovered={teamHovered} on:click={() => (seeStatsData = dataRow)}>
     {#each shownStats as shownStat}
         <StatData
             stat={shownStat}
@@ -20,11 +22,26 @@
             bind:selectedTeam
             bind:selectedTeamName
             on:show-data={() => (seeStatsData = dataRow)}
+            on:hover-team={() => (teamHovered = true)}
+            on:un-hover-team={() => (teamHovered = false)}
         />
     {/each}
 </tr>
 
 <style>
+    tr {
+        outline: transparent solid 2px;
+        outline-offset: -2px;
+        transition: outline 0.12s ease 0s;
+
+        cursor: pointer;
+    }
+
+    tr:hover:not(.team-hovered) {
+        z-index: 20;
+        outline: 2px solid var(--color-team-neutral);
+    }
+
     .zebra-stripe {
         background-color: var(--zebra-stripe-color);
         mix-blend-mode: multiply;

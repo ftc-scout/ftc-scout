@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     export let team: {
         number: number;
         name: string;
@@ -14,6 +16,8 @@
 
     $: title = `${number} ${name}`;
 
+    let dispatch = createEventDispatcher();
+
     function handleClick() {
         if (!frozen) {
             if (focused) {
@@ -27,7 +31,12 @@
     }
 </script>
 
-<td class:focused on:click={handleClick}>
+<td
+    class:focused
+    on:click|stopPropagation={handleClick}
+    on:mouseenter={() => dispatch("hover-team")}
+    on:mouseleave={() => dispatch("un-hover-team")}
+>
     <div class="wrap">
         {#if frozen}
             <a sveltekit:prefetch href={`/teams/${number}`} class="inner" {title}>
@@ -46,6 +55,7 @@
 <style>
     td {
         outline: transparent solid 2px;
+        outline-offset: -2px;
         transition: outline 0.12s ease 0s;
     }
 
