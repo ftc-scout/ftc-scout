@@ -44,5 +44,5 @@
     bind:currentSort
     bind:selectedTeam
     statSet={STAT_SET_2021_REMOTE}
-    {eventName}
+    fileName={`${eventName} Rankings`}
 />

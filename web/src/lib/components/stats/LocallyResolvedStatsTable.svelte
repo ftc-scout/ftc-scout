@@ -18,7 +18,7 @@
     export let currentSort: ChosenSort<T> = defaultSort;
     export let currentFilters: StatFilterOrGroup<T> = [];
 
-    export let eventName: string;
+    export let fileName: string;
 
     function makeSortFunction(sort: { stat: Stat<T>; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
         return (a: T, b: T) => {
@@ -50,5 +50,5 @@
     {defaultSort}
     bind:currentFilters
     bind:currentSort
-    {eventName}
+    {fileName}
 />

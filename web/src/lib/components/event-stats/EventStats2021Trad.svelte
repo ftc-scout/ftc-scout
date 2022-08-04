@@ -46,5 +46,5 @@
     bind:currentFilters={$currentFilters}
     bind:selectedTeam
     statSet={STAT_SET_2021_TRAD}
-    {eventName}
+    fileName={`${eventName} Rankings`}
 />
