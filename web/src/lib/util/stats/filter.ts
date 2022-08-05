@@ -33,7 +33,14 @@ export function emptyFilter<T>(): Filter<T> {
     return {
         id: getFilterId(),
         type: "ALL",
-        conditions: [],
+        conditions: [
+            {
+                type: "compare",
+                lhs: 0,
+                operator: StatFilterType.EQ,
+                rhs: 0,
+            },
+        ],
     };
 }
 

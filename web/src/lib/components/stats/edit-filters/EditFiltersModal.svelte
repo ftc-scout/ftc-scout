@@ -6,6 +6,7 @@
     import ChooseFilter from "./ChooseFilter.svelte";
     import type { Filter } from "../../../util/stats/filter";
     import type { StatsSet } from "../../../util/stats/StatsSet";
+    import Checkbox from "../choose-stats/Checkbox.svelte";
 
     type T = $$Generic;
 
@@ -14,8 +15,11 @@
     export let statSet: StatsSet<T, unknown>;
 
     let filter: Filter<T> = currentFilters;
-
     $: if (!shown) currentFilters = filter;
+
+    let advanced = filter.type != "ALL" || filter.conditions.some((c) => c.type != "compare");
+    $: canBeSimple = filter.type == "ALL" && filter.conditions.every((c) => c.type == "compare");
+    $: console.log(canBeSimple);
 </script>
 
 <Modal bind:shown>
@@ -27,14 +31,26 @@
     </b>
 
     <div>
-        <ChooseFilter {filter} {statSet} on:filters-changed={() => console.log(filter)} />
+        <ChooseFilter {filter} {statSet} on:filters-changed={() => (filter = filter)} {advanced} />
     </div>
+
+    <span>
+        <Checkbox bind:checked={advanced} disabled={!canBeSimple && advanced} />
+        Advanced Mode
+    </span>
 </Modal>
 
 <style>
     div {
         font-family: monospace;
         min-width: 65ch;
+    }
+
+    span {
+        display: flex;
+        align-items: center;
+        justify-content: right;
+        gap: var(--small-gap);
     }
 
     b {

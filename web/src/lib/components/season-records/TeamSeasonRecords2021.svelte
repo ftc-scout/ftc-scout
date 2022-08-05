@@ -35,7 +35,7 @@
     import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
     import { filterStatSet } from "../../util/stats/StatsSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
-import { emptyFilter, type Filter } from "../../util/stats/filter";
+    import { emptyFilter, type Filter } from "../../util/stats/filter";
 
     export let eventTypes: EventTypes;
     export let data: Data[];

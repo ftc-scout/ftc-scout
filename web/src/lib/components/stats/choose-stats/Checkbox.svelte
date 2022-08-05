@@ -1,8 +1,9 @@
 <script lang="ts">
     export let checked = false;
+    export let disabled = false;
 </script>
 
-<input type="checkbox" bind:checked on:click />
+<input type="checkbox" bind:checked on:click {disabled} />
 
 <style>
     input {

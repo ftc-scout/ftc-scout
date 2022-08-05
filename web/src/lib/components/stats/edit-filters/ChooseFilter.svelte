@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { faArrowTurnUp, faFolderPlus, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
+    import { faFolderPlus, faPlusCircle, faTrash } from "@fortawesome/free-solid-svg-icons";
     import { createEventDispatcher } from "svelte";
     import Fa from "svelte-fa";
     import { slide } from "svelte/transition";
@@ -15,6 +15,7 @@
 
     export let filter: Filter<T>;
     export let depth = 0;
+    export let advanced: boolean;
 
     let dispatch = createEventDispatcher();
 
@@ -49,9 +50,11 @@
             dispatch("filters-changed");
         }
     }
+
+    $: margin = depth != 0 && advanced ? `calc(4 * var(--gap))` : "";
 </script>
 
-<div style:margin-left={depth != 0 ? `calc(4 * var(--gap))` : ""} transition:slide|local={{ duration: 400 }}>
+<div style:margin-left={margin} transition:slide|local={{ duration: 400 }}>
     {#if depth == 0}
         SHOW ROW IF:
     {/if}
@@ -61,11 +64,14 @@
         <CompareTypeChoice bind:value={filter.operator} />
         <StatOrNumberChoice bind:stat={filter.rhs} {statSet} />
     {:else}
-        <AllAnyChoice bind:value={filter.type} /> (
+        {#if advanced}
+            <AllAnyChoice bind:value={filter.type} /> (
+        {/if}
         {#each filter.conditions as subFilter, i (subFilter.id)}
             <svelte:self
                 filter={subFilter}
                 depth={depth + 1}
+                {advanced}
                 {statSet}
                 on:delete-me={() => deleteAt(i)}
                 on:filters-changed
@@ -73,14 +79,16 @@
         {:else}
             <br />
         {/each}
-        <button style:margin-left="calc(4 * var(--gap))" on:click={add} title="Add condition.">
+        <button style:margin-left={margin} on:click={add} title="Add condition.">
             <Fa icon={faPlusCircle} fw />
         </button>
-        <button on:click={addGroup} title="Add group.">
-            <Fa icon={faFolderPlus} fw />
-        </button>
-        <br />
-        )
+        {#if advanced}
+            <button on:click={addGroup} title="Add group.">
+                <Fa icon={faFolderPlus} fw />
+            </button>
+            <br />
+            )
+        {/if}
     {/if}
 
     {#if depth != 0}
