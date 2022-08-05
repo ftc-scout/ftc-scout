@@ -9,7 +9,7 @@
     type T = $$Generic;
 
     export let statSet: StatsSet<T, unknown>;
-    export let stat: Stat<T> | number;
+    export let stat: Stat<T> | number | null;
     export let statOnly = false;
 
     let chosenStats: Writable<Stat<T>[]> = writable([]);
@@ -29,11 +29,15 @@
 />
 
 <span>
-    {#if typeof stat == "number" && !statOnly}
+    {#if (typeof stat == "number" || stat == null) && !statOnly}
         <input type="number" bind:value={stat} />
     {:else}
         {@const name =
-            typeof stat == "number" ? "" : stat.identifierName.length < 20 ? stat.identifierName : stat.columnName}
+            stat == null || typeof stat == "number"
+                ? ""
+                : stat.identifierName.length < 20
+                ? stat.identifierName
+                : stat.columnName}
         <input
             type="text"
             readonly={true}

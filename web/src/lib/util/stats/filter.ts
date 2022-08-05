@@ -24,9 +24,9 @@ export type Filter<T> =
     | {
           id?: number;
           type: "compare";
-          lhs: Stat<T> | number;
+          lhs: Stat<T> | number | null;
           operator: StatFilterType;
-          rhs: Stat<T> | number;
+          rhs: Stat<T> | number | null;
       };
 
 export function emptyFilter<T>(): Filter<T> {
@@ -84,11 +84,13 @@ export function statDataMatchesSingleFilter<T>(
     filter: {
         id?: number;
         type: "compare";
-        lhs: Stat<T> | number;
+        lhs: Stat<T> | number | null;
         operator: StatFilterType;
-        rhs: Stat<T> | number;
+        rhs: Stat<T> | number | null;
     }
 ): boolean {
+    if (filter.lhs == null || filter.rhs == null) return true;
+
     let lhsValue = read(data, filter.lhs);
     let rhsValue = read(data, filter.rhs);
 

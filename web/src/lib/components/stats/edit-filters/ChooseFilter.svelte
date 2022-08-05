@@ -51,10 +51,10 @@
         }
     }
 
-    $: margin = depth != 0 && advanced ? `calc(4 * var(--gap))` : "";
+    $: margin = advanced ? `calc(4 * var(--gap))` : "";
 </script>
 
-<div style:margin-left={margin} transition:slide|local={{ duration: 400 }}>
+<div style:margin-left={depth != 0 ? margin : ""} transition:slide|local={{ duration: 400 }}>
     {#if depth == 0}
         SHOW ROW IF:
     {/if}

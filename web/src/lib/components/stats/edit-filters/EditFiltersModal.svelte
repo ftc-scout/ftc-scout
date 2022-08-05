@@ -19,7 +19,6 @@
 
     let advanced = filter.type != "ALL" || filter.conditions.some((c) => c.type != "compare");
     $: canBeSimple = filter.type == "ALL" && filter.conditions.every((c) => c.type == "compare");
-    $: console.log(canBeSimple);
 </script>
 
 <Modal bind:shown>
