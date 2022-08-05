@@ -47,7 +47,7 @@
 <Navbar />
 <Sidebar />
 
-<div class="content">
+<div id="content">
     <slot />
 </div>
 
@@ -55,7 +55,7 @@
     @import "/static/css/colors.css";
     @import "/static/css/global.css";
 
-    .content {
+    #content {
         margin-top: var(--navbar-size);
         margin-left: var(--sidebar-size);
         padding: var(--padding);

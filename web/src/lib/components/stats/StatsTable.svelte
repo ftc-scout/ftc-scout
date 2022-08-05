@@ -19,6 +19,7 @@
     import EditFiltersModal from "./edit-filters/EditFiltersModal.svelte";
     import type { SortType } from "../SortButton.svelte";
     import { emptyFilter, type Filter } from "../../util/stats/filter";
+    import StatsPageChooser from "./StatsPageChooser.svelte";
 
     type T = $$Generic;
 
@@ -28,6 +29,11 @@
     export let shownStats: Writable<Stat<T>[]>;
     export let selectedTeam: number | null = null;
     export let selectedTeamName: string | null = null;
+
+    export let pagination = false;
+    export let page = 0;
+    export let totalCount = 0;
+    export let pageSize = 1;
 
     export let defaultSort: ChosenSort<T>;
     export let currentSort: ChosenSort<T> = defaultSort;
@@ -97,6 +103,12 @@
         </tr>
     {/if}
 </table>
+
+{#if pagination}
+    <div style="display: flex; align-items: center; justify-content: center;">
+        <StatsPageChooser bind:page {totalCount} {pageSize} />
+    </div>
+{/if}
 
 <style>
     .options {
