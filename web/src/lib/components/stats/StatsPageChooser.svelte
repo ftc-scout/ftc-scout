@@ -1,43 +1,49 @@
 <script lang="ts">
+    import { browser } from "$app/env";
+    import { page } from "$app/stores";
+    import { prefetch } from "$app/navigation";
     import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
 
-    export let page: number;
+    export let currentPage: number;
     export let totalCount: number;
     export let pageSize: number;
 
     $: totalPages = Math.ceil(totalCount / pageSize);
-    let inputValue = page;
-    $: inputValue = page;
+    let inputValue = currentPage;
+    $: inputValue = currentPage;
+    $: if (browser && +inputValue >= 1 && +inputValue <= pageSize) {
+        let url = $page.url;
+        let old = url.searchParams.get("page");
+        url.searchParams.set("page", "" + inputValue);
+        let urlString = url.toString();
+        if (old) {
+            url.searchParams.set("page", old);
+        } else {
+            url.searchParams.delete("page");
+        }
+        prefetch(urlString);
+    }
 </script>
 
 <div class="wrapper">
-    <button
-        class="left"
-        on:click={() => {
-            if (page != 1) page--;
-        }}
-        disabled={page == 1}
-    >
+    <a class="left" href="?page={currentPage - 1}" sveltekit:prefetch class:disabled={currentPage == 1}>
         <Fa icon={faArrowLeft} />
-    </button>
+    </a>
 
     <span class="middle">
-        <form on:submit|preventDefault={() => (page = inputValue)} on:focusout={() => (page = inputValue)}>
+        <form
+            on:submit|preventDefault={() => (currentPage = inputValue)}
+            on:focusout={() => (currentPage = inputValue)}
+        >
             <input type="number" min="1" max={totalPages} style:width="6ch" bind:value={inputValue} />
         </form>
         / {totalPages}
     </span>
 
-    <button
-        class="right"
-        on:click={() => {
-            if (page != totalPages) page++;
-        }}
-        disabled={page == totalPages}
-    >
+    <a class="right" href="?page={currentPage + 1}" sveltekit:prefetch class:disabled={currentPage == totalPages}>
         <Fa icon={faArrowRight} />
-    </button>
+    </a>
 </div>
 
 <style>
@@ -50,7 +56,9 @@
         box-shadow: var(--shadow-color) 0px 2px 5px -1px, var(--shadow-color) 0px 1px 3px -1px;
     }
 
-    button {
+    a {
+        display: inline-block;
+
         border: none;
         background: var(--theme-color);
         color: var(--theme-text-color);
@@ -59,21 +67,22 @@
         cursor: pointer;
     }
 
-    button:hover {
+    a:hover {
         filter: brightness(0.95);
     }
 
-    button:disabled {
+    a.disabled {
+        pointer-events: none;
         filter: brightness(0.8);
         cursor: not-allowed;
     }
 
-    button.left {
+    a.left {
         border-top-left-radius: var(--pill-border-radius);
         border-bottom-left-radius: var(--pill-border-radius);
     }
 
-    button.right {
+    a.right {
         border-top-right-radius: var(--pill-border-radius);
         border-bottom-right-radius: var(--pill-border-radius);
     }

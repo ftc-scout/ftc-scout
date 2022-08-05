@@ -106,7 +106,7 @@
 
 {#if pagination}
     <div style="display: flex; align-items: center; justify-content: center;">
-        <StatsPageChooser bind:page {totalCount} {pageSize} />
+        <StatsPageChooser bind:currentPage={page} {totalCount} {pageSize} />
     </div>
 {/if}
 

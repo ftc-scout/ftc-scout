@@ -36,19 +36,12 @@
     import { filterStatSet } from "../../util/stats/StatsSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
     import { emptyFilter, type Filter } from "../../util/stats/filter";
-    import { goto } from "$app/navigation";
-    import { browser } from "$app/env";
 
     export let eventTypes: EventTypes;
     export let data: Data[];
     export let page: number;
     export let totalCount: number;
     export let pageSize: number;
-
-    $: if (browser) {
-        let url = `?page=${page}`;
-        goto(url);
-    }
 
     $: statSet =
         eventTypes == EventTypes.Remote
