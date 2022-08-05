@@ -13,14 +13,14 @@
         OPR_STAT,
         MAX_STAT,
     ]);
-    let currentFilters: Writable<StatFilterOrGroup<S>> = writable([]);
+    let currentFilters: Writable<Filter<S>> = writable(emptyFilter());
     let currentSort = defaultSort;
 </script>
 
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
+    import { emptyFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
-    import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
     import { PLAYED_STAT, RANK_STAT, RP_STAT, TEAM_STAT } from "../../util/stats/StatsShared2021";
     import {
         STAT_SET_2021_TRAD,

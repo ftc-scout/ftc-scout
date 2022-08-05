@@ -12,7 +12,7 @@
         AVERAGE_STAT,
         MAX_STAT,
     ]);
-    let currentFilters: Writable<StatFilterOrGroup<S>> = writable([]);
+    let currentFilters: Writable<Filter<S>> = writable(emptyFilter());
     let currentSort = defaultSort;
 </script>
 
@@ -27,9 +27,9 @@
         type FullTep2021Remote,
     } from "../../util/stats/StatsRemote2021";
     import { SortType } from "../SortButton.svelte";
-    import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
     import LocallyResolvedStatsTable from "../stats/LocallyResolvedStatsTable.svelte";
     import type { ChosenSort } from "../stats/StatsTable.svelte";
+    import { emptyFilter, type Filter } from "../../util/stats/filter";
 
     export let data: S[];
     export let selectedTeam: number | null = null;

@@ -17,8 +17,8 @@
     import ShowStatsModal from "./show-stats/ShowStatsModal.svelte";
     import { exportStatsCSV } from "../../util/stats/export-stats-csv";
     import EditFiltersModal from "./edit-filters/EditFiltersModal.svelte";
-    import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
     import type { SortType } from "../SortButton.svelte";
+    import { emptyFilter, type Filter } from "../../util/stats/filter";
 
     type T = $$Generic;
 
@@ -31,7 +31,7 @@
 
     export let defaultSort: ChosenSort<T>;
     export let currentSort: ChosenSort<T> = defaultSort;
-    export let currentFilters: StatFilterOrGroup<T> = [];
+    export let currentFilters: Filter<T> = emptyFilter();
 
     export let fileName: string;
 
@@ -45,20 +45,16 @@
         <FaButton
             icon={faEdit}
             on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
-            buttonStyle="font-size: var(--medium-font-size);">Choose Statistics</FaButton
+            buttonStyle="font-size: var(--medium-font-size);"
         >
+            Statistics
+        </FaButton>
         <FaButton
             icon={faFilter}
             on:click={() => (editFiltersModalShown = !editFiltersModalShown)}
             buttonStyle="font-size: var(--medium-font-size); margin-left: var(--gap);"
-            iconColor={currentFilters.length ? "var(--theme-color)" : ""}
         >
-            Edit Filters
-            {#if currentFilters.length}
-                <span style:color="var(--secondary-text-color)" style:font-weight="bold">
-                    ({currentFilters.length})
-                </span>
-            {/if}
+            Filters
         </FaButton>
     </div>
 
@@ -77,7 +73,7 @@
 </div>
 
 <ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
-<EditFiltersModal bind:shown={editFiltersModalShown} bind:currentFilters {statSet} />
+<EditFiltersModal bind:shown={editFiltersModalShown} {statSet} bind:currentFilters />
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table tabindex="-1">

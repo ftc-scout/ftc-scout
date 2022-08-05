@@ -11,14 +11,13 @@
         AVERAGE_STAT,
         RANK_STAT,
     ]);
-    let currentFilters: Writable<StatFilterOrGroup<Data>> = writable([]);
+    let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 </script>
 
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
     import { EventTypes } from "../../graphql/generated/graphql-operations";
     import type { Stat } from "../../util/stats/Stat";
-    import type { StatFilterOrGroup } from "../../util/stats/StatFilter";
     import { STAT_SET_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemote2021";
     import {
         AUTO_OPR_STAT,
@@ -36,6 +35,7 @@
     import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
     import { filterStatSet } from "../../util/stats/StatsSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
+import { emptyFilter, type Filter } from "../../util/stats/filter";
 
     export let eventTypes: EventTypes;
     export let data: Data[];

@@ -3,8 +3,8 @@
     import { SortType } from "../SortButton.svelte";
     import type { StatsSet } from "../../util/stats/StatsSet";
     import type { Writable } from "svelte/store";
-    import { filterStatDataList, type StatFilterOrGroup } from "../../util/stats/StatFilter";
     import StatsTable, { type ChosenSort } from "./StatsTable.svelte";
+    import { emptyFilter, filterStatDataList, type Filter } from "../../util/stats/filter";
 
     type T = $$Generic;
 
@@ -16,7 +16,7 @@
 
     export let defaultSort: ChosenSort<T>;
     export let currentSort: ChosenSort<T> = defaultSort;
-    export let currentFilters: StatFilterOrGroup<T> = [];
+    export let currentFilters: Filter<T> = emptyFilter();
 
     export let fileName: string;
 
