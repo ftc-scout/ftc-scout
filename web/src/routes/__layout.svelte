@@ -17,6 +17,7 @@
     import { setContext } from "svelte";
     import Sidebar from "../lib/components/nav/Sidebar.svelte";
     import type { HttpOptions } from "@apollo/client";
+    import { beforeNavigate } from "$app/navigation";
 
     export let f: NonNullable<HttpOptions["fetch"]>;
     setClient(getMyClient(f));
@@ -28,6 +29,19 @@
     $: $meStore = meData;
 
     setContext("me", meStore);
+
+    beforeNavigate(() => {
+        document.getElementById("content")!.scrollTo({
+            top: 0,
+        });
+    });
+
+    // $: if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
+    //     console.log("scroll to top")
+    //     document.getElementById("content")!.scrollTo({
+    //         top: 0,
+    //     });
+    // }
 </script>
 
 <svelte:head>

@@ -63,12 +63,6 @@
     $: data2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let data2021Teams: (FullTep2021Traditional | FullTep2021Remote)[] | undefined;
     $: data2021Teams = data2021?.teps as any;
-
-    $: if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
-        document.getElementById("content")!.scrollTo({
-            top: 0,
-        });
-    }
 </script>
 
 <svelte:head>
