@@ -35,13 +35,6 @@
             top: 0,
         });
     });
-
-    // $: if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
-    //     console.log("scroll to top")
-    //     document.getElementById("content")!.scrollTo({
-    //         top: 0,
-    //     });
-    // }
 </script>
 
 <svelte:head>
