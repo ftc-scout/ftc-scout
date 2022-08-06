@@ -35,12 +35,15 @@
     }
 
     li div {
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        text-align: center;
+        padding: var(--padding);
         background: var(--purple-stat-color-transparent);
 
         min-width: 200px;
+        max-width: 200px;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
     }
 
     @media (max-width: 500px) {

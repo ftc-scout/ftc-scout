@@ -17,6 +17,9 @@ query TeamSeasonRecords2021(
                 number
                 name
             }
+            event {
+                ...RecordsEvent
+            }
         }
         offset
         count

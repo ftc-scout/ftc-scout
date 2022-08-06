@@ -3,6 +3,7 @@
     import { prettyPrintOrdinal } from "../../util/format/pretty-print-ordinal";
     import type { Stat } from "../../util/stats/Stat";
     import { StatDisplayType } from "../../util/stats/stat-display-type";
+    import StatEvent from "./StatEvent.svelte";
     import StatTeam from "./StatTeam.svelte";
 
     type T = $$Generic;
@@ -14,11 +15,22 @@
 
     $: read = stat.read(data);
     $: team = read as { number: number; name: string };
+    $: event = read as {
+        name: string;
+        start: string;
+        end: string;
+        code: string;
+        season: number;
+    };
     $: value = read as number;
 </script>
 
 {#if stat.displayType == StatDisplayType.TEAM}
     <StatTeam {team} bind:selectedTeam bind:selectedTeamName on:hover-team on:un-hover-team />
+{:else if stat.displayType == StatDisplayType.EVENT}
+    <StatEvent {event} />
+{:else if stat.displayType == StatDisplayType.STRING}
+    {read}
 {:else}
     <td class={stat.color} title={stat.identifierName}>
         {#if stat.displayType == StatDisplayType.INTEGER}

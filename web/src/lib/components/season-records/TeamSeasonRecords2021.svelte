@@ -10,6 +10,7 @@
         ENDGAME_OPR_STAT,
         AVERAGE_STAT,
         RANK_STAT,
+        EVENT_STAT as any,
     ]);
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 </script>
@@ -33,9 +34,10 @@
     import { STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
-    import { filterStatSet } from "../../util/stats/StatSet";
+    import { filterStatSet, type StatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
     import { emptyFilter, type Filter } from "../../util/stats/filter";
+    import { EVENT_STAT, STAT_SET_EVENT } from "$lib/util/stats/StatsEvent";
 
     export let eventTypes: EventTypes;
     export let data: Data[];
@@ -43,12 +45,16 @@
     export let totalCount: number;
     export let pageSize: number;
 
-    $: statSet =
-        eventTypes == EventTypes.Remote
-            ? STAT_SET_2021_REMOTE
-            : eventTypes == EventTypes.Trad
-            ? STAT_SET_2021_TRAD
-            : STAT_SET_2021_SHARED;
+    let statSet: StatSet<unknown, unknown>;
+    $: {
+        statSet =
+            eventTypes == EventTypes.Remote
+                ? STAT_SET_2021_REMOTE
+                : eventTypes == EventTypes.Trad
+                ? STAT_SET_2021_TRAD
+                : STAT_SET_2021_SHARED;
+        statSet.push(...STAT_SET_EVENT);
+    }
 
     $: $shownStats = filterStatSet(statSet as any, $shownStats);
 

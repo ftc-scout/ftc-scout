@@ -66,15 +66,15 @@ export function statFilterTypeToString(type: StatFilterType): "=" | "≠" | ">" 
     }[type] as "=" | "≠" | ">" | "≥" | "<" | "≤";
 }
 
-function read<T>(data: T, val: Stat<T> | number): number {
+function read<T>(data: T, val: Stat<T> | number): number | string {
     if (typeof val == "number") {
         return val;
     } else {
         let read = val.read(data);
-        if (typeof read == "number") {
+        if (typeof read == "number" || typeof read == "string") {
             return read;
         } else {
-            return read.number;
+            return "number" in read ? read.number : read.name;
         }
     }
 }

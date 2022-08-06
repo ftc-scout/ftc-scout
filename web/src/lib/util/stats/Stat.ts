@@ -7,7 +7,13 @@ export interface Stat<T> {
     columnName: string;
     listName: string;
     identifierName: string;
-    read(_: T): number | { number: number; name: string };
+    read(
+        _: T
+    ):
+        | number
+        | { number: number; name: string }
+        | { name: string; start: string; end: string; code: string; season: number }
+        | string;
 }
 
 export function statFromGroup<U, T>(

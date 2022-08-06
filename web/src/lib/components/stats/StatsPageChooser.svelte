@@ -12,7 +12,7 @@
     $: totalPages = Math.ceil(totalCount / pageSize);
     let inputValue = currentPage;
     $: inputValue = currentPage;
-    $: if (browser && +inputValue >= 1 && +inputValue <= pageSize) {
+    $: if (browser && +inputValue >= 1 && +inputValue <= totalPages) {
         let url = $page.url;
         let old = url.searchParams.get("page");
         url.searchParams.set("page", "" + inputValue);
@@ -26,7 +26,7 @@
     }
 
     function go() {
-        if (browser && +inputValue >= 1 && +inputValue <= pageSize) {
+        if (browser && +inputValue >= 1 && +inputValue <= totalPages) {
             let url = $page.url;
             let old = url.searchParams.get("page");
             url.searchParams.set("page", "" + inputValue);

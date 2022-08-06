@@ -13,8 +13,12 @@
     $: value = stat.read(data);
 </script>
 
-{#if typeof value == "object"}
+{#if typeof value == "string"}
+    {value}
+{:else if typeof value == "object" && "number" in value}
     {value.number}
+{:else if typeof value == "object" && "name" in value}
+    {value.name}
 {:else if stat.displayType == StatDisplayType.INTEGER}
     {value}
 {:else if stat.displayType == StatDisplayType.DECIMAL}

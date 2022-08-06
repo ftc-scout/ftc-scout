@@ -16,7 +16,7 @@
 
 <Modal bind:shown>
     <b slot="title">
-        <span>Choose Statistics</span>
+        <span>Statistics</span>
         <button
             on:click={() => {
                 shown = false;
@@ -61,5 +61,7 @@
         display: block;
 
         width: fit-content;
+
+        margin-bottom: var(--vl-gap);
     }
 </style>

@@ -64,7 +64,6 @@ function nestedStatContains<T, U>(group: StatGroup<T, U>, nestedStat: NestedStat
 }
 
 export function filterStatSet<T, U>(statSet: StatSet<T, U>, filterList: Stat<T>[]): Stat<T>[] {
-    console.log(statSet, filterList);
     return filterList.filter((s) =>
         statSet.some((set) => {
             return set.type == "standalone"

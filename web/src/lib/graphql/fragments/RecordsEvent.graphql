@@ -1,0 +1,17 @@
+fragment RecordsEvent on Event {
+    season
+    code
+    name
+    remote
+    fieldCount
+    type
+    regionCode
+    leagueCode
+    start
+    end
+    venue
+    city
+    stateOrProvince
+    country
+    website
+}

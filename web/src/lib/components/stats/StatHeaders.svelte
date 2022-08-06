@@ -203,7 +203,7 @@
         {@const mySort = shownStat == sort?.stat ? sort.type : SortType.NONE}
         <th
             class={shownStat.color}
-            class:team={shownStat.displayType == StatDisplayType.TEAM}
+            class:grow={shownStat.displayType == StatDisplayType.TEAM || shownStat.displayType == StatDisplayType.EVENT}
             title={shownStat.identifierName}
             use:draggable={i}
             bind:this={elements[i]}
@@ -231,7 +231,7 @@
         cursor: grab;
     }
 
-    .team {
+    .grow {
         width: 100%;
     }
 
