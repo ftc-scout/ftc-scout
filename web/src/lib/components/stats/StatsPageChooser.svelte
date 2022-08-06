@@ -1,7 +1,7 @@
 <script lang="ts">
     import { browser } from "$app/env";
     import { page } from "$app/stores";
-    import { prefetch } from "$app/navigation";
+    import { goto, prefetch } from "$app/navigation";
     import { faArrowLeft, faArrowRight } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
 
@@ -24,6 +24,21 @@
         }
         prefetch(urlString);
     }
+
+    function go() {
+        if (browser && +inputValue >= 1 && +inputValue <= pageSize) {
+            let url = $page.url;
+            let old = url.searchParams.get("page");
+            url.searchParams.set("page", "" + inputValue);
+            let urlString = url.toString();
+            if (old) {
+                url.searchParams.set("page", old);
+            } else {
+                url.searchParams.delete("page");
+            }
+            goto(urlString);
+        }
+    }
 </script>
 
 <div class="wrapper">
@@ -33,8 +48,8 @@
 
     <span class="middle">
         <form
-            on:submit|preventDefault={() => (currentPage = inputValue)}
-            on:focusout={() => (currentPage = inputValue)}
+            on:submit|preventDefault={go}
+            on:focusout={go}
         >
             <input type="number" min="1" max={totalPages} style:width="6ch" bind:value={inputValue} />
         </form>
