@@ -81,7 +81,7 @@
     }
 
     @media (max-width: 1600px) {
-        .content {
+        #content {
             margin-left: 0;
         }
     }
