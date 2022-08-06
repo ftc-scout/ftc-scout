@@ -5,6 +5,16 @@ import { FtcApiMetadata } from "../entities/FtcApiMetadata";
 import { Event } from "../../db/entities/Event";
 import { DeepPartial } from "typeorm";
 
+const EVENT_RENAMING: Record<string, string> = {
+    FTCCMP1: "FIRST World Championship - Finals Division",
+    FTCCMP1FRNK: "FIRST World Championship - Franklin Division",
+    FTCCMP1JEMI: "FIRST World Championship - Jemison Division",
+};
+
+function getEventName(name: string, code: string): string {
+    return (EVENT_RENAMING[code] ?? name).trim();
+}
+
 export async function loadAllEvents(season: Season) {
     console.log(`Fetching all events for season ${season}.`);
 
@@ -22,7 +32,7 @@ export async function loadAllEvents(season: Season) {
             season,
             code: apiEvent.code,
             divisionCode: apiEvent?.divisionCode === "" ? null : apiEvent.divisionCode,
-            name: apiEvent.name?.trim(),
+            name: getEventName(apiEvent.name!, apiEvent.code!),
             remote: apiEvent.remote,
             hybrid: apiEvent.hybrid,
             fieldCount: apiEvent.fieldCount,
