@@ -3,12 +3,12 @@
     import Fa from "svelte-fa";
     import { writable, type Writable } from "svelte/store";
     import type { Stat } from "../../../util/stats/Stat";
-    import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { StatSet } from "../../../util/stats/StatSet";
     import ChooseStatsModal from "../choose-stats/ChooseStatsModal.svelte";
 
     type T = $$Generic;
 
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSet<T, unknown>;
     export let stat: Stat<T> | number | null;
     export let statOnly = false;
 

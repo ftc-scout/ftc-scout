@@ -5,14 +5,14 @@
     import Modal from "../../Modal.svelte";
     import ChooseFilter from "./ChooseFilter.svelte";
     import type { Filter } from "../../../util/stats/filter";
-    import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { StatSet } from "../../../util/stats/StatSet";
     import Checkbox from "../choose-stats/Checkbox.svelte";
 
     type T = $$Generic;
 
     export let shown = false;
     export let currentFilters: Filter<T>;
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSet<T, unknown>;
 
     let filter: Filter<T> = currentFilters;
     $: if (!shown) currentFilters = filter;

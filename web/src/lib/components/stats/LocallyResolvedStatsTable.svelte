@@ -1,14 +1,14 @@
 <script lang="ts">
     import type { Stat } from "../../util/stats/Stat";
     import { SortType } from "../SortButton.svelte";
-    import type { StatsSet } from "../../util/stats/StatsSet";
+    import type { StatSet } from "../../util/stats/StatSet";
     import type { Writable } from "svelte/store";
     import StatsTable, { type ChosenSort } from "./StatsTable.svelte";
     import { emptyFilter, filterStatDataList, type Filter } from "../../util/stats/filter";
 
     type T = $$Generic;
 
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSet<T, unknown>;
 
     export let data: T[];
     export let shownStats: Writable<Stat<T>[]>;

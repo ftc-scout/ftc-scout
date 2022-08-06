@@ -33,7 +33,7 @@
     import { STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
-    import { filterStatSet } from "../../util/stats/StatsSet";
+    import { filterStatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
     import { emptyFilter, type Filter } from "../../util/stats/filter";
 

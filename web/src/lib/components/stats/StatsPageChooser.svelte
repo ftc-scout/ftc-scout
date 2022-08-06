@@ -47,10 +47,7 @@
     </a>
 
     <span class="middle">
-        <form
-            on:submit|preventDefault={go}
-            on:focusout={go}
-        >
+        <form on:submit|preventDefault={go} on:focusout={go}>
             <input type="number" min="1" max={totalPages} style:width="6ch" bind:value={inputValue} />
         </form>
         / {totalPages}

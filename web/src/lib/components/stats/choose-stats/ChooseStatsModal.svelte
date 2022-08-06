@@ -1,6 +1,6 @@
 <script lang="ts">
     import GroupsHeader from "./GroupsHeader.svelte";
-    import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { StatSet } from "../../../util/stats/StatSet";
     import Modal from "../../Modal.svelte";
     import ChooseStatsRow from "./ChooseStatsRow.svelte";
     import Fa from "svelte-fa";
@@ -13,7 +13,7 @@
     type T = $$Generic;
 
     export let chosenStats: Writable<Stat<T>[]>;
-    export let statSet: StatsSet<unknown, unknown>;
+    export let statSet: StatSet<unknown, unknown>;
     export let oneOnly = false;
     export let shown = false;
 
@@ -28,7 +28,7 @@
 </script>
 
 <Modal bind:shown>
-    <b slot="title">
+    <b slot="title" class="title">
         <span>Choose Statistics</span>
         <button
             on:click={() => {
@@ -39,24 +39,28 @@
         </button>
     </b>
 
-    <ChooseStandaloneStats {statSet} {chosenStats} {oneOnly} on:stat-change={change} />
-
-    <table>
-        <GroupsHeader groups={statSet.groups} />
-        {#each statSet.groupStats as groupStat}
-            <ChooseStatsRow
-                myNestedStat={groupStat}
-                groups={statSet.groups}
-                {chosenStats}
-                {oneOnly}
-                on:stat-change={change}
-            />
-        {/each}
-    </table>
+    {#each statSet as set}
+        {#if set.type == "standalone"}
+            <ChooseStandaloneStats statSet={set.set} {chosenStats} {oneOnly} on:stat-change={change} name={set.name} />
+        {:else}
+            <table>
+                <GroupsHeader groups={set.set.groups} name={set.name} />
+                {#each set.set.groupStats as groupStat}
+                    <ChooseStatsRow
+                        myNestedStat={groupStat}
+                        groups={set.set.groups}
+                        {chosenStats}
+                        {oneOnly}
+                        on:stat-change={change}
+                    />
+                {/each}
+            </table>
+        {/if}
+    {/each}
 </Modal>
 
 <style>
-    b {
+    .title {
         display: flex;
         align-items: center;
         justify-content: space-between;

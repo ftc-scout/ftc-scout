@@ -12,7 +12,7 @@
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
     import FaButton from "../FaButton.svelte";
     import { faEdit, faFileArrowDown, faFilter } from "@fortawesome/free-solid-svg-icons";
-    import type { StatsSet } from "../../util/stats/StatsSet";
+    import type { StatSet } from "../../util/stats/StatSet";
     import type { Writable } from "svelte/store";
     import ShowStatsModal from "./show-stats/ShowStatsModal.svelte";
     import { exportStatsCSV } from "../../util/stats/export-stats-csv";
@@ -23,7 +23,7 @@
 
     type T = $$Generic;
 
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSet<T, unknown>;
 
     export let data: T[];
     export let shownStats: Writable<Stat<T>[]>;

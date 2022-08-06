@@ -3,20 +3,21 @@
 
     import Fa from "svelte-fa";
     import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
-    import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { StatSetStandalone } from "../../../util/stats/StatSet";
     import type { Writable } from "svelte/store";
     import type { Stat } from "../../../util/stats/Stat";
 
     type T = $$Generic;
 
     export let chosenStats: Writable<Stat<T>[]>;
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSetStandalone<T>;
     export let oneOnly: boolean;
+    export let name: string;
 </script>
 
 <ul>
     <li>
-        <span />
+        <b> {name} </b>
         <div class="header" title="Choose which statistics are shown.">
             Show Statistic
             <span style:font-size="var(--tiny-font-size)">
@@ -31,6 +32,13 @@
 </ul>
 
 <style>
+    b {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     ul {
         list-style: none;
         margin: 0;
@@ -39,7 +47,6 @@
         margin-bottom: var(--vl-gap);
 
         max-width: 100%;
-        /* width: fit-content; */
     }
 
     li {

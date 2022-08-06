@@ -1,6 +1,6 @@
 <script lang="ts">
     import GroupsHeader from "./GroupsHeader.svelte";
-    import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { StatSet } from "../../../util/stats/StatSet";
     import Modal from "../../Modal.svelte";
     import ShowStatsRow from "./ShowStatsRow.svelte";
     import Fa from "svelte-fa";
@@ -10,7 +10,7 @@
     type T = $$Generic;
 
     export let data: T;
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSet<T, unknown>;
     export let shown = false;
 </script>
 
@@ -26,14 +26,18 @@
         </button>
     </b>
 
-    <ShowStandaloneStats {statSet} {data} />
-
-    <table>
-        <GroupsHeader groups={statSet.groups} />
-        {#each statSet.groupStats as groupStat}
-            <ShowStatsRow myNestedStat={groupStat} groups={statSet.groups} {data} />
-        {/each}
-    </table>
+    {#each statSet as set}
+        {#if set.type == "standalone"}
+            <ShowStandaloneStats statSet={set.set} {data} name={set.name} />
+        {:else}
+            <table>
+                <GroupsHeader groups={set.set.groups} name={set.name} />
+                {#each set.set.groupStats as groupStat}
+                    <ShowStatsRow myNestedStat={groupStat} groups={set.set.groups} {data} />
+                {/each}
+            </table>
+        {/if}
+    {/each}
 </Modal>
 
 <style>

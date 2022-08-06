@@ -5,7 +5,7 @@
 <script lang="ts">
     import ShowSingleStat from "./ShowSingleStat.svelte";
 
-    import type { NestedStat, StatGroup } from "../../../util/stats/StatsSet";
+    import type { NestedStat, StatGroup } from "../../../util/stats/StatSet";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
     import { writable, type Writable } from "svelte/store";

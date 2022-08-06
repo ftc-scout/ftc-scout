@@ -3,19 +3,20 @@
 
     import Fa from "svelte-fa";
     import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
-    import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { StatSetStandalone } from "../../../util/stats/StatSet";
 
     type T = $$Generic;
 
     export let data: T;
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSetStandalone<T>;
+    export let name: string;
 </script>
 
 <ul>
     <li>
-        <span />
+        <b> {name} </b>
         <div class="header" title="Choose which statistics are shown.">
-            Show Statistic
+            Statistic
             <span style:font-size="var(--tiny-font-size)">
                 <Fa icon={faQuestionCircle} />
             </span>
@@ -28,6 +29,13 @@
 </ul>
 
 <style>
+    b {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
     ul {
         list-style: none;
         margin: 0;

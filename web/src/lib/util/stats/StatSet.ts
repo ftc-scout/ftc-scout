@@ -34,11 +34,27 @@ export function groupGetter<T, U>(
     };
 }
 
-export interface StatsSet<T, U> {
+export interface StatSetStandalone<T> {
     standalone: Stat<T>[];
+}
+
+export interface StatSetGroup<T, U> {
     groups: StatGroup<T, U>[];
     groupStats: NestedStat<U>[];
 }
+
+export type StatSet<T, U> = (
+    | {
+          name: string;
+          type: "standalone";
+          set: StatSetStandalone<T>;
+      }
+    | {
+          name: string;
+          type: "group";
+          set: StatSetGroup<T, U>;
+      }
+)[];
 
 function nestedStatContains<T, U>(group: StatGroup<T, U>, nestedStat: NestedStat<U>, stat: Stat<T>): boolean {
     return (
@@ -47,10 +63,13 @@ function nestedStatContains<T, U>(group: StatGroup<T, U>, nestedStat: NestedStat
     );
 }
 
-export function filterStatSet<T, U>(statSet: StatsSet<T, U>, filterList: Stat<T>[]): Stat<T>[] {
-    return filterList.filter(
-        (s) =>
-            statSet.standalone.some((ss) => ss.identifierName == s.identifierName) ||
-            statSet.groups.some((g) => statSet.groupStats.some((gs) => nestedStatContains(g, gs, s)))
+export function filterStatSet<T, U>(statSet: StatSet<T, U>, filterList: Stat<T>[]): Stat<T>[] {
+    console.log(statSet, filterList);
+    return filterList.filter((s) =>
+        statSet.some((set) => {
+            return set.type == "standalone"
+                ? set.set.standalone.some((ss) => ss.identifierName == s.identifierName)
+                : set.set.groups.some((g) => set.set.groupStats.some((gs) => nestedStatContains(g, gs, s)));
+        })
     );
 }

@@ -3,7 +3,7 @@
 
     import type { Writable } from "svelte/store";
     import type { Stat } from "../../../util/stats/Stat";
-    import type { StatGroup } from "../../../util/stats/StatsSet";
+    import type { StatGroup } from "../../../util/stats/StatSet";
     import Checkbox from "./Checkbox.svelte";
 
     type T = $$Generic;

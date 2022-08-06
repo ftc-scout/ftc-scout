@@ -1,15 +1,16 @@
 <script lang="ts">
     import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
-    import type { StatGroup } from "../../../util/stats/StatsSet";
+    import type { StatGroup } from "../../../util/stats/StatSet";
 
     type T = $$Generic;
 
     export let groups: StatGroup<T, unknown>[];
+    export let name: string;
 </script>
 
 <thead>
-    <th style:flex-grow="1" />
+    <th style:flex-grow="1"> <b>{name}</b> </th>
     {#each groups as group}
         <th class={group.color} title={group.description}>
             <span class="center">

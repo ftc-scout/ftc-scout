@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Stat } from "../../../util/stats/Stat";
-    import type { StatGroup } from "../../../util/stats/StatsSet";
+    import type { StatGroup } from "../../../util/stats/StatSet";
     import ShowData from "./ShowData.svelte";
 
     type T = $$Generic;

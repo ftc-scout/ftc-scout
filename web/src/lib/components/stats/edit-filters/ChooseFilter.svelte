@@ -4,14 +4,14 @@
     import Fa from "svelte-fa";
     import { slide } from "svelte/transition";
     import { getFilterId, StatFilterType, type Filter } from "../../../util/stats/filter";
-    import type { StatsSet } from "../../../util/stats/StatsSet";
+    import type { StatSet } from "../../../util/stats/StatSet";
     import AllAnyChoice from "./AllAnyChoice.svelte";
     import CompareTypeChoice from "./CompareTypeChoice.svelte";
     import StatOrNumberChoice from "./StatOrNumberChoice.svelte";
 
     type T = $$Generic;
 
-    export let statSet: StatsSet<T, unknown>;
+    export let statSet: StatSet<T, unknown>;
 
     export let filter: Filter<T>;
     export let depth = 0;
