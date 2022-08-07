@@ -47,13 +47,14 @@
 
     let statSet: StatSet<unknown, unknown>;
     $: {
-        statSet =
-            eventTypes == EventTypes.Remote
+        statSet = [
+            ...(eventTypes == EventTypes.Remote
                 ? STAT_SET_2021_REMOTE
                 : eventTypes == EventTypes.Trad
                 ? STAT_SET_2021_TRAD
-                : STAT_SET_2021_SHARED;
-        statSet.push(...STAT_SET_EVENT);
+                : STAT_SET_2021_SHARED),
+            ...STAT_SET_EVENT,
+        ];
     }
 
     $: $shownStats = filterStatSet(statSet as any, $shownStats);
