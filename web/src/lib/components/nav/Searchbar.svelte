@@ -119,7 +119,7 @@
 
             <ol>
                 {#each eventsSearchData as oneSearchRes, i}
-                    {@const link = `/events/${oneSearchRes.event.season}/${oneSearchRes.event.code}`}
+                    {@const link = `/events/${oneSearchRes.event.season}/${oneSearchRes.event.code}/matches`}
 
                     <li>
                         <a

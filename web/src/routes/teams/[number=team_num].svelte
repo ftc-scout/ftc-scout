@@ -101,7 +101,7 @@
         {@const event = teamEvent.event}
         <Card>
             <h2 id={event.code}>
-                <a sveltekit:prefetch class="event-link" href={`/events/${event.season}/${event.code}`}>
+                <a sveltekit:prefetch class="event-link" href={`/events/${event.season}/${event.code}/matches`}>
                     {event.name}
                 </a>
             </h2>

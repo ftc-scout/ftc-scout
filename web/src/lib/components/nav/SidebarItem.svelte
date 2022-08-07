@@ -7,7 +7,13 @@
     export let icon: IconDefinition;
     export let href: string | null = null;
 
-    $: active = href == null ? false : href == "/" ? $page.url.pathname == "/" : $page.url.pathname.startsWith(href);
+    $: topLevel = href?.split("/").find((s) => s != "");
+    $: active =
+        href == null
+            ? false
+            : topLevel == null
+            ? $page.url.pathname == "/"
+            : $page.url.pathname.startsWith("/" + topLevel);
 </script>
 
 {#if href}

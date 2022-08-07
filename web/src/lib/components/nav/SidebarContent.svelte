@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { CURRENT_SEASON } from "$lib/constants";
+
     import {
         ABOUT_ICON,
         API_ICON,
@@ -47,7 +49,7 @@
 <SidebarItem icon={EVENTS_ICON} href="/events">Events</SidebarItem>
 <SidebarItem icon={TEAMS_ICON} href="/teams">Teams</SidebarItem>
 <SidebarItem icon={REGIONS_ICON} href="/regions">Regions and Leagues</SidebarItem>
-<SidebarItem icon={SEASON_RECORDS_ICON} href="/records">Season Records</SidebarItem>
+<SidebarItem icon={SEASON_RECORDS_ICON} href="/records/{CURRENT_SEASON}/teams">Season Records</SidebarItem>
 
 <hr />
 

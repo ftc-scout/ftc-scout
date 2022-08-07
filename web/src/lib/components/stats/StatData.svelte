@@ -28,7 +28,7 @@
 {#if stat.displayType == StatDisplayType.TEAM}
     <StatTeam {team} bind:selectedTeam bind:selectedTeamName on:hover-team on:un-hover-team />
 {:else if stat.displayType == StatDisplayType.EVENT}
-    <StatEvent {event} />
+    <StatEvent {event} on:hover-team on:un-hover-team />
 {:else if stat.displayType == StatDisplayType.STRING}
     {read}
 {:else}
