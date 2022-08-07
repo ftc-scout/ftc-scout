@@ -6,6 +6,7 @@ import { TepStats2021 } from "../../../db/entities/team-event-participation/TepS
 import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { EventTypes } from "./EventTypes";
 import { Order } from "./Order";
+import { Event } from "src/db/entities/Event";
 
 @ObjectType()
 class TEP2021Records {
@@ -73,6 +74,7 @@ enum TEP2021FieldName {
     TOTAL_POINTS,
     TOTAL_POINTS_NP,
     //
+    TEAM_NUMBER,
     RP,
     TB1,
     TB2,
@@ -82,12 +84,14 @@ enum TEP2021FieldName {
     TIES,
     DQ,
     QUAL_MATCHES_PLAYED,
+    //
+    EVENT_NAME,
 }
 
 registerEnumType(TEP2021FieldName, { name: "TEP2021FieldName" });
 
 function getFieldNameSingular(fn: TEP2021FieldName): string | null {
-    let map: Partial<Record<TEP2021FieldName, keyof TeamEventParticipation2021>> = {
+    let map: Partial<Record<TEP2021FieldName, keyof TeamEventParticipation2021 | `e.${keyof Event}`>> = {
         [TEP2021FieldName.RP]: "rp",
         [TEP2021FieldName.TB1]: "tb1",
         [TEP2021FieldName.TB2]: "tb2",
@@ -97,6 +101,8 @@ function getFieldNameSingular(fn: TEP2021FieldName): string | null {
         [TEP2021FieldName.TIES]: "ties",
         [TEP2021FieldName.DQ]: "dq",
         [TEP2021FieldName.QUAL_MATCHES_PLAYED]: "qualMatchesPlayed",
+        [TEP2021FieldName.TEAM_NUMBER]: "teamNumber",
+        [TEP2021FieldName.EVENT_NAME]: "e.name",
     };
 
     return map[fn] ?? null;
@@ -183,7 +189,11 @@ class TEP2021Ordering {
 
         if (!sqlName) return query;
 
-        return query.addOrderBy(`tep.${sqlName}`, direction);
+        if (sqlName.includes(".")) {
+            return query.addOrderBy(sqlName, direction);
+        } else {
+            return query.addOrderBy(`tep.${sqlName}`, direction);
+        }
     }
 }
 

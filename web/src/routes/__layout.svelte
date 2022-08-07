@@ -17,8 +17,6 @@
     import { setContext } from "svelte";
     import Sidebar from "../lib/components/nav/Sidebar.svelte";
     import type { HttpOptions } from "@apollo/client";
-    import { afterNavigate } from "$app/navigation";
-    import { page } from "$app/stores";
 
     export let f: NonNullable<HttpOptions["fetch"]>;
     setClient(getMyClient(f));
@@ -30,14 +28,6 @@
     $: $meStore = meData;
 
     setContext("me", meStore);
-
-    afterNavigate(() => {
-        if (!$page.url.hash) {
-            document.getElementById("content")!.scrollTo({
-                top: 0,
-            });
-        }
-    });
 </script>
 
 <svelte:head>

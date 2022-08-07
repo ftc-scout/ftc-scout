@@ -1,4 +1,4 @@
-import type { FullStatsGroup2021RemoteFragment } from "../../graphql/generated/graphql-operations";
+import { Tep2021Group, type FullStatsGroup2021RemoteFragment } from "../../graphql/generated/graphql-operations";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
@@ -77,7 +77,16 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                     shortName: "TOT",
                     description: "The sum of all points scored in the category.",
                     color: StatColor.RED,
-                    get: (s) => groupGetter((t) => t.stats.total, s, StatColor.RED, "TOT", "Total", "Total"),
+                    get: (s) =>
+                        groupGetter(
+                            (t) => t.stats.total,
+                            s,
+                            StatColor.RED,
+                            "TOT",
+                            "Total",
+                            "Total",
+                            Tep2021Group.Total
+                        ),
                 },
                 {
                     longName: "Average",
@@ -92,6 +101,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                             "AVG",
                             "Average",
                             "Average",
+                            Tep2021Group.Avg,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -100,14 +110,32 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                     shortName: "MIN",
                     description: "The lowest number of points scored in the category.",
                     color: StatColor.LIGHT_BLUE,
-                    get: (s) => groupGetter((t) => t.stats.min, s, StatColor.LIGHT_BLUE, "MIN", "Minimum", "Minimum"),
+                    get: (s) =>
+                        groupGetter(
+                            (t) => t.stats.min,
+                            s,
+                            StatColor.LIGHT_BLUE,
+                            "MIN",
+                            "Minimum",
+                            "Minimum",
+                            Tep2021Group.Min
+                        ),
                 },
                 {
                     longName: "Maximum",
                     shortName: "MAX",
                     description: "The highest number of points scored in the category.",
                     color: StatColor.BLUE,
-                    get: (s) => groupGetter((t) => t.stats.max, s, StatColor.BLUE, "MAX", "Maximum", "Maximum"),
+                    get: (s) =>
+                        groupGetter(
+                            (t) => t.stats.max,
+                            s,
+                            StatColor.BLUE,
+                            "MAX",
+                            "Maximum",
+                            "Maximum",
+                            Tep2021Group.Avg
+                        ),
                 },
                 {
                     longName: "Std. Dev.",
@@ -122,6 +150,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                             "DEV",
                             "Std. Dev.",
                             "Standard Deviation",
+                            Tep2021Group.Dev,
                             StatDisplayType.DECIMAL
                         ),
                 },

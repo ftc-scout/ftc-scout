@@ -19,6 +19,7 @@
 
     export let defaultSort: ChosenSort;
     export let sort: ChosenSort = defaultSort;
+    console.log("header", sort);
 
     function handleClick(stat: Stat<T>) {
         let currentSort = sort?.stat == stat ? sort.type : SortType.NONE;
@@ -200,7 +201,7 @@
 
 <thead>
     {#each $shownStats as shownStat, i}
-        {@const mySort = shownStat == sort?.stat ? sort.type : SortType.NONE}
+        {@const mySort = shownStat.identifierName == sort?.stat.identifierName ? sort.type : SortType.NONE}
         <th
             class={shownStat.color}
             class:grow={shownStat.displayType == StatDisplayType.TEAM || shownStat.displayType == StatDisplayType.EVENT}

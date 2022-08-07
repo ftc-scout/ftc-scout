@@ -1,4 +1,8 @@
-import type { FullStatsGroup2021TradFragment } from "../../graphql/generated/graphql-operations";
+import {
+    Tep2021FieldName,
+    Tep2021Group,
+    type FullStatsGroup2021TradFragment,
+} from "../../graphql/generated/graphql-operations";
 import { makeStat, type Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
@@ -72,6 +76,7 @@ export const WINS_STAT: Stat<FullTep2021Traditional> = {
     columnName: "Wins",
     identifierName: "Wins",
     read: (s) => s.stats.wins,
+    apiField: { fieldName: Tep2021FieldName.Wins },
 };
 
 export const lOSSES_STAT: Stat<FullTep2021Traditional> = {
@@ -81,6 +86,7 @@ export const lOSSES_STAT: Stat<FullTep2021Traditional> = {
     columnName: "Losses",
     identifierName: "Losses",
     read: (s) => s.stats.losses,
+    apiField: { fieldName: Tep2021FieldName.Losses },
 };
 
 export const TIES_STAT: Stat<FullTep2021Traditional> = {
@@ -90,6 +96,7 @@ export const TIES_STAT: Stat<FullTep2021Traditional> = {
     columnName: "Ties",
     identifierName: "Ties",
     read: (s) => s.stats.ties,
+    apiField: { fieldName: Tep2021FieldName.Ties },
 };
 
 export const DQ_STAT: Stat<FullTep2021Traditional> = {
@@ -99,6 +106,7 @@ export const DQ_STAT: Stat<FullTep2021Traditional> = {
     columnName: "DQs",
     identifierName: "Disqualifications (DQs)",
     read: (s) => s.stats.ties,
+    apiField: { fieldName: Tep2021FieldName.Dq },
 };
 
 type Group = FullTep2021Traditional["stats"]["total"];
@@ -109,7 +117,8 @@ const DC_SHARED_STAT: Stat<Group> = makeStat(
     "driverControlledSharedHubPoints",
     "Shared Hub Points",
     "Shared",
-    "Driver Controlled Shared Hub Points"
+    "Driver Controlled Shared Hub Points",
+    Tep2021FieldName.DriverControlledSharedHubPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -118,7 +127,8 @@ export const ENDGAME_TIPPED_STAT: Stat<Group> = makeStat(
     "sharedUnbalancedPoints",
     "Shared Tipped Points",
     "Shared Tipped ",
-    "Endgame Shared Hub Tipped Points"
+    "Endgame Shared Hub Tipped Points",
+    Tep2021FieldName.SharedUnbalancedPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -152,7 +162,16 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     shortName: "TOT",
                     description: "The sum of all points scored in the category.",
                     color: StatColor.RED,
-                    get: (s) => groupGetter((t) => t.stats.total, s, StatColor.RED, "TOT", "Total", "Total"),
+                    get: (s) =>
+                        groupGetter(
+                            (t) => t.stats.total,
+                            s,
+                            StatColor.RED,
+                            "TOT",
+                            "Total",
+                            "Total",
+                            Tep2021Group.Total
+                        ),
                 },
                 {
                     longName: "Average",
@@ -167,6 +186,8 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "AVG",
                             "Average",
                             "Average",
+
+                            Tep2021Group.Avg,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -183,6 +204,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "OPR",
                             "OPR",
                             "OPR",
+                            Tep2021Group.Opr,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -191,14 +213,32 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     shortName: "MIN",
                     description: "The lowest number of points scored in the category.",
                     color: StatColor.LIGHT_BLUE,
-                    get: (s) => groupGetter((t) => t.stats.min, s, StatColor.LIGHT_BLUE, "MIN", "Minimum", "Minimum"),
+                    get: (s) =>
+                        groupGetter(
+                            (t) => t.stats.min,
+                            s,
+                            StatColor.LIGHT_BLUE,
+                            "MIN",
+                            "Minimum",
+                            "Minimum",
+                            Tep2021Group.Min
+                        ),
                 },
                 {
                     longName: "Maximum",
                     shortName: "MAX",
                     description: "The highest number of points scored in the category.",
                     color: StatColor.BLUE,
-                    get: (s) => groupGetter((t) => t.stats.max, s, StatColor.BLUE, "MAX", "Maximum", "Maximum"),
+                    get: (s) =>
+                        groupGetter(
+                            (t) => t.stats.max,
+                            s,
+                            StatColor.BLUE,
+                            "MAX",
+                            "Maximum",
+                            "Maximum",
+                            Tep2021Group.Max
+                        ),
                 },
                 {
                     longName: "Std. Dev.",
@@ -213,6 +253,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "DEV",
                             "Std. Dev.",
                             "Standard Deviation",
+                            Tep2021Group.Dev,
                             StatDisplayType.DECIMAL
                         ),
                 },

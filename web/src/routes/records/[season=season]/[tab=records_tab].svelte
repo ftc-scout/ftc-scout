@@ -3,14 +3,33 @@
         let { params, url } = event;
 
         if (params.tab == "teams") {
+            let eventTypes = EventTypes.Trad;
+            let statSet = getStatSet2021Teams(eventTypes);
+
             let take = +(url.searchParams.get("take") ?? "50");
             let page = +(url.searchParams.get("page") ?? "1");
 
+            let order: Tep2021Ordering[] = [
+                {
+                    field: DEFAULT_SORT_TEAM_2021.stat.apiField,
+                    order: DEFAULT_SORT_TEAM_2021.type == SortType.HIGH_LOW ? Order.Desc : Order.Asc,
+                },
+            ];
+            let sortStatIdenName = url.searchParams.get("sort") ?? null;
+            if (sortStatIdenName) {
+                let sortStat = findInStatSet(statSet, sortStatIdenName);
+                if (sortStat) {
+                    let field = sortStat.apiField;
+                    let direction = url.searchParams.get("sort-dir") == "reverse" ? Order.Asc : Order.Desc;
+                    order = [{ field, order: direction }, ...order];
+                }
+            }
+            console.log(order);
             return queryLoad("teams2021", TeamSeasonRecords2021Document, {
                 skip: Math.max((page - 1) * take, 0),
                 take,
                 filter: { andGroups: [] },
-                order: [],
+                order,
                 eventTypes: EventTypes.Trad,
             })(event);
         } else if (params.tab == "matches") {
@@ -25,20 +44,27 @@
     import { browser } from "$app/env";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
+    import { SortType } from "$lib/components/SortButton.svelte";
+    import { findInStatSet } from "$lib/util/stats/StatSet";
     import type { ApolloQueryResult } from "@apollo/client";
     import type { Load } from "@sveltejs/kit";
     import type { Readable } from "svelte/store";
     import Card from "../../../lib/components/Card.svelte";
     import Dropdown from "../../../lib/components/Dropdown.svelte";
-    import TeamSeasonRecords2021 from "../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
+    import TeamSeasonRecords2021, {
+        DEFAULT_SORT_TEAM_2021,
+        getStatSet2021Teams,
+    } from "../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
     import SkeletonRow from "../../../lib/components/skeleton/SkeletonRow.svelte";
     import TabbedCard from "../../../lib/components/tabs/TabbedCard.svelte";
     import TabContent from "../../../lib/components/tabs/TabContent.svelte";
     import WidthProvider from "../../../lib/components/WidthProvider.svelte";
     import {
         EventTypes,
+        Order,
         TeamSeasonRecords2021Document,
         type TeamSeasonRecords2021Query,
+        type Tep2021Ordering,
     } from "../../../lib/graphql/generated/graphql-operations";
     import { queryLoad } from "../../../lib/graphql/query-load";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../lib/icons";
@@ -103,7 +129,7 @@
                 <TeamSeasonRecords2021
                     eventTypes={EventTypes.TradAndRemote}
                     data={data2021Teams}
-                    {page}
+                    currPage={page}
                     {totalCount}
                     {pageSize}
                 />

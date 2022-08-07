@@ -12,7 +12,39 @@
         RANK_STAT,
         EVENT_STAT as any,
     ]);
+    console.log(OPR_STAT);
+    export const DEFAULT_SORT_TEAM_2021: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
+
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
+
+    export function getStatSet2021Teams(eventTypes: EventTypes): StatSet<unknown, unknown> {
+        return [
+            ...(eventTypes == EventTypes.Remote
+                ? STAT_SET_2021_REMOTE
+                : eventTypes == EventTypes.Trad
+                ? STAT_SET_2021_TRAD
+                : STAT_SET_2021_SHARED),
+            ...STAT_SET_EVENT,
+        ];
+    }
+
+    function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
+        let eventTypes = EventTypes.Trad;
+        let statSet = getStatSet2021Teams(eventTypes);
+
+        let sortStatIdenName = url.searchParams.get("sort") ?? null;
+        if (sortStatIdenName) {
+            let sortStat = findInStatSet(statSet, sortStatIdenName);
+            let direction = url.searchParams.get("sort-dir") == "reverse" ? SortType.LOW_HIGH : SortType.HIGH_LOW;
+            if (sortStat) {
+                return {
+                    stat: sortStat,
+                    type: direction,
+                };
+            }
+        }
+        return DEFAULT_SORT_TEAM_2021;
+    }
 </script>
 
 <script lang="ts">
@@ -34,36 +66,34 @@
     import { STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
-    import { filterStatSet, type StatSet } from "../../util/stats/StatSet";
+    import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
     import { emptyFilter, type Filter } from "../../util/stats/filter";
     import { EVENT_STAT, STAT_SET_EVENT } from "$lib/util/stats/StatsEvent";
+    import { changeParam } from "./changeParams";
+    import { page } from "$app/stores";
 
     export let eventTypes: EventTypes;
     export let data: Data[];
-    export let page: number;
+    export let currPage: number;
     export let totalCount: number;
     export let pageSize: number;
 
     let statSet: StatSet<unknown, unknown>;
-    $: {
-        statSet = [
-            ...(eventTypes == EventTypes.Remote
-                ? STAT_SET_2021_REMOTE
-                : eventTypes == EventTypes.Trad
-                ? STAT_SET_2021_TRAD
-                : STAT_SET_2021_SHARED),
-            ...STAT_SET_EVENT,
-        ];
-    }
+    $: statSet = getStatSet2021Teams(eventTypes);
 
     $: $shownStats = filterStatSet(statSet as any, $shownStats);
 
-    const defaultSort: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
-    let currentSort: ChosenSort<Data> = defaultSort;
+    let currentSort: ChosenSort<Data> = getCurrentSortFromUrl($page.url);
+    $: console.log("currSort", currentSort, SortType.HIGH_LOW, SortType.LOW_HIGH);
 
     let selectedTeam: number | null = null;
     let selectedTeamName: string | null = null;
+
+    $: changeParam({
+        sort: currentSort.stat.identifierName,
+        ["sort-dir"]: currentSort.type == SortType.HIGH_LOW ? null : "reverse",
+    });
 </script>
 
 {#if selectedTeam && selectedTeamName}
@@ -76,12 +106,12 @@
     {shownStats}
     bind:selectedTeam
     bind:selectedTeamName
-    {defaultSort}
-    {currentSort}
+    defaultSort={DEFAULT_SORT_TEAM_2021}
+    bind:currentSort
     bind:currentFilters={$currentFilters}
     fileName={"Team Season Records 2021"}
     pagination
-    bind:page
+    bind:page={currPage}
     {totalCount}
     {pageSize}
 />

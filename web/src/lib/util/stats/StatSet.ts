@@ -1,3 +1,4 @@
+import type { Tep2021Group } from "$lib/graphql/generated/graphql-operations";
 import type { Stat } from "./Stat";
 import type { StatColor } from "./stat-color";
 import type { StatDisplayType } from "./stat-display-type";
@@ -22,6 +23,7 @@ export function groupGetter<T, U>(
     shortNameAdd: string,
     longNameAdd: string,
     identifierNameAdd: string,
+    apiGroup: Tep2021Group,
     displayTypeOverride: StatDisplayType | null = null
 ): Stat<T> {
     return {
@@ -31,6 +33,10 @@ export function groupGetter<T, U>(
         identifierName: `${stat.identifierName} ${identifierNameAdd}`,
         displayType: displayTypeOverride ?? stat.displayType,
         color,
+        apiField: {
+            ...stat.apiField,
+            group: apiGroup,
+        },
     };
 }
 
@@ -56,6 +62,10 @@ export type StatSet<T, U> = (
       }
 )[];
 
+function flattenNestedStat<T>(nestedStat: NestedStat<T>): Stat<T>[] {
+    return [nestedStat.stat, ...nestedStat.nestedStats.flatMap(flattenNestedStat)];
+}
+
 function nestedStatContains<T, U>(group: StatGroup<T, U>, nestedStat: NestedStat<U>, stat: Stat<T>): boolean {
     return (
         group.get(nestedStat.stat).identifierName == stat.identifierName ||
@@ -71,4 +81,22 @@ export function filterStatSet<T, U>(statSet: StatSet<T, U>, filterList: Stat<T>[
                 : set.set.groups.some((g) => set.set.groupStats.some((gs) => nestedStatContains(g, gs, s)));
         })
     );
+}
+
+export function findInStatSet<T, U>(statSet: StatSet<T, U>, identifierName: string): Stat<T> | null {
+    for (let set of statSet) {
+        if (set.type == "standalone") {
+            for (let stat of set.set.standalone) {
+                if (stat.identifierName == identifierName) return stat;
+            }
+        } else {
+            for (let groupStat of set.set.groupStats.flatMap(flattenNestedStat)) {
+                for (let groupName of set.set.groups) {
+                    let stat = groupName.get(groupStat);
+                    if (stat.identifierName == identifierName) return stat;
+                }
+            }
+        }
+    }
+    return null;
 }
