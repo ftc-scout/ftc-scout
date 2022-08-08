@@ -27,7 +27,7 @@
             return queryLoad("teams2021", TeamSeasonRecords2021Document, {
                 skip: Math.max((page - 1) * take, 0),
                 take,
-                filter: { andGroups: [] },
+                filter: { all: [] },
                 order,
                 eventTypes: EventTypes.Trad,
             })(event);

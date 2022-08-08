@@ -1,7 +1,7 @@
 query TeamSeasonRecords2021(
     $skip: Int!
     $take: Int!
-    $filter: TEP2021OrGroup!
+    $filter: TEP2021Filter!
     $order: [TEP2021Ordering!]!
     $eventTypes: EventTypes!
 ) {
