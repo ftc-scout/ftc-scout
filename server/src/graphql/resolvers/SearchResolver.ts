@@ -76,8 +76,10 @@ export class SearchResolver {
 
         // If fuzzysort didn't find anything it is likely that the user made a misspelling.
         // Therefore we will try a fuzzy method which is more lenient.
-        if (teamResults.length == 0) teamResults = teamResultsLax(searchText);
-        if (eventResults.length == 0) eventResults = eventResultsLax(searchText);
+        if (teamResults.length == 0 && eventResults.length == 0) {
+            teamResults = teamResultsLax(searchText);
+            eventResults = eventResultsLax(searchText);
+        }
 
         return new SearchResults(searchText, teamResults, eventResults);
     }
