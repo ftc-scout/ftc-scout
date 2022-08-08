@@ -239,38 +239,44 @@ class TEP2021Condition {
 }
 
 @InputType()
-class TEP2021AndGroup {
-    @Field(() => [TEP2021Condition])
-    conditions!: TEP2021Condition[];
+class TEP2021Filter {
+    @Field(() => [TEP2021Filter], { nullable: true })
+    any!: TEP2021Filter[] | null;
 
-    toQueryBrackets(): Brackets {
-        return new Brackets((qb) => {
-            let query = qb.where("TRUE");
-            for (let condition of this.conditions.slice(0, 10)) {
-                query = condition.addSelfToQuery(query);
-            }
-            return query;
-        });
-    }
-}
+    @Field(() => [TEP2021Filter], { nullable: true })
+    all!: TEP2021Filter[] | null;
 
-@InputType()
-class TEP2021OrGroup {
-    @Field(() => [TEP2021AndGroup])
-    andGroups!: TEP2021AndGroup[];
+    @Field(() => TEP2021Condition, { nullable: true })
+    condition!: TEP2021Condition | null;
 
-    addSelfToQuery(
-        query: SelectQueryBuilder<TeamEventParticipation2021>
-    ): SelectQueryBuilder<TeamEventParticipation2021> {
-        return query.andWhere(
-            new Brackets((qb) => {
-                let query = qb.where(this.andGroups.length == 0 ? "TRUE" : "FALSE");
-                for (let and of this.andGroups.slice(0, 10)) {
-                    query = query.orWhere(and.toQueryBrackets());
+    toBrackets(): Brackets {
+        let any = this.any;
+        let all = this.all;
+        let condition = this.condition;
+
+        if (any != null && all == null && condition == null) {
+            return new Brackets((qb) => {
+                let query = qb;
+                for (let sub of any!) {
+                    query = query.orWhere(sub.toBrackets());
                 }
                 return query;
-            })
-        );
+            });
+        } else if (this.any == null && this.all != null && this.condition == null) {
+            return new Brackets((qb) => {
+                let query = qb;
+                for (let sub of all!) {
+                    query = query.andWhere(sub.toBrackets());
+                }
+                return query;
+            });
+        } else if (this.any == null && this.all == null && this.condition != null) {
+            return new Brackets((qb) => {
+                condition!.addSelfToQuery(qb);
+            });
+        } else {
+            throw "Invalid filter. Only one field may be set.";
+        }
     }
 }
 
@@ -280,7 +286,7 @@ export class SeasonRecords2021Resolver {
     async teamRecords2021(
         @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
         @Arg("order", () => [TEP2021Ordering]) orderIn: TEP2021Ordering[],
-        @Arg("filter", () => TEP2021OrGroup) filters: TEP2021OrGroup,
+        @Arg("filter", () => TEP2021Filter) filter: TEP2021Filter,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<TEP2021Records> {
@@ -308,7 +314,7 @@ export class SeasonRecords2021Resolver {
             query = order.addSelfToQuery(query);
         }
 
-        query = filters.addSelfToQuery(query as any);
+        query = query.andWhere(filter.toBrackets());
 
         let [teps, count] = await query.getManyAndCount();
 
