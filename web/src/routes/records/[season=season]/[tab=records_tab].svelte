@@ -24,7 +24,6 @@
                     order = [{ field, order: direction }, ...order];
                 }
             }
-            console.log(order);
             return queryLoad("teams2021", TeamSeasonRecords2021Document, {
                 skip: Math.max((page - 1) * take, 0),
                 take,

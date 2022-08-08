@@ -12,7 +12,6 @@
         RANK_STAT,
         EVENT_STAT as any,
     ]);
-    console.log(OPR_STAT);
     export const DEFAULT_SORT_TEAM_2021: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
 
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
@@ -85,7 +84,6 @@
     $: $shownStats = filterStatSet(statSet as any, $shownStats);
 
     let currentSort: ChosenSort<Data> = getCurrentSortFromUrl($page.url);
-    $: console.log("currSort", currentSort, SortType.HIGH_LOW, SortType.LOW_HIGH);
 
     let selectedTeam: number | null = null;
     let selectedTeamName: string | null = null;

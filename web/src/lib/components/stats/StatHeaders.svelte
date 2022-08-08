@@ -19,7 +19,6 @@
 
     export let defaultSort: ChosenSort;
     export let sort: ChosenSort = defaultSort;
-    console.log("header", sort);
 
     function handleClick(stat: Stat<T>) {
         let currentSort = sort?.stat == stat ? sort.type : SortType.NONE;
