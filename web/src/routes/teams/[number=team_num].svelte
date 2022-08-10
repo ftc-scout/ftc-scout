@@ -47,13 +47,13 @@
     function logger() {
         if ($me!.id == teamData.number) {
             console.log("Right team!");
-            if (document.getElementById("edit-box")!.contentEditable == "true") {
-                document.getElementById("edit-box")!.contentEditable = "false";
-            } else {
-                document.getElementById("edit-box")!.contentEditable = "true";
-            }
-        } else {
-            console.log("Wrong team!");
+            document.getElementById("edit-box")!.contentEditable = "true";
+        }
+    }
+    function save() {
+        if ($me!.id == teamData.number) {
+            console.log("Right team save");
+            localStorage.setItem("teamInfo", (<HTMLInputElement>document.getElementById("edit-box"))?.value);
         }
     }
 </script>
@@ -166,7 +166,8 @@
         </Card>
     {/each}
 
-    <button on:click={logger} id="editor" class="edit-button" type="button">Edit Document</button>
+    <button on:click={logger} id="editor" class="user-button" type="button">Edit Document</button>
+    <button on:click={save} id="saver" class="user-button" type="button">Save Document </button>
     <Card>
         <p class="team-box" id="edit-box" type="text" contenteditable="false">I am not editable</p>
     </Card>
@@ -179,7 +180,7 @@
         resize: none;
         outline: none;
     }
-    .edit-button {
+    .user-button {
         border: var(--theme-color) 2px solid;
         text-decoration: none;
 
@@ -196,7 +197,7 @@
         cursor: pointer;
     }
 
-    .edit-button:hover {
+    .user-button:hover {
         /* maybe like add a fade in transition to the hover colors */
         background-color: var(--theme-color);
         color: var(--theme-text-color);
