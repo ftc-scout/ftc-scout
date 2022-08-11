@@ -24,10 +24,22 @@
                     order = [{ field, order: direction }, ...order];
                 }
             }
+
+            let filter = emptyFilter();
+            let filterParam = url.searchParams.get("filter") ?? null;
+            if (filterParam != null) {
+                try {
+                    let parsed = JSON.parse(filterParam);
+                    let urlFilter = simpleJsonToFilter(parsed, statSet);
+                    if (urlFilter) filter = urlFilter;
+                } catch {}
+            }
+            let apiFilter = filterToApiFilter(filter);
+
             return queryLoad("teams2021", TeamSeasonRecords2021Document, {
                 skip: Math.max((page - 1) * take, 0),
                 take,
-                filter: { all: [] },
+                filter: apiFilter,
                 order,
                 eventTypes: EventTypes.Trad,
             })(event);
@@ -41,9 +53,10 @@
 
 <script lang="ts">
     import { browser } from "$app/env";
-    import { goto } from "$app/navigation";
+    import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/stores";
     import { SortType } from "$lib/components/SortButton.svelte";
+    import { emptyFilter, filterToApiFilter, simpleJsonToFilter } from "$lib/util/stats/filter";
     import { findInStatSet } from "$lib/util/stats/StatSet";
     import type { ApolloQueryResult } from "@apollo/client";
     import type { Load } from "@sveltejs/kit";
@@ -53,6 +66,7 @@
     import TeamSeasonRecords2021, {
         DEFAULT_SORT_TEAM_2021,
         getStatSet2021Teams,
+        team2021SearchParams,
     } from "../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
     import SkeletonRow from "../../../lib/components/skeleton/SkeletonRow.svelte";
     import TabbedCard from "../../../lib/components/tabs/TabbedCard.svelte";
@@ -73,7 +87,8 @@
 
     function gotoSubPage(name: string) {
         if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
-            goto(`/records/${$page.params.season}/${name.toLowerCase()}?${$page.url.searchParams ?? ""}`, {
+            let searchParams = name.toLowerCase() == "teams" ? team2021SearchParams : null;
+            goto(`/records/${$page.params.season}/${name.toLowerCase()}${searchParams ? "?" + searchParams : ""}`, {
                 replaceState: true,
             });
         }
@@ -88,6 +103,12 @@
     $: data2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let data2021Teams: (FullTep2021Traditional | FullTep2021Remote)[] | undefined;
     $: data2021Teams = data2021?.teps as any;
+
+    afterNavigate(({ to }) => {
+        if (to.pathname.startsWith("/records")) {
+            document.getElementById("content")?.scrollTo({ top: 0 });
+        }
+    });
 </script>
 
 <svelte:head>

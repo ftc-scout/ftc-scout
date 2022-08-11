@@ -1,3 +1,21 @@
+<script lang="ts" context="module">
+    function pageOffsetUrl(currentUrl: URL, offset: number): string {
+        let params = currentUrl.searchParams;
+        let currPage = params.get("page");
+        let newPage = +(currPage ?? 1) + offset;
+        params.set("page", "" + newPage);
+        let url = params.toString();
+
+        if (currPage == null) {
+            params.delete("page");
+        } else {
+            params.set("page", currPage);
+        }
+
+        return url;
+    }
+</script>
+
 <script lang="ts">
     import { browser } from "$app/env";
     import { page } from "$app/stores";
@@ -26,7 +44,12 @@
     }
 
     function go() {
-        if (browser && +inputValue >= 1 && +inputValue <= totalPages) {
+        if (
+            browser &&
+            +inputValue >= 1 &&
+            inputValue <= totalPages &&
+            ($page.url.searchParams.get("page") ?? "1") != "" + inputValue
+        ) {
             let url = $page.url;
             let old = url.searchParams.get("page");
             url.searchParams.set("page", "" + inputValue);
@@ -39,10 +62,13 @@
             goto(urlString);
         }
     }
+
+    $: nextPageURL = pageOffsetUrl($page.url, 1);
+    $: previousPageURL = pageOffsetUrl($page.url, -1);
 </script>
 
 <div class="wrapper">
-    <a class="left" href="?page={currentPage - 1}" sveltekit:prefetch class:disabled={currentPage == 1}>
+    <a class="left" href="?{previousPageURL}" sveltekit:prefetch class:disabled={currentPage == 1}>
         <Fa icon={faArrowLeft} />
     </a>
 
@@ -53,7 +79,7 @@
         / {totalPages}
     </span>
 
-    <a class="right" href="?page={currentPage + 1}" sveltekit:prefetch class:disabled={currentPage == totalPages}>
+    <a class="right" href="?{nextPageURL}" sveltekit:prefetch class:disabled={currentPage == totalPages}>
         <Fa icon={faArrowRight} />
     </a>
 </div>

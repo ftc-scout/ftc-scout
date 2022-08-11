@@ -44,6 +44,8 @@
         }
         return DEFAULT_SORT_TEAM_2021;
     }
+
+    export let team2021SearchParams: string = "";
 </script>
 
 <script lang="ts">
@@ -67,7 +69,7 @@
     import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
     import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
-    import { emptyFilter, type Filter } from "../../util/stats/filter";
+    import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import { EVENT_STAT, STAT_SET_EVENT } from "$lib/util/stats/StatsEvent";
     import { changeParam } from "./changeParams";
     import { page } from "$app/stores";
@@ -78,8 +80,13 @@
     export let totalCount: number;
     export let pageSize: number;
 
-    let statSet: StatSet<unknown, unknown>;
+    let statSet: StatSet<unknown, unknown> = getStatSet2021Teams(eventTypes);
     $: statSet = getStatSet2021Teams(eventTypes);
+
+    try {
+        let startFilter = simpleJsonToFilter(JSON.parse($page.url.searchParams.get("filter") ?? ""), statSet);
+        if (startFilter) $currentFilters = startFilter;
+    } catch {}
 
     $: $shownStats = filterStatSet(statSet as any, $shownStats);
 
@@ -88,10 +95,16 @@
     let selectedTeam: number | null = null;
     let selectedTeamName: string | null = null;
 
-    $: changeParam({
-        sort: currentSort.stat.identifierName,
-        ["sort-dir"]: currentSort.type == SortType.HIGH_LOW ? null : "reverse",
-    });
+    $: isDefualtSort =
+        currentSort.type == DEFAULT_SORT_TEAM_2021.type &&
+        currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2021.stat.identifierName;
+    $: if ($page.params.tab == "teams")
+        changeParam({
+            sort: isDefualtSort ? null : currentSort.stat.identifierName,
+            ["sort-dir"]: isDefualtSort || currentSort.type == SortType.HIGH_LOW ? null : "reverse",
+            filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
+        });
+    $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 </script>
 
 {#if selectedTeam && selectedTeamName}
