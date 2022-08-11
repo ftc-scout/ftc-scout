@@ -102,7 +102,7 @@
     export let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query>>;
     $: data2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let data2021Teams: (FullTep2021Traditional | FullTep2021Remote)[] | undefined;
-    $: data2021Teams = data2021?.teps as any;
+    $: data2021Teams = data2021?.teps.map((t) => t.tep) as any;
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {

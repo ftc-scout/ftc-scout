@@ -9,9 +9,21 @@ import { Order } from "./Order";
 import { Event } from "src/db/entities/Event";
 
 @ObjectType()
+class TEP2021RecordRow {
+    @Field(() => TeamEventParticipation2021)
+    tep!: TeamEventParticipation2021;
+
+    @Field(() => Int)
+    rank!: number;
+
+    @Field(() => Int)
+    preFilterRank!: number;
+}
+
+@ObjectType()
 class TEP2021Records {
-    @Field(() => [TeamEventParticipation2021])
-    teps!: TeamEventParticipation2021[];
+    @Field(() => [TEP2021RecordRow])
+    teps!: TEP2021RecordRow[];
 
     @Field(() => Int)
     offset!: number;
@@ -195,6 +207,19 @@ class TEP2021Ordering {
             return query.addOrderBy(`tep.${sqlName}`, direction);
         }
     }
+
+    toRawSql(tableName: string = "tep"): string | null {
+        let direction: "ASC" | "DESC" = this.order == Order.ASC ? "ASC" : "DESC";
+        let sqlName = this.field.toSqlName();
+
+        if (!sqlName) return null;
+
+        if (sqlName.includes(".")) {
+            return '"' + sqlName + '" ' + direction;
+        } else {
+            return `${tableName}.\"${sqlName}\" ${direction}`;
+        }
+    }
 }
 
 @InputType()
@@ -286,22 +311,57 @@ export class SeasonRecords2021Resolver {
     async teamRecords2021(
         @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
         @Arg("order", () => [TEP2021Ordering]) orderIn: TEP2021Ordering[],
-        @Arg("filter", () => TEP2021Filter) filter: TEP2021Filter,
+        @Arg("filter", () => TEP2021Filter, { nullable: true }) filter: TEP2021Filter | null,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<TEP2021Records> {
         let limit = Math.min(takeIn, 50);
 
+        let orderByRaw = orderIn
+            .slice(0, 5)
+            .map((o) => o.toRawSql())
+            .filter((o) => o != null)
+            .join(", ");
+        if (orderByRaw.length == 0) orderByRaw = 'tep."oprTotalpoints" DESC';
+
+        let orderByRaw2 = orderIn
+            .slice(0, 5)
+            .map((o) => o.toRawSql("tep2"))
+            .filter((o) => o != null)
+            .join(", ");
+        if (orderByRaw2.length == 0) orderByRaw = 'tep2."oprTotalpoints" DESC';
+
+        let preFilterQuery = DATA_SOURCE.getRepository(TeamEventParticipation2021)
+            .createQueryBuilder("tep2")
+            .leftJoin("tep2.event", "e2")
+            .select([`RANK() OVER (ORDER BY ${orderByRaw2}) as pre_filter_rank`, '"eventCode"', '"teamNumber"'])
+            .where("tep2.hasStats")
+            .andWhere("e2.season = 2021");
+
+        if (eventTypes == EventTypes.REMOTE) {
+            preFilterQuery = preFilterQuery.andWhere("e2.remote");
+        } else if (eventTypes == EventTypes.TRAD) {
+            preFilterQuery = preFilterQuery.andWhere("NOT e2.remote");
+        }
+
         let query = DATA_SOURCE.getRepository(TeamEventParticipation2021)
             .createQueryBuilder("tep")
             .leftJoinAndSelect("tep.event", "e")
+            .addSelect(`RANK() OVER (ORDER BY ${orderByRaw}) as post_filter_rank`)
+            .leftJoin(
+                "(" + preFilterQuery.getSql() + ")",
+                "pre_rank",
+                'pre_rank."eventCode" = tep."eventCode" AND pre_rank."teamNumber" = tep."teamNumber"'
+            )
+            .addSelect("pre_rank.pre_filter_rank", "pre_filter_rank")
             .where("tep.hasStats")
+            .andWhere("e.season = 2021")
             .limit(limit)
             .offset(skip);
 
         if (orderIn.length == 0) {
             // In case they didn't provide an order
-            query = query.orderBy("tep.oprTotalpoints", "DESC");
+            query = query.orderBy('tep."oprTotalpoints"', "DESC");
         }
 
         if (eventTypes == EventTypes.REMOTE) {
@@ -314,13 +374,24 @@ export class SeasonRecords2021Resolver {
             query = order.addSelfToQuery(query);
         }
 
-        query = query.andWhere(filter.toBrackets());
+        if (filter != null) {
+            query = query.andWhere(filter.toBrackets());
+        }
 
-        let [teps, count] = await query.getManyAndCount();
+        let { entities, raw } = await query.getRawAndEntities();
+
+        let teps: TEP2021RecordRow[] = entities.map((e) => {
+            let rawRow = raw.find((r) => r.tep_eventCode == e.eventCode && r.tep_teamNumber == e.teamNumber);
+            return {
+                tep: e,
+                rank: rawRow.post_filter_rank as number,
+                preFilterRank: rawRow.pre_filter_rank as number,
+            };
+        });
 
         return {
             teps,
-            count,
+            count: 0,
             offset: skip,
         };
     }
