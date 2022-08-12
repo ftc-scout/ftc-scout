@@ -1,6 +1,18 @@
 <script lang="ts" context="module">
     type Data = FullTep2021Traditional | FullTep2021Remote;
 
+    let DEFUALT_SHOWN_STATS: Stat<Data>[] = [
+        TEAM_STAT,
+        OPR_STAT,
+        NP_OPR_STAT,
+        AUTO_OPR_STAT,
+        TELEOP_OPR_STAT,
+        ENDGAME_OPR_STAT,
+        AVERAGE_STAT,
+        RANK_STAT,
+        EVENT_STAT as any,
+    ];
+
     let shownStats: Writable<Stat<Data>[]> = writable([
         TEAM_STAT,
         OPR_STAT,
@@ -74,6 +86,7 @@
     import { changeParam } from "./changeParams";
     import { page } from "$app/stores";
     import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab].svelte";
+    import { arraysEqual } from "$lib/util/array-eq";
 
     export let eventTypes: EventTypes;
     export let data: StatData<Data>[];
@@ -89,6 +102,12 @@
         if (startFilter) $currentFilters = startFilter;
     } catch {}
 
+    try {
+        let parsed = JSON.parse($page.url.searchParams.get("shown-stats") ?? "");
+        let stats = parsed.map((s: string) => findInStatSet(statSet, s));
+        $shownStats = stats;
+    } catch {}
+
     $: $shownStats = filterStatSet(statSet as any, $shownStats);
 
     let currentSort: ChosenSort<Data> = getCurrentSortFromUrl($page.url);
@@ -99,12 +118,17 @@
     $: isDefualtSort =
         currentSort.type == DEFAULT_SORT_TEAM_2021.type &&
         currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2021.stat.identifierName;
+    $: isDefualtShownStats = arraysEqual(
+        DEFUALT_SHOWN_STATS.map((s) => s.identifierName),
+        $shownStats.map((s) => s.identifierName)
+    );
     $: if ($page.params.tab == "teams")
         changeParam({
             sort: isDefualtSort ? null : currentSort.stat.identifierName,
             ["sort-dir"]: isDefualtSort || currentSort.type == SortType.HIGH_LOW ? null : "reverse",
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
             ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
+            ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 </script>
