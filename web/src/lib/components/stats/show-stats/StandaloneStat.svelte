@@ -1,10 +1,11 @@
 <script lang="ts">
     import type { Stat } from "../../../util/stats/Stat";
+    import type { StatData } from "../StatsTable.svelte";
     import ShowData from "./ShowData.svelte";
 
     type T = $$Generic;
 
-    export let data: T;
+    export let data: StatData<T>;
     export let stat: Stat<T>;
     export let zebraStripe = false;
 </script>

@@ -9,10 +9,11 @@
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
     import { writable, type Writable } from "svelte/store";
+    import type { StatData } from "../StatsTable.svelte";
 
     type T = $$Generic;
 
-    export let data: T;
+    export let data: StatData<T>;
     export let groups: StatGroup<T, unknown>[];
     export let myNestedStat: NestedStat<T>;
     export let nestingDepth = 0;

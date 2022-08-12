@@ -75,7 +75,7 @@ export const WINS_STAT: Stat<FullTep2021Traditional> = {
     listName: "Wins",
     columnName: "Wins",
     identifierName: "Wins",
-    read: (s) => s.stats.wins,
+    read: (s) => s.data.stats.wins,
     apiField: { fieldName: Tep2021FieldName.Wins },
 };
 
@@ -85,7 +85,7 @@ export const lOSSES_STAT: Stat<FullTep2021Traditional> = {
     listName: "Losses",
     columnName: "Losses",
     identifierName: "Losses",
-    read: (s) => s.stats.losses,
+    read: (s) => s.data.stats.losses,
     apiField: { fieldName: Tep2021FieldName.Losses },
 };
 
@@ -95,7 +95,7 @@ export const TIES_STAT: Stat<FullTep2021Traditional> = {
     listName: "Ties",
     columnName: "Ties",
     identifierName: "Ties",
-    read: (s) => s.stats.ties,
+    read: (s) => s.data.stats.ties,
     apiField: { fieldName: Tep2021FieldName.Ties },
 };
 
@@ -105,7 +105,7 @@ export const DQ_STAT: Stat<FullTep2021Traditional> = {
     listName: "Disqualifications (DQs)",
     columnName: "DQs",
     identifierName: "Disqualifications (DQs)",
-    read: (s) => s.stats.ties,
+    read: (s) => s.data.stats.ties,
     apiField: { fieldName: Tep2021FieldName.Dq },
 };
 
@@ -164,7 +164,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.RED,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.total,
+                            (t) => ({ ...t, data: t.data.stats.total }),
                             s,
                             StatColor.RED,
                             "TOT",
@@ -180,7 +180,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.PURPLE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.average,
+                            (t) => ({ ...t, data: t.data.stats.average }),
                             s,
                             StatColor.PURPLE,
                             "AVG",
@@ -198,7 +198,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.PURPLE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.opr,
+                            (t) => ({ ...t, data: t.data.stats.opr }),
                             s,
                             StatColor.PURPLE,
                             "OPR",
@@ -215,7 +215,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.LIGHT_BLUE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.min,
+                            (t) => ({ ...t, data: t.data.stats.min }),
                             s,
                             StatColor.LIGHT_BLUE,
                             "MIN",
@@ -231,7 +231,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.BLUE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.max,
+                            (t) => ({ ...t, data: t.data.stats.max }),
                             s,
                             StatColor.BLUE,
                             "MAX",
@@ -247,7 +247,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.GREEN,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.standardDev,
+                            (t) => ({ ...t, data: t.data.stats.standardDev }),
                             s,
                             StatColor.GREEN,
                             "DEV",

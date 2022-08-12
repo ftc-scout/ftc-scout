@@ -14,7 +14,7 @@ export const TEAM_STAT: Stat<FullTep2021Shared> = {
     listName: "Team",
     columnName: "Team",
     identifierName: "Team",
-    read: (s) => s.team,
+    read: (s) => s.data.team,
     apiField: { fieldName: Tep2021FieldName.TeamNumber },
 };
 
@@ -24,7 +24,7 @@ export const RP_STAT: Stat<FullTep2021Shared> = {
     listName: "Ranking Points (RP)",
     columnName: "RP",
     identifierName: "Ranking Points (RP)",
-    read: (s) => s.stats.rp,
+    read: (s) => s.data.stats.rp,
     apiField: { fieldName: Tep2021FieldName.Rp },
 };
 
@@ -34,7 +34,7 @@ export const RANK_STAT: Stat<FullTep2021Shared> = {
     listName: "Ranking",
     columnName: "Rank",
     identifierName: "Event Ranking",
-    read: (s) => s.stats.rank,
+    read: (s) => s.data.stats.rank,
     apiField: { fieldName: Tep2021FieldName.Rank },
 };
 
@@ -44,7 +44,7 @@ export const TBP_STAT: Stat<FullTep2021Shared> = {
     listName: "Tie Breaker Points (TBP)",
     columnName: "TBP",
     identifierName: "Tie Breaker Points (TBP)",
-    read: (s) => s.stats.tb1,
+    read: (s) => s.data.stats.tb1,
     apiField: { fieldName: Tep2021FieldName.Tb1 },
 };
 
@@ -54,7 +54,7 @@ export const TBP2_STAT: Stat<FullTep2021Shared> = {
     listName: "Tie Breaker Points 2 (TBP2)",
     columnName: "TBP2",
     identifierName: "Tie Breaker Points 2 (TBP2)",
-    read: (s) => s.stats.tb2,
+    read: (s) => s.data.stats.tb2,
     apiField: { fieldName: Tep2021FieldName.Tb2 },
 };
 
@@ -64,7 +64,7 @@ export const PLAYED_STAT: Stat<FullTep2021Shared> = {
     listName: "Matches Played",
     columnName: "Played",
     identifierName: "Qual Matches Played",
-    read: (s) => s.stats.qualMatchesPlayed,
+    read: (s) => s.data.stats.qualMatchesPlayed,
     apiField: { fieldName: Tep2021FieldName.QualMatchesPlayed },
 };
 
@@ -317,7 +317,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.RED,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.total,
+                            (t) => ({ ...t, data: t.data.stats.total }),
                             s,
                             StatColor.RED,
                             "TOT",
@@ -333,7 +333,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.PURPLE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.average,
+                            (t) => ({ ...t, data: t.data.stats.average }),
                             s,
                             StatColor.PURPLE,
                             "AVG",
@@ -350,7 +350,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.PURPLE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.opr,
+                            (t) => ({ ...t, data: t.data.stats.opr }),
                             s,
                             StatColor.PURPLE,
                             "OPR",
@@ -367,7 +367,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.LIGHT_BLUE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.min,
+                            (t) => ({ ...t, data: t.data.stats.min }),
                             s,
                             StatColor.LIGHT_BLUE,
                             "MIN",
@@ -383,7 +383,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.BLUE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.max,
+                            (t) => ({ ...t, data: t.data.stats.max }),
                             s,
                             StatColor.BLUE,
                             "MAX",
@@ -399,7 +399,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
                     color: StatColor.GREEN,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.standardDev,
+                            (t) => ({ ...t, data: t.data.stats.standardDev }),
                             s,
                             StatColor.GREEN,
                             "DEV",

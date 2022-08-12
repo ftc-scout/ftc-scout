@@ -1,13 +1,13 @@
 <script lang="ts">
     import { prettyPrintFloat } from "../../../util/format/pretty-print-float";
     import { prettyPrintOrdinal } from "../../../util/format/pretty-print-ordinal";
-
     import type { Stat } from "../../../util/stats/Stat";
     import { StatDisplayType } from "../../../util/stats/stat-display-type";
+    import type { StatData } from "../StatsTable.svelte";
 
     type T = $$Generic;
 
-    export let data: T;
+    export let data: StatData<T>;
     export let stat: Stat<T>;
 
     $: value = stat.read(data);

@@ -6,10 +6,11 @@
     import Fa from "svelte-fa";
     import { faXmark } from "@fortawesome/free-solid-svg-icons";
     import ShowStandaloneStats from "./ShowStandaloneStats.svelte";
+    import type { StatData } from "../StatsTable.svelte";
 
     type T = $$Generic;
 
-    export let data: T;
+    export let data: StatData<T>;
     export let statSet: StatSet<T, unknown>;
     export let shown = false;
 </script>

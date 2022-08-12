@@ -2,6 +2,12 @@ import type { Tep2021Field, Tep2021FieldName, Tep2021Group } from "$lib/graphql/
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
 
+export type StatData<T> = {
+    rank: number;
+    preFilterRank: number;
+    data: T;
+};
+
 export interface Stat<T> {
     displayType: StatDisplayType;
     color: StatColor;
@@ -9,7 +15,7 @@ export interface Stat<T> {
     listName: string;
     identifierName: string;
     read(
-        _: T
+        _: StatData<T>
     ):
         | number
         | { number: number; name: string }
@@ -35,7 +41,7 @@ export function statFromGroup<U, T>(
         columnName,
         listName,
         identifierName,
-        read: (u: U) => read(u[group] as unknown as T),
+        read: (u: StatData<U>) => read(u.data[group] as unknown as T),
         apiField: {
             fieldName: apiFieldName,
             group: apiGroupName,
@@ -59,10 +65,22 @@ export function makeStat<T>(
         listName,
         columnName,
         identifierName,
-        read: (s) => s[key] as any,
+        read: (s) => s.data[key] as any,
         apiField: {
             fieldName: apiFieldName,
             group: apiGroupName,
         },
     };
+}
+
+export function distillStatRead(data: ReturnType<Stat<unknown>["read"]>): number | string {
+    if (typeof data == "number" || typeof data == "string") {
+        return data;
+    } else if ("number" in data) {
+        return data.number;
+    } else if ("code" in data) {
+        return data.code;
+    } else {
+        throw "Impossible";
+    }
 }

@@ -1,14 +1,20 @@
-import type { Stat } from "./Stat";
+import { distillStatRead, type Stat } from "./Stat";
 import { ExportToCsv } from "export-to-csv";
 
-export function exportStatsCSV<T>(eventName: string, data: T[], stats: Stat<T>[]) {
+type StatData<T> = {
+    rank: number;
+    preFilterRank: number;
+    data: T;
+};
+
+export function exportStatsCSV<T>(eventName: string, data: StatData<T>[], stats: Stat<T>[]) {
     if (stats.length == 0 || data.length == 0) return;
 
     let jsonData = data.map((d) => {
-        let obj: Record<string, number> = {};
+        let obj: Record<string, number | string> = {};
         stats.forEach((s) => {
             let value = s.read(d);
-            value = typeof value == "number" ? value : value.number;
+            value = distillStatRead(value);
             obj[s.listName] = value;
         });
         return obj;

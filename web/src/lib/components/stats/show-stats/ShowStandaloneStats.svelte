@@ -1,13 +1,12 @@
 <script lang="ts">
     import StandaloneStat from "./StandaloneStat.svelte";
 
-    import Fa from "svelte-fa";
-    import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import type { StatSetStandalone } from "../../../util/stats/StatSet";
+    import type { StatData } from "../StatsTable.svelte";
 
     type T = $$Generic;
 
-    export let data: T;
+    export let data: StatData<T>;
     export let statSet: StatSetStandalone<T>;
     export let name: string;
 </script>

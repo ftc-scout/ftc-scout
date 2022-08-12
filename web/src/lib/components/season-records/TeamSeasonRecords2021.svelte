@@ -66,7 +66,7 @@
     } from "../../util/stats/StatsShared2021";
     import { STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
-    import StatsTable, { type ChosenSort } from "../stats/StatsTable.svelte";
+    import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
     import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
@@ -75,7 +75,7 @@
     import { page } from "$app/stores";
 
     export let eventTypes: EventTypes;
-    export let data: Data[];
+    export let data: StatData<Data>[];
     export let currPage: number;
     export let totalCount: number;
     export let pageSize: number;

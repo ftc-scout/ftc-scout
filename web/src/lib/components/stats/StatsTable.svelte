@@ -3,6 +3,12 @@
         stat: Stat<T>;
         type: SortType.HIGH_LOW | SortType.LOW_HIGH;
     };
+
+    export type StatData<T> = {
+        rank: number;
+        preFilterRank: number;
+        data: T;
+    };
 </script>
 
 <script lang="ts">
@@ -25,7 +31,7 @@
 
     export let statSet: StatSet<T, unknown>;
 
-    export let data: T[];
+    export let data: StatData<T>[];
     export let shownStats: Writable<Stat<T>[]>;
     export let selectedTeam: number | null = null;
     export let selectedTeamName: string | null = null;
@@ -43,7 +49,7 @@
 
     let chooseStatsModalShown = false;
     let editFiltersModalShown = false;
-    let seeStatsData: T | null = null;
+    let seeStatsData: StatData<T> | null = null;
 </script>
 
 <div class="options">

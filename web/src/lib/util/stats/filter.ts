@@ -1,5 +1,5 @@
 import { CompareOperator, type Tep2021Filter, type Tep2021Value } from "$lib/graphql/generated/graphql-operations";
-import type { Stat } from "./Stat";
+import type { Stat, StatData } from "./Stat";
 import { findInStatSet, type StatSet } from "./StatSet";
 
 let filterId = 0;
@@ -74,7 +74,7 @@ function statFilterTypeToApi(type: StatFilterType): CompareOperator {
     }[type];
 }
 
-function read<T>(data: T, val: Stat<T> | number): number | string {
+function read<T>(data: StatData<T>, val: Stat<T> | number): number | string {
     if (typeof val == "number") {
         return val;
     } else {
@@ -88,7 +88,7 @@ function read<T>(data: T, val: Stat<T> | number): number | string {
 }
 
 export function statDataMatchesSingleFilter<T>(
-    data: T,
+    data: StatData<T>,
     filter: {
         id?: number;
         type: "compare";
@@ -118,7 +118,7 @@ export function statDataMatchesSingleFilter<T>(
     }
 }
 
-export function statDataMatchesFilter<T>(data: T, filter: Filter<T>): boolean {
+export function statDataMatchesFilter<T>(data: StatData<T>, filter: Filter<T>): boolean {
     switch (filter.type) {
         case "compare":
             return statDataMatchesSingleFilter(data, filter);
@@ -129,7 +129,7 @@ export function statDataMatchesFilter<T>(data: T, filter: Filter<T>): boolean {
     }
 }
 
-export function filterStatDataList<T>(data: T[], filter: Filter<T>): T[] {
+export function filterStatDataList<T>(data: StatData<T>[], filter: Filter<T>): StatData<T>[] {
     return data.filter((d) => statDataMatchesFilter(d, filter));
 }
 

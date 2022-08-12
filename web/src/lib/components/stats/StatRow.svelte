@@ -1,22 +1,23 @@
 <script lang="ts">
     import type { Stat } from "../../util/stats/Stat";
-    import StatData from "./StatData.svelte";
+    import type { StatData } from "./StatsTable.svelte";
+    import StatDataComp from "./StatData.svelte";
 
     type T = $$Generic;
 
-    export let dataRow: T;
+    export let dataRow: StatData<T>;
     export let shownStats: Stat<T>[];
     export let zebraStripe = false;
     export let selectedTeam: number | null = null;
     export let selectedTeamName: string | null = null;
-    export let seeStatsData: T | null = null;
+    export let seeStatsData: StatData<T> | null = null;
 
     let teamHovered = false;
 </script>
 
 <tr class:zebra-stripe={zebraStripe} class:team-hovered={teamHovered} on:click={() => (seeStatsData = dataRow)}>
     {#each shownStats as shownStat}
-        <StatData
+        <StatDataComp
             stat={shownStat}
             data={dataRow}
             bind:selectedTeam

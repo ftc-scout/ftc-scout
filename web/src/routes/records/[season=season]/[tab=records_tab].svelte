@@ -57,6 +57,7 @@
     import { page } from "$app/stores";
     import { SortType } from "$lib/components/SortButton.svelte";
     import { emptyFilter, filterToApiFilter, simpleJsonToFilter } from "$lib/util/stats/filter";
+    import type { StatData } from "$lib/util/stats/Stat";
     import { findInStatSet } from "$lib/util/stats/StatSet";
     import type { ApolloQueryResult } from "@apollo/client";
     import type { Load } from "@sveltejs/kit";
@@ -101,8 +102,12 @@
 
     export let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query>>;
     $: data2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
-    let data2021Teams: (FullTep2021Traditional | FullTep2021Remote)[] | undefined;
-    $: data2021Teams = data2021?.teps.map((t) => t.tep) as any;
+    let data2021Teams: StatData<FullTep2021Traditional | FullTep2021Remote>[] | undefined;
+    $: data2021Teams = data2021?.teps.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.tep,
+    })) as any;
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {

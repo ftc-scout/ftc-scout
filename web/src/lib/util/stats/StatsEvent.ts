@@ -15,11 +15,11 @@ export const EVENT_STAT: Stat<T> = {
     columnName: "Event",
     identifierName: "Event",
     read: (s) => ({
-        name: s.event.name,
-        start: s.event.start,
-        end: s.event.end,
-        code: s.event.code,
-        season: s.event.season,
+        name: s.data.event.name,
+        start: s.data.event.start,
+        end: s.data.event.end,
+        code: s.data.event.code,
+        season: s.data.event.season,
     }),
     apiField: { fieldName: Tep2021FieldName.EventName }, // TODO
 };

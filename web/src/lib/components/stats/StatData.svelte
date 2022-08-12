@@ -4,12 +4,13 @@
     import type { Stat } from "../../util/stats/Stat";
     import { StatDisplayType } from "../../util/stats/stat-display-type";
     import StatEvent from "./StatEvent.svelte";
+    import type { StatData } from "./StatsTable.svelte";
     import StatTeam from "./StatTeam.svelte";
 
     type T = $$Generic;
 
     export let stat: Stat<T>;
-    export let data: T;
+    export let data: StatData<T>;
     export let selectedTeam: number | null = null;
     export let selectedTeamName: string | null = null;
 

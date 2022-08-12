@@ -79,7 +79,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                     color: StatColor.RED,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.total,
+                            (t) => ({ ...t, data: t.data.stats.total }),
                             s,
                             StatColor.RED,
                             "TOT",
@@ -95,7 +95,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                     color: StatColor.PURPLE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.average,
+                            (t) => ({ ...t, data: t.data.stats.average }),
                             s,
                             StatColor.PURPLE,
                             "AVG",
@@ -112,7 +112,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                     color: StatColor.LIGHT_BLUE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.min,
+                            (t) => ({ ...t, data: t.data.stats.min }),
                             s,
                             StatColor.LIGHT_BLUE,
                             "MIN",
@@ -128,7 +128,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                     color: StatColor.BLUE,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.max,
+                            (t) => ({ ...t, data: t.data.stats.max }),
                             s,
                             StatColor.BLUE,
                             "MAX",
@@ -144,7 +144,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                     color: StatColor.GREEN,
                     get: (s) =>
                         groupGetter(
-                            (t) => t.stats.standardDev,
+                            (t) => ({ ...t, data: t.data.stats.standardDev }),
                             s,
                             StatColor.GREEN,
                             "DEV",
