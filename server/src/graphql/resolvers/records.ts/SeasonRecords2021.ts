@@ -102,8 +102,8 @@ enum TEP2021FieldName {
 
 registerEnumType(TEP2021FieldName, { name: "TEP2021FieldName" });
 
-function getFieldNameSingular(fn: TEP2021FieldName): string | null {
-    let map: Partial<Record<TEP2021FieldName, keyof TeamEventParticipation2021 | `e.${keyof Event}`>> = {
+function getFieldNameSingular(fn: TEP2021FieldName, postfix: string): string | null {
+    let map: Partial<Record<TEP2021FieldName, keyof TeamEventParticipation2021 | `e.${keyof Event}` | string>> = {
         [TEP2021FieldName.RP]: "rp",
         [TEP2021FieldName.TB1]: "tb1",
         [TEP2021FieldName.TB2]: "tb2",
@@ -114,7 +114,7 @@ function getFieldNameSingular(fn: TEP2021FieldName): string | null {
         [TEP2021FieldName.DQ]: "dq",
         [TEP2021FieldName.QUAL_MATCHES_PLAYED]: "qualMatchesPlayed",
         [TEP2021FieldName.TEAM_NUMBER]: "teamNumber",
-        [TEP2021FieldName.EVENT_NAME]: "e.name",
+        [TEP2021FieldName.EVENT_NAME]: `e${postfix}"."name`,
     };
 
     return map[fn] ?? null;
@@ -171,7 +171,7 @@ class TEP2021Field {
     @Field(() => TEP2021FieldName)
     fieldName!: TEP2021FieldName;
 
-    toSqlName(): string | null {
+    toSqlName(postfix: string): string | null {
         if (this.group) {
             let groupName = getGroupName(this.group);
             let fieldName = getFieldNameGroup(this.fieldName);
@@ -180,7 +180,7 @@ class TEP2021Field {
 
             return groupName + capitalizeFirstLetter(fieldName.toLowerCase());
         } else {
-            return getFieldNameSingular(this.fieldName);
+            return getFieldNameSingular(this.fieldName, postfix);
         }
     }
 }
@@ -197,27 +197,27 @@ class TEP2021Ordering {
         query: SelectQueryBuilder<TeamEventParticipation2021>
     ): SelectQueryBuilder<TeamEventParticipation2021> {
         let direction: "ASC" | "DESC" = this.order == Order.ASC ? "ASC" : "DESC";
-        let sqlName = this.field.toSqlName();
+        let sqlName = this.field.toSqlName("");
 
         if (!sqlName) return query;
 
         if (sqlName.includes(".")) {
-            return query.addOrderBy(sqlName, direction);
+            return query.addOrderBy('"' + sqlName + '"', direction);
         } else {
             return query.addOrderBy(`tep.${sqlName}`, direction);
         }
     }
 
-    toRawSql(tableName: string = "tep"): string | null {
+    toRawSql(postfix: string): string | null {
         let direction: "ASC" | "DESC" = this.order == Order.ASC ? "ASC" : "DESC";
-        let sqlName = this.field.toSqlName();
+        let sqlName = this.field.toSqlName(postfix);
 
         if (!sqlName) return null;
 
         if (sqlName.includes(".")) {
             return '"' + sqlName + '" ' + direction;
         } else {
-            return `${tableName}.\"${sqlName}\" ${direction}`;
+            return `tep${postfix}.\"${sqlName}\" ${direction}`;
         }
     }
 }
@@ -235,10 +235,10 @@ class TEP2021Value {
     }
 
     toSql(prefix: string): string {
-        if (this.value) {
+        if (this.value != null) {
             return "" + this.value;
         } else {
-            return `${prefix}${this.field!.toSqlName()}`;
+            return `${prefix}${this.field!.toSqlName("")}`;
         }
     }
 }
@@ -319,14 +319,14 @@ export class SeasonRecords2021Resolver {
 
         let orderByRaw = orderIn
             .slice(0, 5)
-            .map((o) => o.toRawSql())
+            .map((o) => o.toRawSql(""))
             .filter((o) => o != null)
             .join(", ");
         if (orderByRaw.length == 0) orderByRaw = 'tep."oprTotalpoints" DESC';
 
         let orderByRaw2 = orderIn
             .slice(0, 5)
-            .map((o) => o.toRawSql("tep2"))
+            .map((o) => o.toRawSql("2"))
             .filter((o) => o != null)
             .join(", ");
         if (orderByRaw2.length == 0) orderByRaw = 'tep2."oprTotalpoints" DESC';
