@@ -172,7 +172,7 @@ class TEP2021Field {
     fieldName!: TEP2021FieldName;
 
     toSqlName(postfix: string): string | null {
-        if (this.group) {
+        if (this.group != null) {
             let groupName = getGroupName(this.group);
             let fieldName = getFieldNameGroup(this.fieldName);
 
