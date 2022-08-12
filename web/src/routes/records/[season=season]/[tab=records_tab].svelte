@@ -3,7 +3,7 @@
         let { params, url } = event;
 
         if (params.tab == "teams") {
-            let eventTypes = EventTypes.Trad;
+            let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad;
             let statSet = getStatSet2021Teams(eventTypes);
 
             let take = +(url.searchParams.get("take") ?? "50");
@@ -41,7 +41,7 @@
                 take,
                 filter: apiFilter,
                 order,
-                eventTypes: EventTypes.Trad,
+                eventTypes,
             })(event);
         } else if (params.tab == "matches") {
             return {};
@@ -49,6 +49,30 @@
             throw "impossible";
         }
     };
+
+    export function eventTypesFromStr(str: string): EventTypes | null {
+        switch (str) {
+            case "Traditional":
+                return EventTypes.Trad;
+            case "Remote":
+                return EventTypes.Remote;
+            case "Traditional and Remote":
+                return EventTypes.TradAndRemote;
+            default:
+                return null;
+        }
+    }
+
+    export function eventTypesToStr(str: EventTypes): "Traditional" | "Remote" | "Traditional and Remote" {
+        switch (str) {
+            case EventTypes.Trad:
+                return "Traditional";
+            case EventTypes.Remote:
+                return "Remote";
+            default:
+                return "Traditional and Remote";
+        }
+    }
 </script>
 
 <script lang="ts">
@@ -114,6 +138,11 @@
             document.getElementById("content")?.scrollTo({ top: 0 });
         }
     });
+
+    let eventTypesStr: "Traditional" | "Remote" | "Traditional and Remote" = eventTypesToStr(
+        eventTypesFromStr($page.url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad
+    );
+    $: eventTypes = eventTypesFromStr(eventTypesStr) ?? EventTypes.Trad;
 </script>
 
 <svelte:head>
@@ -126,11 +155,16 @@
     <Card>
         <h1>{prettyPrintSeason(season)} Season Records</h1>
 
-        <p>Season: <Dropdown items={["2021 Freight Frenzy"]} value="2021 Freight Frenzy" /></p>
         <p>
-            Event Types:&nbsp; <Dropdown
-                items={["Traditional and Remote", "Traditional", "Remote"]}
-                value="Traditional"
+            <span>Season:</span>
+            <Dropdown items={["2021 Freight Frenzy"]} value="2021 Freight Frenzy" style="width: calc(100% - 15ch)" />
+        </p>
+        <p>
+            <span>Event Types:</span>
+            <Dropdown
+                items={["Traditional", "Remote", "Traditional and Remote"]}
+                bind:value={eventTypesStr}
+                style="width: calc(100% - 15ch)"
             />
         </p>
     </Card>
@@ -151,16 +185,26 @@
                 {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
                 {@const page = data2021.offset / pageSize + 1}
 
-                <TeamSeasonRecords2021
-                    eventTypes={EventTypes.TradAndRemote}
-                    data={data2021Teams}
-                    currPage={page}
-                    {totalCount}
-                    {pageSize}
-                />
+                <TeamSeasonRecords2021 {eventTypes} data={data2021Teams} currPage={page} {totalCount} {pageSize} />
             {:else}
                 <SkeletonRow rows={50} card={false} header={false} />
             {/if}
         </TabContent>
     </TabbedCard>
 </WidthProvider>
+
+<style>
+    p {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    span {
+        display: inline-block;
+        width: 12ch;
+
+        font-size: var(--large-font-size);
+        font-weight: normal;
+    }
+</style>

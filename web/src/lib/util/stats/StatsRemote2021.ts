@@ -106,6 +106,23 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
                         ),
                 },
                 {
+                    longName: "OPR",
+                    shortName: "OPR",
+                    description: "Offensive Power Rating.",
+                    color: StatColor.PURPLE,
+                    get: (s) =>
+                        groupGetter(
+                            (t) => ({ ...t, data: t.data.stats.opr }),
+                            s,
+                            StatColor.PURPLE,
+                            "OPR",
+                            "OPR",
+                            "OPR",
+                            Tep2021Group.Opr,
+                            StatDisplayType.DECIMAL
+                        ),
+                },
+                {
                     longName: "Minimum",
                     shortName: "MIN",
                     description: "The lowest number of points scored in the category.",

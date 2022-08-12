@@ -73,6 +73,7 @@
     import { EVENT_STAT, STAT_SET_EVENT } from "$lib/util/stats/StatsEvent";
     import { changeParam } from "./changeParams";
     import { page } from "$app/stores";
+    import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab].svelte";
 
     export let eventTypes: EventTypes;
     export let data: StatData<Data>[];
@@ -103,6 +104,7 @@
             sort: isDefualtSort ? null : currentSort.stat.identifierName,
             ["sort-dir"]: isDefualtSort || currentSort.type == SortType.HIGH_LOW ? null : "reverse",
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
+            ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 </script>
