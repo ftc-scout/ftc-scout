@@ -378,7 +378,7 @@ export class SeasonRecords2021Resolver {
             query = query.andWhere(filter.toBrackets());
         }
 
-        let { entities, raw } = await query.getRawAndEntities();
+        let [{ entities, raw }, count] = await Promise.all([await query.getRawAndEntities(), await query.getCount()]);
 
         let teps: TEP2021RecordRow[] = entities.map((e) => {
             let rawRow = raw.find((r) => r.tep_eventCode == e.eventCode && r.tep_teamNumber == e.teamNumber);
@@ -391,7 +391,7 @@ export class SeasonRecords2021Resolver {
 
         return {
             teps,
-            count: 0,
+            count,
             offset: skip,
         };
     }
