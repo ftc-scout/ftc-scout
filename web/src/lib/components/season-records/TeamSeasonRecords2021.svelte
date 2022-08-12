@@ -28,6 +28,8 @@
 
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 
+    let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_TEAM_2021);
+
     export function getStatSet2021Teams(eventTypes: EventTypes): StatSet<unknown, unknown> {
         return [
             ...(eventTypes == EventTypes.Remote
@@ -54,14 +56,14 @@
                 };
             }
         }
-        return DEFAULT_SORT_TEAM_2021;
+        return get(currentSort);
     }
 
     export let team2021SearchParams: string = "";
 </script>
 
 <script lang="ts">
-    import { writable, type Writable } from "svelte/store";
+    import { get, writable, type Writable } from "svelte/store";
     import { EventTypes } from "../../graphql/generated/graphql-operations";
     import type { Stat } from "../../util/stats/Stat";
     import { STAT_SET_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemote2021";
@@ -110,22 +112,22 @@
 
     $: $shownStats = filterStatSet(statSet as any, $shownStats);
 
-    let currentSort: ChosenSort<Data> = getCurrentSortFromUrl($page.url);
+    $currentSort = getCurrentSortFromUrl($page.url);
 
     let selectedTeam: number | null = null;
     let selectedTeamName: string | null = null;
 
     $: isDefualtSort =
-        currentSort.type == DEFAULT_SORT_TEAM_2021.type &&
-        currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2021.stat.identifierName;
+        $currentSort.type == DEFAULT_SORT_TEAM_2021.type &&
+        $currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2021.stat.identifierName;
     $: isDefualtShownStats = arraysEqual(
         DEFUALT_SHOWN_STATS.map((s) => s.identifierName),
         $shownStats.map((s) => s.identifierName)
     );
     $: if ($page.params.tab == "teams")
         changeParam({
-            sort: isDefualtSort ? null : currentSort.stat.identifierName,
-            ["sort-dir"]: isDefualtSort || currentSort.type == SortType.HIGH_LOW ? null : "reverse",
+            sort: isDefualtSort ? null : $currentSort.stat.identifierName,
+            ["sort-dir"]: isDefualtSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
             ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
             ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
@@ -144,7 +146,7 @@
     bind:selectedTeam
     bind:selectedTeamName
     defaultSort={DEFAULT_SORT_TEAM_2021}
-    bind:currentSort
+    bind:currentSort={$currentSort}
     bind:currentFilters={$currentFilters}
     fileName={"Team Season Records 2021"}
     pagination
