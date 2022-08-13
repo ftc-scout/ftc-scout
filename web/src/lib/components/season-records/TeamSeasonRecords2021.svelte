@@ -9,7 +9,7 @@
         TELEOP_OPR_STAT,
         ENDGAME_OPR_STAT,
         AVERAGE_STAT,
-        RANK_STAT,
+        EVENT_RANK_STAT,
         EVENT_STAT as any,
     ];
 
@@ -21,7 +21,7 @@
         TELEOP_OPR_STAT,
         ENDGAME_OPR_STAT,
         AVERAGE_STAT,
-        RANK_STAT,
+        EVENT_RANK_STAT,
         EVENT_STAT as any,
     ]);
     export const DEFAULT_SORT_TEAM_2021: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
@@ -73,7 +73,7 @@
         ENDGAME_OPR_STAT,
         NP_OPR_STAT,
         OPR_STAT,
-        RANK_STAT,
+        EVENT_RANK_STAT,
         STAT_SET_2021_SHARED,
         TEAM_STAT,
         TELEOP_OPR_STAT,

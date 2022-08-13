@@ -20,6 +20,8 @@
 
     export let fileName: string;
 
+    export let showRanks = true;
+
     function makeSortFunction(sort: { stat: Stat<T>; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
         return (a: StatData<T>, b: StatData<T>) => {
             let { stat, type } = sort;
@@ -68,4 +70,5 @@
     bind:currentFilters
     bind:currentSort
     {fileName}
+    {showRanks}
 />

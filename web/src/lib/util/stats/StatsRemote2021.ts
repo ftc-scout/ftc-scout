@@ -27,7 +27,7 @@ import {
     PENALTIES_MINOR_STAT,
     PENALTIES_STAT,
     PLAYED_STAT,
-    RANK_STAT,
+    EVENT_RANK_STAT,
     RP_STAT,
     TBP2_STAT,
     TBP_STAT,
@@ -64,7 +64,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
         name: "Team's Event Performance",
         type: "standalone",
         set: {
-            standalone: [TEAM_STAT, RANK_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT],
+            standalone: [TEAM_STAT, EVENT_RANK_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT],
         },
     },
     {

@@ -4,7 +4,7 @@
     import { onDestroy, onMount } from "svelte";
     import type { Writable } from "svelte/store";
     import { array_move } from "../../util/array-move";
-    import type { Stat } from "../../util/stats/Stat";
+    import { RANK_STAT, type Stat } from "../../util/stats/Stat";
     import { StatDisplayType } from "../../util/stats/stat-display-type";
     import SortButton, { cycleSortType, SortType } from "../SortButton.svelte";
 
@@ -19,6 +19,8 @@
 
     export let defaultSort: ChosenSort;
     export let sort: ChosenSort = defaultSort;
+
+    export let showRanks: boolean;
 
     function handleClick(stat: Stat<T>) {
         let currentSort = sort?.stat == stat ? sort.type : SortType.NONE;
@@ -199,6 +201,10 @@
 </script>
 
 <thead>
+    {#if showRanks}
+        <th class={RANK_STAT.color} />
+    {/if}
+
     {#each $shownStats as shownStat, i}
         {@const mySort = shownStat.identifierName == sort?.stat.identifierName ? sort.type : SortType.NONE}
         <th

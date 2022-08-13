@@ -35,7 +35,7 @@ import {
     PENALTIES_MINOR_STAT,
     PENALTIES_STAT,
     PLAYED_STAT,
-    RANK_STAT,
+    EVENT_RANK_STAT,
     RP_STAT,
     TBP2_STAT,
     TBP_STAT,
@@ -140,7 +140,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
         set: {
             standalone: [
                 TEAM_STAT,
-                RANK_STAT,
+                EVENT_RANK_STAT,
                 RP_STAT,
                 TBP_STAT,
                 TBP2_STAT,

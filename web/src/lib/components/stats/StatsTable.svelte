@@ -24,8 +24,9 @@
     import { exportStatsCSV } from "../../util/stats/export-stats-csv";
     import EditFiltersModal from "./edit-filters/EditFiltersModal.svelte";
     import type { SortType } from "../SortButton.svelte";
-    import { emptyFilter, type Filter } from "../../util/stats/filter";
+    import { emptyFilter, isEmpty, type Filter } from "../../util/stats/filter";
     import StatsPageChooser from "./StatsPageChooser.svelte";
+    import Dropdown from "../Dropdown.svelte";
 
     type T = $$Generic;
 
@@ -50,6 +51,10 @@
     let chooseStatsModalShown = false;
     let editFiltersModalShown = false;
     let seeStatsData: StatData<T> | null = null;
+
+    export let showRanks = true;
+    let rankPreFilterStr = "Rank Before Filters";
+    $: rankPreFilter = rankPreFilterStr == "Rank Before Filters";
 </script>
 
 <div class="options">
@@ -57,17 +62,24 @@
         <FaButton
             icon={faEdit}
             on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
-            buttonStyle="font-size: var(--medium-font-size);"
+            buttonStyle="font-size: var(--medium-font-size); margin-right: var(--gap);"
         >
             Statistics
         </FaButton>
         <FaButton
             icon={faFilter}
             on:click={() => (editFiltersModalShown = !editFiltersModalShown)}
-            buttonStyle="font-size: var(--medium-font-size); margin-left: var(--gap);"
+            buttonStyle="font-size: var(--medium-font-size); margin-right: var(--gap);"
         >
             Filters
         </FaButton>
+        {#if !isEmpty(currentFilters)}
+            <Dropdown
+                items={["Rank Before Filters", "Rank After Filters"]}
+                bind:value={rankPreFilterStr}
+                style="height: 100%"
+            />
+        {/if}
     </div>
 
     <FaButton
@@ -89,7 +101,7 @@
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table tabindex="-1">
-    <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} />
+    <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} {showRanks} />
     {#if data.length}
         <tbody>
             {#each data as dataRow, i}
@@ -100,6 +112,8 @@
                     bind:selectedTeam
                     bind:selectedTeamName
                     bind:seeStatsData
+                    {rankPreFilter}
+                    {showRanks}
                 />
             {/each}
         </tbody>

@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { Stat } from "../../util/stats/Stat";
+    import { PRE_FILTER_RANK_STAT, RANK_STAT, type Stat } from "../../util/stats/Stat";
     import type { StatData } from "./StatsTable.svelte";
     import StatDataComp from "./StatData.svelte";
 
@@ -12,10 +12,21 @@
     export let selectedTeamName: string | null = null;
     export let seeStatsData: StatData<T> | null = null;
 
+    export let rankPreFilter: boolean;
+    export let showRanks: boolean;
+
     let teamHovered = false;
 </script>
 
 <tr class:zebra-stripe={zebraStripe} class:team-hovered={teamHovered} on:click={() => (seeStatsData = dataRow)}>
+    {#if showRanks}
+        <StatDataComp
+            stat={rankPreFilter ? PRE_FILTER_RANK_STAT : RANK_STAT}
+            data={dataRow}
+            on:show-data={() => (seeStatsData = dataRow)}
+        />
+    {/if}
+
     {#each shownStats as shownStat}
         <StatDataComp
             stat={shownStat}

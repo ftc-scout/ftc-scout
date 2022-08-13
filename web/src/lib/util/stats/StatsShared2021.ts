@@ -28,7 +28,7 @@ export const RP_STAT: Stat<FullTep2021Shared> = {
     apiField: { fieldName: Tep2021FieldName.Rp },
 };
 
-export const RANK_STAT: Stat<FullTep2021Shared> = {
+export const EVENT_RANK_STAT: Stat<FullTep2021Shared> = {
     color: StatColor.WHITE,
     displayType: StatDisplayType.RANK,
     listName: "Ranking",
@@ -302,7 +302,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
         name: "Team's Event Performance",
         type: "standalone",
         set: {
-            standalone: [TEAM_STAT, RANK_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT],
+            standalone: [TEAM_STAT, EVENT_RANK_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT],
         },
     },
     {

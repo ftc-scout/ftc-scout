@@ -24,6 +24,26 @@ export interface Stat<T> {
     apiField: Tep2021Field;
 }
 
+export const RANK_STAT: Stat<any> = {
+    displayType: StatDisplayType.RANK,
+    color: StatColor.WHITE,
+    columnName: "Rank",
+    listName: "Rank",
+    identifierName: "Post Filter Rank",
+    read: (t) => t.rank,
+    apiField: null as any, // We can't sort by this. It doesn't make any sense
+};
+
+export const PRE_FILTER_RANK_STAT: Stat<any> = {
+    displayType: StatDisplayType.RANK,
+    color: StatColor.WHITE,
+    columnName: "Rank",
+    listName: "Pre Filter Rank",
+    identifierName: "Pre Filter Rank",
+    read: (t) => t.preFilterRank,
+    apiField: null as any,
+};
+
 export function statFromGroup<U, T>(
     displayType: StatDisplayType,
     color: StatColor,
