@@ -79,7 +79,9 @@
     import { browser } from "$app/env";
     import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/stores";
+    import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
     import { SortType } from "$lib/components/SortButton.svelte";
+    import { REGION_NAMES } from "$lib/util/regions";
     import { emptyFilter, filterToApiFilter, simpleJsonToFilter } from "$lib/util/stats/filter";
     import type { StatData } from "$lib/util/stats/Stat";
     import { findInStatSet } from "$lib/util/stats/StatSet";
@@ -143,6 +145,8 @@
         eventTypesFromStr($page.url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad
     );
     $: eventTypes = eventTypesFromStr(eventTypesStr) ?? EventTypes.Trad;
+
+    let regionsStr: string = "All";
 </script>
 
 <svelte:head>
@@ -166,6 +170,10 @@
                 bind:value={eventTypesStr}
                 style="width: calc(100% - 15ch)"
             />
+        </p>
+        <p>
+            <span>Regions:</span>
+            <RegionsDropdown bind:value={regionsStr} style="width: calc(100% - 15ch)" />
         </p>
     </Card>
 
