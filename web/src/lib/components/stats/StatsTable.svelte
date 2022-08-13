@@ -124,7 +124,7 @@
     {/if}
 </table>
 
-{#if pagination}
+{#if pagination && Math.ceil(totalCount / pageSize) > 1}
     <div style="display: flex; align-items: center; justify-content: center;">
         <StatsPageChooser bind:currentPage={page} {totalCount} {pageSize} />
     </div>
