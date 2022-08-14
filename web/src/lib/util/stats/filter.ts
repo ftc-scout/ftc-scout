@@ -70,7 +70,7 @@ function statFilterTypeToApi(type: StatFilterType): CompareOperator {
         [StatFilterType.GT]: CompareOperator.Gt,
         [StatFilterType.GTE]: CompareOperator.Gte,
         [StatFilterType.LT]: CompareOperator.Lt,
-        [StatFilterType.LTE]: CompareOperator.Gt,
+        [StatFilterType.LTE]: CompareOperator.Lte,
     }[type];
 }
 
