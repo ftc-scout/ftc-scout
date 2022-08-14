@@ -81,7 +81,6 @@
     import { page } from "$app/stores";
     import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
     import { SortType } from "$lib/components/SortButton.svelte";
-    import { REGION_NAMES } from "$lib/util/regions";
     import { emptyFilter, filterToApiFilter, simpleJsonToFilter } from "$lib/util/stats/filter";
     import type { StatData } from "$lib/util/stats/Stat";
     import { findInStatSet } from "$lib/util/stats/StatSet";
