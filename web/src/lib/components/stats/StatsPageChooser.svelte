@@ -3,7 +3,13 @@
         let params = currentUrl.searchParams;
         let currPage = params.get("page");
         let newPage = +(currPage ?? 1) + offset;
-        params.set("page", "" + newPage);
+
+        if (newPage != 1) {
+            params.set("page", "" + newPage);
+        } else {
+            params.delete("page");
+        }
+
         let url = params.toString();
 
         if (currPage == null) {
@@ -52,7 +58,12 @@
         ) {
             let url = $page.url;
             let old = url.searchParams.get("page");
-            url.searchParams.set("page", "" + inputValue);
+
+            if (+inputValue != 1) {
+                url.searchParams.set("page", "" + inputValue);
+            } else {
+                url.searchParams.delete("page");
+            }
             let urlString = url.toString();
             if (old) {
                 url.searchParams.set("page", old);
