@@ -37,6 +37,7 @@ export enum Region {
     USAR = "USAR",
     USARL = "USARL",
     USAZ = "USAZ",
+    USCA = "USCA",
     USCALA = "USCALA",
     USCANO = "USCANO",
     USCASD = "USCASD",
@@ -65,6 +66,7 @@ export enum Region {
     USNJ = "USNJ",
     USNM = "USNM",
     USNV = "USNV",
+    USNY = "USNY",
     USNYEX = "USNYEX",
     USNYLI = "USNYLI",
     USNYNY = "USNYNY",
@@ -75,6 +77,7 @@ export enum Region {
     USRI = "USRI",
     USSC = "USSC",
     USTN = "USTN",
+    USTX = "USTX",
     USTXCE = "USTXCE",
     USTXHO = "USTXHO",
     USTXNO = "USTXNO",
@@ -102,12 +105,18 @@ export function getRegionCodes(region: Region): string[] {
             return SOUTH_REGIONS;
         case Region.INTERNATIONAL:
             return INTERNATIONAL_REGIONS;
+        case Region.USCA:
+            return [Region.USCALA, Region.USCANO, Region.USCASD].map((r) => r.toString());
+        case Region.USNY:
+            return [Region.USNYEX, Region.USNYLI, Region.USNYNY].map((r) => r.toString());
+        case Region.USTX:
+            return [Region.USTXCE, Region.USTXHO, Region.USTXNO, Region.USTXSO, Region.USTXWP].map((r) => r.toString());
         default:
             return [region.toString()];
     }
 }
 
-let ALL_REGIONS = [
+const ALL_REGIONS = [
     Region.AU,
     Region.BR,
     Region.CAAB,
@@ -189,7 +198,7 @@ let ALL_REGIONS = [
     Region.ZA,
 ].map((r) => r.toString());
 
-let NORTH_REGIONS = [
+const NORTH_REGIONS = [
     Region.USCT,
     Region.USDE,
     Region.USIA,
@@ -213,7 +222,7 @@ let NORTH_REGIONS = [
     Region.USMI,
 ].map((r) => r.toString());
 
-let SOUTH_REGIONS = [
+const SOUTH_REGIONS = [
     Region.USAK,
     Region.USAL,
     Region.USAR,
@@ -247,7 +256,7 @@ let SOUTH_REGIONS = [
     Region.USWY,
 ].map((r) => r.toString());
 
-let INTERNATIONAL_REGIONS = [
+const INTERNATIONAL_REGIONS = [
     Region.CAAB,
     Region.AU,
     Region.CABC,
