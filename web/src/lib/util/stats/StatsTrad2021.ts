@@ -105,7 +105,7 @@ export const DQ_STAT: Stat<FullTep2021Traditional> = {
     listName: "Disqualifications (DQs)",
     columnName: "DQs",
     identifierName: "Disqualifications (DQs)",
-    read: (s) => s.data.stats.ties,
+    read: (s) => s.data.stats.dqs,
     apiField: { fieldName: Tep2021FieldName.Dq },
 };
 

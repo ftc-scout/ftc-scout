@@ -317,6 +317,8 @@ export class SeasonRecords2021Resolver {
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<TEP2021Records> {
+        console.log(orderIn);
+
         let limit = Math.min(takeIn, 50);
 
         let regionCodes = getRegionCodes(region);
@@ -394,6 +396,8 @@ export class SeasonRecords2021Resolver {
                 preFilterRank: rawRow.pre_filter_rank as number,
             };
         });
+
+        console.log(teps.map((tep) => tep.tep.dq));
 
         return {
             teps,

@@ -80,7 +80,7 @@
 
 <script lang="ts">
     import { browser } from "$app/env";
-    import { afterNavigate, goto } from "$app/navigation";
+    import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
     import { SortType } from "$lib/components/SortButton.svelte";
