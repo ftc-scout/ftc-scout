@@ -64,7 +64,7 @@
 
 <script lang="ts">
     import { get, writable, type Writable } from "svelte/store";
-    import { EventTypes } from "../../graphql/generated/graphql-operations";
+    import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
     import type { Stat } from "../../util/stats/Stat";
     import { STAT_SET_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemote2021";
     import {
@@ -89,8 +89,10 @@
     import { page } from "$app/stores";
     import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab].svelte";
     import { arraysEqual } from "$lib/util/array-eq";
+    import { regionToString } from "$lib/util/regions";
 
     export let eventTypes: EventTypes;
+    export let region: Region;
     export let data: StatData<Data>[];
     export let currPage: number;
     export let totalCount: number;
@@ -131,6 +133,7 @@
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
             ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
             ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
+            region: region == Region.All ? null : regionToString(region),
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 </script>

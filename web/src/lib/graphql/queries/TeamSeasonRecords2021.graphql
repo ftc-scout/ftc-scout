@@ -4,8 +4,16 @@ query TeamSeasonRecords2021(
     $filter: TEP2021Filter!
     $order: [TEP2021Ordering!]!
     $eventTypes: EventTypes!
+    $region: Region!
 ) {
-    teamRecords2021(skip: $skip, take: $take, filter: $filter, order: $order, eventTypes: $eventTypes) {
+    teamRecords2021(
+        skip: $skip
+        take: $take
+        filter: $filter
+        order: $order
+        eventTypes: $eventTypes
+        region: $region
+    ) {
         teps {
             tep {
                 season

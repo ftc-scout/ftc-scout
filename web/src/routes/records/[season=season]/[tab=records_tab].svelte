@@ -6,6 +6,8 @@
             let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad;
             let statSet = getStatSet2021Teams(eventTypes);
 
+            let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
+
             let take = +(url.searchParams.get("take") ?? "50");
             let page = +(url.searchParams.get("page") ?? "1");
 
@@ -42,6 +44,7 @@
                 filter: apiFilter,
                 order,
                 eventTypes,
+                region,
             })(event);
         } else if (params.tab == "matches") {
             return {};
@@ -81,6 +84,7 @@
     import { page } from "$app/stores";
     import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
     import { SortType } from "$lib/components/SortButton.svelte";
+    import { regionFromStr, regionToString } from "$lib/util/regions";
     import { emptyFilter, filterToApiFilter, simpleJsonToFilter } from "$lib/util/stats/filter";
     import type { StatData } from "$lib/util/stats/Stat";
     import { findInStatSet } from "$lib/util/stats/StatSet";
@@ -101,6 +105,7 @@
     import {
         EventTypes,
         Order,
+        Region,
         TeamSeasonRecords2021Document,
         type TeamSeasonRecords2021Query,
         type Tep2021Ordering,
@@ -145,7 +150,8 @@
     );
     $: eventTypes = eventTypesFromStr(eventTypesStr) ?? EventTypes.Trad;
 
-    let regionsStr: string = "All";
+    let regionStr: string = regionToString(regionFromStr($page.url.searchParams.get("region") ?? "ALL") ?? Region.All);
+    $: region = regionFromStr(regionStr) ?? Region.All;
 </script>
 
 <svelte:head>
@@ -172,7 +178,7 @@
         </p>
         <p>
             <span>Regions:</span>
-            <RegionsDropdown bind:value={regionsStr} style="width: calc(100% - 15ch)" />
+            <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
         </p>
     </Card>
 
@@ -192,7 +198,14 @@
                 {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
                 {@const page = data2021.offset / pageSize + 1}
 
-                <TeamSeasonRecords2021 {eventTypes} data={data2021Teams} currPage={page} {totalCount} {pageSize} />
+                <TeamSeasonRecords2021
+                    {eventTypes}
+                    data={data2021Teams}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                />
             {:else}
                 <SkeletonRow rows={50} card={false} header={false} />
             {/if}

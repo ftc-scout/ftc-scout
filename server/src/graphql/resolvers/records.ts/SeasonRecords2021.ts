@@ -7,6 +7,7 @@ import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { EventTypes } from "./EventTypes";
 import { Order } from "./Order";
 import { Event } from "src/db/entities/Event";
+import { getRegionCodes, Region } from "../../../db/entities/types/Region";
 
 @ObjectType()
 class TEP2021RecordRow {
@@ -310,12 +311,15 @@ export class SeasonRecords2021Resolver {
     @Query(() => TEP2021Records)
     async teamRecords2021(
         @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
+        @Arg("region", () => Region) region: Region,
         @Arg("order", () => [TEP2021Ordering]) orderIn: TEP2021Ordering[],
         @Arg("filter", () => TEP2021Filter, { nullable: true }) filter: TEP2021Filter | null,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<TEP2021Records> {
         let limit = Math.min(takeIn, 50);
+
+        let regionCodes = getRegionCodes(region);
 
         let orderByRaw = orderIn
             .slice(0, 5)
@@ -336,7 +340,8 @@ export class SeasonRecords2021Resolver {
             .leftJoin("tep2.event", "e2")
             .select([`RANK() OVER (ORDER BY ${orderByRaw2}) as pre_filter_rank`, '"eventCode"', '"teamNumber"'])
             .where("tep2.hasStats")
-            .andWhere("e2.season = 2021");
+            .andWhere("e2.season = 2021")
+            .andWhere('e2."regionCode" IN (:...regionCodes)', { regionCodes });
 
         if (eventTypes == EventTypes.REMOTE) {
             preFilterQuery = preFilterQuery.andWhere("e2.remote");
@@ -356,6 +361,7 @@ export class SeasonRecords2021Resolver {
             .addSelect("pre_rank.pre_filter_rank", "pre_filter_rank")
             .where("tep.hasStats")
             .andWhere("e.season = 2021")
+            .andWhere('e."regionCode" IN (:...regionCodes)', { regionCodes })
             .limit(limit)
             .offset(skip);
 

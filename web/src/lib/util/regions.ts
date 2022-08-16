@@ -1,3 +1,5 @@
+import { Region } from "$lib/graphql/generated/graphql-operations";
+
 export const REGION_NAMES = {
     AU: "Australia",
     BR: "Brazil",
@@ -31,7 +33,7 @@ export const REGION_NAMES = {
     USAZ: "Arizona",
     USCALA: "California - Los Angeles",
     USCANO: "California - Northern",
-    USCASD: "	California - San Diego",
+    USCASD: "California - San Diego",
     USCHS: "Chesapeake",
     USCO: "Colorado",
     USCT: "Connecticut",
@@ -48,7 +50,7 @@ export const REGION_NAMES = {
     USMA: "Massachusets",
     USMI: "Michigan",
     USMN: "Minnesota",
-    USMOKS: "Missouri",
+    USMOKS: "Missouri & Kansas",
     USMS: "Mississippi",
     USMT: "Montana",
     USNC: "North Carolina",
@@ -79,3 +81,39 @@ export const REGION_NAMES = {
     USWY: "Wyoming",
     ZA: "South Africa",
 };
+
+export function regionToString(region: Region): string {
+    switch (region) {
+        case Region.All:
+            return "All";
+        case Region.North:
+            return "North";
+        case Region.South:
+            return "South";
+        case Region.International:
+            return "International";
+        default:
+            return (<any>REGION_NAMES)[region.toString()];
+    }
+}
+
+export function regionFromStr(str: string): Region | null {
+    switch (str) {
+        case "All":
+            return Region.All;
+        case "North":
+            return Region.North;
+        case "South":
+            return Region.South;
+        case "International":
+            return Region.International;
+        default:
+            for (let [k, v] of Object.entries(REGION_NAMES)) {
+                if (v == str) {
+                    return k as Region;
+                }
+            }
+    }
+
+    return null;
+}
