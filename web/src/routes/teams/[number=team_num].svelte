@@ -31,6 +31,7 @@
         SCHOOL_ICON,
         SPONSOR_ICON,
         WEBSITE_ICON,
+        OPR_ICON,
     } from "../../lib/icons";
 
     export let team: Readable<ApolloQueryResult<TeamQuery> | null>;
@@ -57,6 +58,8 @@
         }
     }
     $: console.log($me);
+    $: maxOpr = Math.max(...sortedEvents.filter((e) => !e.event.remote).map((e) => e.stats?.opr?.totalPoints ?? 0));
+    $: maxOprEvent = sortedEvents.find((e) => (e.stats?.opr?.totalPoints ?? 0) == maxOpr)?.eventCode;
 </script>
 
 <svelte:head>
@@ -67,7 +70,7 @@
 
 <Loading store={$team} width={"1000px"} doesNotExist={!teamData}>
     <Card>
-        <h1>{teamData.number} - {teamData.name} {$me?.team?.number}</h1>
+        <h1>{teamData.number} - {teamData.name}</h1>
 
         <InfoIconRow icon={SCHOOL_ICON}>
             {teamData.schoolName}
@@ -96,6 +99,11 @@
         </InfoIconRow>
 
         <DataFromFirst />
+        <InfoIconRow icon={OPR_ICON}>
+            Top OPR: <a class="opr-link" href="#{maxOprEvent}">
+                {prettyPrintFloat(maxOpr)}
+            </a>
+        </InfoIconRow>
     </Card>
 
     {#each sortedEvents as teamEvent}
@@ -211,5 +219,9 @@
 
     .event-link:hover {
         text-decoration: underline;
+    }
+    .opr-link {
+        font-weight: bold;
+        color: inherit;
     }
 </style>
