@@ -17,6 +17,7 @@
     import { setContext } from "svelte";
     import Sidebar from "../lib/components/nav/Sidebar.svelte";
     import type { HttpOptions } from "@apollo/client";
+    import { page } from "$app/stores";
 
     export let f: NonNullable<HttpOptions["fetch"]>;
     setClient(getMyClient(f));
@@ -47,9 +48,11 @@
 <Navbar />
 <Sidebar />
 
-<div id="content">
-    <slot />
-</div>
+{#key $page.url}
+    <div id="content">
+        <slot />
+    </div>
+{/key}
 
 <style>
     @import "/static/css/colors.css";

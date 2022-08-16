@@ -139,12 +139,6 @@
         data: t.tep,
     })) as any;
 
-    afterNavigate(({ to }) => {
-        if (to.pathname.startsWith("/records")) {
-            document.getElementById("content")?.scrollTo({ top: 0 });
-        }
-    });
-
     let eventTypesStr: "Traditional" | "Remote" | "Traditional and Remote" = eventTypesToStr(
         eventTypesFromStr($page.url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad
     );
