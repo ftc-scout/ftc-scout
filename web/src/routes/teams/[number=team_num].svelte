@@ -57,9 +57,14 @@
             localStorage.setItem("teamInfo", (<HTMLInputElement>document.getElementById("edit-box"))?.value);
         }
     }
-    $: console.log($me);
-    $: maxOpr = Math.max(...sortedEvents.filter((e) => !e.event.remote).map((e) => e.stats?.opr?.totalPoints ?? 0));
-    $: maxOprEvent = sortedEvents.find((e) => (e.stats?.opr?.totalPoints ?? 0) == maxOpr)?.eventCode;
+
+    $: oprs = sortedEvents
+        .filter((e) => !e.event.remote)
+        .map((e) => e.stats?.opr?.totalPoints)
+        .filter((x) => (x ?? null) != null)
+        .map((x) => x!);
+    $: maxOpr = oprs.length == 0 ? null : Math.max(...oprs);
+    $: maxOprEvent = maxOpr != null ? sortedEvents.find((e) => e.stats?.opr?.totalPoints == maxOpr)?.eventCode : null;
 </script>
 
 <svelte:head>
@@ -98,12 +103,13 @@
             Rookie Year: {teamData.rookieYear}
         </InfoIconRow>
 
+        {#if maxOpr != null && maxOprEvent != null}
+            <InfoIconRow icon={OPR_ICON}>
+                Top OPR: <a class="opr-link" href="#{maxOprEvent}">{prettyPrintFloat(maxOpr)}</a>
+            </InfoIconRow>
+        {/if}
+
         <DataFromFirst />
-        <InfoIconRow icon={OPR_ICON}>
-            Top OPR: <a class="opr-link" href="#{maxOprEvent}">
-                {prettyPrintFloat(maxOpr)}
-            </a>
-        </InfoIconRow>
     </Card>
 
     {#each sortedEvents as teamEvent}
@@ -220,8 +226,10 @@
     .event-link:hover {
         text-decoration: underline;
     }
+
     .opr-link {
         font-weight: bold;
         color: inherit;
+        text-decoration: underline;
     }
 </style>
