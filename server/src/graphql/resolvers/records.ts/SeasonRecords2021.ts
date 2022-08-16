@@ -322,14 +322,14 @@ export class SeasonRecords2021Resolver {
         let regionCodes = getRegionCodes(region);
 
         let orderByRaw = orderIn
-            .slice(0, 5)
+            .slice(0, 1)
             .map((o) => o.toRawSql(""))
             .filter((o) => o != null)
             .join(", ");
         if (orderByRaw.length == 0) orderByRaw = 'tep."oprTotalpoints" DESC';
 
         let orderByRaw2 = orderIn
-            .slice(0, 5)
+            .slice(0, 1)
             .map((o) => o.toRawSql("2"))
             .filter((o) => o != null)
             .join(", ");
