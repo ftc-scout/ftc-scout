@@ -1,35 +1,15 @@
-import { Region } from "$lib/graphql/generated/graphql-operations";
+import type { Region } from "$lib/graphql/generated/graphql-operations";
 
 export const REGION_NAMES = {
-    AU: "Australia",
-    BR: "Brazil",
-    CAAB: "Alberta",
-    CABC: "British Columbia",
-    CAON: "Ontario",
-    CAQC: "Québec",
-    CMPZ2: "FIRST Championship - Zone 2", // TODO include this?
-    CN: "China",
-    CY: "Cyprus",
-    EG: "Egypt",
-    GB: "United Kingdom",
-    IL: "Israel",
-    IN: "India",
-    JM: "Jamaica",
-    KZ: "Kazakhstan",
-    LY: "Libya",
-    MX: "Mexico",
-    NG: "Nigeria",
-    NL: "Netherlands",
-    ONADOD: "Military and Diplomatic",
-    QA: "Qatar",
-    RO: "Romania",
-    RU: "Russia",
-    TH: "Thailand",
-    TW: "Chinese Taipei",
+    ALL: "All",
+
+    NORTH: "North",
+    SOUTH: "South",
+    INTERNATIONAL: "International",
+
     USAK: "Alaska",
     USAL: "Alabama",
     USAR: "Arkansas",
-    USARL: "Adventist Robotics League",
     USAZ: "Arizona",
     USCALA: "California - Los Angeles",
     USCANO: "California - Northern",
@@ -79,40 +59,134 @@ export const REGION_NAMES = {
     USWA: "Washington",
     USWI: "Wisconsin",
     USWY: "Wyoming",
+
+    CAAB: "Alberta",
+    CABC: "British Columbia",
+    CAON: "Ontario",
+    CAQC: "Québec",
+
+    AU: "Australia",
+    BR: "Brazil",
+    CN: "China",
+    TW: "Chinese Taipei",
+    CY: "Cyprus",
+    EG: "Egypt",
+    IL: "Israel",
+    IN: "India",
+    JM: "Jamaica",
+    KZ: "Kazakhstan",
+    LY: "Libya",
+    MX: "Mexico",
+    NG: "Nigeria",
+    NL: "Netherlands",
+    QA: "Qatar",
+    RO: "Romania",
+    RU: "Russia",
     ZA: "South Africa",
+    TH: "Thailand",
+    GB: "United Kingdom",
+
+    CMPZ2: "FIRST Championship - Zone 2", // TODO include this?
+    ONADOD: "Military and Diplomatic",
+    USARL: "Adventist Robotics League",
 };
 
+export const REGION_GROUPS = [
+    ["All"],
+    ["North", "South", "International"],
+    [
+        "Alaska",
+        "Alabama",
+        "Arkansas",
+        "Arizona",
+        "California - Los Angeles",
+        "California - Northern",
+        "California - San Diego",
+        "Chesapeake",
+        "Colorado",
+        "Connecticut",
+        "Delaware",
+        "Florida",
+        "Georgia",
+        "Hawaii",
+        "Iowa",
+        "Idaho",
+        "Illinois",
+        "Indiana",
+        "Kentucky",
+        "Louisiana",
+        "Massachusets",
+        "Michigan",
+        "Minnesota",
+        "Missouri & Kansas",
+        "Mississippi",
+        "Montana",
+        "North Carolina",
+        "North Dakota",
+        "New Hampshire",
+        "New Jersey",
+        "New Mexico",
+        "Nevada",
+        "New York - Excelsior",
+        "New York - Long Island",
+        "New York - NYC",
+        "Ohio",
+        "Oklahoma",
+        "Oregon",
+        "Pennsylvania",
+        "Rhode Island",
+        "South Carolina",
+        "Tennessee",
+        "Texas - Central",
+        "Texas - Houston",
+        "Texas - North",
+        "Texas - South",
+        "Texas - West and Panhandle",
+        "Utah",
+        "Vermont",
+        "Washington",
+        "Wisconsin",
+        "Wyoming",
+    ],
+    ["Alberta", "British Columbia", "Ontario", "Québec"],
+    [
+        "Australia",
+        "Brazil",
+        "China",
+        "Chinese Taipei",
+        "Cyprus",
+        "Egypt",
+        "Israel",
+        "India",
+        "Jamaica",
+        "Kazakhstan",
+        "Libya",
+        "Mexico",
+        "Nigeria",
+        "Netherlands",
+        "Qatar",
+        "Romania",
+        "Russia",
+        "South Africa",
+        "Thailand",
+        "United Kingdom",
+    ],
+    [
+        "FIRST Championship - Zone 2", // TODO include this?
+        "Military and Diplomatic",
+        "Adventist Robotics League",
+    ],
+];
+
 export function regionToString(region: Region): string {
-    switch (region) {
-        case Region.All:
-            return "All";
-        case Region.North:
-            return "North";
-        case Region.South:
-            return "South";
-        case Region.International:
-            return "International";
-        default:
-            return (<any>REGION_NAMES)[region.toString()];
-    }
+    return (<any>REGION_NAMES)[region.toString()];
 }
 
 export function regionFromStr(str: string): Region | null {
-    switch (str) {
-        case "All":
-            return Region.All;
-        case "North":
-            return Region.North;
-        case "South":
-            return Region.South;
-        case "International":
-            return Region.International;
-        default:
-            for (let [k, v] of Object.entries(REGION_NAMES)) {
-                if (v == str) {
-                    return k as Region;
-                }
-            }
+    for (let [k, v] of Object.entries(REGION_NAMES)) {
+        if (v == str) {
+            return k as Region;
+        }
     }
 
     return null;

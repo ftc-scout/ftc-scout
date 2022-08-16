@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { REGION_NAMES } from "$lib/util/regions";
+    import { REGION_GROUPS } from "$lib/util/regions";
 
     export let value: string = "All";
 
@@ -7,21 +7,13 @@
 </script>
 
 <select {style} bind:value>
-    <optgroup>
-        <option>All</option>
-    </optgroup>
-
-    <optgroup>
-        <option>North</option>
-        <option>South</option>
-        <option>International</option>
-    </optgroup>
-
-    <optgroup>
-        {#each Object.values(REGION_NAMES) as region}
-            <option>{region}</option>
-        {/each}
-    </optgroup>
+    {#each REGION_GROUPS as group}
+        <optgroup>
+            {#each group as region}
+                <option>{region}</option>
+            {/each}
+        </optgroup>
+    {/each}
 </select>
 
 <style>
