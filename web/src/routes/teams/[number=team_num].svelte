@@ -45,7 +45,7 @@
     let me: Readable<MeQuery["me"] | null> = getContext("me");
 
     function logger() {
-        if ($me!.id == teamData.number) {
+        if ($me?.team?.number == teamData.number) {
             console.log("Right team!");
             document.getElementById("edit-box")!.contentEditable = "true";
         }
@@ -56,6 +56,7 @@
             localStorage.setItem("teamInfo", (<HTMLInputElement>document.getElementById("edit-box"))?.value);
         }
     }
+    $: console.log($me);
 </script>
 
 <svelte:head>
@@ -66,7 +67,7 @@
 
 <Loading store={$team} width={"1000px"} doesNotExist={!teamData}>
     <Card>
-        <h1>{teamData.number} - {teamData.name}</h1>
+        <h1>{teamData.number} - {teamData.name} {$me?.team?.number}</h1>
 
         <InfoIconRow icon={SCHOOL_ICON}>
             {teamData.schoolName}

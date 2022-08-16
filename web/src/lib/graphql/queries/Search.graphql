@@ -1,5 +1,5 @@
-query Search($searchText: String!) {
-    search(searchText: $searchText) {
+query Search($searchText: String!, $numResults: Int!) {
+    search(searchText: $searchText, numResults: $numResults) {
         searchText
         teams {
             searchText

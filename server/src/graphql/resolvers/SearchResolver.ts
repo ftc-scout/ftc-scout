@@ -1,5 +1,5 @@
 import fuzzysort from "fuzzysort";
-import { Arg, Field, ObjectType, Query, Resolver } from "type-graphql";
+import { Arg, Field, Int, ObjectType, Query, Resolver } from "type-graphql";
 import { MINUTE_MS } from "../../constants";
 import { Team } from "../../db/entities/Team";
 import { Event } from "../../db/entities/Event";
@@ -59,26 +59,29 @@ class EventSearchResult {
     highlighted: string;
 }
 
-const NUM_RESULTS = 5;
+// const NUM_RESULTS = 5;
 
 @Resolver()
 export class SearchResolver {
     @Query(() => SearchResults)
-    async search(@Arg("searchText", () => String) searchText: string): Promise<SearchResults> {
+    async search(
+        @Arg("searchText", () => String) searchText: string,
+        @Arg("numResults", () => Int) numResults: number
+    ): Promise<SearchResults> {
         if (searchText.length > 100 || searchText == "") return new SearchResults(searchText, [], []);
 
         await updateCache();
 
         // fuzzysort results have to contain all the text in the search (but can be be jumbled).
         // Therefore we check this first.
-        let teamResults = teamResultsStrict(searchText);
-        let eventResults = eventResultsStrict(searchText);
+        let teamResults = teamResultsStrict(searchText, numResults);
+        let eventResults = eventResultsStrict(searchText, numResults);
 
         // If fuzzysort didn't find anything it is likely that the user made a misspelling.
         // Therefore we will try a fuzzy method which is more lenient.
         if (teamResults.length == 0 && eventResults.length == 0) {
-            teamResults = teamResultsLax(searchText);
-            eventResults = eventResultsLax(searchText);
+            teamResults = teamResultsLax(searchText, numResults);
+            eventResults = eventResultsLax(searchText, numResults);
         }
 
         return new SearchResults(searchText, teamResults, eventResults);
@@ -112,16 +115,16 @@ function getHighlightTextTeams(res: Fuzzysort.KeysResult<Team>): string {
     return `${numPart} ${namePart}`;
 }
 
-function teamResultsStrict(searchText: string): TeamSearchResult[] {
+function teamResultsStrict(searchText: string, numResults: number): TeamSearchResult[] {
     let results = fuzzysort.go(searchText, cachedTeams, {
-        limit: NUM_RESULTS,
+        limit: numResults,
         threshold: -10000,
         keys: ["number", "name"],
     });
     return results.map((r) => new TeamSearchResult(searchText, r.obj, getHighlightTextTeams(r)));
 }
 
-function teamResultsLax(searchText: string): TeamSearchResult[] {
+function teamResultsLax(searchText: string, numResults: number): TeamSearchResult[] {
     let names = cachedTeams.map((t) => t.name);
 
     let distances = names.map((t) => {
@@ -136,7 +139,7 @@ function teamResultsLax(searchText: string): TeamSearchResult[] {
     let top = [...distances.entries()]
         .sort((a, b) => a[1] - b[1])
         .filter(([_, d]) => d < searchText.length / 3 + 1)
-        .slice(0, NUM_RESULTS);
+        .slice(0, numResults);
 
     return top.map(([i, _]) => {
         let team: Team = cachedTeams[i];
@@ -154,16 +157,16 @@ function getHighlightTextEvents(res: Fuzzysort.KeysResult<Event>): string {
     }
 }
 
-function eventResultsStrict(searchText: string): EventSearchResult[] {
+function eventResultsStrict(searchText: string, numResults: number): EventSearchResult[] {
     let results = fuzzysort.go(searchText, cachedEvents, {
-        limit: NUM_RESULTS,
+        limit: numResults,
         threshold: -10000,
         keys: ["code", "name"],
     });
     return results.map((r) => new EventSearchResult(searchText, r.obj, getHighlightTextEvents(r)));
 }
 
-function eventResultsLax(searchText: string): EventSearchResult[] {
+function eventResultsLax(searchText: string, numResults: number): EventSearchResult[] {
     let names = cachedEvents.map((e) => e.name);
 
     let distances = names.map((t) => {
@@ -178,7 +181,7 @@ function eventResultsLax(searchText: string): EventSearchResult[] {
     let top = [...distances.entries()]
         .sort((a, b) => a[1] - b[1])
         .filter(([_, d]) => d < searchText.length / 3 + 1)
-        .slice(0, NUM_RESULTS);
+        .slice(0, numResults);
 
     return top.map(([i, _]) => {
         let event: Event = cachedEvents[i];

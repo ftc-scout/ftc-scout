@@ -31,7 +31,7 @@ export class User extends BaseEntity {
     team!: Team | null;
 
     @Column("int", { nullable: true })
-    teamId!: number | null;
+    teamNumber!: number | null;
 
     @Field()
     @Column({ default: false })

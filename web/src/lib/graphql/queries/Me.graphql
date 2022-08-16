@@ -2,5 +2,8 @@ query Me {
     me {
         id
         username
+        team {
+            number
+        }
     }
 }

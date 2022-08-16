@@ -52,7 +52,7 @@ export class UserResolver {
                 const user = await User.create({
                     username,
                     password: hashedPassword,
-                    teamId: teamNumber === "" ? null : +teamNumber,
+                    teamNumber: teamNumber === "" ? null : +teamNumber,
                 }).save();
 
                 // Logs the user in

@@ -8,9 +8,9 @@
     let searchText = "";
 
     let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, {
-        variables: { searchText: searchText.trim() },
+        variables: { searchText: searchText.trim(), numResults: 5 },
     });
-    $: searchResults = query(SearchDocument, { variables: { searchText: searchText.trim() } });
+    $: searchResults = query(SearchDocument, { variables: { searchText: searchText.trim(), numResults: 5 } });
 
     let teamsSearchData: SearchQuery["search"]["teams"];
     $: teamsSearchData = $searchResults.data?.search.teams ?? [];

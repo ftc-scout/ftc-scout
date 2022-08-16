@@ -6,11 +6,10 @@
     import SearchbarInput from "./SearchbarInput.svelte";
 
     let searchText = "";
-
     let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, {
-        variables: { searchText: searchText.trim() },
+        variables: { searchText: searchText.trim(), numResults: 10 },
     });
-    $: searchResults = query(SearchDocument, { variables: { searchText: searchText.trim() } });
+    $: searchResults = query(SearchDocument, { variables: { searchText: searchText.trim(), numResults: 10 } });
 
     let teamsSearchData: SearchQuery["search"]["teams"];
     $: teamsSearchData = $searchResults.data?.search.teams ?? [];
