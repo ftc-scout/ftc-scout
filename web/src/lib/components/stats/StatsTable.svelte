@@ -17,7 +17,7 @@
     import type { Stat } from "../../util/stats/Stat";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
     import FaButton from "../FaButton.svelte";
-    import { faEdit, faFileArrowDown, faFilter } from "@fortawesome/free-solid-svg-icons";
+    import { faEdit, faFileArrowDown, faFilter, faTrash } from "@fortawesome/free-solid-svg-icons";
     import type { StatSet } from "../../util/stats/StatSet";
     import type { Writable } from "svelte/store";
     import ShowStatsModal from "./show-stats/ShowStatsModal.svelte";
@@ -27,6 +27,7 @@
     import { emptyFilter, isEmpty, type Filter } from "../../util/stats/filter";
     import StatsPageChooser from "./StatsPageChooser.svelte";
     import Dropdown from "../Dropdown.svelte";
+    import { createEventDispatcher } from "svelte";
 
     type T = $$Generic;
 
@@ -55,6 +56,9 @@
     export let showRanks = true;
     let rankPreFilterStr = "Rank Before Filters";
     $: rankPreFilter = rankPreFilterStr == "Rank Before Filters";
+
+    let dispatch = createEventDispatcher();
+    let changingFilters: Filter<T>;
 </script>
 
 <div class="options">
@@ -77,8 +81,18 @@
             <Dropdown
                 items={["Rank Before Filters", "Rank After Filters"]}
                 bind:value={rankPreFilterStr}
-                style="height: 100%"
+                style="height: 100%; margin-right: var(--gap);"
             />
+            <FaButton
+                icon={faTrash}
+                on:click={() => {
+                    changingFilters = emptyFilter();
+                    dispatch("change");
+                }}
+                buttonStyle="font-size: var(--medium-font-size);"
+            >
+                Reset Filters
+            </FaButton>
         {/if}
     </div>
 
@@ -97,7 +111,13 @@
 </div>
 
 <ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
-<EditFiltersModal bind:shown={editFiltersModalShown} {statSet} bind:currentFilters on:change />
+<EditFiltersModal
+    bind:shown={editFiltersModalShown}
+    {statSet}
+    bind:currentFilters
+    bind:filter={changingFilters}
+    on:change
+/>
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table tabindex="-1">

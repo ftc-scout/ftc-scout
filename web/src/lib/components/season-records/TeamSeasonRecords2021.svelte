@@ -139,7 +139,6 @@
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 
     function change() {
-        console.log("change");
         currPage = 0;
     }
 </script>

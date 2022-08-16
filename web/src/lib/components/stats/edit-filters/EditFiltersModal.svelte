@@ -18,13 +18,13 @@
     let dispatch = createEventDispatcher();
     let someChange = false;
 
-    let filter: Filter<T> = currentFilters;
+    export let filter: Filter<T> = currentFilters;
     $: if (!shown) {
+        currentFilters = filter;
         if (someChange) {
             dispatch("change");
             someChange = false;
         }
-        currentFilters = filter;
     }
 
     let advanced = filter.type != "ALL" || filter.conditions.some((c) => c.type != "compare");
