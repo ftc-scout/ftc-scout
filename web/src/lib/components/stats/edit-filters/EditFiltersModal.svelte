@@ -7,6 +7,7 @@
     import type { Filter } from "../../../util/stats/filter";
     import type { StatSet } from "../../../util/stats/StatSet";
     import Checkbox from "../choose-stats/Checkbox.svelte";
+    import { createEventDispatcher } from "svelte";
 
     type T = $$Generic;
 
@@ -14,8 +15,17 @@
     export let currentFilters: Filter<T>;
     export let statSet: StatSet<T, unknown>;
 
+    let dispatch = createEventDispatcher();
+    let someChange = false;
+
     let filter: Filter<T> = currentFilters;
-    $: if (!shown) currentFilters = filter;
+    $: if (!shown) {
+        if (someChange) {
+            dispatch("change");
+            someChange = false;
+        }
+        currentFilters = filter;
+    }
 
     let advanced = filter.type != "ALL" || filter.conditions.some((c) => c.type != "compare");
     $: canBeSimple = filter.type == "ALL" && filter.conditions.every((c) => c.type == "compare");
@@ -30,7 +40,15 @@
     </b>
 
     <div>
-        <ChooseFilter {filter} {statSet} on:filters-changed={() => (filter = filter)} {advanced} />
+        <ChooseFilter
+            {filter}
+            {statSet}
+            on:filters-changed={() => {
+                filter = filter;
+                someChange = true;
+            }}
+            {advanced}
+        />
     </div>
 
     <span>

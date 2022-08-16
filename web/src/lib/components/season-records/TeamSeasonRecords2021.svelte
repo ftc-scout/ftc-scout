@@ -134,8 +134,14 @@
             ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
             ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
             region: region == Region.All ? null : regionToString(region),
+            page: currPage == 1 ? null : "" + currPage,
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
+
+    function change() {
+        console.log("change");
+        currPage = 0;
+    }
 </script>
 
 {#if selectedTeam && selectedTeamName}
@@ -156,4 +162,5 @@
     bind:page={currPage}
     {totalCount}
     {pageSize}
+    on:change={change}
 />

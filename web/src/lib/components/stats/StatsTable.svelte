@@ -97,7 +97,7 @@
 </div>
 
 <ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
-<EditFiltersModal bind:shown={editFiltersModalShown} {statSet} bind:currentFilters />
+<EditFiltersModal bind:shown={editFiltersModalShown} {statSet} bind:currentFilters on:change />
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table tabindex="-1">
