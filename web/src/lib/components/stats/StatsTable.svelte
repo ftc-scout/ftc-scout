@@ -58,7 +58,6 @@
     $: rankPreFilter = rankPreFilterStr == "Rank Before Filters";
 
     let dispatch = createEventDispatcher();
-    let changingFilters: Filter<T>;
 </script>
 
 <div class="options">
@@ -86,7 +85,7 @@
             <FaButton
                 icon={faTrash}
                 on:click={() => {
-                    changingFilters = emptyFilter();
+                    currentFilters = emptyFilter();
                     dispatch("change");
                 }}
                 buttonStyle="font-size: var(--medium-font-size);"
@@ -111,13 +110,9 @@
 </div>
 
 <ChooseStatsModal bind:shown={chooseStatsModalShown} {statSet} bind:chosenStats={shownStats} />
-<EditFiltersModal
-    bind:shown={editFiltersModalShown}
-    {statSet}
-    bind:currentFilters
-    bind:filter={changingFilters}
-    on:change
-/>
+{#if editFiltersModalShown}
+    <EditFiltersModal bind:shown={editFiltersModalShown} {statSet} bind:currentFilters on:change />
+{/if}
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table tabindex="-1">

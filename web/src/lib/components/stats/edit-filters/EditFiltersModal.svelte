@@ -18,23 +18,25 @@
     let dispatch = createEventDispatcher();
     let someChange = false;
 
-    export let filter: Filter<T> = currentFilters;
-    $: if (!shown) {
+    let filter: Filter<T> = currentFilters;
+
+    function close() {
         currentFilters = filter;
         if (someChange) {
             dispatch("change");
             someChange = false;
         }
+        shown = false;
     }
 
     let advanced = filter.type != "ALL" || filter.conditions.some((c) => c.type != "compare");
     $: canBeSimple = filter.type == "ALL" && filter.conditions.every((c) => c.type == "compare");
 </script>
 
-<Modal bind:shown>
+<Modal bind:shown closeFn={close}>
     <b slot="title">
         <span>Edit Filters</span>
-        <button on:click={() => (shown = false)}>
+        <button on:click={close}>
             <Fa icon={faXmark} size="1.5x" />
         </button>
     </b>
