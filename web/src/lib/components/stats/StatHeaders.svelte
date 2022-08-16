@@ -1,7 +1,7 @@
 <script lang="ts">
     import { browser } from "$app/env";
 
-    import { onDestroy, onMount } from "svelte";
+    import { createEventDispatcher, onDestroy, onMount } from "svelte";
     import type { Writable } from "svelte/store";
     import { array_move } from "../../util/array-move";
     import { RANK_STAT, type Stat } from "../../util/stats/Stat";
@@ -22,6 +22,8 @@
 
     export let showRanks: boolean;
 
+    let dispatch = createEventDispatcher();
+
     function handleClick(stat: Stat<T>) {
         let currentSort = sort?.stat == stat ? sort.type : SortType.NONE;
         let newSort = cycleSortType(currentSort);
@@ -34,6 +36,7 @@
                 type: newSort == SortType.NONE ? SortType.HIGH_LOW : newSort,
             };
         }
+        dispatch("change");
     }
 
     function getOffsetAndWidth(element: HTMLElement | null): [number, number] {

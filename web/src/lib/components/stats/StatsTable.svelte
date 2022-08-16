@@ -121,7 +121,7 @@
 {#if seeStatsData != null} <ShowStatsModal shown={seeStatsData != null} data={seeStatsData} {statSet} /> {/if}
 
 <table tabindex="-1">
-    <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} {showRanks} />
+    <StatHeaders bind:shownStats bind:sort={currentSort} {defaultSort} {showRanks} on:change />
     {#if data.length}
         <tbody>
             {#each data as dataRow, i}
