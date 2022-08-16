@@ -1,8 +1,5 @@
 <script lang="ts">
     import StandaloneStat from "./StandaloneStat.svelte";
-
-    import Fa from "svelte-fa";
-    import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import type { StatSetStandalone } from "../../../util/stats/StatSet";
     import type { Writable } from "svelte/store";
     import type { Stat } from "../../../util/stats/Stat";
