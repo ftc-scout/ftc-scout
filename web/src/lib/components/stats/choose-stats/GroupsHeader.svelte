@@ -2,6 +2,10 @@
     import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
     import type { StatGroup } from "../../../util/stats/StatSet";
+    import { createTippy } from "svelte-tippy";
+    import "tippy.js/dist/tippy.css";
+
+    const tippy = createTippy({});
 
     export let groups: StatGroup<unknown, unknown>[];
     export let name: string;
@@ -10,7 +14,7 @@
 <thead>
     <th style:flex-grow="1"> <b> {name} </b> </th>
     {#each groups as group}
-        <th class={group.color} title={group.description}>
+        <th class={group.color} use:tippy={{ content: group.description }}>
             <span class="center">
                 {group.shortName}
                 <span style:font-size="var(--tiny-font-size)">

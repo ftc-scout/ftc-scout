@@ -18,12 +18,7 @@
 <ul>
     <li>
         <b> {name} </b>
-        <div class="header" title="Choose which statistics are shown.">
-            Show Statistic
-            <span style:font-size="var(--tiny-font-size)">
-                <Fa icon={faQuestionCircle} />
-            </span>
-        </div>
+        <div class="header" title="Choose which statistics are shown.">Show Statistic</div>
     </li>
 
     {#each statSet.standalone as stat, i}
