@@ -80,7 +80,7 @@
 
 <script lang="ts">
     import { browser } from "$app/env";
-    import { goto } from "$app/navigation";
+    import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/stores";
     import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
     import { SortType } from "$lib/components/SortButton.svelte";
@@ -146,6 +146,12 @@
 
     let regionStr: string = regionToString(regionFromStr($page.url.searchParams.get("region") ?? "ALL") ?? Region.All);
     $: region = regionFromStr(regionStr) ?? Region.All;
+
+    afterNavigate(({ to }) => {
+        if (to.pathname.startsWith("/records")) {
+            document.getElementById("content")?.scrollTo({ top: 0 });
+        }
+    });
 </script>
 
 <svelte:head>

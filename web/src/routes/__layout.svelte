@@ -48,7 +48,7 @@
 <Navbar />
 <Sidebar />
 
-{#key $page.url}
+{#key $page.url.pathname}
     <div id="content">
         <slot />
     </div>
