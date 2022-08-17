@@ -24,6 +24,7 @@
         AVERAGE_STAT,
         EVENT_RANK_STAT,
         EVENT_STAT as any,
+        RECORD_STAT,
     ]);
     export const DEFAULT_SORT_TEAM_2021: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
 
@@ -98,6 +99,8 @@
     export let currPage: number;
     export let totalCount: number;
     export let pageSize: number;
+    export let startDate: Date | null;
+    export let endDate: Date | null;
 
     let statSet: StatSet<unknown, unknown> = getStatSet2021Teams(eventTypes);
     $: statSet = getStatSet2021Teams(eventTypes);
@@ -136,6 +139,8 @@
             ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
             region: region == Region.All ? null : regionToString(region),
             page: currPage == 1 ? null : "" + currPage,
+            start: startDate?.toDateString(),
+            end: endDate?.toDateString(),
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 

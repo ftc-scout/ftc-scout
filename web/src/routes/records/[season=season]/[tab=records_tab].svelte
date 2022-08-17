@@ -1,4 +1,11 @@
 <script lang="ts" context="module">
+    function readDateFromUrl(str: string | null): Date | null {
+        if (str == null) return null;
+
+        let date = new Date(str);
+        return date instanceof Date && isFinite(date.valueOf()) ? date : null;
+    }
+
     export const load: Load = (event) => {
         let { params, url } = event;
 
@@ -7,6 +14,9 @@
             let statSet = getStatSet2021Teams(eventTypes);
 
             let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
+
+            let start = readDateFromUrl(url.searchParams.get("start"));
+            let end = readDateFromUrl(url.searchParams.get("end"));
 
             let take = +(url.searchParams.get("take") ?? "50");
             let page = +(url.searchParams.get("page") ?? "1");
@@ -45,6 +55,8 @@
                 order,
                 eventTypes,
                 region,
+                start,
+                end,
             })(event);
         } else if (params.tab == "matches") {
             return {};
@@ -82,6 +94,7 @@
     import { browser } from "$app/env";
     import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/stores";
+    import DateRange from "$lib/components/DateRange.svelte";
     import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
     import { SortType } from "$lib/components/SortButton.svelte";
     import { regionFromStr, regionToString } from "$lib/util/regions";
@@ -116,6 +129,12 @@
     import type { FullTep2021Remote } from "../../../lib/util/stats/StatsRemote2021";
     import type { FullTep2021Traditional } from "../../../lib/util/stats/StatsTrad2021";
 
+    afterNavigate(({ to }) => {
+        if (to.pathname.startsWith("/records")) {
+            document.getElementById("content")?.scrollTo({ top: 0 });
+        }
+    });
+
     function gotoSubPage(name: string) {
         if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
             let searchParams = name.toLowerCase() == "teams" ? team2021SearchParams : null;
@@ -147,11 +166,8 @@
     let regionStr: string = regionToString(regionFromStr($page.url.searchParams.get("region") ?? "ALL") ?? Region.All);
     $: region = regionFromStr(regionStr) ?? Region.All;
 
-    afterNavigate(({ to }) => {
-        if (to.pathname.startsWith("/records")) {
-            document.getElementById("content")?.scrollTo({ top: 0 });
-        }
-    });
+    let startDate: Date | null = readDateFromUrl($page.url.searchParams.get("start"));
+    let endDate: Date | null = readDateFromUrl($page.url.searchParams.get("end"));
 </script>
 
 <svelte:head>
@@ -180,6 +196,10 @@
             <span>Regions:</span>
             <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
         </p>
+        <p>
+            <span>From:</span>
+            <DateRange style="width: calc(100% - 15ch)" bind:startDate bind:endDate />
+        </p>
     </Card>
 
     <TabbedCard
@@ -205,6 +225,8 @@
                     {totalCount}
                     {pageSize}
                     {region}
+                    {startDate}
+                    {endDate}
                 />
             {:else}
                 <SkeletonRow rows={50} card={false} header={false} />

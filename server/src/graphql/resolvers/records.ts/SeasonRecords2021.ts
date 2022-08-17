@@ -312,13 +312,13 @@ export class SeasonRecords2021Resolver {
     async teamRecords2021(
         @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
         @Arg("region", () => Region) region: Region,
+        @Arg("start", () => Date, { nullable: true }) start: Date | null,
+        @Arg("end", () => Date, { nullable: true }) end: Date | null,
         @Arg("order", () => [TEP2021Ordering]) orderIn: TEP2021Ordering[],
         @Arg("filter", () => TEP2021Filter, { nullable: true }) filter: TEP2021Filter | null,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<TEP2021Records> {
-        console.log(orderIn);
-
         let limit = Math.min(takeIn, 50);
 
         let regionCodes = getRegionCodes(region);
@@ -345,6 +345,9 @@ export class SeasonRecords2021Resolver {
             .andWhere("e2.season = 2021")
             .andWhere('e2."regionCode" IN (:...regionCodes)', { regionCodes });
 
+        if (start) preFilterQuery = preFilterQuery.andWhere("e2.end >= :start", { start });
+        if (end) preFilterQuery = preFilterQuery.andWhere("e2.start <= :end", { end });
+
         if (eventTypes == EventTypes.REMOTE) {
             preFilterQuery = preFilterQuery.andWhere("e2.remote");
         } else if (eventTypes == EventTypes.TRAD) {
@@ -366,6 +369,9 @@ export class SeasonRecords2021Resolver {
             .andWhere('e."regionCode" IN (:...regionCodes)', { regionCodes })
             .limit(limit)
             .offset(skip);
+
+        if (start) query = query.andWhere("e.end >= :start", { start });
+        if (end) query = query.andWhere("e.start <= :end", { end });
 
         if (orderIn.length == 0) {
             // In case they didn't provide an order
@@ -396,8 +402,6 @@ export class SeasonRecords2021Resolver {
                 preFilterRank: rawRow.pre_filter_rank as number,
             };
         });
-
-        console.log(teps.map((tep) => tep.tep.dq));
 
         return {
             teps,
