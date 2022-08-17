@@ -1,11 +1,11 @@
-import { datesAreOnSameDay } from "../date";
+const DATE_TIME_FORMAT = Intl.DateTimeFormat(undefined, {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+});
 
 export function prettyPrintDateRange(start: Date, end: Date): string {
-    if (datesAreOnSameDay(start, end)) {
-        return prettyPrintDate(start);
-    } else {
-        return `${prettyPrintDate(start)} - ${prettyPrintDate(end)}`;
-    }
+    return DATE_TIME_FORMAT.formatRange(start, end);
 }
 
 export function dateFromStr(date: string): Date {
@@ -19,12 +19,4 @@ export const dateToStr = (d: Date | null) =>
 
 export function prettyPrintDateRangeString(start: string, end: string): string {
     return prettyPrintDateRange(dateFromStr(start), dateFromStr(end));
-}
-
-function prettyPrintDate(date: Date): string {
-    return date.toLocaleDateString(undefined, {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-    });
 }
