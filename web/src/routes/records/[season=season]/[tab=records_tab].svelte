@@ -2,7 +2,7 @@
     function readDateFromUrl(str: string | null): Date | null {
         if (str == null) return null;
 
-        let date = new Date(str);
+        let date = dateFromStr(str);
         return date instanceof Date && isFinite(date.valueOf()) ? date : null;
     }
 
@@ -97,6 +97,7 @@
     import DateRange from "$lib/components/DateRange.svelte";
     import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
     import { SortType } from "$lib/components/SortButton.svelte";
+    import { dateFromStr } from "$lib/util/format/pretty-print-date";
     import { regionFromStr, regionToString } from "$lib/util/regions";
     import { emptyFilter, filterToApiFilter, simpleJsonToFilter } from "$lib/util/stats/filter";
     import type { StatData } from "$lib/util/stats/Stat";

@@ -1,15 +1,13 @@
 <script lang="ts">
-    const p = (s: any, n: number) => s.toString().padStart(n, "0");
-    const formatDate = (d: Date | null) =>
-        d ? `${p(d.getFullYear(), 4)}-${p(d.getMonth() + 1, 2)}-${p(d.getDate(), 2)}` : "";
+    import { dateFromStr, dateToStr } from "$lib/util/format/pretty-print-date";
 
     export let startDate: Date | null = null;
-    $: startDate = !startDateStr ? null : new Date(startDateStr);
+    $: startDate = !startDateStr ? null : dateFromStr(startDateStr);
     export let endDate: Date | null = null;
-    $: endDate = !endDateStr ? null : new Date(endDateStr);
+    $: endDate = !endDateStr ? null : dateFromStr(endDateStr);
 
-    let startDateStr: string = formatDate(startDate);
-    let endDateStr: string = formatDate(endDate);
+    let startDateStr: string = dateToStr(startDate) ?? "";
+    let endDateStr: string = dateToStr(endDate) ?? "";
 
     export let style: string = "";
 </script>

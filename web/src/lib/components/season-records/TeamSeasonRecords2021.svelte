@@ -92,6 +92,7 @@
     import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab].svelte";
     import { arraysEqual } from "$lib/util/array-eq";
     import { regionToString } from "$lib/util/regions";
+    import { dateToStr } from "$lib/util/format/pretty-print-date";
 
     export let eventTypes: EventTypes;
     export let region: Region;
@@ -139,8 +140,8 @@
             ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
             region: region == Region.All ? null : regionToString(region),
             page: currPage == 1 ? null : "" + currPage,
-            start: startDate?.toDateString(),
-            end: endDate?.toDateString(),
+            start: dateToStr(startDate),
+            end: dateToStr(endDate),
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 

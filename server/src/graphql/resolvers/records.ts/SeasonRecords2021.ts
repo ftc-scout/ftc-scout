@@ -346,7 +346,7 @@ export class SeasonRecords2021Resolver {
             .andWhere('e2."regionCode" IN (:...regionCodes)', { regionCodes });
 
         if (start) preFilterQuery = preFilterQuery.andWhere("e2.end >= :start", { start });
-        if (end) preFilterQuery = preFilterQuery.andWhere("e2.start <= :end", { end });
+        if (end) preFilterQuery = preFilterQuery.andWhere("e2.end <= :end", { end });
 
         if (eventTypes == EventTypes.REMOTE) {
             preFilterQuery = preFilterQuery.andWhere("e2.remote");
@@ -371,7 +371,7 @@ export class SeasonRecords2021Resolver {
             .offset(skip);
 
         if (start) query = query.andWhere("e.end >= :start", { start });
-        if (end) query = query.andWhere("e.start <= :end", { end });
+        if (end) query = query.andWhere("e.end <= :end", { end });
 
         if (orderIn.length == 0) {
             // In case they didn't provide an order
