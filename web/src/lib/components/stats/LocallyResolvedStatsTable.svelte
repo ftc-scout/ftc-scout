@@ -5,6 +5,7 @@
     import type { Writable } from "svelte/store";
     import StatsTable, { type ChosenSort, type StatData } from "./StatsTable.svelte";
     import { emptyFilter, filterStatDataList, type Filter } from "../../util/stats/filter";
+    import StatData from "./StatData.svelte";
 
     type T = $$Generic;
 
@@ -22,7 +23,10 @@
 
     export let showRanks = true;
 
-    function makeSortFunction(sort: { stat: Stat<T>; type: SortType.HIGH_LOW | SortType.LOW_HIGH }) {
+    function makeSortFunction<T>(sort: {
+        stat: Stat<T>;
+        type: SortType.HIGH_LOW | SortType.LOW_HIGH;
+    }): (a: StatData<T>, b: StatData<T>) => number {
         return (a: StatData<T>, b: StatData<T>) => {
             let { stat, type } = sort;
             let readA = stat.read(a);
@@ -40,25 +44,40 @@
         };
     }
 
-    function assignRanks(data: StatData<T>[], pre: boolean): StatData<T>[] {
+    function assignRanks(data: StatData<T>[], pre: boolean, stat: Stat<T>): StatData<T>[] {
         const field = pre ? "preFilterRank" : "rank";
 
         for (let i = 0; i < data.length; i++) {
-            // TODO make duplicate values have the same rank
-            data[i][field] = i + 1;
+            if (i == 0) {
+                data[i][field] = i + 1;
+            } else {
+                let prev = data[i - 1];
+                let prevValue = distillStatRead(stat.read(prev));
+                let thisValue = distillStatRead(stat.read(data[i]));
+                data[i][field] = prevValue == thisValue ? prev[field] : i + 1;
+            }
         }
 
         return data;
     }
 
+    function sortAndRank(
+        data: StatData<T>[],
+        currentSort: ChosenSort<T>,
+        defaultSort: ChosenSort<T>,
+        filters: Filter<T>
+    ): StatData<T>[] {
+        let sortedData = data.sort(makeSortFunction(defaultSort)).sort(makeSortFunction(currentSort ?? defaultSort));
+        assignRanks(sortedData, true, currentSort.stat);
+
+        let filteredData = filterStatDataList(sortedData, filters);
+        assignRanks(filteredData, false, currentSort.stat);
+
+        return sortedData;
+    }
+
     $: statData = data.map((d) => ({ rank: 0, preFilterRank: 0, data: d }));
-
-    // Sort by default first for consistent ordering.
-    $: preFilterSortedData = statData
-        .sort(makeSortFunction(defaultSort))
-        .sort(makeSortFunction(currentSort ?? defaultSort));
-
-    $: sortedData = assignRanks(filterStatDataList(assignRanks(preFilterSortedData, true), currentFilters), false);
+    $: sortedData = sortAndRank(statData, currentSort, defaultSort, currentFilters);
 </script>
 
 <StatsTable
