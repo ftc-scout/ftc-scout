@@ -23,6 +23,7 @@
         code: string;
         season: number;
     };
+    $: record = read as { wins: number; losses: number; ties: number };
     $: value = read as number;
 </script>
 
@@ -31,7 +32,9 @@
 {:else if stat.displayType == StatDisplayType.EVENT}
     <StatEvent {event} on:hover-team on:un-hover-team />
 {:else if stat.displayType == StatDisplayType.STRING}
-    {read}
+    <td class={stat.color} title={stat.identifierName}>{read}</td>
+{:else if stat.displayType == StatDisplayType.RECORD}
+    <td class={stat.color} title={stat.identifierName}>{record.wins}-{record.losses}-{record.ties}</td>
 {:else}
     <td class={stat.color} title={stat.identifierName}>
         {#if stat.displayType == StatDisplayType.INTEGER}

@@ -11,6 +11,7 @@
         AVERAGE_STAT,
         EVENT_RANK_STAT,
         EVENT_STAT as any,
+        RECORD_STAT,
     ];
 
     let shownStats: Writable<Stat<Data>[]> = writable([
@@ -78,7 +79,7 @@
         TEAM_STAT,
         TELEOP_OPR_STAT,
     } from "../../util/stats/StatsShared2021";
-    import { STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
+    import { RECORD_STAT, STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
     import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";

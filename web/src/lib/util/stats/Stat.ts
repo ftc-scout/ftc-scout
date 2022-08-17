@@ -20,6 +20,7 @@ export interface Stat<T> {
         | number
         | { number: number; name: string }
         | { name: string; start: string; end: string; code: string; season: number }
+        | { wins: number; losses: number; ties: number }
         | string;
     apiField: Tep2021Field;
 }
@@ -96,6 +97,8 @@ export function makeStat<T>(
 export function distillStatRead(data: ReturnType<Stat<unknown>["read"]>): number | string {
     if (typeof data == "number" || typeof data == "string") {
         return data;
+    } else if ("wins" in data && "losses" in data && "ties" in data) {
+        return data.wins / (data.wins + data.losses + data.ties);
     } else if ("number" in data) {
         return data.number;
     } else if ("code" in data) {

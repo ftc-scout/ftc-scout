@@ -99,6 +99,16 @@ export const TIES_STAT: Stat<FullTep2021Traditional> = {
     apiField: { fieldName: Tep2021FieldName.Ties },
 };
 
+export const RECORD_STAT: Stat<FullTep2021Traditional> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.RECORD,
+    listName: "Record",
+    columnName: "Record",
+    identifierName: "Event Record",
+    read: (s) => ({ wins: s.data.stats.wins, losses: s.data.stats.losses, ties: s.data.stats.ties }),
+    apiField: { fieldName: Tep2021FieldName.Wins },
+};
+
 export const DQ_STAT: Stat<FullTep2021Traditional> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
@@ -148,6 +158,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                 WINS_STAT,
                 lOSSES_STAT,
                 TIES_STAT,
+                RECORD_STAT,
                 DQ_STAT,
             ],
         },

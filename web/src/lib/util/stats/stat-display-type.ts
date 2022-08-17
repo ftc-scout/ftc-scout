@@ -3,6 +3,7 @@ export enum StatDisplayType {
     INTEGER,
     DECIMAL,
     STRING,
+    RECORD,
     TEAM,
     EVENT,
 }
