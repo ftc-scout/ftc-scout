@@ -13,8 +13,9 @@
 </script>
 
 <span {style}>
-    <input type="date" bind:value={startDateStr} style="margin-right: var(--large-gap);" /> to
-    <input type="date" bind:value={endDateStr} style="margin-left: var(--large-gap);" />
+    <input type="date" bind:value={startDateStr} style="margin-right: var(--large-gap);" aria-label="start date" />
+    to
+    <input type="date" bind:value={endDateStr} style="margin-left: var(--large-gap);" aria-label="end date" />
 </span>
 
 <style>

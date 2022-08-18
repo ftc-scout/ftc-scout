@@ -13,7 +13,7 @@
 </script>
 
 <div class="wrapper" class:shown class:focus={focusCount}>
-    <button class="search-button" type="submit"><Fa icon={faSearch} /></button>
+    <button class="search-button" type="submit" aria-label="Search"><Fa icon={faSearch} /></button>
     <input
         type="search"
         placeholder="Search for teams and events"

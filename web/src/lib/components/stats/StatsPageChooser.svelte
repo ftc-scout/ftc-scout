@@ -79,18 +79,37 @@
 </script>
 
 <div class="wrapper">
-    <a class="left" href="?{previousPageURL}" sveltekit:prefetch class:disabled={currentPage == 1}>
+    <a
+        class="left"
+        href="?{previousPageURL}"
+        sveltekit:prefetch
+        class:disabled={currentPage == 1}
+        aria-label="previous page"
+    >
         <Fa icon={faArrowLeft} />
     </a>
 
     <span class="middle">
         <form on:submit|preventDefault={go} on:focusout={go}>
-            <input type="number" min="1" max={totalPages} style:width="6ch" bind:value={inputValue} />
+            <input
+                type="number"
+                min="1"
+                max={totalPages}
+                style:width="6ch"
+                bind:value={inputValue}
+                aria-label="choose page"
+            />
         </form>
         / {totalPages}
     </span>
 
-    <a class="right" href="?{nextPageURL}" sveltekit:prefetch class:disabled={currentPage == totalPages}>
+    <a
+        class="right"
+        href="?{nextPageURL}"
+        sveltekit:prefetch
+        class:disabled={currentPage == totalPages}
+        aria-label="next page"
+    >
         <Fa icon={faArrowRight} />
     </a>
 </div>

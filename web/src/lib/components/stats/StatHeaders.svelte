@@ -218,7 +218,7 @@
             bind:this={elements[i]}
         >
             {shownStat.columnName}
-            <SortButton sort={mySort} on:click={() => handleClick(shownStat)} />
+            <SortButton sort={mySort} on:click={() => handleClick(shownStat)} name={shownStat.columnName} />
         </th>
     {/each}
 </thead>

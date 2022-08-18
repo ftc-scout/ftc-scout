@@ -22,6 +22,7 @@
     import Fa from "svelte-fa";
 
     export let sort: SortType = SortType.NONE;
+    export let name: string;
 
     const SORT_ICONS = {
         [SortType.NONE]: faSort,
@@ -30,7 +31,7 @@
     };
 </script>
 
-<button on:click>
+<button on:click aria-label="Sort by {name}">
     <Fa icon={SORT_ICONS[sort]} />
 </button>
 
