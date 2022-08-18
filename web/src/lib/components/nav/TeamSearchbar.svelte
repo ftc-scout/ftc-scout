@@ -154,12 +154,6 @@
         }
     }
 
-    .result .header {
-        margin-bottom: var(--small-gap);
-        font-weight: bold;
-        color: var(--secondary-text-color);
-    }
-
     .result ol {
         padding: 0;
         margin: 0;
