@@ -1,31 +1,22 @@
-<script context="module" lang="ts">
-    import { EventPageDocument, type FullStatsFragment } from "../../../../lib/graphql/generated/graphql-operations";
-    import { queryLoad } from "../../../../lib/graphql/query-load";
-
-    export const load = queryLoad("event", EventPageDocument, ({ params }) => ({
-        season: +params.season,
-        code: params.code,
-    }));
-</script>
-
 <script lang="ts">
-    import Card from "../../../../lib/components/Card.svelte";
-    import { prettyPrintDateRangeString } from "../../../../lib/util/format/pretty-print-date";
-    import { prettyPrintURL } from "../../../../lib/util/format/pretty-print-url";
-    import DataFromFirst from "../../../../lib/components/DataFromFirst.svelte";
-    import InfoIconRow from "../../../../lib/components/InfoIconRow.svelte";
-    import type { EventPageQuery } from "../../../../lib/graphql/generated/graphql-operations";
-    import MatchTable from "../../../../lib/components/matches/MatchTable.svelte";
-    import Loading from "../../../../lib/components/Loading.svelte";
+    import type { PageData } from "./$types";
+    import Card from "../../../../../lib/components/Card.svelte";
+    import { prettyPrintDateRangeString } from "../../../../../lib/util/format/pretty-print-date";
+    import { prettyPrintURL } from "../../../../../lib/util/format/pretty-print-url";
+    import DataFromFirst from "../../../../../lib/components/DataFromFirst.svelte";
+    import InfoIconRow from "../../../../../lib/components/InfoIconRow.svelte";
+    import type { EventPageQuery, FullStatsFragment } from "../../../../../lib/graphql/generated/graphql-operations";
+    import MatchTable from "../../../../../lib/components/matches/MatchTable.svelte";
+    import Loading from "../../../../../lib/components/Loading.svelte";
     import type { ApolloQueryResult } from "@apollo/client";
-    import TabbedCard from "../../../../lib/components/tabs/TabbedCard.svelte";
-    import TabContent from "../../../../lib/components/tabs/TabContent.svelte";
-    import AwardsList from "../../../../lib/components/AwardsList.svelte";
+    import TabbedCard from "../../../../../lib/components/tabs/TabbedCard.svelte";
+    import TabContent from "../../../../../lib/components/tabs/TabContent.svelte";
+    import AwardsList from "../../../../../lib/components/AwardsList.svelte";
     import { browser } from "$app/env";
     import { page } from "$app/stores";
-    import TeamsList from "../../../../lib/components/TeamsList.svelte";
+    import TeamsList from "../../../../../lib/components/TeamsList.svelte";
     import { goto } from "$app/navigation";
-    import TeamSelectionBar from "../../../../lib/components/TeamSelectionBar.svelte";
+    import TeamSelectionBar from "../../../../../lib/components/TeamSelectionBar.svelte";
     import {
         AWARDS_ICON,
         DATE_ICON,
@@ -34,11 +25,14 @@
         RANKINGS_ICON,
         TEAMS_ICON,
         WEBSITE_ICON,
-    } from "../../../../lib/icons";
+    } from "../../../../../lib/icons";
     import type { Readable } from "svelte/store";
-    import EventStats from "../../../../lib/components/event-stats/EventStats.svelte";
+    import EventStats from "../../../../../lib/components/event-stats/EventStats.svelte";
 
-    export let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
+    export let data: PageData;
+    let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
+    $: ({ event } = data);
+
     $: eventData = $event?.data?.eventByCode!;
 
     function gotoSubPage(name: string) {

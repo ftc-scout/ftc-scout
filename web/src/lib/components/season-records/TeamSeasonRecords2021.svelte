@@ -89,10 +89,10 @@
     import { EVENT_STAT, STAT_SET_EVENT } from "$lib/util/stats/StatsEvent";
     import { changeParam } from "./changeParams";
     import { page } from "$app/stores";
-    import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab].svelte";
     import { arraysEqual } from "$lib/util/array-eq";
     import { regionToString } from "$lib/util/regions";
     import { dateToStr } from "$lib/util/format/pretty-print-date";
+    import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab]/+page";
 
     export let eventTypes: EventTypes;
     export let region: Region;

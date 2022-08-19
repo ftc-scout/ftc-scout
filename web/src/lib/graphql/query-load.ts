@@ -1,51 +1,38 @@
 import { browser } from "$app/env";
-import type { ApolloQueryResult } from "@apollo/client";
+import type { ApolloClient, ApolloQueryResult, NormalizedCacheObject } from "@apollo/client";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
-import type { Load, LoadEvent } from "@sveltejs/kit";
 import type { DocumentNode } from "graphql";
-import { writable, type Writable } from "svelte/store";
-import { getMyClient } from "./client";
+import { writable, type Readable, type Writable } from "svelte/store";
 
 let firstPage = true;
 
-export function queryLoad<Data = any, Variables = object>(
-    name: string,
+export async function getData<Data = any, Variables = object>(
+    client: ApolloClient<NormalizedCacheObject>,
     query: DocumentNode | TypedDocumentNode<Data, Variables>,
-    variablesProducer: Variables | ((event: LoadEvent) => Variables)
-): Load {
-    return async function load(event: LoadEvent) {
-        let variables =
-            typeof variablesProducer === "function"
-                ? (variablesProducer as (event: LoadEvent) => Variables)(event)
-                : variablesProducer;
+    variables: Variables
+): Promise<Readable<ApolloQueryResult<Data> | null>> {
+    let queryResult = client.query({
+        query,
+        variables,
+    });
 
-        let queryResult = getMyClient(event.fetch).query({
-            query,
-            variables,
-        });
+    let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
 
-        let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
+    queryResult.then((r) => {
+        result.set(r);
+    });
 
-        queryResult.then((r) => {
-            result.set(r);
-        });
+    // If this is the first page we already rendered so we don't want to show the loading spinners.
+    // Just wait for the data.
+    if (!browser || firstPage) {
+        // We are doing SSR so we must have the data.
+        await queryResult;
+    } else {
+        // wait up to 100ms
+        await Promise.race([queryResult, new Promise((r) => setTimeout(r, 300))]);
+    }
 
-        // If this is the first page we already rendered so we don't want to show the loading spinners.
-        // Just wait for the data.
-        if (!browser || firstPage) {
-            // We are doing SSR so we must have the data.
-            await queryResult;
-        } else {
-            // wait up to 100ms
-            await Promise.race([queryResult, new Promise((r) => setTimeout(r, 300))]);
-        }
+    firstPage = false;
 
-        firstPage = false;
-
-        return {
-            props: {
-                [name]: result,
-            },
-        };
-    };
+    return result;
 }

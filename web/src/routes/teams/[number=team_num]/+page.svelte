@@ -1,25 +1,17 @@
-<script context="module" lang="ts">
-    import { TeamDocument, type MeQuery } from "../../lib/graphql/generated/graphql-operations";
-    import { queryLoad } from "../../lib/graphql/query-load";
-
-    export const load = queryLoad("team", TeamDocument, ({ params }) => ({
-        number: +params.number,
-    }));
-</script>
-
 <script lang="ts">
+    import type { PageData } from "./$types";
     import Card from "$lib/components/Card.svelte";
     import { prettyPrintURL } from "$lib/util/format/pretty-print-url";
-    import DataFromFirst from "../../lib/components/DataFromFirst.svelte";
-    import InfoIconRow from "../../lib/components/InfoIconRow.svelte";
-    import type { TeamQuery } from "../../lib/graphql/generated/graphql-operations";
-    import MatchTable from "../../lib/components/matches/MatchTable.svelte";
-    import { prettyPrintDateRangeString } from "../../lib/util/format/pretty-print-date";
-    import { prettyPrintOrdinal } from "../../lib/util/format/pretty-print-ordinal";
-    import { prettyPrintFloat } from "../../lib/util/format/pretty-print-float";
-    import Loading from "../../lib/components/Loading.svelte";
+    import DataFromFirst from "../../../lib/components/DataFromFirst.svelte";
+    import InfoIconRow from "../../../lib/components/InfoIconRow.svelte";
+    import type { MeQuery, TeamQuery } from "../../../lib/graphql/generated/graphql-operations";
+    import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
+    import { prettyPrintDateRangeString } from "../../../lib/util/format/pretty-print-date";
+    import { prettyPrintOrdinal } from "../../../lib/util/format/pretty-print-ordinal";
+    import { prettyPrintFloat } from "../../../lib/util/format/pretty-print-float";
+    import Loading from "../../../lib/components/Loading.svelte";
     import type { ApolloQueryResult } from "@apollo/client";
-    import Award from "../../lib/components/Award.svelte";
+    import Award from "../../../lib/components/Award.svelte";
     import type { Readable } from "svelte/store";
     import { getContext } from "svelte";
     import {
@@ -32,9 +24,12 @@
         SPONSOR_ICON,
         WEBSITE_ICON,
         OPR_ICON,
-    } from "../../lib/icons";
+    } from "../../../lib/icons";
 
-    export let team: Readable<ApolloQueryResult<TeamQuery> | null>;
+    export let data: PageData;
+    let team: Readable<ApolloQueryResult<TeamQuery> | null>;
+    $: ({ team } = data);
+
     $: teamData = $team?.data?.teamByNumber!;
 
     $: sortedEvents = $team

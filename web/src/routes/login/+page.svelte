@@ -1,12 +1,12 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
     import { writable, type Writable } from "svelte/store";
-    import Form from "../lib/components/form/Form.svelte";
-    import type { FormError } from "../lib/components/form/FormError";
-    import SubmitButton from "../lib/components/form/SubmitButton.svelte";
-    import TextInput from "../lib/components/form/TextInput.svelte";
-    import MaxWidth from "../lib/components/WidthProvider.svelte";
-    import { LoginDocument, MeDocument } from "../lib/graphql/generated/graphql-operations";
+    import Form from "../../lib/components/form/Form.svelte";
+    import type { FormError } from "../../lib/components/form/FormError";
+    import SubmitButton from "../../lib/components/form/SubmitButton.svelte";
+    import TextInput from "../../lib/components/form/TextInput.svelte";
+    import MaxWidth from "../../lib/components/WidthProvider.svelte";
+    import { LoginDocument, MeDocument } from "../../lib/graphql/generated/graphql-operations";
     import { mutation } from "svelte-apollo";
 
     let username: string = "";

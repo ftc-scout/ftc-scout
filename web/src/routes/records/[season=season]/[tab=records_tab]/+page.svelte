@@ -1,134 +1,33 @@
-<script lang="ts" context="module">
-    function readDateFromUrl(str: string | null): Date | null {
-        if (str == null) return null;
-
-        let date = dateFromStr(str);
-        return date instanceof Date && isFinite(date.valueOf()) ? date : null;
-    }
-
-    export const load: Load = (event) => {
-        let { params, url } = event;
-
-        if (params.tab == "teams") {
-            let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad;
-            let statSet = getStatSet2021Teams(eventTypes);
-
-            let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
-
-            let start = readDateFromUrl(url.searchParams.get("start"));
-            let end = readDateFromUrl(url.searchParams.get("end"));
-
-            let take = +(url.searchParams.get("take") ?? "50");
-            let page = +(url.searchParams.get("page") ?? "1");
-
-            let order: Tep2021Ordering[] = [
-                {
-                    field: DEFAULT_SORT_TEAM_2021.stat.apiField,
-                    order: DEFAULT_SORT_TEAM_2021.type == SortType.HIGH_LOW ? Order.Desc : Order.Asc,
-                },
-            ];
-            let sortStatIdenName = url.searchParams.get("sort") ?? null;
-            if (sortStatIdenName) {
-                let sortStat = findInStatSet(statSet, sortStatIdenName);
-                if (sortStat) {
-                    let field = sortStat.apiField;
-                    let direction = url.searchParams.get("sort-dir") == "reverse" ? Order.Asc : Order.Desc;
-                    order = [{ field, order: direction }, ...order];
-                }
-            }
-
-            let filter = emptyFilter();
-            let filterParam = url.searchParams.get("filter") ?? null;
-            if (filterParam != null) {
-                try {
-                    let parsed = JSON.parse(filterParam);
-                    let urlFilter = simpleJsonToFilter(parsed, statSet);
-                    if (urlFilter) filter = urlFilter;
-                } catch {}
-            }
-            let apiFilter = filterToApiFilter(filter);
-
-            return queryLoad("teams2021", TeamSeasonRecords2021Document, {
-                skip: Math.max((page - 1) * take, 0),
-                take,
-                filter: apiFilter,
-                order,
-                eventTypes,
-                region,
-                start,
-                end,
-            })(event);
-        } else if (params.tab == "matches") {
-            return {};
-        } else {
-            throw "impossible";
-        }
-    };
-
-    export function eventTypesFromStr(str: string): EventTypes | null {
-        switch (str) {
-            case "Traditional":
-                return EventTypes.Trad;
-            case "Remote":
-                return EventTypes.Remote;
-            case "Traditional and Remote":
-                return EventTypes.TradAndRemote;
-            default:
-                return null;
-        }
-    }
-
-    export function eventTypesToStr(str: EventTypes): "Traditional" | "Remote" | "Traditional and Remote" {
-        switch (str) {
-            case EventTypes.Trad:
-                return "Traditional";
-            case EventTypes.Remote:
-                return "Remote";
-            default:
-                return "Traditional and Remote";
-        }
-    }
-</script>
-
 <script lang="ts">
+    import type { PageData } from "./$types";
     import { browser } from "$app/env";
     import { afterNavigate, goto } from "$app/navigation";
     import { page } from "$app/stores";
     import DateRange from "$lib/components/DateRange.svelte";
     import RegionsDropdown from "$lib/components/season-records/RegionsDropdown.svelte";
-    import { SortType } from "$lib/components/SortButton.svelte";
-    import { dateFromStr } from "$lib/util/format/pretty-print-date";
     import { regionFromStr, regionToString } from "$lib/util/regions";
-    import { emptyFilter, filterToApiFilter, simpleJsonToFilter } from "$lib/util/stats/filter";
     import type { StatData } from "$lib/util/stats/Stat";
-    import { findInStatSet } from "$lib/util/stats/StatSet";
     import type { ApolloQueryResult } from "@apollo/client";
-    import type { Load } from "@sveltejs/kit";
     import type { Readable } from "svelte/store";
-    import Card from "../../../lib/components/Card.svelte";
-    import Dropdown from "../../../lib/components/Dropdown.svelte";
+    import Card from "../../../../lib/components/Card.svelte";
+    import Dropdown from "../../../../lib/components/Dropdown.svelte";
     import TeamSeasonRecords2021, {
-        DEFAULT_SORT_TEAM_2021,
-        getStatSet2021Teams,
         team2021SearchParams,
-    } from "../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
-    import SkeletonRow from "../../../lib/components/skeleton/SkeletonRow.svelte";
-    import TabbedCard from "../../../lib/components/tabs/TabbedCard.svelte";
-    import TabContent from "../../../lib/components/tabs/TabContent.svelte";
-    import WidthProvider from "../../../lib/components/WidthProvider.svelte";
+    } from "../../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
+    import SkeletonRow from "../../../../lib/components/skeleton/SkeletonRow.svelte";
+    import TabbedCard from "../../../../lib/components/tabs/TabbedCard.svelte";
+    import TabContent from "../../../../lib/components/tabs/TabContent.svelte";
+    import WidthProvider from "../../../../lib/components/WidthProvider.svelte";
     import {
         EventTypes,
-        Order,
         Region,
-        TeamSeasonRecords2021Document,
         type TeamSeasonRecords2021Query,
-        type Tep2021Ordering,
-    } from "../../../lib/graphql/generated/graphql-operations";
-    import { queryLoad } from "../../../lib/graphql/query-load";
-    import { TEAMS_ICON, MATCHES_ICON } from "../../../lib/icons";
-    import { prettyPrintSeason } from "../../../lib/util/format/pretty-print-season";
-    import type { FullTep2021Remote } from "../../../lib/util/stats/StatsRemote2021";
-    import type { FullTep2021Traditional } from "../../../lib/util/stats/StatsTrad2021";
+    } from "../../../../lib/graphql/generated/graphql-operations";
+    import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
+    import { prettyPrintSeason } from "../../../../lib/util/format/pretty-print-season";
+    import type { FullTep2021Remote } from "../../../../lib/util/stats/StatsRemote2021";
+    import type { FullTep2021Traditional } from "../../../../lib/util/stats/StatsTrad2021";
+    import { eventTypesFromStr, eventTypesToStr, readDateFromUrl } from "./+page";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -145,12 +44,15 @@
         }
     }
 
+    export let data: PageData;
+    let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query>>;
+    $: ({ teams2021 } = data);
+
     let selectedPage: string = $page.params.tab;
     $: gotoSubPage(selectedPage);
 
     $: season = +$page.params.season as 2021;
 
-    export let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query>>;
     $: data2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let data2021Teams: StatData<FullTep2021Traditional | FullTep2021Remote>[] | undefined;
     $: data2021Teams = data2021?.teps.map((t) => ({

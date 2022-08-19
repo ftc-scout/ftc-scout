@@ -3,11 +3,11 @@
     "description": "The website for Ftc Scout.",
     "version": "0.0.1",
     "scripts": {
-        "dev": "svelte-kit dev",
-        "build": "svelte-kit build",
+        "dev": "vite dev",
+        "build": "vite build",
         "package": "svelte-kit package",
         "preview": "svelte-kit preview",
-        "prepare": "svelte-kit sync && npm run gen",
+        "prepare": "npm run gen",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
         "lint": "prettier --check --plugin-search-dir=. .",
@@ -22,14 +22,15 @@
         "@graphql-codegen/typescript-operations": "^2.4.0",
         "@graphql-typed-document-node/core": "^3.1.1",
         "@sveltejs/adapter-auto": "next",
-        "@sveltejs/kit": "1.0.0-next.405",
+        "@sveltejs/kit": "next",
         "prettier": "2.6.2",
         "prettier-plugin-svelte": "2.7.0",
         "svelte": "^3.44.0",
         "svelte-check": "^2.2.6",
         "svelte-preprocess": "^4.10.1",
         "tslib": "^2.3.1",
-        "typescript": "~4.6.2"
+        "typescript": "~4.6.2",
+        "vite": "^3.0.9"
     },
     "type": "module",
     "dependencies": {

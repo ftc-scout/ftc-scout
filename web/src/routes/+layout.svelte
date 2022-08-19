@@ -1,14 +1,5 @@
-<script lang="ts" context="module">
-    export function load({ fetch }: { fetch: NonNullable<HttpOptions["fetch"]> }) {
-        return {
-            props: {
-                f: fetch,
-            },
-        };
-    }
-</script>
-
 <script lang="ts">
+    import type { LayoutData } from "./$types";
     import { MeDocument, type MeQuery } from "../lib/graphql/generated/graphql-operations";
     import Navbar from "$lib/components/nav/Navbar.svelte";
     import { query, setClient, type ReadableQuery } from "svelte-apollo";
@@ -19,10 +10,13 @@
     import type { HttpOptions } from "@apollo/client";
     import { page } from "$app/stores";
 
-    export let f: NonNullable<HttpOptions["fetch"]>;
+    export let data: LayoutData;
+    let f: NonNullable<HttpOptions["fetch"]>;
+    $: ({ f } = data);
+
     setClient(getMyClient(f));
 
-    export let me: ReadableQuery<MeQuery> = query(MeDocument);
+    let me: ReadableQuery<MeQuery> = query(MeDocument);
     $: meData = $me?.data?.me;
 
     let meStore: Writable<MeQuery["me"] | null | undefined> = writable(undefined);
