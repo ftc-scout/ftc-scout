@@ -3,7 +3,7 @@
     import { query, type ReadableQuery } from "svelte-apollo";
     import { goto, prefetch } from "$app/navigation";
     import SkeletonRow from "../skeleton/SkeletonRow.svelte";
-    import SearchbarInput from "./SearchbarInput.svelte";
+    import SingleSearchbarInput from "./SingleSearchbarInput.svelte";
 
     let searchText = "";
     let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, {
@@ -64,7 +64,7 @@
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
-    <SearchbarInput
+    <SingleSearchbarInput
         bind:value={searchText}
         on:focus={() => focusCount++}
         on:focusout={() => setTimeout(() => focusCount--, 1)}
