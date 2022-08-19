@@ -13,9 +13,24 @@
 </script>
 
 <span {style}>
-    <input type="date" bind:value={startDateStr} style="margin-right: var(--large-gap);" aria-label="start date" />
+    <!-- TODO update ranges for multiple seasons -->
+    <input
+        type="date"
+        bind:value={startDateStr}
+        style="margin-right: var(--large-gap);"
+        aria-label="start date"
+        min="2021-09-17"
+        max="2022-09-23"
+    />
     to
-    <input type="date" bind:value={endDateStr} style="margin-left: var(--large-gap);" aria-label="end date" />
+    <input
+        type="date"
+        bind:value={endDateStr}
+        style="margin-left: var(--large-gap);"
+        aria-label="end date"
+        min="2021-09-17"
+        max="2022-09-23"
+    />
 </span>
 
 <style>
