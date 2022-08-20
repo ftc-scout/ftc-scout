@@ -6,7 +6,7 @@
         "dev": "vite dev",
         "build": "vite build",
         "package": "svelte-kit package",
-        "preview": "svelte-kit preview",
+        "preview": "vite preview",
         "prepare": "npm run gen",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
