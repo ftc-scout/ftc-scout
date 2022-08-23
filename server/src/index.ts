@@ -17,7 +17,6 @@ import {
     IS_PROD,
     COOKIE_AGE,
     SESSION_SECRET,
-    CURRENT_SEASON,
     REDIS_URL,
 } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
@@ -27,10 +26,7 @@ import connectRedis from "connect-redis";
 import Redis from "ioredis";
 import { GraphQLContext } from "./graphql/Context";
 import { FTCSSession } from "./graphql/Session";
-import { loadAllTeamsIntoDatabase } from "./db/load-data/load-all-teams";
-import { Team } from "./db/entities/Team";
 import { setupApiWatchers } from "./ftc-api/setup-watchers";
-import { Season } from "./ftc-api/types/Season";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
 import compression from "compression";
