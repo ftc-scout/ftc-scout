@@ -26,5 +26,6 @@ export const REDIS_URL = process.env.REDIS_URL;
 export const FTC_API_KEY = process.env.FTC_API_KEY;
 
 export const CURRENT_SEASON: Season = 2021;
+export const PAST_SEASONS: Season[] = [2019, 2020];
 
 export const SYNC = process.env.SYNC ? process.env.SYNC === "1" : false;

@@ -1,4 +1,4 @@
-import { DAY_MS } from "../constants";
+import { CURRENT_SEASON, DAY_MS, PAST_SEASONS } from "../constants";
 import { FtcApiMetadata } from "../db/entities/FtcApiMetadata";
 import { loadAllAwards } from "../db/load-data/load-all-awards";
 import { loadAllEvents as loadAllEventsIntoDatabase } from "../db/load-data/load-all-events";
@@ -6,29 +6,53 @@ import { loadAllMatches } from "../db/load-data/load-all-matches";
 import { loadAllTeamsIntoDatabase } from "../db/load-data/load-all-teams";
 import { Season } from "./types/Season";
 
-export async function setupApiWatchers(seasons: Season[]) {
-    seasons.forEach(ensureSeasonHasMetadataTable);
+export async function setupApiWatchers() {
+    [...PAST_SEASONS, CURRENT_SEASON].forEach(ensureSeasonHasMetadataTable);
 
-    for (const season of seasons) {
-        setupApiWatcher([
-            {
-                reqFunction: () => loadAllTeamsIntoDatabase(season),
-                getTimeOfLastReq: () => FtcApiMetadata.getLastTeamsReq(season),
-            },
-            {
-                reqFunction: () => loadAllEventsIntoDatabase(season),
-                getTimeOfLastReq: () => FtcApiMetadata.getLastEventsReq(season),
-            },
-            {
-                reqFunction: () => loadAllMatches(season),
-                getTimeOfLastReq: () => FtcApiMetadata.getLastMatchesReq(season),
-            },
-            {
-                reqFunction: () => loadAllAwards(season),
-                getTimeOfLastReq: () => FtcApiMetadata.getLastAwardsReq(season),
-            },
-        ]);
+    // Make sure past seasons have been fetched
+    for (let season of PAST_SEASONS) {
+        console.log("Checking load of season", season);
+        if ((await FtcApiMetadata.getLastTeamsReq(season)) == null) {
+            await loadAllTeamsIntoDatabase(season);
+        } else {
+            console.log("Teams for season", season, "already loaded.");
+        }
+        if ((await FtcApiMetadata.getLastEventsReq(season)) == null) {
+            await loadAllEventsIntoDatabase(season);
+        } else {
+            console.log("Events for season", season, "already loaded.");
+        }
+        if ((await FtcApiMetadata.getLastMatchesReq(season)) == null) {
+            await loadAllMatches(season);
+        } else {
+            console.log("Matches for season", season, "already loaded.");
+        }
+        if ((await FtcApiMetadata.getLastAwardsReq(season)) == null) {
+            await loadAllAwards(season);
+        } else {
+            console.log("Awards for season", season, "already loaded.");
+        }
     }
+
+    // Continually watch for updates for the current season.
+    setupApiWatcher([
+        {
+            reqFunction: () => loadAllTeamsIntoDatabase(CURRENT_SEASON),
+            getTimeOfLastReq: () => FtcApiMetadata.getLastTeamsReq(CURRENT_SEASON),
+        },
+        {
+            reqFunction: () => loadAllEventsIntoDatabase(CURRENT_SEASON),
+            getTimeOfLastReq: () => FtcApiMetadata.getLastEventsReq(CURRENT_SEASON),
+        },
+        {
+            reqFunction: () => loadAllMatches(CURRENT_SEASON),
+            getTimeOfLastReq: () => FtcApiMetadata.getLastMatchesReq(CURRENT_SEASON),
+        },
+        {
+            reqFunction: () => loadAllAwards(CURRENT_SEASON),
+            getTimeOfLastReq: () => FtcApiMetadata.getLastAwardsReq(CURRENT_SEASON),
+        },
+    ]);
 }
 
 function ensureSeasonHasMetadataTable(season: Season) {

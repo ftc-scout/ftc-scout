@@ -6,6 +6,7 @@ export enum EventType {
     QUALIFIER = 2,
     LEAGUE_TOURNAMENT,
     CHAMPIONSHIP = 4,
+    OTHER = 5,
     FIRST_CHAMPIONSHIP = 6,
     SUPER_QUALIFIER = 7,
     OFF_SEASON = 10,

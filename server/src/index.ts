@@ -108,14 +108,7 @@ async function main() {
         console.log(`Server started and listening on localhost:${SERVER_PORT}`);
     });
 
-    setupApiWatchers([Season.FREIGHT_FRENZY]);
-
-    if (process.argv.includes("--clear-teams")) {
-        Team.clear();
-    }
-    if (process.argv.includes("--load-teams")) {
-        loadAllTeamsIntoDatabase(CURRENT_SEASON);
-    }
+    setupApiWatchers();
 }
 
 main();

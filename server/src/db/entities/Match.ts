@@ -14,6 +14,7 @@ import {
 import { MatchFtcApi } from "../../ftc-api/types/Match";
 import { Season } from "../../ftc-api/types/Season";
 import { Event } from "./Event";
+import { MatchScores2019 } from "./MatchScores2019";
 import { MatchScores2021 } from "./MatchScores2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { Alliance } from "./types/Alliance";
@@ -93,12 +94,19 @@ export class Match extends BaseEntity {
         }
     }
 
-    @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
-        cascade: true,
-        eager: true,
-    })
-    @TypeormLoader()
+    // @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
+    //     cascade: true,
+    //     eager: true,
+    // })
+    // @TypeormLoader()
     scores2021!: MatchScores2021[];
+
+    // @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
+    //     cascade: true,
+    //     eager: true,
+    // })
+    // @TypeormLoader()
+    scores2019!: MatchScores2019[];
 
     @Field()
     @CreateDateColumn()
@@ -111,6 +119,8 @@ export class Match extends BaseEntity {
     redTotalPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
+        } else if (this.scores2021) {
+            return this.scores2019.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
         } else {
             return null;
         }
@@ -119,6 +129,8 @@ export class Match extends BaseEntity {
     blueTotalPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
+        } else if (this.scores2019) {
+            return this.scores2019.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
         } else {
             return null;
         }

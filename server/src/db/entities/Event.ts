@@ -6,7 +6,7 @@ import { Match } from "./Match";
 import { TeamEventParticipation2021 } from "./team-event-participation/TeamEventParticipation2021";
 import { EventType } from "./types/EventType";
 
-export const EVENT_CODE_LEN = 16;
+export const EVENT_CODE_LEN = 32;
 
 @ObjectType()
 @Entity()
@@ -16,7 +16,7 @@ export class Event extends BaseEntity {
     season!: Season;
 
     @Field()
-    @PrimaryColumn("varchar", { length: EVENT_CODE_LEN })
+    @PrimaryColumn("varchar")
     code!: string;
 
     @Field(() => [Match])
@@ -62,9 +62,9 @@ export class Event extends BaseEntity {
     @Column("enum", { enum: EventType })
     type!: EventType;
 
-    @Field()
-    @Column()
-    regionCode!: string;
+    @Field(() => String, { nullable: true })
+    @Column({ type: "varchar", nullable: true })
+    regionCode!: string | null;
 
     @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
@@ -106,9 +106,9 @@ export class Event extends BaseEntity {
     @Column({ type: "varchar", array: true })
     webcasts!: string[];
 
-    @Field()
-    @Column()
-    timezone!: string;
+    @Field(() => String, { nullable: true })
+    @Column({ type: "varchar", nullable: true })
+    timezone!: string | null;
 
     @Field(() => String)
     @Column("date", { nullable: true })

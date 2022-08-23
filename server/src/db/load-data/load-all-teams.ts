@@ -20,7 +20,7 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
         await Promise.all(
             apiTeams.map(async (apiTeam) => {
                 // There is one weird team in the db that doesn't have a city but it is inactive. We will just ignore it.
-                if (apiTeam.nameShort === null || apiTeam.city === null) {
+                if (apiTeam.nameShort == null || apiTeam.nameFull == null || apiTeam.city == null) {
                     return null;
                 }
 
