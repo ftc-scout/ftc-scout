@@ -6,13 +6,14 @@ import { TepStats2021 } from "../../../db/entities/team-event-participation/TepS
 import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { EventTypes } from "./EventTypes";
 import { Order } from "./Order";
-import { Event } from "src/db/entities/Event";
+import { Event } from "../../../db/entities/Event";
 import { getRegionCodes, Region } from "../../../db/entities/types/Region";
+import { TeamEventParticipation } from "../../../graphql/objects/TeamEventParticipation";
 
 @ObjectType()
 class TEP2021RecordRow {
-    @Field(() => TeamEventParticipation2021)
-    tep!: TeamEventParticipation2021;
+    @Field(() => TeamEventParticipation)
+    tep!: TeamEventParticipation;
 
     @Field(() => Int)
     rank!: number;

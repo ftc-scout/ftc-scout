@@ -1,4 +1,4 @@
-fragment FullStats on TeamEventStats2021 {
+fragment FullStats on TeamEventStats {
     ... on TeamEventStats2021Traditional {
         rank
         rp

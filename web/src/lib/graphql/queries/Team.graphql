@@ -1,4 +1,4 @@
-query Team($number: Int!) {
+query Team($number: Int!, $season: Int!) {
     teamByNumber(number: $number) {
         number
         website
@@ -9,7 +9,7 @@ query Team($number: Int!) {
         schoolName
         sponsors
         rookieYear
-        events {
+        events(season: $season) {
             season
             eventCode
             teamNumber

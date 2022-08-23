@@ -4,7 +4,7 @@ import { EventResolver } from "./EventResolver";
 import { MatchResolver } from "./MatchResolver";
 import { SeasonRecords2021Resolver } from "./records.ts/SeasonRecords2021";
 import { SearchResolver } from "./SearchResolver";
-import { TeamEventParticipation2021Resolver } from "./TeamEventParticipation2021Resolver";
+import { TeamEventParticipationResolver } from "./TeamEventParticipationResolver";
 import { TeamResolver } from "./TeamResolver";
 import { UserResolver } from "./UserResolver";
 
@@ -15,6 +15,6 @@ export const resolvers: NonEmptyArray<Function> = [
     EventResolver,
     AwardResolver,
     SearchResolver,
-    TeamEventParticipation2021Resolver,
+    TeamEventParticipationResolver,
     SeasonRecords2021Resolver,
 ];

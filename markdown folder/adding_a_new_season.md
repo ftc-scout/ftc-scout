@@ -9,3 +9,6 @@
     -   Around line ~150 converting api scores to db scores.
 -   Create new `TeamEventParticipation{season}` and `TepStats{season}` entities for the DB.
 -   Implement the `calculateEventStatistics{season}` function and add it to the `loadAllMatches` function (around line ~170).
+-   At this point all your data should load correctly when you run the program. Make sure it does.
+-   Update the `TeamEventParticipation` graphql union with your new season.
+-   Update the various resolvers for `Event`, `Team`, etc.

@@ -6,6 +6,9 @@ import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation
 import { Season } from "../../ftc-api/types/Season";
 import DataLoader from "dataloader";
 import { DateTime } from "luxon";
+import { TeamEventParticipation } from "../objects/TeamEventParticipation";
+import { TeamEventParticipation2021 } from "../../db/entities/team-event-participation/TeamEventParticipation2021";
+import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
 
 @Resolver(Event)
 export class EventResolver {
@@ -45,7 +48,6 @@ export class EventResolver {
                 let id = ids[i];
                 if (id.season == a.season && id.eventCode == a.eventCode) {
                     groups[i].push(a);
-                    break;
                 }
             }
         }
@@ -54,6 +56,43 @@ export class EventResolver {
     awards(@Root() event: Event) {
         return async (dl: DataLoader<{ season: Season; eventCode: string }, Award[]>) => {
             return dl.load({ season: event.season, eventCode: event.code });
+        };
+    }
+
+    @FieldResolver(() => [TeamEventParticipation])
+    @Loader<{ eventSeason: number; eventCode: string }, TeamEventParticipation[]>(async (ids, _) => {
+        let ids2021 = ids.filter((id) => id.eventSeason == 2021);
+        let ids2019 = ids.filter((id) => id.eventSeason == 2019);
+
+        let teps2021P = ids2021.length
+            ? TeamEventParticipation2021.find({
+                  where: ids2021 as { eventSeason: number; eventCode: string }[],
+              })
+            : [];
+        let teps2019P = ids2019.length
+            ? TeamEventParticipation2019.find({
+                  where: ids2019 as { eventSeason: number; eventCode: string }[],
+              })
+            : [];
+
+        let [teps2021, teps2019] = await Promise.all([teps2021P, teps2019P]);
+        let teps = [...teps2021, ...teps2019];
+
+        let groups: TeamEventParticipation[][] = ids.map((_) => []);
+
+        for (let tep of teps) {
+            for (let i = 0; i < ids.length; i++) {
+                let id = ids[i];
+                if (id.eventSeason == tep.eventSeason && id.eventCode == tep.eventCode) {
+                    groups[i].push(new TeamEventParticipation(tep));
+                }
+            }
+        }
+        return groups;
+    })
+    teams(@Root() event: Event) {
+        return async (dl: DataLoader<{ eventSeason: number; eventCode: string }, TeamEventParticipation[]>) => {
+            return dl.load({ eventSeason: event.season, eventCode: event.code });
         };
     }
 

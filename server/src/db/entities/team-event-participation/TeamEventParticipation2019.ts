@@ -1,5 +1,4 @@
-import { Field, Int, ObjectType } from "type-graphql";
-import { BaseEntity, Column, Entity, Index, ManyToOne, OneToMany, PrimaryColumn } from "typeorm";
+import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn } from "typeorm";
 import { Team } from "../Team";
 import { Event } from "../Event";
 import { Season } from "../../../ftc-api/types/Season";
@@ -7,35 +6,29 @@ import { TypeormLoader } from "type-graphql-dataloader";
 import { Award } from "../Award";
 import { TepStats2019 } from "./TepStats2019";
 
-@ObjectType()
 @Entity()
 export class TeamEventParticipation2019 extends BaseEntity {
-    @Field(() => Int, { name: "season" })
     @PrimaryColumn("smallint")
     eventSeason!: Season;
 
-    @Field()
     @PrimaryColumn()
     eventCode!: string;
 
-    @Field(() => Int)
     @PrimaryColumn("int")
     teamNumber!: number;
 
-    @Field(() => Event)
-    @ManyToOne(() => Event, (event) => event.teams)
-    @TypeormLoader()
-    event!: Event;
+    // @ManyToOne(() => Event, (event) => event.teams)
+    // @TypeormLoader()
+    // event!: Event;
 
-    @Field(() => [Award])
-    @OneToMany(() => Award, (award) => award.teamEventParticipation)
-    @TypeormLoader()
-    awards!: Award[];
+    // @Field(() => [Award])
+    // @OneToMany(() => Award, (award) => award.teamEventParticipation)
+    // @TypeormLoader()
+    // awards!: Award[];
 
-    @Field(() => Team)
-    @ManyToOne(() => Team, (team) => team.events)
-    @TypeormLoader()
-    team!: Team;
+    // @ManyToOne(() => Team, (team) => team.events2019)
+    // @TypeormLoader()
+    // team!: Team;
 
     @Column("float", { nullable: true })
     @Index()
