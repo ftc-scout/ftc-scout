@@ -340,7 +340,7 @@ export class SeasonRecords2021Resolver {
 
         let preFilterQuery = DATA_SOURCE.getRepository(TeamEventParticipation2021)
             .createQueryBuilder("tep2")
-            .leftJoin("tep2.event", "e2")
+            .leftJoin("event", "e2", 'e2.season = 2021 AND e2.code = tep2."eventCode"')
             .select([`RANK() OVER (ORDER BY ${orderByRaw2}) as pre_filter_rank`, '"eventCode"', '"teamNumber"'])
             .where("tep2.hasStats")
             .andWhere("e2.season = 2021")
@@ -357,7 +357,7 @@ export class SeasonRecords2021Resolver {
 
         let query = DATA_SOURCE.getRepository(TeamEventParticipation2021)
             .createQueryBuilder("tep")
-            .leftJoinAndSelect("tep.event", "e")
+            .leftJoinAndSelect("event", "e", 'e.season = 2021 AND e.code = tep."eventCode"')
             .addSelect(`RANK() OVER (ORDER BY ${orderByRaw}) as post_filter_rank`)
             .leftJoin(
                 "(" + preFilterQuery.getSql() + ")",
@@ -398,7 +398,7 @@ export class SeasonRecords2021Resolver {
         let teps: TEP2021RecordRow[] = entities.map((e) => {
             let rawRow = raw.find((r) => r.tep_eventCode == e.eventCode && r.tep_teamNumber == e.teamNumber);
             return {
-                tep: e,
+                tep: new TeamEventParticipation(e),
                 rank: rawRow.post_filter_rank as number,
                 preFilterRank: rawRow.pre_filter_rank as number,
             };
