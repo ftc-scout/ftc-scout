@@ -21,7 +21,7 @@ export function getMyClient(fetch: NonNullable<HttpOptions["fetch"]>): ApolloCli
     const cache = new InMemoryCache({
         possibleTypes: {
             MatchScores: ["MatchScores2021Remote", "MatchScores2021Traditional"],
-            TeamEventStats2021: ["TeamEventStats2021Traditional", "TeamEventStats2021Remote"],
+            TeamEventStats: ["TeamEventStats2021Traditional", "TeamEventStats2021Remote", "TeamEventStats2019"],
         },
         typePolicies: {
             Team: { keyFields: ["number"] },
@@ -37,17 +37,7 @@ export function getMyClient(fetch: NonNullable<HttpOptions["fetch"]>): ApolloCli
             //     keyFields: ["season", "eventCode", "matchId"],
             // },
             TeamMatchParticipation: { keyFields: ["season", "eventCode", "matchId", "teamNumber"] },
-            TeamEventParticipation2021: {
-                fields: {
-                    stats: {
-                        merge(existing, incoming, { mergeObjects }) {
-                            return mergeObjects(existing, incoming);
-                        },
-                    },
-                },
-                keyFields: ["season", "eventCode", "teamNumber"],
-            },
-            TeamEventParticipation2019: {
+            TeamEventParticipation: {
                 fields: {
                     stats: {
                         merge(existing, incoming, { mergeObjects }) {
