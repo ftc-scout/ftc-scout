@@ -1,3 +1,4 @@
+import { CURRENT_SEASON } from "../../constants";
 import { DeepPartial } from "typeorm";
 import { getAllTeams } from "../../ftc-api/get-teams";
 import { Season } from "../../ftc-api/types/Season";
@@ -55,7 +56,12 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
     ).filter((x): x is Team => !!x);
 
     await DATA_SOURCE.transaction(async (em) => {
-        await em.save(dbTeams);
+        if (season == CURRENT_SEASON) {
+            await em.save(dbTeams);
+        } else {
+            // Don't override date from latest season with older seasons.
+            await DATA_SOURCE.createQueryBuilder().insert().into(Team).values(dbTeams).orIgnore().execute();
+        }
         await em.save(
             FtcApiMetadata.create({
                 season,
