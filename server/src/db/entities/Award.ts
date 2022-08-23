@@ -10,7 +10,7 @@ import { Award2021, awardCode2021FromFtcApi, AwardTypes2021 } from "./types/2021
 @Entity()
 export class Award extends BaseEntity {
     @Field(() => Int)
-    @PrimaryColumn()
+    @PrimaryColumn("smallint")
     season!: Season;
 
     @Field()
@@ -25,14 +25,14 @@ export class Award extends BaseEntity {
     @PrimaryColumn("int")
     teamNumber!: number;
 
-    @Field(() => TeamEventParticipation2021)
-    @ManyToOne(() => TeamEventParticipation2021, (tep) => tep.awards)
-    @JoinColumn([
-        { name: "season", referencedColumnName: "eventSeason" },
-        { name: "eventCode", referencedColumnName: "eventCode" },
-        { name: "teamNumber", referencedColumnName: "teamNumber" },
-    ])
-    @TypeormLoader()
+    // @Field(() => TeamEventParticipation2021)
+    // @ManyToOne(() => TeamEventParticipation2021, (tep) => tep.awards)
+    // @JoinColumn([
+    //     { name: "season", referencedColumnName: "eventSeason" },
+    //     { name: "eventCode", referencedColumnName: "eventCode" },
+    //     { name: "teamNumber", referencedColumnName: "teamNumber" },
+    // ])
+    // @TypeormLoader()
     teamEventParticipation!: TeamEventParticipation2021;
 
     @Field(() => String, { nullable: true })

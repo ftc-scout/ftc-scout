@@ -27,10 +27,6 @@ export async function loadAllEvents(season: Season) {
     console.log("Adding all events to database.");
 
     let dbEvents: Event[] = apiEvents.map((apiEvent) => {
-        // if (apiEvent.timezone == null) {
-        //     console.log(apiEvent)
-        // }
-
         return Event.create({
             eventId: apiEvent.eventId,
             season,

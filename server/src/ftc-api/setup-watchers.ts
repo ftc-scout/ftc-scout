@@ -23,12 +23,12 @@ export async function setupApiWatchers() {
             console.log("Events for season", season, "already loaded.");
         }
         if ((await FtcApiMetadata.getLastMatchesReq(season)) == null) {
-            await loadAllMatches(season);
+            if (season != 2020) await loadAllMatches(season);
         } else {
             console.log("Matches for season", season, "already loaded.");
         }
         if ((await FtcApiMetadata.getLastAwardsReq(season)) == null) {
-            await loadAllAwards(season);
+            if (season != 2020) await loadAllAwards(season);
         } else {
             console.log("Awards for season", season, "already loaded.");
         }

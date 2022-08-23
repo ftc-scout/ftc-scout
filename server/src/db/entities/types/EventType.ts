@@ -9,6 +9,7 @@ export enum EventType {
     OTHER = 5,
     FIRST_CHAMPIONSHIP = 6,
     SUPER_QUALIFIER = 7,
+    INNOVATION_CHALLENGE = 9,
     OFF_SEASON = 10,
     KICKOFF = 12,
     WORKSHOP = 13,
