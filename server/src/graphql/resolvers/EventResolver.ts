@@ -59,7 +59,7 @@ export class EventResolver {
 
     @FieldResolver(() => Boolean)
     hasStarted(@Root() event: Event): boolean {
-        let eventStart = DateTime.fromSQL(event.start as string, { zone: event.timezone });
+        let eventStart = DateTime.fromSQL(event.start as string, { zone: event.timezone ?? undefined });
         let now = DateTime.now();
         return now > eventStart;
     }
