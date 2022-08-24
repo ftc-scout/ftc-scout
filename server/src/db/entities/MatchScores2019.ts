@@ -161,7 +161,7 @@ export class MatchScores2019 extends BaseEntity {
             this.autoPlacementPoints;
         this.dcPoints = this.dcDeliveryPoints + this.dcPlacementPoints + this.dcSkyscraperBonusPoints;
         this.endgamePoints = this.cappingPoints + this.parkingPoints + this.foundationMovedPoints;
-        this.penaltyPoints = this.majorPenalties * -20 + this.minorPenalties + -5;
+        this.penaltyPoints = this.majorPenalties * -20 + this.minorPenalties * -5;
 
         this.totalPoints = Math.max(this.autoPoints + this.dcPoints + this.endgamePoints + this.penaltyPoints, 0);
         this.totalPointsNp = this.autoPoints + this.dcPoints + this.endgamePoints;
