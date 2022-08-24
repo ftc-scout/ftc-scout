@@ -12,7 +12,7 @@
     <TradScoreLine {score} heading name="Auto" getProp={(a) => a.autoPoints} />
     <TradScoreLine
         {score}
-        name="Transport Points"
+        name="Auto Transport Points"
         getProp={(a) => a.autoDeliveryPoints}
         subProps={[
             ["Skystones", (a) => a.autoSkystoneDeliveredFirst * 10],
@@ -29,6 +29,30 @@
         subProps={[
             ["Robot 1", (a) => (a.navigated1 ? 5 : 0)],
             ["Robot 2", (a) => (a.navigated2 ? 5 : 0)],
+        ]}
+    />
+
+    <TradScoreLine {score} heading name="Driver-Controlled" getProp={(a) => a.dcPoints} />
+    <TradScoreLine
+        {score}
+        name="DC Transport Points"
+        getProp={(a) => a.dcDeliveryPoints}
+        subProps={[
+            ["Delivered", (a) => a.dcStonesDelivered],
+            ["Returned", (a) => -a.dcReturned],
+        ]}
+    />
+    <TradScoreLine {score} name="Placement Points" getProp={(a) => a.dcPlacementPoints} />
+    <TradScoreLine {score} name="Skyscrapper Points" getProp={(a) => a.dcSkyscraperBonusPoints} />
+
+    <TradScoreLine {score} heading name="Endgame" getProp={(a) => a.endgamePoints} />
+    <TradScoreLine
+        {score}
+        name="Capping Points"
+        getProp={(a) => a.cappingPoints}
+        subProps={[
+            ["Robot 1", (a) => (a.capLevel1 == -1 ? 0 : a.capLevel1 + 5)],
+            ["Robot 2", (a) => (a.capLevel2 == -1 ? 0 : a.capLevel2 + 5)],
         ]}
     />
 
