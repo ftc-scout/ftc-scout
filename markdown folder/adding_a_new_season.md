@@ -12,3 +12,4 @@
 -   At this point all your data should load correctly when you run the program. Make sure it does.
 -   Update the `TeamEventParticipation` graphql union with your new season.
 -   Update the various resolvers for `Event`, `Team`, etc.
+-   Add a `MatchScores{season}Graphql` type, update the `MatchScoresUnion`, and update the `Match` resolver to return this new type of match score.

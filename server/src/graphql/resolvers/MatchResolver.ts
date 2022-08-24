@@ -8,36 +8,62 @@ import { MatchScores2021RemoteGraphql } from "../objects/MatchScores2021RemoteGr
 import { MatchScores2021TradGraphql } from "../objects/MatchScores2021TradGraphql";
 import { MatchScoresUnion } from "../objects/MatchScoresUnion";
 import DataLoader from "dataloader";
+import { MatchScores2019Graphql } from "../objects/MatchScores2019Graphql";
+import { MatchScores2019 } from "../../db/entities/MatchScores2019";
 
 @Resolver(Match)
 export class MatchResolver {
     // Ugly hack because type-graphql-dataloader can't deal with eager fields.
     @FieldResolver(() => MatchScoresUnion, { nullable: true })
-    @Loader<{ season: Season; eventCode: string; matchId: number }, MatchScores2021[]>(async (ids, _) => {
-        let matches = await MatchScores2021.find({
-            where: ids as {
-                season: Season;
-                eventCode: string;
-                matchId: number;
-            }[],
-        });
+    @Loader<{ season: Season; eventCode: string; matchId: number }, (MatchScores2021 | MatchScores2019)[]>(
+        async (ids, _) => {
+            let ids2021 = ids.filter((id) => id.season == 2021);
+            let ids2019 = ids.filter((id) => id.season == 2019);
 
-        let groups: MatchScores2021[][] = ids.map((_) => []);
+            let scores2021P = ids2021.length
+                ? await MatchScores2021.find({
+                      where: ids2021 as {
+                          season: Season;
+                          eventCode: string;
+                          matchId: number;
+                      }[],
+                  })
+                : [];
+            let scores2019P = ids2019.length
+                ? await MatchScores2019.find({
+                      where: ids2019 as {
+                          season: Season;
+                          eventCode: string;
+                          matchId: number;
+                      }[],
+                  })
+                : [];
 
-        for (let m of matches) {
-            for (let i = 0; i < ids.length; i++) {
-                let id = ids[i];
-                if (id.season == m.season && id.eventCode == m.eventCode && id.matchId == m.matchId) {
-                    groups[i].push(m);
-                    break;
+            let [scores2021, scores2019] = await Promise.all([scores2021P, scores2019P]);
+            let scores = [...scores2021, ...scores2019];
+
+            let groups: (MatchScores2021 | MatchScores2019)[][] = ids.map((_) => []);
+
+            for (let s of scores) {
+                for (let i = 0; i < ids.length; i++) {
+                    let id = ids[i];
+                    if (id.season == s.season && id.eventCode == s.eventCode && id.matchId == s.matchId) {
+                        groups[i].push(s);
+                        break;
+                    }
                 }
             }
-        }
 
-        return groups;
-    })
+            return groups;
+        }
+    )
     async scores(@Root() _match: Match) {
-        return async (dl: DataLoader<{ season: Season; eventCode: string; matchId: number }, MatchScores2021[]>) => {
+        return async (
+            dl: DataLoader<
+                { season: Season; eventCode: string; matchId: number },
+                (MatchScores2021 | MatchScores2019)[]
+            >
+        ) => {
             let scores = await dl.load({
                 season: _match.eventSeason,
                 eventCode: _match.eventCode,
@@ -45,13 +71,38 @@ export class MatchResolver {
             });
 
             if (scores && scores.length != 0) {
-                switch (scores[0].alliance) {
-                    case Alliance.SOLO:
-                        return new MatchScores2021RemoteGraphql(scores[0]);
-                    case Alliance.RED:
-                        return new MatchScores2021TradGraphql(scores[0], scores[1]);
-                    case Alliance.BLUE:
-                        return new MatchScores2021TradGraphql(scores[1], scores[0]);
+                if (_match.eventSeason == Season.FREIGHT_FRENZY) {
+                    switch (scores[0].alliance) {
+                        case Alliance.SOLO:
+                            return new MatchScores2021RemoteGraphql(scores[0] as MatchScores2021);
+                        case Alliance.RED:
+                            return new MatchScores2021TradGraphql(
+                                scores[0] as MatchScores2021,
+                                scores[1] as MatchScores2021
+                            );
+                        case Alliance.BLUE:
+                            return new MatchScores2021TradGraphql(
+                                scores[1] as MatchScores2021,
+                                scores[0] as MatchScores2021
+                            );
+                    }
+                } else if (_match.eventSeason == Season.SKYSTONE) {
+                    switch (scores[0].alliance) {
+                        case Alliance.RED:
+                            return new MatchScores2019Graphql(
+                                scores[0] as MatchScores2019,
+                                scores[1] as MatchScores2019
+                            );
+                        case Alliance.BLUE:
+                            return new MatchScores2019Graphql(
+                                scores[1] as MatchScores2019,
+                                scores[0] as MatchScores2019
+                            );
+                        case Alliance.SOLO:
+                            throw "Impossible solo alliance in 2019";
+                    }
+                } else {
+                    throw `Can't construct match scores for season ${_match.eventSeason}.`;
                 }
             } else {
                 return null;
