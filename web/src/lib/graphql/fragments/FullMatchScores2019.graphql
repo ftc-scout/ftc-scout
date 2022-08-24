@@ -1,0 +1,11 @@
+fragment FullMatchScores2019 on MatchScores2019 {
+    season
+    eventCode
+    matchId
+    red {
+        ...FullMatchScores2019Alliance
+    }
+    blue {
+        ...FullMatchScores2019Alliance
+    }
+}

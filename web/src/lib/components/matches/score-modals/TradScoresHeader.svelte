@@ -1,6 +1,8 @@
 <script lang="ts">
-    import type { MatchScores2021Traditional } from "../../../graphql/generated/graphql-operations";
-    export let score: MatchScores2021Traditional;
+    export let score: {
+        red: { totalPoints: number };
+        blue: { totalPoints: number };
+    };
 
     $: red = score.red;
     $: blue = score.blue;

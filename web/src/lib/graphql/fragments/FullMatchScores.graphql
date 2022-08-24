@@ -8,4 +8,8 @@ fragment FullMatchScores on MatchScores {
         __typename
         ...FullMatchScores2021Traditional
     }
+    ... on MatchScores2019 {
+        __typename
+        ...FullMatchScores2019
+    }
 }

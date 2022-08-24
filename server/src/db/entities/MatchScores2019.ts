@@ -132,11 +132,11 @@ export class MatchScores2019 extends BaseEntity {
     totalPointsNp!: number;
 
     static calcCapPoints(level: number): number {
-        return level == 0 ? 0 : level + 5;
+        return level == -1 ? 0 : level + 5;
     }
 
     addGeneratedProps() {
-        this.autoNavigationPoints = (this.parked1 ? 5 : 0) + (this.parked2 ? 5 : 0);
+        this.autoNavigationPoints = (this.navigated1 ? 5 : 0) + (this.navigated2 ? 5 : 0);
         this.autoRepositioningPoints = this.repositioned ? 10 : 0;
         this.autoDeliveryPoints =
             this.autoStonesDelivered * 2 +

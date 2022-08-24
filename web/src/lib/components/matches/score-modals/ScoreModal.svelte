@@ -5,6 +5,7 @@
     import Fa from "svelte-fa";
     import ScoreRemote2021 from "./ScoreRemote2021.svelte";
     import { CLOSE_ICON } from "../../../icons";
+    import Scores2019 from "./Scores2019.svelte";
 
     export let matchScores: EventPageMatchFragment | null = null;
     export let shown = false;
@@ -27,6 +28,8 @@
             <ScoreTrad2021 score={matchScores.scores} />
         {:else if matchScores.scores?.__typename == "MatchScores2021Remote"}
             <ScoreRemote2021 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />
+        {:else if matchScores.scores?.__typename == "MatchScores2019"}
+            <Scores2019 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />
         {/if}
     </Modal>
 {/if}

@@ -13,3 +13,8 @@
 -   Update the `TeamEventParticipation` graphql union with your new season.
 -   Update the various resolvers for `Event`, `Team`, etc.
 -   Add a `MatchScores{season}Graphql` type, update the `MatchScoresUnion`, and update the `Match` resolver to return this new type of match score.
+-   Update the apollo client on the frontend to support the new backend types.
+-   Update the season param to support the new season
+-   Update the `FullMatchScores` graphql fragment. Make sure `npm run gen` still works
+-   Add score modals for the new season
+-   Make sure that all the scores are accurate. (Esp. check that opr is right)

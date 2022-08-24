@@ -1,15 +1,18 @@
 <script lang="ts">
-    import type {
-        MatchScores2021Traditional,
-        MatchScores2021TraditionalAlliance,
-    } from "../../../graphql/generated/graphql-operations";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
     import { trad2021Expansions } from "./expansions";
 
-    type PropFn = (_: MatchScores2021TraditionalAlliance) => number;
+    type T = $$Generic;
 
-    export let score: MatchScores2021Traditional;
+    type Outer = {
+        red: T;
+        blue: T;
+    };
+
+    type PropFn = (_: T) => number;
+
+    export let score: Outer;
     export let name: string;
     export let heading = false;
     export let getProp: PropFn;
@@ -48,8 +51,8 @@
 
     <tr class="sub-row" transition:slide|local={{ duration: 250 }}>
         <td class="name">{subName}</td>
-        <td class="data red" class:nz={red != 0}>+{red}</td>
-        <td class="data blue" class:nz={blue != 0}>+{blue}</td>
+        <td class="data red" class:nz={red != 0}>{red >= 0 ? "+" : ""}{red}</td>
+        <td class="data blue" class:nz={blue != 0}>{blue >= 0 ? "+" : ""}{blue}</td>
     </tr>
 {/each}
 
