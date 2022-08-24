@@ -1,6 +1,6 @@
 import fuzzysort from "fuzzysort";
 import { Arg, Field, Int, ObjectType, Query, Resolver } from "type-graphql";
-import { MINUTE_MS } from "../../constants";
+import { CURRENT_SEASON, MINUTE_MS } from "../../constants";
 import { Team } from "../../db/entities/Team";
 import { Event } from "../../db/entities/Event";
 import levenshtein from "fast-levenshtein";
@@ -98,7 +98,7 @@ async function updateCache() {
         teams.forEach((t) => (t.number = ("" + t.number) as any));
         cachedTeams = teams;
 
-        let events = await Event.find();
+        let events = await Event.findBy({ season: CURRENT_SEASON });
         cachedEvents = events;
 
         lastCacheUpdate = now;
