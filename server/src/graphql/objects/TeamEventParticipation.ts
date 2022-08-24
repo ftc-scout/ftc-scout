@@ -1,5 +1,3 @@
-import { Team } from "../../db/entities/Team";
-import { Event } from "../../db/entities/Event";
 import { Season } from "../../ftc-api/types/Season";
 import { createUnionType, Field, Int, ObjectType } from "type-graphql";
 import {

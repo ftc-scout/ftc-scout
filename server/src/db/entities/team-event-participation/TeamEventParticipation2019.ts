@@ -1,9 +1,5 @@
-import { BaseEntity, Column, Entity, Index, ManyToOne, PrimaryColumn } from "typeorm";
-import { Team } from "../Team";
-import { Event } from "../Event";
+import { BaseEntity, Column, Entity, Index, PrimaryColumn } from "typeorm";
 import { Season } from "../../../ftc-api/types/Season";
-import { TypeormLoader } from "type-graphql-dataloader";
-import { Award } from "../Award";
 import { TepStats2019 } from "./TepStats2019";
 
 @Entity()
@@ -16,19 +12,6 @@ export class TeamEventParticipation2019 extends BaseEntity {
 
     @PrimaryColumn("int")
     teamNumber!: number;
-
-    // @ManyToOne(() => Event, (event) => event.teams)
-    // @TypeormLoader()
-    // event!: Event;
-
-    // @Field(() => [Award])
-    // @OneToMany(() => Award, (award) => award.teamEventParticipation)
-    // @TypeormLoader()
-    // awards!: Award[];
-
-    // @ManyToOne(() => Team, (team) => team.events2019)
-    // @TypeormLoader()
-    // team!: Team;
 
     @Column("float", { nullable: true })
     @Index()

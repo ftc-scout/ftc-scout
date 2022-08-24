@@ -1,8 +1,6 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { TypeormLoader } from "type-graphql-dataloader";
 import { BaseEntity, Column, CreateDateColumn, Entity, OneToMany, PrimaryColumn, UpdateDateColumn } from "typeorm";
-import { TeamEventParticipation2019 } from "./team-event-participation/TeamEventParticipation2019";
-import { TeamEventParticipation2021 } from "./team-event-participation/TeamEventParticipation2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { User } from "./User";
 

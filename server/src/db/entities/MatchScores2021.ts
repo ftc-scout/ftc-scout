@@ -30,14 +30,6 @@ export class MatchScores2021 extends BaseEntity {
     ])
     match!: Match;
 
-    // @Field(() => Event)
-    // @ManyToOne(() => Event)
-    // @JoinColumn([
-    //     { name: "season", referencedColumnName: "season" },
-    //     { name: "eventCode", referencedColumnName: "code" },
-    // ])
-    // event!: Event;
-
     @Column("int8")
     randomization!: number;
 

@@ -2,7 +2,6 @@ import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, DeepPartial, Entity, PrimaryColumn } from "typeorm";
 import { AwardFtcApi } from "../../ftc-api/types/Award";
 import { Season } from "../../ftc-api/types/Season";
-import { TeamEventParticipation2021 } from "./team-event-participation/TeamEventParticipation2021";
 import { Award2021, awardCode2021FromFtcApi, AwardTypes2021 } from "./types/2021/Award2021";
 
 @ObjectType()
@@ -23,16 +22,6 @@ export class Award extends BaseEntity {
     @Field(() => Int)
     @PrimaryColumn("int")
     teamNumber!: number;
-
-    // @Field(() => TeamEventParticipation2021)
-    // @ManyToOne(() => TeamEventParticipation2021, (tep) => tep.awards)
-    // @JoinColumn([
-    //     { name: "season", referencedColumnName: "eventSeason" },
-    //     { name: "eventCode", referencedColumnName: "eventCode" },
-    //     { name: "teamNumber", referencedColumnName: "teamNumber" },
-    // ])
-    // @TypeormLoader()
-    teamEventParticipation!: TeamEventParticipation2021;
 
     @Field(() => String, { nullable: true })
     @Column("varchar", { nullable: true })

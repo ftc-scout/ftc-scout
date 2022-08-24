@@ -26,17 +26,6 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("int")
     teamNumber!: number;
 
-    // It seems typeorm can't handle multiple relations using the same columns as foreign keys.
-
-    // @Field(() => Event)
-    // @ManyToOne(() => Event, (event) => event.teamMatches)
-    // @JoinColumn([
-    //     { name: "season", referencedColumnName: "season" },
-    //     { name: "eventCode", referencedColumnName: "code" },
-    // ])
-    // @TypeormLoader()
-    // event!: Event;
-
     @Field(() => Match)
     @ManyToOne(() => Match, (match) => match.teams)
     @JoinColumn([

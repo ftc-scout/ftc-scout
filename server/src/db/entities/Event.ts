@@ -23,16 +23,6 @@ export class Event extends BaseEntity {
     @TypeormLoader()
     matches!: Match[];
 
-    // @Field(() => [TeamMatchParticipation])
-    // @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.event)
-    // @TypeormLoader()
-    // teamMatches!: TeamMatchParticipation[];
-
-    // @Field(() => [TeamEventParticipation2021])
-    // @OneToMany(() => TeamEventParticipation2021, (tep) => tep.event)
-    // @TypeormLoader()
-    // teams!: TeamEventParticipation2021[];
-
     @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     divisionCode!: string | null;
