@@ -16,14 +16,25 @@
     export let eventCode: string;
 
     $: scores = match.scores as FullMatchScores2021TraditionalFragment;
-    // $: sortedTeams = [...match.teams].sort((a, b) => sortStation(a.station, b.station));
+
+    $: r1 = match.teams.find((t) => t.station == Station.Red_1);
+    $: r2 = match.teams.find((t) => t.station == Station.Red_2);
+    $: r3 = match.teams.find((t) => t.station == Station.Red_3);
+    $: b1 = match.teams.find((t) => t.station == Station.Blue_1);
+    $: b2 = match.teams.find((t) => t.station == Station.Blue_2);
+    $: b3 = match.teams.find((t) => t.station == Station.Blue_3);
+    $: rCount = (r1 ? 1 : 0) + (r2 ? 1 : 0) + (r3 ? 1 : 0);
+    $: bCount = (b1 ? 1 : 0) + (b2 ? 1 : 0) + (b3 ? 1 : 0);
+    $: rPlaceholder = rCount < 2 ? "red" : undefined;
+    $: bPlaceholder = bCount < 2 ? "blue" : undefined;
+
     $: sortedTeams = [
-        match.teams.find((t) => t.station == Station.Red_1) ?? "red",
-        match.teams.find((t) => t.station == Station.Red_2) ?? "red",
-        match.teams.find((t) => t.station == Station.Red_3),
-        match.teams.find((t) => t.station == Station.Blue_1) ?? "blue",
-        match.teams.find((t) => t.station == Station.Blue_2) ?? "blue",
-        match.teams.find((t) => t.station == Station.Blue_3),
+        r1 ?? rPlaceholder,
+        r2 ?? rPlaceholder,
+        r3 ?? rPlaceholder,
+        b1 ?? bPlaceholder,
+        b2 ?? bPlaceholder,
+        b3 ?? bPlaceholder,
     ].filter((t) => t);
     let winner: "RED" | "BLUE" | "TIE" | "X";
     $: winner = scores
