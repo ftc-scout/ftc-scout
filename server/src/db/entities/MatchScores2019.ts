@@ -161,7 +161,7 @@ export class MatchScores2019 extends BaseEntity {
             this.autoPlacementPoints;
         this.dcPoints = this.dcDeliveryPoints + this.dcPlacementPoints + this.dcSkyscraperBonusPoints;
         this.endgamePoints = this.cappingPoints + this.parkingPoints + this.foundationMovedPoints;
-        this.penaltyPoints = this.majorPenalties * -20 + this.minorPenalties * -5;
+        // penalty points are already calculated since they must come from the other alliance.
 
         this.totalPoints = Math.max(this.autoPoints + this.dcPoints + this.endgamePoints + this.penaltyPoints, 0);
         this.totalPointsNp = this.autoPoints + this.dcPoints + this.endgamePoints;
@@ -196,6 +196,7 @@ export class MatchScores2019 extends BaseEntity {
                 parked2: a.robot2Parked,
                 majorPenalties: a.majorPenalties,
                 minorPenalties: a.minorPenalties,
+                penaltyPoints: a.penaltyPoints, // this is penalties committed bu the other alliance
             } as DeepPartial<MatchScores2019>);
             dbms.addGeneratedProps();
             return dbms;

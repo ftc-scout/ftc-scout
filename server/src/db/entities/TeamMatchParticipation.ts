@@ -75,8 +75,8 @@ export class TeamMatchParticipation extends BaseEntity {
             station: stationFromFtcApi(team.station),
             surrogate: team.surrogate,
             noShow: team.noShow,
-            dq: team.dq,
-            onField: team.onField,
+            dq: season == 2019 ? false : team.dq, // For 2019 the api always returns false for dq & onField. Fun!
+            onField: season == 2019 ? !team.noShow : team.onField,
         } as DeepPartial<TeamMatchParticipation>);
     }
 }
