@@ -50,7 +50,6 @@ export class Team extends BaseEntity {
 
     @Field(() => [TeamMatchParticipation])
     @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.team)
-    @TypeormLoader()
     matches!: TeamMatchParticipation[];
 
     // @Field(() => [TeamEventParticipation2021])

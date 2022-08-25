@@ -6,6 +6,7 @@ import DataLoader from "dataloader";
 import { TeamEventParticipation } from "../objects/TeamEventParticipation";
 import { TeamEventParticipation2021 } from "../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
+import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 
 @Resolver(Team)
 export class TeamResolver {
@@ -53,6 +54,30 @@ export class TeamResolver {
     events(@Root() team: Team, @Arg("season", () => Int) season: number) {
         return async (dl: DataLoader<{ eventSeason: number; teamNumber: number }, TeamEventParticipation[]>) => {
             return dl.load({ eventSeason: season, teamNumber: team.number });
+        };
+    }
+
+    @FieldResolver(() => [TeamMatchParticipation])
+    @Loader<{ season: number; teamNumber: number }, TeamMatchParticipation[]>(async (ids, _) => {
+        let tmps = await TeamMatchParticipation.find({
+            where: ids as { season: number; teamNumber: number }[],
+        });
+
+        let groups: TeamMatchParticipation[][] = ids.map((_) => []);
+
+        for (let tmp of tmps) {
+            for (let i = 0; i < ids.length; i++) {
+                let id = ids[i];
+                if (id.season == tmp.season && id.teamNumber == tmp.teamNumber) {
+                    groups[i].push(tmp);
+                }
+            }
+        }
+        return groups;
+    })
+    matches(@Root() team: Team, @Arg("season") season: number) {
+        return async (dl: DataLoader<{ season: number; teamNumber: number }, TeamMatchParticipation[]>) => {
+            return dl.load({ season, teamNumber: team.number });
         };
     }
 
