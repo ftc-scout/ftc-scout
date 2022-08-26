@@ -44,7 +44,6 @@
 <Sidebar />
 
 {#key keyPathName($page.url.pathname)}
-    {console.log("key")}
     <div id="content">
         <slot />
     </div>
