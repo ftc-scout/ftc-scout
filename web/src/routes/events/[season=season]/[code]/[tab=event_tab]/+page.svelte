@@ -80,7 +80,7 @@
 
 <Loading store={$event} width={"1250px"} doesNotExist={!eventData}>
     <Card>
-        <h1>{eventData.season} {eventData.name}</h1>
+        <h1>{new Date(eventData.start).getFullYear()} {eventData.name}</h1>
 
         <InfoIconRow icon={DATE_ICON}>
             {prettyPrintDateRangeString(eventData.start, eventData.end)}
