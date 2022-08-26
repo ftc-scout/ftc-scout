@@ -31,10 +31,10 @@
     $: sortedTeams = [
         r1 ?? rPlaceholder,
         r2 ?? rPlaceholder,
-        r3 ?? rPlaceholder,
+        r3 ?? rCount == 0 ? undefined : rPlaceholder,
         b1 ?? bPlaceholder,
         b2 ?? bPlaceholder,
-        b3 ?? bPlaceholder,
+        b3 ?? bCount == 0 ? undefined : bPlaceholder,
     ].filter((t) => t);
     let winner: "RED" | "BLUE" | "TIE" | "X";
     $: winner = scores
