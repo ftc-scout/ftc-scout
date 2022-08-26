@@ -132,7 +132,7 @@ function createDbEntities(
 
             let hasBeenPlayed = !!match.postResultTime || !!thisMatchScores;
 
-            let dbMatch = Match.fromApi(season, eventCode, match, remote, hasBeenPlayed);
+            let dbMatch: Match | null = Match.fromApi(season, eventCode, match, remote, hasBeenPlayed);
 
             if (thisMatchScores) {
                 if (season == Season.FREIGHT_FRENZY && !remote) {
@@ -162,7 +162,6 @@ function createDbEntities(
                     throw `Cannot load match scores for season ${season}`;
                 }
             }
-            dbMatches.push(dbMatch);
 
             dbMatch.teams = [];
 
@@ -170,8 +169,18 @@ function createDbEntities(
                 if (!team.teamNumber) continue;
 
                 let dbTeamMatchParticipation = TeamMatchParticipation.fromApi(season, eventCode, dbMatch.id, team);
+
+                if (remote && dbTeamMatchParticipation.noShow) {
+                    dbMatch = null;
+                    break;
+                }
+
                 dbTeamMatchParticipations.push(dbTeamMatchParticipation);
                 dbMatch.teams.push(dbTeamMatchParticipation);
+            }
+
+            if (dbMatch != null) {
+                dbMatches.push(dbMatch);
             }
         }
 
