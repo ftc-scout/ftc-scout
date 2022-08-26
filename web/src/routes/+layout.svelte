@@ -9,6 +9,7 @@
     import Sidebar from "../lib/components/nav/Sidebar.svelte";
     import type { HttpOptions } from "@apollo/client";
     import { page } from "$app/stores";
+    import { keyPathName } from "../lib/util/key-pathname";
 
     export let data: LayoutData;
     let f: NonNullable<HttpOptions["fetch"]>;
@@ -42,7 +43,8 @@
 <Navbar />
 <Sidebar />
 
-{#key $page.url.pathname}
+{#key keyPathName($page.url.pathname)}
+    {console.log("key")}
     <div id="content">
         <slot />
     </div>
