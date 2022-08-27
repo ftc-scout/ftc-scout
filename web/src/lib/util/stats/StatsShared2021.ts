@@ -152,7 +152,7 @@ export const AUTO_BONUS_STAT: Stat<Group> = makeStat(
     "Auto Bonus Points",
     "Bonus",
     "Auto Bonus Points",
-    Tep2021FieldName.AutoNavigationPointsIndividual
+    Tep2021FieldName.AutoBonusPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------

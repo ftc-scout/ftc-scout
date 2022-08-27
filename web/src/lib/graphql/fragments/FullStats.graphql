@@ -53,4 +53,32 @@ fragment FullStats on TeamEventStats {
             ...FullStatsGroup2021Remote
         }
     }
+    ... on TeamEventStats2019 {
+        rank
+        rp2019: rp
+        tb
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        total {
+            ...FullStatsGroup2019
+        }
+        average {
+            ...FullStatsGroup2019
+        }
+        opr {
+            ...FullStatsGroup2019
+        }
+        min {
+            ...FullStatsGroup2019
+        }
+        max {
+            ...FullStatsGroup2019
+        }
+        standardDev {
+            ...FullStatsGroup2019
+        }
+    }
 }

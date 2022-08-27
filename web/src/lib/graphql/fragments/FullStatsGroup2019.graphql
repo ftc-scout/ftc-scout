@@ -1,0 +1,21 @@
+fragment FullStatsGroup2019 on TeamEventStatGroup2019 {
+    autoNavigationPoints
+    autoNavigationPointsIndividual
+    autoRepositioningPoints
+    autoDeliveryPoints
+    autoPlacementPoints
+    dcDeliveryPoints
+    dcPlacementPoints
+    dcSkyscraperBonusPoints
+    cappingPoints
+    cappingPointsIndividual
+    parkingPoints
+    parkingPointsIndividual
+    foundationMovedPoints
+    autoPoints
+    dcPoints
+    endgamePoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}

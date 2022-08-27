@@ -119,7 +119,7 @@ export class Match extends BaseEntity {
     redTotalPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
-        } else if (this.scores2021) {
+        } else if (this.scores2019) {
             return this.scores2019.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
         } else {
             return null;
@@ -131,6 +131,26 @@ export class Match extends BaseEntity {
             return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
         } else if (this.scores2019) {
             return this.scores2019.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
+        } else {
+            return null;
+        }
+    }
+
+    redTotalNpPoints(): number | null {
+        if (this.scores2021) {
+            return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
+        } else if (this.scores2019) {
+            return this.scores2019.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
+        } else {
+            return null;
+        }
+    }
+
+    blueTotalNpPoints(): number | null {
+        if (this.scores2021) {
+            return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;
+        } else if (this.scores2019) {
+            return this.scores2019.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;
         } else {
             return null;
         }

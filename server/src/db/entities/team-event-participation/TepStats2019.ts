@@ -1,7 +1,7 @@
 import { Field, Float, ObjectType } from "type-graphql";
 import { Column, Index } from "typeorm";
 
-@ObjectType()
+@ObjectType("TeamEventStatGroup2019")
 export class TepStats2019 {
     @Field(() => Float)
     @Column("float")

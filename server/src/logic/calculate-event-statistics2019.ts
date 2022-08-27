@@ -138,8 +138,8 @@ function calcTbPoints(teamNumber: number, matches: Match[]): number | null {
     let matchesPlayed = 0;
 
     for (let m of matches) {
-        if (teamNumber in m.teams.map((t) => t.teamNumber)) {
-            totalLosingScore += losingScore(m);
+        if (m.teams.map((t) => t.teamNumber).indexOf(teamNumber) != -1) {
+            totalLosingScore += tbPointsForMatch(m);
             matchesPlayed++;
         }
     }
@@ -147,8 +147,8 @@ function calcTbPoints(teamNumber: number, matches: Match[]): number | null {
     return matchesPlayed == 0 ? null : totalLosingScore / matchesPlayed;
 }
 
-function losingScore(match: Match): number {
-    return Math.min(match.redTotalPoints()!, match.blueTotalPoints()!);
+function tbPointsForMatch(match: Match): number {
+    return Math.min(match.redTotalNpPoints()!, match.blueTotalNpPoints()!);
 }
 
 function teamsAlliance(teamNumber: number, match: Match): Alliance {
