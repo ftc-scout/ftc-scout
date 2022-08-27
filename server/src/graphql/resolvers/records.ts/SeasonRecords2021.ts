@@ -1,4 +1,4 @@
-import { Arg, Field, InputType, Int, ObjectType, Query, registerEnumType, Resolver } from "type-graphql";
+import { Arg, Field, InputType, Int, Query, registerEnumType, Resolver } from "type-graphql";
 import { DATA_SOURCE } from "../../../db/data-source";
 import { TeamEventParticipation2021 } from "../../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { TepStats2021 } from "../../../db/entities/team-event-participation/TepStats2021";
@@ -6,31 +6,8 @@ import { EventTypes } from "./EventTypes";
 import { Event } from "../../../db/entities/Event";
 import { getRegionCodes, Region } from "../../../db/entities/types/Region";
 import { TeamEventParticipation } from "../../../graphql/objects/TeamEventParticipation";
-import { TepCondition, TepField, TepFilter, TepOrdering, TepValue } from "./TepObjects";
-
-@ObjectType()
-class TEP2021RecordRow {
-    @Field(() => TeamEventParticipation)
-    tep!: TeamEventParticipation;
-
-    @Field(() => Int)
-    rank!: number;
-
-    @Field(() => Int)
-    preFilterRank!: number;
-}
-
-@ObjectType()
-class TEP2021Records {
-    @Field(() => [TEP2021RecordRow])
-    teps!: TEP2021RecordRow[];
-
-    @Field(() => Int)
-    offset!: number;
-
-    @Field(() => Int)
-    count!: number;
-}
+import { TepCondition, TepField, TepOrdering, TepRecordRow, TepRecords, TepValue } from "./TepObjects";
+import { Brackets } from "typeorm";
 
 enum Tep2021Group {
     TOTAL,
@@ -178,11 +155,49 @@ class Tep2021Value extends TepValue(Tep2021Field) {}
 class Tep2021Condition extends TepCondition(Tep2021Value) {}
 
 @InputType()
-class Tep2021Filter extends TepFilter(Tep2021Condition) {}
+abstract class Tep2021Filter {
+    @Field(() => [Tep2021Filter], { nullable: true })
+    any!: Tep2021Filter[] | null;
 
+    @Field(() => [Tep2021Filter], { nullable: true })
+    all!: Tep2021Filter[] | null;
+
+    @Field(() => Tep2021Condition, { nullable: true })
+    condition!: Tep2021Condition | null;
+
+    toBrackets(): Brackets {
+        let any = this.any;
+        let all = this.all;
+        let condition = this.condition;
+
+        if (any != null && all == null && condition == null) {
+            return new Brackets((qb) => {
+                let query = qb;
+                for (let sub of any!) {
+                    query = query.orWhere(sub.toBrackets());
+                }
+                return query;
+            });
+        } else if (this.any == null && this.all != null && this.condition == null) {
+            return new Brackets((qb) => {
+                let query = qb;
+                for (let sub of all!) {
+                    query = query.andWhere(sub.toBrackets());
+                }
+                return query;
+            });
+        } else if (this.any == null && this.all == null && this.condition != null) {
+            return new Brackets((qb) => {
+                condition!.addSelfToQuery(qb);
+            });
+        } else {
+            throw "Invalid filter. Only one field may be set.";
+        }
+    }
+}
 @Resolver()
 export class SeasonRecords2021Resolver {
-    @Query(() => TEP2021Records)
+    @Query(() => TepRecords)
     async teamRecords2021(
         @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
         @Arg("region", () => Region) region: Region,
@@ -192,7 +207,7 @@ export class SeasonRecords2021Resolver {
         @Arg("filter", () => Tep2021Filter, { nullable: true }) filter: Tep2021Filter | null,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
-    ): Promise<TEP2021Records> {
+    ): Promise<TepRecords> {
         let limit = Math.min(takeIn, 50);
 
         let regionCodes = getRegionCodes(region);
@@ -268,7 +283,7 @@ export class SeasonRecords2021Resolver {
 
         let [{ entities, raw }, count] = await Promise.all([await query.getRawAndEntities(), await query.getCount()]);
 
-        let teps: TEP2021RecordRow[] = entities.map((e) => {
+        let teps: TepRecordRow[] = entities.map((e) => {
             let rawRow = raw.find((r) => r.tep_eventCode == e.eventCode && r.tep_teamNumber == e.teamNumber);
             return {
                 tep: new TeamEventParticipation(e),

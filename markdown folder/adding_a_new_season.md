@@ -20,3 +20,4 @@
 -   Update the `FullStats` Fragment
 -   Add an `EventStats{season}.svelte` file and connect it in in the `EventStats.svelte` file
 -   Make sure that all the scores are accurate. (Esp. check that opr is right)
+-   Make the backend request for season records.

@@ -1,5 +1,6 @@
-import { ClassType, InputType, Field, Float } from "type-graphql";
+import { ClassType, InputType, Field, Float, ObjectType, Int } from "type-graphql";
 import { Brackets, SelectQueryBuilder, WhereExpressionBuilder } from "typeorm";
+import { TeamEventParticipation } from "../../objects/TeamEventParticipation";
 import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { Order } from "./Order";
 
@@ -137,52 +138,26 @@ export function TepCondition<V extends TTepValue>(TepValue: ClassType<V>) {
     return TepCondition;
 }
 
-interface TCondition {
-    addSelfToQuery(query: WhereExpressionBuilder): WhereExpressionBuilder;
+@ObjectType()
+export class TepRecordRow {
+    @Field(() => TeamEventParticipation)
+    tep!: TeamEventParticipation;
+
+    @Field(() => Int)
+    rank!: number;
+
+    @Field(() => Int)
+    preFilterRank!: number;
 }
 
-export function TepFilter<C extends TCondition>(Condition: ClassType<C>) {
-    @InputType()
-    abstract class TepFilter {
-        @Field(() => [TepFilter], { nullable: true })
-        any!: TepFilter[] | null;
+@ObjectType()
+export class TepRecords {
+    @Field(() => [TepRecordRow])
+    teps!: TepRecordRow[];
 
-        @Field(() => [TepFilter], { nullable: true })
-        all!: TepFilter[] | null;
+    @Field(() => Int)
+    offset!: number;
 
-        @Field(() => Condition, { nullable: true })
-        condition!: C | null;
-
-        toBrackets(): Brackets {
-            let any = this.any;
-            let all = this.all;
-            let condition = this.condition;
-
-            if (any != null && all == null && condition == null) {
-                return new Brackets((qb) => {
-                    let query = qb;
-                    for (let sub of any!) {
-                        query = query.orWhere(sub.toBrackets());
-                    }
-                    return query;
-                });
-            } else if (this.any == null && this.all != null && this.condition == null) {
-                return new Brackets((qb) => {
-                    let query = qb;
-                    for (let sub of all!) {
-                        query = query.andWhere(sub.toBrackets());
-                    }
-                    return query;
-                });
-            } else if (this.any == null && this.all == null && this.condition != null) {
-                return new Brackets((qb) => {
-                    condition!.addSelfToQuery(qb);
-                });
-            } else {
-                throw "Invalid filter. Only one field may be set.";
-            }
-        }
-    }
-
-    return TepFilter;
+    @Field(() => Int)
+    count!: number;
 }
