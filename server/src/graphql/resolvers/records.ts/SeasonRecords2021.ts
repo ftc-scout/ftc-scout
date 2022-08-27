@@ -1,14 +1,12 @@
-import { Arg, Field, Float, InputType, Int, ObjectType, Query, registerEnumType, Resolver } from "type-graphql";
-import { Brackets, SelectQueryBuilder, WhereExpressionBuilder } from "typeorm";
+import { Arg, Field, InputType, Int, ObjectType, Query, registerEnumType, Resolver } from "type-graphql";
 import { DATA_SOURCE } from "../../../db/data-source";
 import { TeamEventParticipation2021 } from "../../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { TepStats2021 } from "../../../db/entities/team-event-participation/TepStats2021";
-import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { EventTypes } from "./EventTypes";
-import { Order } from "./Order";
 import { Event } from "../../../db/entities/Event";
 import { getRegionCodes, Region } from "../../../db/entities/types/Region";
 import { TeamEventParticipation } from "../../../graphql/objects/TeamEventParticipation";
+import { TepCondition, TepField, TepFilter, TepOrdering, TepValue } from "./TepObjects";
 
 @ObjectType()
 class TEP2021RecordRow {
@@ -34,7 +32,7 @@ class TEP2021Records {
     count!: number;
 }
 
-enum TEP2021Group {
+enum Tep2021Group {
     TOTAL,
     AVG,
     OPR,
@@ -43,20 +41,20 @@ enum TEP2021Group {
     DEV,
 }
 
-function getGroupName(group: TEP2021Group): string {
+function getGroupName(group: Tep2021Group): string {
     return {
-        [TEP2021Group.TOTAL]: "tot",
-        [TEP2021Group.AVG]: "avg",
-        [TEP2021Group.OPR]: "opr",
-        [TEP2021Group.MIN]: "min",
-        [TEP2021Group.MAX]: "max",
-        [TEP2021Group.DEV]: "dev",
+        [Tep2021Group.TOTAL]: "tot",
+        [Tep2021Group.AVG]: "avg",
+        [Tep2021Group.OPR]: "opr",
+        [Tep2021Group.MIN]: "min",
+        [Tep2021Group.MAX]: "max",
+        [Tep2021Group.DEV]: "dev",
     }[group];
 }
 
-registerEnumType(TEP2021Group, { name: "TEP2021Group" });
+registerEnumType(Tep2021Group, { name: "TEP2021Group" });
 
-enum TEP2021FieldName {
+enum Tep2021FieldName {
     AUTO_CAROUSEL_POINTS,
     AUTO_NAVIGATION_POINTS,
     AUTO_NAVIGATION_POINTS_INDIVIDUAL,
@@ -102,210 +100,85 @@ enum TEP2021FieldName {
     EVENT_NAME,
 }
 
-registerEnumType(TEP2021FieldName, { name: "TEP2021FieldName" });
+registerEnumType(Tep2021FieldName, { name: "TEP2021FieldName" });
 
-function getFieldNameSingular(fn: TEP2021FieldName, postfix: string): string | null {
-    let map: Partial<Record<TEP2021FieldName, keyof TeamEventParticipation2021 | `e.${keyof Event}` | string>> = {
-        [TEP2021FieldName.RP]: "rp",
-        [TEP2021FieldName.TB1]: "tb1",
-        [TEP2021FieldName.TB2]: "tb2",
-        [TEP2021FieldName.RANK]: "rank",
-        [TEP2021FieldName.WINS]: "wins",
-        [TEP2021FieldName.LOSSES]: "losses",
-        [TEP2021FieldName.TIES]: "ties",
-        [TEP2021FieldName.DQ]: "dq",
-        [TEP2021FieldName.QUAL_MATCHES_PLAYED]: "qualMatchesPlayed",
-        [TEP2021FieldName.TEAM_NUMBER]: "teamNumber",
-        [TEP2021FieldName.EVENT_NAME]: `e${postfix}"."name`,
+function getFieldNameSingular(fn: Tep2021FieldName, postfix: string): string | null {
+    let map: Partial<Record<Tep2021FieldName, keyof TeamEventParticipation2021 | `e.${keyof Event}` | string>> = {
+        [Tep2021FieldName.RP]: "rp",
+        [Tep2021FieldName.TB1]: "tb1",
+        [Tep2021FieldName.TB2]: "tb2",
+        [Tep2021FieldName.RANK]: "rank",
+        [Tep2021FieldName.WINS]: "wins",
+        [Tep2021FieldName.LOSSES]: "losses",
+        [Tep2021FieldName.TIES]: "ties",
+        [Tep2021FieldName.DQ]: "dq",
+        [Tep2021FieldName.QUAL_MATCHES_PLAYED]: "qualMatchesPlayed",
+        [Tep2021FieldName.TEAM_NUMBER]: "teamNumber",
+        [Tep2021FieldName.EVENT_NAME]: `e${postfix}"."name`,
     };
 
     return map[fn] ?? null;
 }
 
-function getFieldNameGroup(fn: TEP2021FieldName): string | null {
-    let map: Partial<Record<TEP2021FieldName, keyof TepStats2021>> = {
-        [TEP2021FieldName.AUTO_CAROUSEL_POINTS]: "autoCarouselPoints",
-        [TEP2021FieldName.AUTO_NAVIGATION_POINTS]: "autoNavigationPoints",
-        [TEP2021FieldName.AUTO_NAVIGATION_POINTS_INDIVIDUAL]: "autoNavigationPointsIndividual",
-        [TEP2021FieldName.AUTO_FREIGHT_POINTS]: "autoFreightPoints",
-        [TEP2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_1]: "autoFreightPointsLevel1",
-        [TEP2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_2]: "autoFreightPointsLevel2",
-        [TEP2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_3]: "autoFreightPointsLevel3",
-        [TEP2021FieldName.AUTO_FREIGHT_POINTS_STORAGE]: "autoFreightPointsStorage",
-        [TEP2021FieldName.AUTO_BONUS_POINTS]: "autoBonusPoints",
-        [TEP2021FieldName.AUTO_BONUS_POINTS_INDIVIDUAL]: "autoBonusPointsIndividual",
-        [TEP2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS]: "driverControlledAllianceHubPoints",
-        [TEP2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_1]: "driverControlledAllianceHubPointsLevel1",
-        [TEP2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_2]: "driverControlledAllianceHubPointsLevel2",
-        [TEP2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_3]: "driverControlledAllianceHubPointsLevel3",
-        [TEP2021FieldName.DRIVER_CONTROLLED_SHARED_HUB_POINTS]: "driverControlledSharedHubPoints",
-        [TEP2021FieldName.DRIVER_CONTROLLED_STORAGE_POINTS]: "driverControlledStoragePoints",
-        [TEP2021FieldName.ENDGAME_DELIVERY_POINTS]: "endgameDeliveryPoints",
-        [TEP2021FieldName.ALLIANCE_BALANCED_POINTS]: "allianceBalancedPoints",
-        [TEP2021FieldName.SHARED_UNBALANCED_POINTS]: "sharedUnbalancedPoints",
-        [TEP2021FieldName.ENDGAME_PARKING_POINTS]: "endgameParkingPoints",
-        [TEP2021FieldName.ENDGAME_PARKING_POINTS_INDIVIDUAL]: "endgameParkingPoints",
-        [TEP2021FieldName.CAPPING_POINTS]: "cappingPoints",
-        [TEP2021FieldName.MAJOR_PENALTY_POINTS]: "majorPenaltyPoints",
-        [TEP2021FieldName.MINOR_PENALTY_POINTS]: "minorPenaltyPoints",
-        [TEP2021FieldName.AUTO_POINTS]: "autoPoints",
-        [TEP2021FieldName.DRIVER_CONTROLLED_POINTS]: "driverControlledPoints",
-        [TEP2021FieldName.ENDGAME_POINTS]: "endgamePoints",
-        [TEP2021FieldName.PENALTY_POINTS]: "penaltyPoints",
-        [TEP2021FieldName.TOTAL_POINTS]: "totalPoints",
-        [TEP2021FieldName.TOTAL_POINTS_NP]: "totalPointsNp",
+function getFieldNameGroup(fn: Tep2021FieldName): string | null {
+    let map: Partial<Record<Tep2021FieldName, keyof TepStats2021>> = {
+        [Tep2021FieldName.AUTO_CAROUSEL_POINTS]: "autoCarouselPoints",
+        [Tep2021FieldName.AUTO_NAVIGATION_POINTS]: "autoNavigationPoints",
+        [Tep2021FieldName.AUTO_NAVIGATION_POINTS_INDIVIDUAL]: "autoNavigationPointsIndividual",
+        [Tep2021FieldName.AUTO_FREIGHT_POINTS]: "autoFreightPoints",
+        [Tep2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_1]: "autoFreightPointsLevel1",
+        [Tep2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_2]: "autoFreightPointsLevel2",
+        [Tep2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_3]: "autoFreightPointsLevel3",
+        [Tep2021FieldName.AUTO_FREIGHT_POINTS_STORAGE]: "autoFreightPointsStorage",
+        [Tep2021FieldName.AUTO_BONUS_POINTS]: "autoBonusPoints",
+        [Tep2021FieldName.AUTO_BONUS_POINTS_INDIVIDUAL]: "autoBonusPointsIndividual",
+        [Tep2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS]: "driverControlledAllianceHubPoints",
+        [Tep2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_1]: "driverControlledAllianceHubPointsLevel1",
+        [Tep2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_2]: "driverControlledAllianceHubPointsLevel2",
+        [Tep2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_3]: "driverControlledAllianceHubPointsLevel3",
+        [Tep2021FieldName.DRIVER_CONTROLLED_SHARED_HUB_POINTS]: "driverControlledSharedHubPoints",
+        [Tep2021FieldName.DRIVER_CONTROLLED_STORAGE_POINTS]: "driverControlledStoragePoints",
+        [Tep2021FieldName.ENDGAME_DELIVERY_POINTS]: "endgameDeliveryPoints",
+        [Tep2021FieldName.ALLIANCE_BALANCED_POINTS]: "allianceBalancedPoints",
+        [Tep2021FieldName.SHARED_UNBALANCED_POINTS]: "sharedUnbalancedPoints",
+        [Tep2021FieldName.ENDGAME_PARKING_POINTS]: "endgameParkingPoints",
+        [Tep2021FieldName.ENDGAME_PARKING_POINTS_INDIVIDUAL]: "endgameParkingPoints",
+        [Tep2021FieldName.CAPPING_POINTS]: "cappingPoints",
+        [Tep2021FieldName.MAJOR_PENALTY_POINTS]: "majorPenaltyPoints",
+        [Tep2021FieldName.MINOR_PENALTY_POINTS]: "minorPenaltyPoints",
+        [Tep2021FieldName.AUTO_POINTS]: "autoPoints",
+        [Tep2021FieldName.DRIVER_CONTROLLED_POINTS]: "driverControlledPoints",
+        [Tep2021FieldName.ENDGAME_POINTS]: "endgamePoints",
+        [Tep2021FieldName.PENALTY_POINTS]: "penaltyPoints",
+        [Tep2021FieldName.TOTAL_POINTS]: "totalPoints",
+        [Tep2021FieldName.TOTAL_POINTS_NP]: "totalPointsNp",
     };
 
     return map[fn] ?? null;
 }
 
-registerEnumType(TEP2021FieldName, { name: "TEP2021FieldName" });
-
-function capitalizeFirstLetter(string: string): string {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
+registerEnumType(Tep2021FieldName, { name: "TEP2021FieldName" });
 
 @InputType()
-class TEP2021Field {
-    @Field(() => TEP2021Group, { nullable: true })
-    group!: TEP2021Group | null;
-
-    @Field(() => TEP2021FieldName)
-    fieldName!: TEP2021FieldName;
-
-    toSqlName(postfix: string): string | null {
-        if (this.group != null) {
-            let groupName = getGroupName(this.group);
-            let fieldName = getFieldNameGroup(this.fieldName);
-
-            if (!groupName || !fieldName) return null;
-
-            return groupName + capitalizeFirstLetter(fieldName.toLowerCase());
-        } else {
-            return getFieldNameSingular(this.fieldName, postfix);
-        }
-    }
-}
+class Tep2021Field extends TepField(
+    Tep2021Group,
+    Tep2021FieldName,
+    getGroupName,
+    getFieldNameGroup,
+    getFieldNameSingular
+) {}
 
 @InputType()
-class TEP2021Ordering {
-    @Field(() => TEP2021Field)
-    field!: TEP2021Field;
-
-    @Field(() => Order)
-    order!: Order;
-
-    addSelfToQuery(
-        query: SelectQueryBuilder<TeamEventParticipation2021>
-    ): SelectQueryBuilder<TeamEventParticipation2021> {
-        let direction: "ASC" | "DESC" = this.order == Order.ASC ? "ASC" : "DESC";
-        let sqlName = this.field.toSqlName("");
-
-        if (!sqlName) return query;
-
-        if (sqlName.includes(".")) {
-            return query.addOrderBy('"' + sqlName + '"', direction);
-        } else {
-            return query.addOrderBy(`tep.${sqlName}`, direction);
-        }
-    }
-
-    toRawSql(postfix: string): string | null {
-        let direction: "ASC" | "DESC" = this.order == Order.ASC ? "ASC" : "DESC";
-        let sqlName = this.field.toSqlName(postfix);
-
-        if (!sqlName) return null;
-
-        if (sqlName.includes(".")) {
-            return '"' + sqlName + '" ' + direction;
-        } else {
-            return `tep${postfix}.\"${sqlName}\" ${direction}`;
-        }
-    }
-}
+class Tep2021Ordering extends TepOrdering<Tep2021Field, TeamEventParticipation2021>(Tep2021Field) {}
 
 @InputType()
-class TEP2021Value {
-    @Field(() => Float, { nullable: true })
-    value!: number | null;
-
-    @Field(() => TEP2021Field, { nullable: true })
-    field!: TEP2021Field | null;
-
-    isInvalid(): boolean {
-        return this.value == null && this.field == null;
-    }
-
-    toSql(prefix: string): string {
-        if (this.value != null) {
-            return "" + this.value;
-        } else {
-            return `${prefix}${this.field!.toSqlName("")}`;
-        }
-    }
-}
+class Tep2021Value extends TepValue(Tep2021Field) {}
 
 @InputType()
-class TEP2021Condition {
-    @Field(() => TEP2021Value)
-    lhs!: TEP2021Value;
-
-    @Field(() => CompareOperator)
-    compareOperator!: CompareOperator;
-
-    @Field(() => TEP2021Value)
-    rhs!: TEP2021Value;
-
-    addSelfToQuery(query: WhereExpressionBuilder): WhereExpressionBuilder {
-        if (this.lhs.isInvalid() || this.rhs.isInvalid()) return query;
-
-        return query.andWhere(
-            `${this.lhs.toSql("tep.")} ${compareOpToSql(this.compareOperator)} ${this.rhs.toSql("tep.")}`
-        );
-    }
-}
+class Tep2021Condition extends TepCondition(Tep2021Value) {}
 
 @InputType()
-class TEP2021Filter {
-    @Field(() => [TEP2021Filter], { nullable: true })
-    any!: TEP2021Filter[] | null;
-
-    @Field(() => [TEP2021Filter], { nullable: true })
-    all!: TEP2021Filter[] | null;
-
-    @Field(() => TEP2021Condition, { nullable: true })
-    condition!: TEP2021Condition | null;
-
-    toBrackets(): Brackets {
-        let any = this.any;
-        let all = this.all;
-        let condition = this.condition;
-
-        if (any != null && all == null && condition == null) {
-            return new Brackets((qb) => {
-                let query = qb;
-                for (let sub of any!) {
-                    query = query.orWhere(sub.toBrackets());
-                }
-                return query;
-            });
-        } else if (this.any == null && this.all != null && this.condition == null) {
-            return new Brackets((qb) => {
-                let query = qb;
-                for (let sub of all!) {
-                    query = query.andWhere(sub.toBrackets());
-                }
-                return query;
-            });
-        } else if (this.any == null && this.all == null && this.condition != null) {
-            return new Brackets((qb) => {
-                condition!.addSelfToQuery(qb);
-            });
-        } else {
-            throw "Invalid filter. Only one field may be set.";
-        }
-    }
-}
+class Tep2021Filter extends TepFilter(Tep2021Condition) {}
 
 @Resolver()
 export class SeasonRecords2021Resolver {
@@ -315,8 +188,8 @@ export class SeasonRecords2021Resolver {
         @Arg("region", () => Region) region: Region,
         @Arg("start", () => Date, { nullable: true }) start: Date | null,
         @Arg("end", () => Date, { nullable: true }) end: Date | null,
-        @Arg("order", () => [TEP2021Ordering]) orderIn: TEP2021Ordering[],
-        @Arg("filter", () => TEP2021Filter, { nullable: true }) filter: TEP2021Filter | null,
+        @Arg("order", () => [Tep2021Ordering]) orderIn: Tep2021Ordering[],
+        @Arg("filter", () => Tep2021Filter, { nullable: true }) filter: Tep2021Filter | null,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<TEP2021Records> {
