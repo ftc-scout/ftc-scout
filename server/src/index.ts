@@ -9,7 +9,7 @@ import { ApolloServer } from "apollo-server-express";
 import cors from "cors";
 import express from "express";
 import { buildSchema } from "type-graphql";
-import { SERVER_PORT, IS_DEV, WEB_ORIGIN } from "./constants";
+import { SERVER_PORT, IS_DEV } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
 import { DATA_SOURCE } from "./db/data-source";
 import { GraphQLContext } from "./graphql/Context";
@@ -29,7 +29,7 @@ async function main() {
     // Allow requests from our webpage.
     app.use(
         cors({
-            origin: WEB_ORIGIN,
+            origin: "*",
             credentials: true,
         })
     );
