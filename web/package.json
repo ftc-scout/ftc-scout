@@ -13,7 +13,8 @@
         "lint": "prettier --check --plugin-search-dir=. .",
         "format": "prettier --write --plugin-search-dir=. .",
         "gen": "graphql-codegen",
-        "pretty": "prettier --write ."
+        "pretty": "prettier --write .",
+        "start": "node build/index.js"
     },
     "devDependencies": {
         "@graphql-codegen/cli": "^2.6.2",
@@ -22,6 +23,7 @@
         "@graphql-codegen/typescript-operations": "^2.4.0",
         "@graphql-typed-document-node/core": "^3.1.1",
         "@sveltejs/adapter-auto": "next",
+        "@sveltejs/adapter-node": "next",
         "@sveltejs/kit": "next",
         "prettier": "2.6.2",
         "prettier-plugin-svelte": "2.7.0",
