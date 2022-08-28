@@ -14,7 +14,9 @@
     import TeamSeasonRecords2021, {
         team2021SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
-    import TeamSeasonRecords2019 from "../../../../lib/components/season-records/TeamSeasonRecords2019.svelte";
+    import TeamSeasonRecords2019, {
+        team2019SearchParams,
+    } from "../../../../lib/components/season-records/TeamSeasonRecords2019.svelte";
     import SkeletonRow from "../../../../lib/components/skeleton/SkeletonRow.svelte";
     import TabbedCard from "../../../../lib/components/tabs/TabbedCard.svelte";
     import TabContent from "../../../../lib/components/tabs/TabContent.svelte";
@@ -39,9 +41,22 @@
         }
     });
 
+    function getSearchParams(name: string, season: 2021 | 2019): string | null {
+        if (name.toLocaleLowerCase() == "teams") {
+            switch (season) {
+                case 2021:
+                    return team2021SearchParams;
+                case 2019:
+                    return team2019SearchParams;
+            }
+        } else {
+            return null;
+        }
+    }
+
     function gotoSubPage(season: 2021 | 2019, name: string) {
         if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
-            let searchParams = name.toLowerCase() == "teams" ? team2021SearchParams : null;
+            let searchParams = getSearchParams(name, season);
             goto(`/records/${season}/${name.toLowerCase()}${searchParams ? "?" + searchParams : ""}`, {
                 replaceState: true,
             });
