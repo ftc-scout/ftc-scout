@@ -9,6 +9,8 @@ import { DateTime } from "luxon";
 import { TeamEventParticipation } from "../objects/TeamEventParticipation";
 import { TeamEventParticipation2021 } from "../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
+import { DATA_SOURCE } from "../../db/data-source";
+import { Brackets } from "typeorm";
 
 @Resolver(Event)
 export class EventResolver {
@@ -101,5 +103,25 @@ export class EventResolver {
         let eventStart = DateTime.fromSQL(event.start as string, { zone: event.timezone ?? undefined });
         let now = DateTime.now();
         return now > eventStart;
+    }
+
+    // TODO make a batch loader
+    @FieldResolver(() => [Event])
+    async relatedEvents(@Root() event: Event): Promise<Event[]> {
+        return DATA_SOURCE.getRepository(Event)
+            .createQueryBuilder("e")
+            .where("e.season = :season", { season: event.season })
+            .andWhere("e.code <> :code4", { code4: event.code })
+            .andWhere(
+                new Brackets((qb) => {
+                    if (event.divisionCode) {
+                        qb = qb.orWhere("e.code = :code1", { code1: event.divisionCode });
+                        qb = qb.orWhere('e."divisionCode" = :code2', { code2: event.divisionCode });
+                    }
+                    qb = qb.orWhere('e."divisionCode" = :code3', { code3: event.code });
+                    return qb;
+                })
+            )
+            .getMany();
     }
 }
