@@ -12,7 +12,7 @@
     {#if !store}
         <Skeleton />
     {:else if doesNotExist}
-        doesn't exist
+        <slot name="error" />
     {:else}
         <slot />
     {/if}

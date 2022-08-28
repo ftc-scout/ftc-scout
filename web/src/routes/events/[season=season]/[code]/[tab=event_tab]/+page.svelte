@@ -28,6 +28,7 @@
     } from "../../../../../lib/icons";
     import type { Readable } from "svelte/store";
     import EventStats from "../../../../../lib/components/event-stats/EventStats.svelte";
+    import ErrorPage from "../../../../../lib/components/ErrorPage.svelte";
 
     export let data: PageData;
     let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
@@ -81,6 +82,10 @@
 </svelte:head>
 
 <Loading store={$event} width={"1250px"} doesNotExist={!eventData}>
+    <ErrorPage slot="error" status={404} message="No event with code {$page.params.code}">
+        (Try searching for events on <a href="/events">the events page</a>)
+    </ErrorPage>
+
     <Card>
         <h1>{new Date(eventData.start).getFullYear()} {eventData.name}</h1>
 

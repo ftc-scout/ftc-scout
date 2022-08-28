@@ -24,6 +24,8 @@
         WEBSITE_ICON,
         OPR_ICON,
     } from "../../../lib/icons";
+    import ErrorPage from "../../../lib/components/ErrorPage.svelte";
+    import { page } from "$app/stores";
 
     export let data: PageData;
     let team: Readable<ApolloQueryResult<TeamQuery> | null>;
@@ -31,7 +33,7 @@
 
     $: teamData = $team?.data?.teamByNumber!;
 
-    $: sortedEvents = $team
+    $: sortedEvents = teamData
         ? [...teamData.events].sort(
               (a, b) => new Date(b.event.start as string).getTime() - new Date(a.event.start as string).getTime()
           )!
@@ -53,6 +55,10 @@
 </svelte:head>
 
 <Loading store={$team} width={"1000px"} doesNotExist={!teamData}>
+    <ErrorPage slot="error" status={404} message="No team with number {$page.params.number}">
+        (Try searching for teams on <a href="/teams">the teams page</a>)
+    </ErrorPage>
+
     <Card>
         <h1>{teamData.number} - {teamData.name}</h1>
 
