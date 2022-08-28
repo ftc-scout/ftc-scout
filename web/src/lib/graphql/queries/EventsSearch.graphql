@@ -1,0 +1,36 @@
+query EventsSearch(
+    $season: Int!
+    $eventTypes: EventTypes!
+    $region: Region!
+    $start: DateTime
+    $end: DateTime
+    $limit: Int!
+    $onlyWithMatches: Boolean!
+) {
+    eventsSearch(
+        season: $season
+        eventTypes: $eventTypes
+        region: $region
+        start: $start
+        end: $end
+        onlyWithMatches: $onlyWithMatches
+        limit: $limit
+    ) {
+        season
+        code
+        name
+        start
+        end
+        hasStarted
+        venue
+        city
+        stateOrProvince
+        country
+        matches {
+            season
+            eventCode
+            id
+            hasBeenPlayed
+        }
+    }
+}

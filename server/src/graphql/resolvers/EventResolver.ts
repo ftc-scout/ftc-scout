@@ -11,6 +11,8 @@ import { TeamEventParticipation2021 } from "../../db/entities/team-event-partici
 import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
 import { DATA_SOURCE } from "../../db/data-source";
 import { Brackets } from "typeorm";
+import { EventTypes } from "./records.ts/EventTypes";
+import { getRegionCodes, Region } from "../../db/entities/types/Region";
 
 @Resolver(Event)
 export class EventResolver {
@@ -23,6 +25,44 @@ export class EventResolver {
             season,
             code,
         });
+    }
+
+    @Query(() => [Event])
+    eventsSearch(
+        @Arg("season", () => Int) season: number,
+        @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
+        @Arg("region", () => Region) region: Region,
+        @Arg("start", () => Date, { nullable: true }) start: Date | null,
+        @Arg("end", () => Date, { nullable: true }) end: Date | null,
+        @Arg("onlyWithMatches", () => Boolean) onlyWithMatches: boolean,
+        @Arg("limit", () => Int) limit: number
+    ): Promise<Event[]> {
+        let query = DATA_SOURCE.getRepository(Event)
+            .createQueryBuilder("e")
+            .where("e.season = :season", { season })
+            .orderBy("e.start", "ASC")
+            .addOrderBy("e.name", "DESC")
+            .limit(limit);
+
+        let regionCodes = getRegionCodes(region);
+        query.andWhere('e."regionCode" IN (:...regionCodes)', { regionCodes });
+
+        if (eventTypes == EventTypes.REMOTE) {
+            query = query.andWhere("e.remote");
+        } else if (eventTypes == EventTypes.TRAD) {
+            query = query.andWhere("NOT e.remote");
+        }
+
+        if (start) query = query.andWhere("e.end >= :start", { start });
+        if (end) query = query.andWhere("e.end <= :end", { end });
+
+        if (onlyWithMatches) {
+            query.andWhere(
+                'EXISTS (SELECT * FROM match WHERE "hasBeenPlayed" AND season = :season AND "eventCode" = e.code)'
+            );
+        }
+
+        return query.getMany();
     }
 
     @FieldResolver(() => [TeamMatchParticipation])
