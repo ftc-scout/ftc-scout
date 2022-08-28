@@ -38,6 +38,19 @@ query Team($number: Int!, $season: Int!) {
                         totalPoints
                     }
                 }
+                ... on TeamEventStats2019 {
+                    rank
+                    wins
+                    losses
+                    ties
+                    rp2019: rp
+                    opr {
+                        totalPoints
+                    }
+                    average {
+                        totalPoints
+                    }
+                }
             }
             awards {
                 season

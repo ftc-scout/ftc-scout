@@ -1,10 +1,11 @@
 import {
     CompareOperator,
     type Tep2019Filter,
+    type Tep2019Value,
     type Tep2021Filter,
     type Tep2021Value,
 } from "$lib/graphql/generated/graphql-operations";
-import type { Stat, StatData } from "./Stat";
+import { distillStatRead, type Stat, type StatData } from "./Stat";
 import { findInStatSet, type StatSet } from "./StatSet";
 
 let filterId = 0;
@@ -84,11 +85,7 @@ function read<T>(data: StatData<T>, val: Stat<T> | number): number | string {
         return val;
     } else {
         let read = val.read(data);
-        if (typeof read == "number" || typeof read == "string") {
-            return read;
-        } else {
-            return "number" in read ? read.number : read.name;
-        }
+        return distillStatRead(read);
     }
 }
 
@@ -213,7 +210,7 @@ export function isEmpty(filter: Filter<unknown>): boolean {
     return (filter.type == "ALL" || filter.type == "ANY") && filter.conditions.length == 0;
 }
 
-function sideToValue<T>(side: Stat<T> | number | null): Tep2021Value | null {
+function sideToValue<T>(side: Stat<T> | number | null): Tep2021Value | Tep2019Value | null {
     if (side == null) {
         return null;
     } else if (typeof side == "number") {
@@ -222,7 +219,7 @@ function sideToValue<T>(side: Stat<T> | number | null): Tep2021Value | null {
         };
     } else {
         return {
-            field: side.apiField,
+            field: side.apiField as any,
         };
     }
 }
@@ -251,9 +248,9 @@ export function filterToApiFilter<T>(filter: Filter<T>): Tep2021Filter | Tep2019
         } else {
             return {
                 condition: {
-                    lhs,
+                    lhs: lhs as any,
                     compareOperator: statFilterTypeToApi(filter.operator),
-                    rhs,
+                    rhs: rhs as any,
                 },
             };
         }

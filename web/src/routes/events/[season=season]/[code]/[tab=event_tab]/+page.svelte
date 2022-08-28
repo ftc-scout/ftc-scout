@@ -50,7 +50,8 @@
     let selectedTeam: number | null = null;
     let selectedTeamStats: {
         rank: number;
-        rp: number;
+        rp?: number;
+        rp2019?: number;
         wins?: number;
         losses?: number;
         ties?: number;

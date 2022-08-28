@@ -75,7 +75,7 @@ export const load: PageLoad = async ({ fetch, params, url }) => {
 
             let order: Tep2021Ordering[] = [
                 {
-                    field: DEFAULT_SORT_TEAM_2021.stat.apiField,
+                    field: DEFAULT_SORT_TEAM_2021.stat.apiField as Tep2021Field,
                     order: DEFAULT_SORT_TEAM_2021.type == SortType.HIGH_LOW ? Order.Desc : Order.Asc,
                 },
             ];
@@ -133,7 +133,7 @@ export const load: PageLoad = async ({ fetch, params, url }) => {
 
             let order: Tep2019Ordering[] = [
                 {
-                    field: DEFAULT_SORT_TEAM_2019.stat.apiField,
+                    field: DEFAULT_SORT_TEAM_2019.stat.apiField as Tep2019Field,
                     order: DEFAULT_SORT_TEAM_2019.type == SortType.HIGH_LOW ? Order.Desc : Order.Asc,
                 },
             ];

@@ -29,7 +29,7 @@
         {:else if matchScores.scores?.__typename == "MatchScores2021Remote"}
             <ScoreRemote2021 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />
         {:else if matchScores.scores?.__typename == "MatchScores2019"}
-            <Scores2019 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />
+            <Scores2019 score={matchScores.scores} />
         {/if}
     </Modal>
 {/if}

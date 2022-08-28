@@ -46,6 +46,10 @@
         .map((x) => x!);
     $: maxOpr = oprs.length == 0 ? null : Math.max(...oprs);
     $: maxOprEvent = maxOpr != null ? sortedEvents.find((e) => e.stats?.opr?.totalPoints == maxOpr)?.eventCode : null;
+
+    function getRp(tep: any): number | null {
+        return tep.stats.rp ?? tep.stats.rp2019 ?? null;
+    }
 </script>
 
 <svelte:head>
@@ -129,17 +133,18 @@
                 </InfoIconRow>
             {/if}
 
-            {@const rp = typeof teamEvent.stats?.rp == "number"}
-            {@const opr = typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
-            {@const avg = typeof teamEvent.stats?.average?.totalPoints == "number"}
+            {@const rp = getRp(teamEvent)}
+            {@const hasRp = typeof rp == "number"}
+            {@const hasOpr = typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
+            {@const hasAvg = typeof teamEvent.stats?.average?.totalPoints == "number"}
 
-            {#if rp || opr || avg}
+            {#if hasRp || hasOpr || hasAvg}
                 <InfoIconRow icon={null}>
-                    {#if typeof teamEvent.stats?.rp == "number"}
-                        <b>{teamEvent.stats.rp}</b> RP{opr || avg ? " · " : ""}
+                    {#if typeof rp == "number"}
+                        <b>{rp}</b> RP{hasOpr || hasAvg ? " · " : ""}
                     {/if}
                     {#if typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
-                        <b>{prettyPrintFloat(teamEvent.stats?.opr?.totalPoints)}</b> OPR{avg ? " · " : ""}
+                        <b>{prettyPrintFloat(teamEvent.stats?.opr?.totalPoints)}</b> OPR{hasAvg ? " · " : ""}
                     {/if}
                     {#if typeof teamEvent.stats?.average?.totalPoints == "number"}
                         <b>{prettyPrintFloat(teamEvent.stats?.average?.totalPoints)}</b> AVG

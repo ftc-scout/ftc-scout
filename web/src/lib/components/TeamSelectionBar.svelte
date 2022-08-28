@@ -8,7 +8,8 @@
 
     export let tep: {
         rank: number;
-        rp: number;
+        rp?: number;
+        rp2019?: number;
         wins?: number;
         losses?: number;
         ties?: number;
@@ -26,8 +27,10 @@
     $: url = eventCode ? `/teams/${number}#${eventCode}` : `/teams/${number}`;
     $: prefetch(url);
 
+    $: rp = tep?.rp ?? tep?.rp2019 ?? null;
+
     $: showWLT = typeof tep?.wins == "number" && typeof tep?.losses == "number" && typeof tep?.ties == "number";
-    $: showRp = typeof tep?.rp == "number";
+    $: showRp = typeof rp == "number";
     $: showOpr = typeof tep?.opr == "number";
     $: showAvg = typeof tep?.average?.totalPoints == "number";
 
@@ -53,8 +56,8 @@
                 <b>{tep.wins}-{tep.losses}-{tep.ties}</b> W-L-T
                 {wltDot ? "·" : ""}
             {/if}
-            {#if typeof tep.rp == "number"}
-                <b>{tep.rp}</b> RP
+            {#if typeof rp == "number"}
+                <b>{rp}</b> RP
                 {rpDot ? "·" : ""}
             {/if}
             {#if typeof tep.opr == "number"}

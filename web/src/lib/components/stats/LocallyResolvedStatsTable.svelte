@@ -5,7 +5,6 @@
     import type { Writable } from "svelte/store";
     import StatsTable, { type ChosenSort, type StatData } from "./StatsTable.svelte";
     import { emptyFilter, filterStatDataList, type Filter } from "../../util/stats/filter";
-    import StatData from "./StatData.svelte";
 
     type T = $$Generic;
 
