@@ -17,12 +17,6 @@ export const WEB_ORIGIN = process.env.WEB_URL;
 
 export const DATABASE_URL = process.env.DATABASE_URL;
 
-export const COOKIE_NAME = "ftc-scout-cookie";
-export const COOKIE_AGE = YEAR_MS * 10;
-export const SESSION_SECRET = process.env.SESSION_SECRET;
-
-export const REDIS_URL = process.env.REDIS_URL;
-
 export const FTC_API_KEY = process.env.FTC_API_KEY;
 
 export const CURRENT_SEASON: Season = 2021;
