@@ -7,10 +7,8 @@ import { SeasonRecords2021Resolver } from "./records.ts/SeasonRecords2021";
 import { SearchResolver } from "./SearchResolver";
 import { TeamEventParticipationResolver } from "./TeamEventParticipationResolver";
 import { TeamResolver } from "./TeamResolver";
-import { UserResolver } from "./UserResolver";
 
 export const resolvers: NonEmptyArray<Function> = [
-    UserResolver,
     TeamResolver,
     MatchResolver,
     EventResolver,

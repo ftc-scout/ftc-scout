@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { CURRENT_SEASON } from "$lib/constants";
+    import { CURRENT_SEASON, EMAIL } from "$lib/constants";
 
     import {
         ABOUT_ICON,
@@ -11,6 +11,8 @@
         SEASON_RECORDS_ICON,
         TEAMS_ICON,
     } from "$lib/icons";
+    import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
+    import { faGithub } from "@fortawesome/free-brands-svg-icons";
     import Fa from "svelte-fa";
     import { sidebarOpen } from "./sidebar";
     import SidebarItem from "./SidebarItem.svelte";
@@ -33,6 +35,11 @@
 
 <SidebarItem icon={ABOUT_ICON} href="/about">About</SidebarItem>
 <SidebarItem icon={API_ICON} href="/api">API</SidebarItem>
+
+<hr />
+
+<SidebarItem icon={faGithub} href="https://github.com/16321-X-Drive/ftc-scout">Github</SidebarItem>
+<SidebarItem icon={faEnvelope} href="mailto:{EMAIL}">Email</SidebarItem>
 
 <style>
     b {

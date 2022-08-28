@@ -36,6 +36,7 @@
     "dependencies": {
         "@apollo/client": "^3.6.9",
         "@fontsource/inter": "^4.5.11",
+        "@fortawesome/free-brands-svg-icons": "^6.1.2",
         "@fortawesome/free-solid-svg-icons": "^6.1.1",
         "@graphql-codegen/introspection": "^2.1.1",
         "export-to-csv": "^0.2.1",

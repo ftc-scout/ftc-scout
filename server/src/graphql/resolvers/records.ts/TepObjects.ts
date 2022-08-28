@@ -1,5 +1,5 @@
 import { ClassType, InputType, Field, Float, ObjectType, Int } from "type-graphql";
-import { Brackets, SelectQueryBuilder, WhereExpressionBuilder } from "typeorm";
+import { SelectQueryBuilder, WhereExpressionBuilder } from "typeorm";
 import { TeamEventParticipation } from "../../objects/TeamEventParticipation";
 import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { Order } from "./Order";
