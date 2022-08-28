@@ -1,4 +1,11 @@
-import type { Tep2021Field, Tep2021FieldName, Tep2021Group } from "$lib/graphql/generated/graphql-operations";
+import type {
+    Tep2019Field,
+    Tep2019FieldName,
+    Tep2019Group,
+    Tep2021Field,
+    Tep2021FieldName,
+    Tep2021Group,
+} from "$lib/graphql/generated/graphql-operations";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
 
@@ -22,7 +29,7 @@ export interface Stat<T> {
         | { name: string; start: string; end: string; code: string; season: number }
         | { wins: number; losses: number; ties: number }
         | string;
-    apiField: Tep2021Field;
+    apiField: Tep2021Field | Tep2019Field;
 }
 
 export const RANK_STAT: Stat<any> = {
@@ -75,8 +82,8 @@ export function makeStat<T>(
     listName: string,
     columnName: string,
     identifierName: string,
-    apiFieldName: Tep2021FieldName,
-    apiGroupName: Tep2021Group | null = null,
+    apiFieldName: Tep2021FieldName | Tep2019FieldName,
+    apiGroupName: Tep2021Group | Tep2019Group | null = null,
     color: StatColor = StatColor.PURPLE,
     displayType: StatDisplayType = StatDisplayType.INTEGER
 ): Stat<T> {
@@ -90,7 +97,7 @@ export function makeStat<T>(
         apiField: {
             fieldName: apiFieldName,
             group: apiGroupName,
-        },
+        } as Tep2021Field | Tep2019Field,
     };
 }
 

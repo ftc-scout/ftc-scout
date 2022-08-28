@@ -1,4 +1,9 @@
-import { CompareOperator, type Tep2021Filter, type Tep2021Value } from "$lib/graphql/generated/graphql-operations";
+import {
+    CompareOperator,
+    type Tep2019Filter,
+    type Tep2021Filter,
+    type Tep2021Value,
+} from "$lib/graphql/generated/graphql-operations";
 import type { Stat, StatData } from "./Stat";
 import { findInStatSet, type StatSet } from "./StatSet";
 
@@ -222,14 +227,14 @@ function sideToValue<T>(side: Stat<T> | number | null): Tep2021Value | null {
     }
 }
 
-export function filterToApiFilter<T>(filter: Filter<T>): Tep2021Filter {
+export function filterToApiFilter<T>(filter: Filter<T>): Tep2021Filter | Tep2019Filter {
     if (filter.type == "ALL") {
         return {
-            all: filter.conditions.map(filterToApiFilter),
+            all: filter.conditions.map(filterToApiFilter) as any,
         };
     } else if (filter.type == "ANY") {
         return {
-            any: filter.conditions.map(filterToApiFilter),
+            any: filter.conditions.map(filterToApiFilter) as any,
         };
     } else if (filter.type == "compare") {
         let lhs = sideToValue(filter.lhs);

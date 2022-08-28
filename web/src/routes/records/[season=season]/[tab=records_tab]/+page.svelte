@@ -14,6 +14,7 @@
     import TeamSeasonRecords2021, {
         team2021SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
+    import TeamSeasonRecords2019 from "../../../../lib/components/season-records/TeamSeasonRecords2019.svelte";
     import SkeletonRow from "../../../../lib/components/skeleton/SkeletonRow.svelte";
     import TabbedCard from "../../../../lib/components/tabs/TabbedCard.svelte";
     import TabContent from "../../../../lib/components/tabs/TabContent.svelte";
@@ -21,6 +22,7 @@
     import {
         EventTypes,
         Region,
+        type TeamSeasonRecords2019Query,
         type TeamSeasonRecords2021Query,
     } from "../../../../lib/graphql/generated/graphql-operations";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
@@ -28,6 +30,8 @@
     import type { FullTep2021Remote } from "../../../../lib/util/stats/StatsRemote2021";
     import type { FullTep2021Traditional } from "../../../../lib/util/stats/StatsTrad2021";
     import { eventTypesFromStr, eventTypesToStr, readDateFromUrl } from "./+page";
+    import { CURRENT_SEASON } from "../../../../lib/constants";
+    import type { FullTep2019 } from "../../../../lib/util/stats/Stats2019";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -35,27 +39,31 @@
         }
     });
 
-    function gotoSubPage(name: string) {
+    function gotoSubPage(season: 2021 | 2019, name: string) {
         if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
             let searchParams = name.toLowerCase() == "teams" ? team2021SearchParams : null;
-            goto(`/records/${$page.params.season}/${name.toLowerCase()}${searchParams ? "?" + searchParams : ""}`, {
+            goto(`/records/${season}/${name.toLowerCase()}${searchParams ? "?" + searchParams : ""}`, {
                 replaceState: true,
             });
         }
     }
 
     export let data: PageData;
-    let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query>>;
-    $: ({ teams2021 } = data);
-
-    let selectedPage: string = $page.params.tab;
-    $: gotoSubPage(selectedPage);
-
-    $: season = +$page.params.season as 2021;
+    let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query> | null> | undefined;
+    let teams2019: Readable<ApolloQueryResult<TeamSeasonRecords2019Query> | null> | undefined;
+    $: ({ teams2021, teams2019 } = data);
 
     $: data2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let data2021Teams: StatData<FullTep2021Traditional | FullTep2021Remote>[] | undefined;
     $: data2021Teams = data2021?.teps.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.tep,
+    })) as any;
+
+    $: data2019 = !$teams2019 ? undefined : $teams2019.data.teamRecords2019;
+    let data2019Teams: StatData<FullTep2019>[] | undefined;
+    $: data2019Teams = data2019?.teps.map((t: any) => ({
         rank: t.rank,
         preFilterRank: t.preFilterRank,
         data: t.tep,
@@ -71,6 +79,28 @@
 
     let startDate: Date | null = readDateFromUrl($page.url.searchParams.get("start"));
     let endDate: Date | null = readDateFromUrl($page.url.searchParams.get("end"));
+
+    function seasonToStr(season: 2021 | 2019): string {
+        return {
+            2021: "2021 Freight Frenzy",
+            2019: "2019 Skystone",
+        }[season];
+    }
+
+    function seasonFromStr(str: string): 2019 | 2021 | null {
+        return (
+            {
+                "2021 Freight Frenzy": 2021 as const,
+                "2019 Skystone": 2019 as const,
+            }[str] ?? null
+        );
+    }
+
+    let seasonStr = seasonToStr(+$page.params.season as 2019 | 2021);
+    $: season = seasonFromStr(seasonStr) ?? CURRENT_SEASON;
+
+    let selectedPage: string = $page.params.tab;
+    $: gotoSubPage(season, selectedPage);
 </script>
 
 <svelte:head>
@@ -85,16 +115,22 @@
 
         <p>
             <span>Season:</span>
-            <Dropdown items={["2021 Freight Frenzy"]} value="2021 Freight Frenzy" style="width: calc(100% - 15ch)" />
-        </p>
-        <p>
-            <span>Event Types:</span>
             <Dropdown
-                items={["Traditional", "Remote", "Traditional and Remote"]}
-                bind:value={eventTypesStr}
+                items={["2021 Freight Frenzy", "2019 Skystone"]}
+                bind:value={seasonStr}
                 style="width: calc(100% - 15ch)"
             />
         </p>
+        {#if season != 2019}
+            <p>
+                <span>Event Types:</span>
+                <Dropdown
+                    items={["Traditional", "Remote", "Traditional and Remote"]}
+                    bind:value={eventTypesStr}
+                    style="width: calc(100% - 15ch)"
+                />
+            </p>
+        {/if}
         <p>
             <span>Regions:</span>
             <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
@@ -124,6 +160,21 @@
                 <TeamSeasonRecords2021
                     {eventTypes}
                     data={data2021Teams}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                />
+            {:else if data2019 && data2019Teams}
+                {@const totalCount = data2019.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = data2019.offset / pageSize + 1}
+
+                <TeamSeasonRecords2019
+                    data={data2019Teams}
                     currPage={page}
                     {totalCount}
                     {pageSize}

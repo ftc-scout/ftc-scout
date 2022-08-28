@@ -1,4 +1,8 @@
-import type { FullStatsGroup2019Fragment } from "../../graphql/generated/graphql-operations";
+import {
+    Tep2019FieldName,
+    Tep2019Group,
+    type FullStatsGroup2019Fragment,
+} from "../../graphql/generated/graphql-operations";
 import { makeStat, type Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
@@ -35,7 +39,7 @@ export const TEAM_STAT: Stat<FullTep2019> = {
     columnName: "Team",
     identifierName: "Team",
     read: (s) => s.data.team,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.TeamNumber },
 };
 
 export const RP_STAT: Stat<FullTep2019> = {
@@ -45,7 +49,7 @@ export const RP_STAT: Stat<FullTep2019> = {
     columnName: "RP",
     identifierName: "Ranking Points (RP)",
     read: (s) => s.data.stats.rp2019,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Rp },
 };
 
 export const EVENT_RANK_STAT: Stat<FullTep2019> = {
@@ -55,7 +59,7 @@ export const EVENT_RANK_STAT: Stat<FullTep2019> = {
     columnName: "Rank",
     identifierName: "Event Ranking",
     read: (s) => s.data.stats.rank,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Rank },
 };
 
 export const TBP_STAT: Stat<FullTep2019> = {
@@ -65,7 +69,7 @@ export const TBP_STAT: Stat<FullTep2019> = {
     columnName: "TBP",
     identifierName: "Tie Breaker Points (TBP)",
     read: (s) => s.data.stats.tb,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Tb },
 };
 
 export const PLAYED_STAT: Stat<FullTep2019> = {
@@ -75,7 +79,7 @@ export const PLAYED_STAT: Stat<FullTep2019> = {
     columnName: "Played",
     identifierName: "Qual Matches Played",
     read: (s) => s.data.stats.qualMatchesPlayed,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.QualMatchesPlayed },
 };
 
 export const WINS_STAT: Stat<FullTep2019> = {
@@ -85,17 +89,17 @@ export const WINS_STAT: Stat<FullTep2019> = {
     columnName: "Wins",
     identifierName: "Wins",
     read: (s) => s.data.stats.wins,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Wins },
 };
 
-export const lOSSES_STAT: Stat<FullTep2019> = {
+export const LOSSES_STAT: Stat<FullTep2019> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
     listName: "Losses",
     columnName: "Losses",
     identifierName: "Losses",
     read: (s) => s.data.stats.losses,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Losses },
 };
 
 export const TIES_STAT: Stat<FullTep2019> = {
@@ -105,7 +109,7 @@ export const TIES_STAT: Stat<FullTep2019> = {
     columnName: "Ties",
     identifierName: "Ties",
     read: (s) => s.data.stats.ties,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Ties },
 };
 
 export const RECORD_STAT: Stat<FullTep2019> = {
@@ -115,7 +119,7 @@ export const RECORD_STAT: Stat<FullTep2019> = {
     columnName: "Record",
     identifierName: "Event Record",
     read: (s) => ({ wins: s.data.stats.wins, losses: s.data.stats.losses, ties: s.data.stats.ties }),
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Wins },
 };
 
 export const DQ_STAT: Stat<FullTep2019> = {
@@ -125,30 +129,42 @@ export const DQ_STAT: Stat<FullTep2019> = {
     columnName: "DQs",
     identifierName: "Disqualifications (DQs)",
     read: (s) => s.data.stats.dqs,
-    apiField: { fieldName: "" as any },
+    apiField: { fieldName: Tep2019FieldName.Dq },
 };
 
 type Group = FullTep2019["stats"]["total"];
 
-export const TOTAL_STAT: Stat<Group> = makeStat("totalPoints", "Total Points", "", "Total Points", "" as any);
+export const TOTAL_STAT: Stat<Group> = makeStat(
+    "totalPoints",
+    "Total Points",
+    "",
+    "Total Points",
+    Tep2019FieldName.TotalPoints
+);
 export const TOTAL_NP_STAT: Stat<Group> = makeStat(
     "totalPointsNp",
     "Total Points No Penalties",
     "np",
     "Total Points No Penalties",
-    "" as any
+    Tep2019FieldName.TotalPointsNp
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const AUTO_STAT: Stat<Group> = makeStat("autoPoints", "Auto Points", "Auto", "Auto Points", "" as any);
+export const AUTO_STAT: Stat<Group> = makeStat(
+    "autoPoints",
+    "Auto Points",
+    "Auto",
+    "Auto Points",
+    Tep2019FieldName.AutoPoints
+);
 
 export const AUTO_NAV_STAT: Stat<Group> = makeStat(
     "autoNavigationPoints",
     "Auto Navigation Points",
     "Auto Nav",
     "Auto Navigation Points",
-    "" as any
+    Tep2019FieldName.AutoNavigationPoints
 );
 
 export const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
@@ -156,7 +172,7 @@ export const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Auto Nav Individual",
     "Auto Navigation Points Individual",
-    "" as any
+    Tep2019FieldName.AutoNavigationPointsIndividual
 );
 
 export const AUTO_REPOSITION_STAT: Stat<Group> = makeStat(
@@ -164,7 +180,7 @@ export const AUTO_REPOSITION_STAT: Stat<Group> = makeStat(
     "Auto Repositioning Points",
     "Auto Reposition",
     "Auto Repositioning Points",
-    "" as any
+    Tep2019FieldName.AutoRepositioningPoints
 );
 
 export const AUTO_DELIVERY_STAT: Stat<Group> = makeStat(
@@ -172,7 +188,7 @@ export const AUTO_DELIVERY_STAT: Stat<Group> = makeStat(
     "Auto Delivery Points",
     "Auto Delivery",
     "Auto Delivery Points",
-    "" as any
+    Tep2019FieldName.AutoDeliveryPoints
 );
 
 export const AUTO_PLACEMENT_STAT: Stat<Group> = makeStat(
@@ -180,7 +196,7 @@ export const AUTO_PLACEMENT_STAT: Stat<Group> = makeStat(
     "Auto Placement Points",
     "Auto Placement",
     "Auto Placement Points",
-    "" as any
+    Tep2019FieldName.AutoPlacementPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -190,7 +206,7 @@ export const DC_STAT: Stat<Group> = makeStat(
     "Driver Controlled Points",
     "Teleop",
     "Driver Controlled Points",
-    "" as any
+    Tep2019FieldName.DriverControlledPoints
 );
 
 export const DC_DELIVERY_STAT: Stat<Group> = makeStat(
@@ -198,7 +214,7 @@ export const DC_DELIVERY_STAT: Stat<Group> = makeStat(
     "Delivery Points",
     "Delivery",
     "Driver Controlled Delivery Points",
-    "" as any
+    Tep2019FieldName.DcDeliveryPoints
 );
 
 export const DC_PLACEMENT_STAT: Stat<Group> = makeStat(
@@ -206,7 +222,7 @@ export const DC_PLACEMENT_STAT: Stat<Group> = makeStat(
     "Placement Points",
     "Placement",
     "Driver Controlled Placement Points",
-    "" as any
+    Tep2019FieldName.DcPlacementPoints
 );
 
 export const DC_SKYSCRAPER_STAT: Stat<Group> = makeStat(
@@ -214,7 +230,7 @@ export const DC_SKYSCRAPER_STAT: Stat<Group> = makeStat(
     "Skyscraper Points",
     "Skyscraper",
     "Driver Controlled Skyscraper Bonus Points",
-    "" as any
+    Tep2019FieldName.DcSkyscraperPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -224,7 +240,7 @@ export const ENDGAME_STAT: Stat<Group> = makeStat(
     "Endgame Points",
     "Endgame",
     "Endgame Points",
-    "" as any
+    Tep2019FieldName.EndgamePoints
 );
 
 export const ENDGAME_CAPPING_STAT: Stat<Group> = makeStat(
@@ -232,7 +248,7 @@ export const ENDGAME_CAPPING_STAT: Stat<Group> = makeStat(
     "Capping Points",
     "Capping",
     "Endgame Capping Points",
-    "" as any
+    Tep2019FieldName.CappingPoints
 );
 
 export const ENDGAME_CAPPING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
@@ -240,7 +256,7 @@ export const ENDGAME_CAPPING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Capping Individual",
     "Endgame Capping Points Individual",
-    "" as any
+    Tep2019FieldName.CappingPointsIndividual
 );
 
 export const ENDGAME_PARKING_STAT: Stat<Group> = makeStat(
@@ -248,7 +264,7 @@ export const ENDGAME_PARKING_STAT: Stat<Group> = makeStat(
     "Parking Points",
     "Parking",
     "Endgame Parking Points",
-    "" as any
+    Tep2019FieldName.EndgameParkingPoints
 );
 
 export const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
@@ -256,7 +272,7 @@ export const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Parking Individual",
     "Endgame Parking Points Individual",
-    "" as any
+    Tep2019FieldName.EndgameParkingPointsIndividual
 );
 
 export const ENDGAME_FOUNDATION_STAT: Stat<Group> = makeStat(
@@ -264,7 +280,7 @@ export const ENDGAME_FOUNDATION_STAT: Stat<Group> = makeStat(
     "Foundation Moved Points",
     "Foundation Moved",
     "Endgame Foundation Moved Points",
-    "" as any
+    Tep2019FieldName.FoundationMovedPoints
 );
 
 export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
@@ -272,7 +288,18 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
         name: "Team's Event Performance",
         type: "standalone",
         set: {
-            standalone: [TEAM_STAT, EVENT_RANK_STAT, RP_STAT, TBP_STAT, PLAYED_STAT],
+            standalone: [
+                TEAM_STAT,
+                EVENT_RANK_STAT,
+                RP_STAT,
+                TBP_STAT,
+                PLAYED_STAT,
+                WINS_STAT,
+                LOSSES_STAT,
+                TIES_STAT,
+                RECORD_STAT,
+                DQ_STAT,
+            ],
         },
     },
     {
@@ -293,7 +320,7 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
                             "TOT",
                             "Total",
                             "Total",
-                            "" as any
+                            Tep2019Group.Total
                         ),
                 },
                 {
@@ -309,7 +336,7 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
                             "AVG",
                             "Average",
                             "Average",
-                            "" as any,
+                            Tep2019Group.Avg,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -326,7 +353,7 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
                             "OPR",
                             "OPR",
                             "OPR",
-                            "" as any,
+                            Tep2019Group.Opr,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -343,7 +370,7 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
                             "MIN",
                             "Minimum",
                             "Minimum",
-                            "" as any
+                            Tep2019Group.Min
                         ),
                 },
                 {
@@ -359,7 +386,7 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
                             "MAX",
                             "Maximum",
                             "Maximum",
-                            "" as any
+                            Tep2019Group.Max
                         ),
                 },
                 {
@@ -375,7 +402,7 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
                             "DEV",
                             "Std. Dev.",
                             "Standard Deviation",
-                            "" as any,
+                            Tep2019Group.Dev,
                             StatDisplayType.DECIMAL
                         ),
                 },

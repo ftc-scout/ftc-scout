@@ -1,0 +1,41 @@
+query TeamSeasonRecords2019(
+    $skip: Int!
+    $take: Int!
+    $filter: Tep2019Filter!
+    $order: [Tep2019Ordering!]!
+    $region: Region!
+    $start: DateTime
+    $end: DateTime
+) {
+    teamRecords2019(
+        skip: $skip
+        take: $take
+        filter: $filter
+        order: $order
+        region: $region
+        start: $start
+        end: $end
+    ) {
+        teps {
+            tep {
+                season
+                eventCode
+                teamNumber
+                stats {
+                    ...FullStats
+                }
+                team {
+                    number
+                    name
+                }
+                event {
+                    ...RecordsEvent
+                }
+            }
+            rank
+            preFilterRank
+        }
+        offset
+        count
+    }
+}

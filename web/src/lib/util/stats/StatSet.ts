@@ -1,4 +1,4 @@
-import type { Tep2021Group } from "$lib/graphql/generated/graphql-operations";
+import type { Tep2019Field, Tep2019Group, Tep2021Field, Tep2021Group } from "$lib/graphql/generated/graphql-operations";
 import type { Stat, StatData } from "./Stat";
 import type { StatColor } from "./stat-color";
 import type { StatDisplayType } from "./stat-display-type";
@@ -23,7 +23,7 @@ export function groupGetter<T, U>(
     shortNameAdd: string,
     longNameAdd: string,
     identifierNameAdd: string,
-    apiGroup: Tep2021Group,
+    apiGroup: Tep2021Group | Tep2019Group,
     displayTypeOverride: StatDisplayType | null = null
 ): Stat<T> {
     return {
@@ -36,7 +36,7 @@ export function groupGetter<T, U>(
         apiField: {
             ...stat.apiField,
             group: apiGroup,
-        },
+        } as Tep2021Field | Tep2019Field,
     };
 }
 

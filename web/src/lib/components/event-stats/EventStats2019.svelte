@@ -41,8 +41,6 @@
     export let data: S[];
     export let selectedTeam: number | null = null;
     export let eventName: string;
-
-    console.log(data);
 </script>
 
 <LocallyResolvedStatsTable
