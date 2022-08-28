@@ -7,9 +7,9 @@
 
     let searchText = "";
     let searchResults: ReadableQuery<SearchQuery> = query(SearchDocument, {
-        variables: { searchText: searchText.trim(), numResults: 10 },
+        variables: { searchText: searchText.trim(), numResults: 50 },
     });
-    $: searchResults = query(SearchDocument, { variables: { searchText: searchText.trim(), numResults: 10 } });
+    $: searchResults = query(SearchDocument, { variables: { searchText: searchText.trim(), numResults: 50 } });
 
     let teamsSearchData: SearchQuery["search"]["teams"];
     $: teamsSearchData = $searchResults.data?.search.teams ?? [];
@@ -116,29 +116,26 @@
 <style>
     form {
         position: relative;
-        height: 500px;
+        height: 300px;
     }
 
     a:focus {
         outline: var(--text-color) 2px auto;
-        background: var(--hover-color);
+        background: #cbc4c2;
     }
 
     a:hover {
-        background: var(--hover-color);
+        background: #cbc4c2;
     }
 
     .result {
         position: absolute;
         top: 60px;
 
-        background: var(--foreground-color);
-        width: 50%;
+        width: 20%;
 
         padding: var(--padding);
         border-radius: 8px;
-
-        box-shadow: -2px 2px 10px 3px #e0e0e0;
     }
 
     @media (max-width: 850px) {
