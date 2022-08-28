@@ -35,6 +35,8 @@
 
     $: eventData = $event?.data?.eventByCode!;
 
+    $: relatedEvents = eventData?.relatedEvents;
+
     function gotoSubPage(name: string) {
         if (browser && $page.routeId == "events/[season=season]/[code]/[tab=event_tab]") {
             goto(`/events/${$page.params.season}/${$page.params.code}/${name.toLowerCase()}`, { replaceState: true });
@@ -102,6 +104,18 @@
         <DataFromFirst />
     </Card>
 
+    {#if relatedEvents && relatedEvents.length}
+        <Card border={false}>
+            <div class="related-events">
+                {#each relatedEvents as relatedEvent}
+                    <a sveltekit:prefetch href="/events/{relatedEvent.season}/{relatedEvent.code}/matches">
+                        {relatedEvent.name}
+                    </a>
+                {/each}
+            </div>
+        </Card>
+    {/if}
+
     <TabbedCard
         names={[
             [MATCHES_ICON, "Matches"],
@@ -141,3 +155,35 @@
         />
     {/if}
 </Loading>
+
+<style>
+    .related-events {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: var(--vl-gap);
+
+        width: 100%;
+    }
+
+    .related-events a {
+        background: var(--foreground-color);
+        border: none;
+        color: inherit;
+        cursor: pointer;
+
+        padding: var(--padding);
+        box-shadow: var(--shadow-color) 0px 2px 5px -1px, var(--shadow-color) 0px 1px 3px -1px;
+        border-radius: 8px;
+
+        width: 100%;
+
+        font-weight: bold;
+        text-align: center;
+        text-decoration: none;
+    }
+
+    .related-events a:hover {
+        filter: brightness(0.95);
+    }
+</style>
