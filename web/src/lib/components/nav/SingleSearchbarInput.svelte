@@ -13,10 +13,10 @@
 </script>
 
 <div class="wrapper" class:shown class:focus={focusCount} style="text-align: center;">
-    <button class="search-button" type="submit" aria-label="Search" style="width: 300px;" />
+    <button class="search-button" type="submit" aria-label="Search" style="width: 40%;" />
     <input
         type="search"
-        placeholder="                                   Search for teams"
+        placeholder="Search for teams"
         bind:value
         on:focus
         on:focusout={() => {
