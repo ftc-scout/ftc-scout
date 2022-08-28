@@ -21,3 +21,6 @@
 -   Add an `EventStats{season}.svelte` file and connect it in in the `EventStats.svelte` file
 -   Make sure that all the scores are accurate. (Esp. check that opr is right)
 -   Make the backend request for season records.
+-   Make a `StatSet{season}`.
+-   Add a `TeamSeasonRecords{season}.svelte` for the season and wire it in on the records page.
+-   Adjust `DateRange.svelte` for the season

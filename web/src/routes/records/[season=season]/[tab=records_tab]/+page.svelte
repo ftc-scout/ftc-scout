@@ -137,7 +137,7 @@
         </p>
         <p>
             <span>From:</span>
-            <DateRange style="width: calc(100% - 15ch)" bind:startDate bind:endDate />
+            <DateRange style="width: calc(100% - 15ch)" {season} bind:startDate bind:endDate />
         </p>
     </Card>
 
