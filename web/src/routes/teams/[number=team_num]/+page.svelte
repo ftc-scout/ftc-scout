@@ -4,7 +4,7 @@
     import { prettyPrintURL } from "$lib/util/format/pretty-print-url";
     import DataFromFirst from "../../../lib/components/DataFromFirst.svelte";
     import InfoIconRow from "../../../lib/components/InfoIconRow.svelte";
-    import type { MeQuery, TeamQuery } from "../../../lib/graphql/generated/graphql-operations";
+    import type { TeamQuery } from "../../../lib/graphql/generated/graphql-operations";
     import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
     import { prettyPrintDateRangeString } from "../../../lib/util/format/pretty-print-date";
     import { prettyPrintOrdinal } from "../../../lib/util/format/pretty-print-ordinal";
@@ -13,7 +13,6 @@
     import type { ApolloQueryResult } from "@apollo/client";
     import Award from "../../../lib/components/Award.svelte";
     import type { Readable } from "svelte/store";
-    import { getContext } from "svelte";
     import {
         AWARDS_ICON,
         DATE_ICON,
@@ -37,21 +36,6 @@
               (a, b) => new Date(b.event.start as string).getTime() - new Date(a.event.start as string).getTime()
           )!
         : [];
-
-    let me: Readable<MeQuery["me"] | null> = getContext("me");
-
-    function logger() {
-        if ($me?.team?.number == teamData.number) {
-            console.log("Right team!");
-            document.getElementById("edit-box")!.contentEditable = "true";
-        }
-    }
-    function save() {
-        if ($me!.id == teamData.number) {
-            console.log("Right team save");
-            localStorage.setItem("teamInfo", (<HTMLInputElement>document.getElementById("edit-box"))?.value);
-        }
-    }
 
     $: oprs = sortedEvents
         .filter((e) => !e.event.remote)
@@ -175,44 +159,9 @@
             />
         </Card>
     {/each}
-
-    <button on:click={logger} id="editor" class="user-button" type="button">Edit Document</button>
-    <button on:click={save} id="saver" class="user-button" type="button">Save Document </button>
-    <Card>
-        <p class="team-box" id="edit-box" type="text" contenteditable="false">I am not editable</p>
-    </Card>
 </Loading>
 
 <style>
-    .team-box {
-        border: none;
-        background-color: transparent;
-        resize: none;
-        outline: none;
-    }
-    .user-button {
-        border: var(--theme-color) 2px solid;
-        text-decoration: none;
-
-        background-color: transparent;
-        color: var(--theme-color);
-        font-weight: bold;
-        font-size: var(--small-font-size);
-        padding: var(--padding) var(--ml-padding);
-        margin: 0 var(--small-gap);
-        border-radius: var(--pill-border-radius);
-
-        display: inline-block;
-
-        cursor: pointer;
-    }
-
-    .user-button:hover {
-        /* maybe like add a fade in transition to the hover colors */
-        background-color: var(--theme-color);
-        color: var(--theme-text-color);
-    }
-
     .event-link {
         color: inherit;
         text-decoration: none;

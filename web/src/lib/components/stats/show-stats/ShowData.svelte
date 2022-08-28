@@ -19,6 +19,8 @@
     {value.number}
 {:else if typeof value == "object" && "name" in value}
     {value.name}
+{:else if typeof value == "object" && "wins" in value && "losses" in value && "ties" in value}
+    {value.wins}-{value.losses}-{value.ties}
 {:else if stat.displayType == StatDisplayType.INTEGER}
     {value}
 {:else if stat.displayType == StatDisplayType.DECIMAL}

@@ -5,9 +5,3 @@ export const load: LayoutLoad = ({ fetch }) => {
         f: fetch,
     };
 };
-
-// export function load({ fetch }: { fetch: NonNullable<HttpOptions["fetch"]> }) {
-//     return {
-//     f: fetch,
-// };
-// }
