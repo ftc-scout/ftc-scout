@@ -1,5 +1,5 @@
 name: Fly Deploy Server
-ron:
+on:
   push:
     branches:
       - 'main'
