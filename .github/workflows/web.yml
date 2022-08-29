@@ -14,12 +14,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: superfly/flyctl-actions/setup-flyctl@master
-      - uses: fountainhead/action-wait-for-check@v1.0.0
-        id: wait-for-build
-        with:
-          token: ${{ secrets.TOKEN_GITHUB }}
-          checkName: Deploy FtcScout web
-          ref: ${{ github.event.pull_request.head.sha || github.sha }}
       - run: flyctl deploy --remote-only
         working-directory: ./web
         if: steps.wait-for-build.outputs.conclusion == 'success'

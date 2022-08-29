@@ -1,1 +1,1 @@
-<h1>Welcome to FTC Scout! 4</h1>
+<h1>Welcome to FTC Scout!</h1>
