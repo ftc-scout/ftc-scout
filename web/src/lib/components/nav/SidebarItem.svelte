@@ -17,7 +17,13 @@
 </script>
 
 {#if href}
-    <a class="wrap" {href} class:active sveltekit:prefetch on:click={() => ($sidebarOpen = false)}>
+    <a
+        class="wrap"
+        {href}
+        class:active
+        sveltekit:prefetch={href?.startsWith("/") ? true : null}
+        on:click={() => ($sidebarOpen = false)}
+    >
         <Fa {icon} fw size="1.25x" />
         <div class="name">
             <slot />
