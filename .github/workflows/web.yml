@@ -1,0 +1,25 @@
+name: Fly Deploy Web
+on:
+  push:
+    branches:
+      - 'main'
+    paths:
+      - 'web/**'
+env:
+  FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+jobs:
+  deploy-server:
+    name: Deploy FtcScout web
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: superfly/flyctl-actions/setup-flyctl@master
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: wait-for-build
+        with:
+          token: ${{ secrets.TOKEN_GITHUB }}
+          checkName: Deploy FtcScout web
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - run: flyctl deploy --remote-only
+        working-directory: ./web
+        if: steps.wait-for-build.outputs.conclusion == 'success'
