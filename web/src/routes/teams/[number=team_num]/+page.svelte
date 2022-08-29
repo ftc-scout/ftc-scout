@@ -48,7 +48,7 @@
     $: maxOprEvent = maxOpr != null ? sortedEvents.find((e) => e.stats?.opr?.totalPoints == maxOpr)?.eventCode : null;
 
     function getRp(tep: any): number | null {
-        return tep.stats.rp ?? tep.stats.rp2019 ?? null;
+        return tep?.stats?.rp ?? tep?.stats?.rp2019 ?? null;
     }
 </script>
 
