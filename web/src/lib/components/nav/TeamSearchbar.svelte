@@ -116,7 +116,7 @@
 <style>
     form {
         position: relative;
-        height: 300px;
+        height: 500px;
     }
 
     a:focus {
@@ -154,11 +154,13 @@
     .result ol {
         padding: 0;
         margin: 0;
+        display: grid;
+        grid-template-columns: 350px 350px 350px 350px;
     }
 
     .result li {
         list-style: none;
-        display: block;
+
         width: 100%;
     }
 
