@@ -65,7 +65,8 @@ async function main() {
 
     // Start the server
     app.listen(SERVER_PORT, () => {
-        console.log(`Server started and listening on localhost:${SERVER_PORT}`);
+        console.log(`Server started and listening on localhost:${SERVER_PORT}.`);
+        console.log("Test 1");
     });
 
     setupApiWatchers();
