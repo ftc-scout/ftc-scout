@@ -16,4 +16,3 @@ jobs:
       - uses: superfly/flyctl-actions/setup-flyctl@master
       - run: flyctl deploy --remote-only
         working-directory: ./web
-        if: steps.wait-for-build.outputs.conclusion == 'success'
