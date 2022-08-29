@@ -11,7 +11,9 @@ jobs:
   deploy:
       name: Deploy FtcScout server
       runs-on: ubuntu-latest
+      work
       steps:
         - uses: actions/checkout@v2
         - uses: superfly/flyctl-actions/setup-flyctl@master
-        - run: flyctl deploy --remote-only --config ./server/fly.toml
+        - run: flyctl deploy --remote-only --config ./fly.toml
+          working-directory: ./server
