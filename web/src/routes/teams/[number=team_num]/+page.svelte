@@ -26,6 +26,12 @@
     } from "../../../lib/icons";
     import ErrorPage from "../../../lib/components/ErrorPage.svelte";
     import { page } from "$app/stores";
+    import Dropdown from "../../../lib/components/Dropdown.svelte";
+    import { getSeasonFromStr } from "./+page";
+    import { prettyPrintSeason } from "../../../lib/util/format/pretty-print-season";
+    import { goto } from "$app/navigation";
+    import { browser } from "$app/env";
+    import { CURRENT_SEASON } from "../../../lib/constants";
 
     export let data: PageData;
     let team: Readable<ApolloQueryResult<TeamQuery> | null>;
@@ -50,6 +56,33 @@
     function getRp(tep: any): number | null {
         return tep?.stats?.rp ?? tep?.stats?.rp2019 ?? null;
     }
+
+    function seasonToStr(season: 2021 | 2019): string {
+        return `${season} ${prettyPrintSeason(season)}`;
+    }
+
+    function seasonFromLongStr(str: string): 2021 | 2019 {
+        switch (str) {
+            case "2021 Freight Frenzy":
+                return 2021;
+            default:
+                return 2019;
+        }
+    }
+
+    function gotoSubPage(season: 2021 | 2019) {
+        if (browser && $page.routeId == "teams/[number=team_num]") {
+            if (season == CURRENT_SEASON) {
+                goto(`/teams/${teamData.number}`, { replaceState: true });
+            } else {
+                goto(`/teams/${teamData.number}?season=${season}`, { replaceState: true });
+            }
+        }
+    }
+
+    let seasonStr = seasonToStr(getSeasonFromStr($page.url.searchParams.get("season")));
+    $: season = seasonFromLongStr(seasonStr);
+    $: gotoSubPage(season);
 </script>
 
 <svelte:head>
@@ -99,6 +132,10 @@
         {/if}
 
         <DataFromFirst />
+    </Card>
+
+    <Card border={false}>
+        <Dropdown items={["2021 Freight Frenzy", "2019 Skystone"]} bind:value={seasonStr} style="width: 100%" />
     </Card>
 
     {#each sortedEvents as teamEvent}

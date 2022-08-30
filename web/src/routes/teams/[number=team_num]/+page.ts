@@ -7,8 +7,19 @@ import { get } from "svelte/store";
 import { TeamDocument } from "../../../lib/graphql/generated/graphql-operations";
 import type { PageLoad } from "./$types";
 
-export const load: PageLoad = async ({ params, fetch }) => {
-    let teamData = await getData(getMyClient(fetch), TeamDocument, { number: +params.number, season: CURRENT_SEASON });
+export function getSeasonFromStr(season: string | null): 2021 | 2019 {
+    switch (season) {
+        case "2019":
+            return 2019;
+        default:
+            return CURRENT_SEASON;
+    }
+}
+
+export const load: PageLoad = async ({ params, url, fetch }) => {
+    let season = getSeasonFromStr(url.searchParams.get("season"));
+
+    let teamData = await getData(getMyClient(fetch), TeamDocument, { number: +params.number, season });
 
     let gotten = get(teamData);
     if (!browser && gotten && !gotten?.data?.teamByNumber) {
