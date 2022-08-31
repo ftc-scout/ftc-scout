@@ -18,43 +18,52 @@
 </script>
 
 <span {style}>
-    <input
-        type="date"
-        bind:value={startDateStr}
-        style="margin-right: var(--large-gap);"
-        aria-label="start date"
-        min={minDate}
-        max={maxDate}
-    />
+    <div>
+        <input type="date" bind:value={startDateStr} aria-label="start date" min={minDate} max={maxDate} />
+    </div>
     to
-    <input
-        type="date"
-        bind:value={endDateStr}
-        style="margin-left: var(--large-gap);"
-        aria-label="end date"
-        min={minDate}
-        max={maxDate}
-    />
+    <div>
+        <input type="date" bind:value={endDateStr} aria-label="end date" min={minDate} max={maxDate} />
+    </div>
 </span>
 
 <style>
     span {
         display: flex;
         align-items: center;
+        gap: var(--large-gap);
     }
 
-    input {
-        font: var(--main-font);
-
+    div {
         background: var(--foreground-color);
-        border: none;
-        color: inherit;
-        cursor: pointer;
 
         padding: var(--small-padding);
         box-shadow: var(--shadow-color) 0px 2px 5px -1px, var(--shadow-color) 0px 1px 3px -1px;
         border-radius: 8px;
 
         width: 100%;
+    }
+
+    input {
+        font: var(--main-font);
+
+        border: none;
+        color: inherit;
+        cursor: pointer;
+
+        border-radius: 8px;
+
+        height: 100%;
+        width: 100%;
+    }
+
+    input:focus,
+    input:focus-visible {
+        outline: none;
+    }
+
+    div:focus,
+    div:focus-within {
+        outline: var(--text-color) 2px solid;
     }
 </style>
