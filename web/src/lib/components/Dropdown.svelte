@@ -15,6 +15,8 @@
 
 <style>
     div {
+        display: inline-block;
+
         background: var(--foreground-color);
         box-shadow: var(--shadow-color) 0px 2px 5px -1px, var(--shadow-color) 0px 1px 3px -1px;
         border-radius: 8px;
