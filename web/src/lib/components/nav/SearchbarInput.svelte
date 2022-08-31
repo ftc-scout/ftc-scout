@@ -10,11 +10,18 @@
     export let focusCount = 0;
 
     let dispatcher = createEventDispatcher();
+
+    function focus() {
+        document.getElementById("searchbar-input")?.focus();
+    }
+
+    $: if (shown) focus();
 </script>
 
 <div class="wrapper" class:shown class:focus={focusCount}>
     <button class="search-button" type="submit" aria-label="Search"><Fa icon={faSearch} /></button>
     <input
+        id="searchbar-input"
         type="search"
         placeholder="Search for teams and events"
         bind:value
@@ -27,7 +34,7 @@
         bind:this={this_}
         tabindex="0"
     />
-    <button class="close">
+    <button class="close" on:click={() => (shown = false)}>
         <Fa icon={CLOSE_ICON} size="1.25x" />
     </button>
 </div>
