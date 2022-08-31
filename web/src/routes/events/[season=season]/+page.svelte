@@ -175,7 +175,7 @@
                 {#if data.length != 0 && data.length % BATCH_SIZE == 0}
                     <div class="more-wrap">
                         <FaButton icon={faCirclePlus} on:click={more} buttonStyle="font-size: var(--large-font-size)">
-                            More
+                            Show More
                         </FaButton>
                     </div>
                 {/if}
