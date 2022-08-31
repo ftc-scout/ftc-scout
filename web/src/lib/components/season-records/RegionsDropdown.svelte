@@ -6,8 +6,8 @@
     export let style = "";
 </script>
 
-<div>
-    <select {style} bind:value>
+<div {style}>
+    <select bind:value>
         {#each REGION_GROUPS as group}
             <optgroup>
                 {#each group as region}
