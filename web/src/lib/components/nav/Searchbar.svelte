@@ -70,10 +70,6 @@
         : (teamsSearchData.length || eventsSearchData.length) == 0 && !$searchResults.loading
         ? null
         : lastResultHeight;
-
-    afterNavigate(() => {
-        barShown = false;
-    });
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
