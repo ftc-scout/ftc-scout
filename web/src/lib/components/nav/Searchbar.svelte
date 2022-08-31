@@ -1,7 +1,7 @@
 <script lang="ts">
     import { SearchDocument, type SearchQuery } from "$lib/graphql/generated/graphql-operations";
     import { query, type ReadableQuery } from "svelte-apollo";
-    import { goto, prefetch } from "$app/navigation";
+    import { afterNavigate, beforeNavigate, goto, prefetch } from "$app/navigation";
     import SkeletonRow from "../skeleton/SkeletonRow.svelte";
     import SearchbarInput from "./SearchbarInput.svelte";
 
@@ -70,6 +70,10 @@
         : (teamsSearchData.length || eventsSearchData.length) == 0 && !$searchResults.loading
         ? null
         : lastResultHeight;
+
+    afterNavigate(() => {
+        barShown = false;
+    });
 </script>
 
 <form autocomplete="off" on:submit|preventDefault={tryGoto}>
