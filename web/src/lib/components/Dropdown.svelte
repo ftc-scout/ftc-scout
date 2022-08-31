@@ -18,6 +18,8 @@
         background: var(--foreground-color);
         box-shadow: var(--shadow-color) 0px 2px 5px -1px, var(--shadow-color) 0px 1px 3px -1px;
         border-radius: 8px;
+
+        padding: var(--small-padding);
     }
 
     select {
@@ -28,18 +30,27 @@
         color: inherit;
         cursor: pointer;
 
-        padding: var(--small-padding);
         border-radius: 8px;
 
         height: 100%;
         width: 100%;
     }
 
-    select:hover {
+    div:hover {
         filter: brightness(0.95);
     }
 
-    select:active {
+    div:active {
         filter: brightness(0.9);
+    }
+
+    select:focus,
+    select:focus-visible {
+        outline: none;
+    }
+
+    div:focus,
+    div:focus-within {
+        outline: var(--text-color) 2px solid;
     }
 </style>
