@@ -2,6 +2,8 @@
     import Logo from "./Logo.svelte";
     import HamburgerButton from "./HamburgerButton.svelte";
     import Searchbar from "./Searchbar.svelte";
+    import { keyPathName } from "../../util/key-pathname";
+    import { page } from "$app/stores";
 </script>
 
 <nav>
@@ -11,7 +13,9 @@
 
     <div class="placeholder" />
 
-    <Searchbar />
+    {#key keyPathName($page.url.pathname)}
+        <Searchbar />
+    {/key}
 </nav>
 
 <style>
