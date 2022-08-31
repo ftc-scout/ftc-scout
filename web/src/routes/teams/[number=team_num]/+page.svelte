@@ -135,7 +135,11 @@
     </Card>
 
     <Card border={false}>
-        <Dropdown items={["2021 Freight Frenzy", "2019 Skystone"]} bind:value={seasonStr} style="width: 100%" />
+        <Dropdown
+            items={["2021 Freight Frenzy", "2019 Skystone"]}
+            bind:value={seasonStr}
+            style="width: 100%; box-shadow: -2px 2px 10px 3px #e0e0e0;"
+        />
     </Card>
 
     {#each sortedEvents as teamEvent}
