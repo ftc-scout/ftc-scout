@@ -1,7 +1,8 @@
 <script lang="ts">
     import { dateFromStr, dateToStr } from "$lib/util/format/pretty-print-date";
+    import type { Season } from "../constants";
 
-    export let season: 2021 | 2019;
+    export let season: Season;
 
     export let startDate: Date | null = null;
     $: startDate = !startDateStr ? null : dateFromStr(startDateStr);

@@ -1,5 +1,5 @@
 import { browser } from "$app/env";
-import { CURRENT_SEASON } from "$lib/constants";
+import { CURRENT_SEASON, type Season } from "$lib/constants";
 import { getMyClient } from "$lib/graphql/client";
 import { getData } from "$lib/graphql/query-load";
 import { error } from "@sveltejs/kit";
@@ -7,7 +7,7 @@ import { get } from "svelte/store";
 import { TeamDocument } from "../../../lib/graphql/generated/graphql-operations";
 import type { PageLoad } from "./$types";
 
-export function getSeasonFromStr(season: string | null): 2021 | 2019 {
+export function getSeasonFromStr(season: string | null): Season {
     switch (season) {
         case "2019":
             return 2019;
