@@ -41,7 +41,7 @@
 
 <button
     class="only-icon"
-    on:click={() => {
+    on:click|preventDefault={() => {
         shown = !shown;
         setTimeout(() => this_?.focus(), 1);
     }}
