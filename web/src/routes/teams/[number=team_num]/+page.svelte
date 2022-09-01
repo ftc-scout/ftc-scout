@@ -210,6 +210,21 @@
                 teamPage={true}
             />
         </Card>
+    {:else}
+        <Card>
+            <div class="no-events">
+                {#if season == CURRENT_SEASON}
+                    <b>
+                        This team has not yet played any events in {prettyPrintSeason(season)}.
+                    </b>
+                {:else}
+                    <b>
+                        This team did not play any events in {prettyPrintSeason(season)}.
+                    </b>
+                {/if}
+                <p class="no-events-help">Try choosing a different season from the dropdown menu.</p>
+            </div>
+        </Card>
     {/each}
 </Loading>
 
@@ -227,5 +242,20 @@
         font-weight: bold;
         color: inherit;
         text-decoration: underline;
+    }
+
+    .no-events {
+        text-align: center;
+    }
+
+    .no-events * {
+        margin: 0;
+        font-size: var(--large-font-size);
+        color: var(--secondary-text-color);
+        display: block;
+    }
+
+    .no-events *:first-child {
+        margin-bottom: var(--large-gap);
     }
 </style>
