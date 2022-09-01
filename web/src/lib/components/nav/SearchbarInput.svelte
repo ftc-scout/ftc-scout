@@ -34,7 +34,7 @@
         bind:this={this_}
         tabindex="0"
     />
-    <button class="close" on:click={() => (shown = false)}>
+    <button class="close" on:click|preventDefault={() => (shown = false)}>
         <Fa icon={CLOSE_ICON} size="1.25x" />
     </button>
 </div>
