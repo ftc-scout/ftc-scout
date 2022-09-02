@@ -58,6 +58,10 @@
         .scores-row {
             grid-template-columns: minmax(0, 1.5fr) repeat(7, minmax(0, 1fr));
         }
+
+        .not-reported {
+            grid-template-columns: minmax(0, 1.5fr) 7fr !important;
+        }
     }
 
     .not-reported {
