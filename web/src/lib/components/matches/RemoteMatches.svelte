@@ -31,7 +31,7 @@
                     {score}
                 {:else}
                     <!-- Make safari happy? Maybe? -->
-                    {" "}
+                    <em style="color: var(--secondary-text-color); font-size: var(--small-font-size)">N/A</em>
                 {/if}
             </td>
         {/each}
