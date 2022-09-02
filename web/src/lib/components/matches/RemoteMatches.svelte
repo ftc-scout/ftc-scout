@@ -29,6 +29,9 @@
             <td class:score={!noShows[i]} on:click={() => show(matches[i])}>
                 {#if !noShows[i]}
                     {score}
+                {:else}
+                    <!-- Make safari happy? Maybe? -->
+                    {" "}
                 {/if}
             </td>
         {/each}
