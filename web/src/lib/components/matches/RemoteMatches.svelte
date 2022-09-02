@@ -14,6 +14,11 @@
     $: scores = matches.map((m) => (m.scores as any)?.totalPoints);
     $: totalPoints = scores.reduce((a, b) => a + b, 0);
 
+    let displayScores: (number | undefined)[];
+    $: displayScores = [1, 2, 3, 4, 5, 6].map(
+        (n) => (matches.find((m) => m.matchNum == n)?.scores as any)?.totalPoints
+    );
+
     $: notReported = matches.some((m) => !m.scores);
 
     function show(scores: EventPageMatchFragment) {
@@ -25,13 +30,10 @@
     <MatchTeam {team} width="" winner={false} border bind:selectedTeam {frozen} {eventCode} />
 
     {#if !notReported}
-        {#each scores as score, i}
+        {#each displayScores as score, i}
             <td class:score={!noShows[i]} on:click={() => show(matches[i])}>
                 {#if !noShows[i]}
                     {score}
-                {:else}
-                    <!-- Make safari happy? Maybe? -->
-                    {" "}
                 {/if}
             </td>
         {/each}
