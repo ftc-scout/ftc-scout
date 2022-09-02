@@ -10,7 +10,6 @@
     export let eventCode: string;
 
     $: team = matches[0].teams[0];
-    $: noShows = matches.map((m) => m.teams[0].noShow);
     $: scores = matches.map((m) => (m.scores as any)?.totalPoints);
     $: totalPoints = scores.reduce((a, b) => a + b, 0);
 
@@ -21,8 +20,8 @@
 
     $: notReported = matches.some((m) => !m.scores);
 
-    function show(scores: EventPageMatchFragment) {
-        if (showScoresFn && !scores.teams[0].noShow) showScoresFn(scores);
+    function show(scores: EventPageMatchFragment | undefined) {
+        if (showScoresFn && !scores!.teams[0].noShow) showScoresFn(scores!);
     }
 </script>
 
@@ -31,8 +30,11 @@
 
     {#if !notReported}
         {#each displayScores as score, i}
-            <td class:score={!noShows[i]} on:click={() => show(matches[i])}>
-                {#if !noShows[i]}
+            <td
+                class:score={displayScores != undefined}
+                on:click={() => show(matches.find((m) => m.matchNum == i + 1))}
+            >
+                {#if displayScores != undefined}
                     {score}
                 {/if}
             </td>
