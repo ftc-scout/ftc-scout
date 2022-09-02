@@ -30,11 +30,8 @@
 
     {#if !notReported}
         {#each displayScores as score, i}
-            <td
-                class:score={displayScores != undefined}
-                on:click={() => show(matches.find((m) => m.matchNum == i + 1))}
-            >
-                {#if displayScores != undefined}
+            <td class:score={score != undefined} on:click={() => show(matches.find((m) => m.matchNum == i + 1))}>
+                {#if score != undefined}
                     {score}
                 {/if}
             </td>
