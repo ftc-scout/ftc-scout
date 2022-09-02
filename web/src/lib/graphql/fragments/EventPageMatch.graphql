@@ -2,6 +2,7 @@ fragment EventPageMatch on Match {
     season
     eventCode
     id
+    matchNum
     matchDescription
     tournamentLevel
     scheduledStartTime

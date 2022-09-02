@@ -10,14 +10,18 @@
     export let eventCode: string;
 
     $: team = matches[0].teams[0];
-    $: noShows = matches.map((m) => m.teams[0].noShow);
     $: scores = matches.map((m) => (m.scores as any)?.totalPoints);
     $: totalPoints = scores.reduce((a, b) => a + b, 0);
 
+    let displayScores: (number | undefined)[];
+    $: displayScores = [1, 2, 3, 4, 5, 6].map(
+        (n) => (matches.find((m) => m.matchNum == n)?.scores as any)?.totalPoints
+    );
+
     $: notReported = matches.some((m) => !m.scores);
 
-    function show(scores: EventPageMatchFragment) {
-        if (showScoresFn && !scores.teams[0].noShow) showScoresFn(scores);
+    function show(scores: EventPageMatchFragment | undefined) {
+        if (showScoresFn && !scores!.teams[0].noShow) showScoresFn(scores!);
     }
 </script>
 
@@ -25,9 +29,9 @@
     <MatchTeam {team} width="" winner={false} border bind:selectedTeam {frozen} {eventCode} />
 
     {#if !notReported}
-        {#each scores as score, i}
-            <td class:score={!noShows[i]} on:click={() => show(matches[i])}>
-                {#if !noShows[i]}
+        {#each displayScores as score, i}
+            <td class:score={score != undefined} on:click={() => show(matches.find((m) => m.matchNum == i + 1))}>
+                {#if score != undefined}
                     {score}
                 {/if}
             </td>
@@ -57,6 +61,10 @@
     @media (max-width: 1000px) {
         .scores-row {
             grid-template-columns: minmax(0, 1.5fr) repeat(7, minmax(0, 1fr));
+        }
+
+        .not-reported {
+            grid-template-columns: minmax(0, 1.5fr) 7fr !important;
         }
     }
 

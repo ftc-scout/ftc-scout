@@ -65,6 +65,11 @@
         min-width: 65ch;
     }
 
+    @media (max-width: 800px) {
+        div {
+            min-width: 50ch;
+        }
+    }
     span {
         display: flex;
         align-items: center;

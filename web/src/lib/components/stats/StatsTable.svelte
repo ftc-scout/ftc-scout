@@ -61,7 +61,7 @@
 </script>
 
 <div class="options">
-    <div>
+    <div class="options-side">
         <FaButton
             icon={faEdit}
             on:click={() => (chooseStatsModalShown = !chooseStatsModalShown)}
@@ -77,11 +77,14 @@
             Filters
         </FaButton>
         {#if !isEmpty(currentFilters)}
-            <Dropdown
-                items={["Rank Before Filters", "Rank After Filters"]}
-                bind:value={rankPreFilterStr}
-                style="height: 100%; margin-right: var(--gap);"
-            />
+            <!-- TODO find a way to show this on smalls screens -->
+            <div class="maybe-hide">
+                <Dropdown
+                    items={["Rank Before Filters", "Rank After Filters"]}
+                    bind:value={rankPreFilterStr}
+                    style="height: 100%; margin-right: var(--gap);"
+                />
+            </div>
             <FaButton
                 icon={faTrash}
                 on:click={() => {
@@ -90,7 +93,7 @@
                 }}
                 buttonStyle="font-size: var(--medium-font-size);"
             >
-                Reset Filters
+                Clear Filters
             </FaButton>
         {/if}
     </div>
@@ -154,6 +157,11 @@
         justify-content: space-between;
     }
 
+    .options-side {
+        display: flex;
+        flex-direction: row;
+    }
+
     table {
         border-spacing: 0;
         border-collapse: collapse;
@@ -185,5 +193,11 @@
     table:focus-visible {
         outline: none;
         border: 1px solid black;
+    }
+
+    @media (max-width: 650px) {
+        .maybe-hide {
+            display: none;
+        }
     }
 </style>

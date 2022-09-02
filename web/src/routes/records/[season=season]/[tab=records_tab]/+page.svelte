@@ -32,8 +32,9 @@
     import type { FullTep2021Remote } from "../../../../lib/util/stats/StatsRemote2021";
     import type { FullTep2021Traditional } from "../../../../lib/util/stats/StatsTrad2021";
     import { eventTypesFromStr, eventTypesToStr, readDateFromUrl } from "./+page";
-    import { CURRENT_SEASON } from "../../../../lib/constants";
     import type { FullTep2019 } from "../../../../lib/util/stats/Stats2019";
+    import SeasonDropdown from "../../../../lib/components/SeasonDropdown.svelte";
+    import type { Season } from "../../../../lib/constants";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -41,7 +42,7 @@
         }
     });
 
-    function getSearchParams(name: string, season: 2021 | 2019): string | null {
+    function getSearchParams(name: string, season: Season): string | null {
         if (name.toLocaleLowerCase() == "teams") {
             switch (season) {
                 case 2021:
@@ -54,7 +55,7 @@
         }
     }
 
-    function gotoSubPage(season: 2021 | 2019, name: string) {
+    function gotoSubPage(season: Season, name: string) {
         if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
             let searchParams = getSearchParams(name, season);
             goto(`/records/${season}/${name.toLowerCase()}${searchParams ? "?" + searchParams : ""}`, {
@@ -95,24 +96,7 @@
     let startDate: Date | null = readDateFromUrl($page.url.searchParams.get("start"));
     let endDate: Date | null = readDateFromUrl($page.url.searchParams.get("end"));
 
-    function seasonToStr(season: 2021 | 2019): string {
-        return {
-            2021: "2021 Freight Frenzy",
-            2019: "2019 Skystone",
-        }[season];
-    }
-
-    function seasonFromStr(str: string): 2019 | 2021 | null {
-        return (
-            {
-                "2021 Freight Frenzy": 2021 as const,
-                "2019 Skystone": 2019 as const,
-            }[str] ?? null
-        );
-    }
-
-    let seasonStr = seasonToStr(+$page.params.season as 2019 | 2021);
-    $: season = seasonFromStr(seasonStr) ?? CURRENT_SEASON;
+    let season = +$page.params.season as 2019 | 2021;
 
     let selectedPage: string = $page.params.tab;
     $: gotoSubPage(season, selectedPage);
@@ -130,11 +114,7 @@
 
         <p>
             <span>Season:</span>
-            <Dropdown
-                items={["2021 Freight Frenzy", "2019 Skystone"]}
-                bind:value={seasonStr}
-                style="width: calc(100% - 15ch)"
-            />
+            <SeasonDropdown bind:season style="width: calc(100% - 15ch)" />
         </p>
         {#if season != 2019}
             <p>

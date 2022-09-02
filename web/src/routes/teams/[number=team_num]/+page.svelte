@@ -26,12 +26,12 @@
     } from "../../../lib/icons";
     import ErrorPage from "../../../lib/components/ErrorPage.svelte";
     import { page } from "$app/stores";
-    import Dropdown from "../../../lib/components/Dropdown.svelte";
     import { getSeasonFromStr } from "./+page";
     import { prettyPrintSeason } from "../../../lib/util/format/pretty-print-season";
     import { goto } from "$app/navigation";
     import { browser } from "$app/env";
-    import { CURRENT_SEASON } from "../../../lib/constants";
+    import { CURRENT_SEASON, type Season } from "../../../lib/constants";
+    import SeasonDropdown from "../../../lib/components/SeasonDropdown.svelte";
 
     export let data: PageData;
     let team: Readable<ApolloQueryResult<TeamQuery> | null>;
@@ -57,20 +57,7 @@
         return tep?.stats?.rp ?? tep?.stats?.rp2019 ?? null;
     }
 
-    function seasonToStr(season: 2021 | 2019): string {
-        return `${season} ${prettyPrintSeason(season)}`;
-    }
-
-    function seasonFromLongStr(str: string): 2021 | 2019 {
-        switch (str) {
-            case "2021 Freight Frenzy":
-                return 2021;
-            default:
-                return 2019;
-        }
-    }
-
-    function gotoSubPage(season: 2021 | 2019) {
+    function gotoSubPage(season: Season) {
         if (browser && $page.routeId == "teams/[number=team_num]") {
             if (season == CURRENT_SEASON) {
                 goto(`/teams/${teamData.number}`, { replaceState: true });
@@ -80,8 +67,7 @@
         }
     }
 
-    let seasonStr = seasonToStr(getSeasonFromStr($page.url.searchParams.get("season")));
-    $: season = seasonFromLongStr(seasonStr);
+    let season = getSeasonFromStr($page.url.searchParams.get("season"));
     $: gotoSubPage(season);
 </script>
 
@@ -135,7 +121,7 @@
     </Card>
 
     <Card border={false}>
-        <Dropdown items={["2021 Freight Frenzy", "2019 Skystone"]} bind:value={seasonStr} style="width: 100%" />
+        <SeasonDropdown bind:season style="width: 100%; box-shadow: -2px 2px 10px 3px #e0e0e0;" />
     </Card>
 
     {#each sortedEvents as teamEvent}
@@ -206,6 +192,21 @@
                 teamPage={true}
             />
         </Card>
+    {:else}
+        <Card>
+            <div class="no-events">
+                {#if season == CURRENT_SEASON}
+                    <b>
+                        This team has not yet played any events in {prettyPrintSeason(season)}.
+                    </b>
+                {:else}
+                    <b>
+                        This team did not play any events in {prettyPrintSeason(season)}.
+                    </b>
+                {/if}
+                <p class="no-events-help">Try choosing a different season from the dropdown menu.</p>
+            </div>
+        </Card>
     {/each}
 </Loading>
 
@@ -223,5 +224,20 @@
         font-weight: bold;
         color: inherit;
         text-decoration: underline;
+    }
+
+    .no-events {
+        text-align: center;
+    }
+
+    .no-events * {
+        margin: 0;
+        font-size: var(--large-font-size);
+        color: var(--secondary-text-color);
+        display: block;
+    }
+
+    .no-events *:first-child {
+        margin-bottom: var(--large-gap);
     }
 </style>

@@ -11,9 +11,10 @@
     import FaButton from "../../../lib/components/FaButton.svelte";
     import { changeParam } from "../../../lib/components/season-records/changeParams";
     import RegionsDropdown from "../../../lib/components/season-records/RegionsDropdown.svelte";
+    import SeasonDropdown from "../../../lib/components/SeasonDropdown.svelte";
     import SkeletonRow from "../../../lib/components/skeleton/SkeletonRow.svelte";
-    import Checkbox from "../../../lib/components/stats/choose-stats/Checkbox.svelte";
     import WidthProvider from "../../../lib/components/WidthProvider.svelte";
+    import type { Season } from "../../../lib/constants";
     import {
         EventsSearchDocument,
         EventTypes,
@@ -31,23 +32,7 @@
 
     const BATCH_SIZE = 50;
 
-    function seasonToStr(season: 2021 | 2019): string {
-        return {
-            2021: "2021 Freight Frenzy",
-            2019: "2019 Skystone",
-        }[season];
-    }
-
-    function seasonFromStr(str: string): 2019 | 2021 | null {
-        return (
-            {
-                "2021 Freight Frenzy": 2021 as const,
-                "2019 Skystone": 2019 as const,
-            }[str] ?? null
-        );
-    }
-
-    function gotoSubPage(season: 2021 | 2019) {
+    function gotoSubPage(season: Season) {
         if (browser && $page.routeId == "events/[season=season]") {
             goto(`/events/${season}`, {
                 replaceState: true,
@@ -55,8 +40,7 @@
         }
     }
 
-    let seasonStr = seasonToStr(+$page.params.season as 2019 | 2021);
-    $: season = seasonFromStr(seasonStr)!;
+    let season = +$page.params.season as Season;
 
     $: gotoSubPage(season);
 
@@ -117,11 +101,7 @@
         <h1>{prettyPrintSeason(season)} Events</h1>
         <p class="options">
             <span>Season:</span>
-            <Dropdown
-                items={["2021 Freight Frenzy", "2019 Skystone"]}
-                bind:value={seasonStr}
-                style="width: calc(100% - 15ch)"
-            />
+            <SeasonDropdown bind:season style="width: calc(100% - 15ch)" />
         </p>
         {#if season != 2019}
             <p class="options">

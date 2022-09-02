@@ -34,7 +34,7 @@
     {:else}
         {@const name =
             stat == null || typeof stat == "number"
-                ? ""
+                ? "<none>"
                 : stat.identifierName.length < 20
                 ? stat.identifierName
                 : stat.columnName}
@@ -68,6 +68,16 @@
 
     input {
         width: 20ch;
+    }
+
+    @media (max-width: 800px) {
+        input {
+            width: 15ch;
+        }
+
+        span {
+            min-width: 18ch;
+        }
     }
 
     input[type="text"] {

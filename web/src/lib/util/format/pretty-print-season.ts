@@ -1,4 +1,6 @@
-export function prettyPrintSeason(season: 2021 | 2019): string {
+import type { Season } from "../../constants";
+
+export function prettyPrintSeason(season: Season): string {
     switch (season) {
         case 2021:
             return "Freight Frenzy";
