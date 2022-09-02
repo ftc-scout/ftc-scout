@@ -72,7 +72,7 @@
         let filteredData = filterStatDataList(sortedData, filters);
         assignRanks(filteredData, false, currentSort.stat);
 
-        return sortedData;
+        return filteredData;
     }
 
     $: statData = data.map((d) => ({ rank: 0, preFilterRank: 0, data: d }));
