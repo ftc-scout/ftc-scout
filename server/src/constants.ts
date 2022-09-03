@@ -21,5 +21,6 @@ export const FTC_API_KEY = process.env.FTC_API_KEY;
 
 export const CURRENT_SEASON: Season = 2021;
 export const PAST_SEASONS: Season[] = [2019, 2020];
+export const ALL_SEASONS: Season[] = [2019, 2020, 2021];
 
 export const SYNC = process.env.SYNC ? process.env.SYNC === "1" : false;
