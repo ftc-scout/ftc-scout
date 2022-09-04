@@ -70,7 +70,7 @@
                             </a>
                         </li>
                     {:else}
-                        <p class="no-events">There are no events scheduled today.</p>
+                        <p class="no-events">There are no events scheduled for today.</p>
                     {/each}
                 </ul>
             {:else}
