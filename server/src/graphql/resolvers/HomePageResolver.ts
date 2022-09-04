@@ -1,5 +1,5 @@
 import { Arg, Int, Query, Resolver } from "type-graphql";
-import { EntityTarget, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
+import { EntityTarget } from "typeorm";
 import { ALL_SEASONS, CURRENT_SEASON } from "../../constants";
 import { DATA_SOURCE } from "../../db/data-source";
 import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
