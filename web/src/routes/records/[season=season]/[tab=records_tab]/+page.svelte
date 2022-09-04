@@ -112,28 +112,28 @@
     <Card>
         <h1>{prettyPrintSeason(season)} Season Records</h1>
 
-        <p>
+        <div>
             <span>Season:</span>
             <SeasonDropdown bind:season style="width: calc(100% - 15ch)" />
-        </p>
+        </div>
         {#if season != 2019}
-            <p>
+            <div>
                 <span>Event Types:</span>
                 <Dropdown
                     items={["Traditional", "Remote", "Traditional and Remote"]}
                     bind:value={eventTypesStr}
                     style="width: calc(100% - 15ch)"
                 />
-            </p>
+            </div>
         {/if}
-        <p>
+        <div>
             <span>Regions:</span>
             <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
-        </p>
-        <p>
+        </div>
+        <div>
             <span>From:</span>
             <DateRange style="width: calc(100% - 15ch)" {season} bind:startDate bind:endDate />
-        </p>
+        </div>
     </Card>
 
     <TabbedCard
@@ -185,10 +185,13 @@
 </WidthProvider>
 
 <style>
-    p {
+    div {
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        margin-top: var(--large-gap);
+        margin-bottom: var(--large-gap);
     }
 
     span {
