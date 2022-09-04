@@ -7,6 +7,5 @@ export const load: PageLoad = async () => {
     let today = new Date();
     // Round to the hour to avoid pointless refetching.
     today.setMinutes(0, 0, 0);
-    console.log(today.toISOString());
     return await getData(getMyClient(fetch), HomePageDocument, { date: today });
 };
