@@ -99,36 +99,36 @@
 <WidthProvider width="1000px">
     <Card>
         <h1>{prettyPrintSeason(season)} Events</h1>
-        <p class="options">
+        <div class="options">
             <span>Season:</span>
             <SeasonDropdown bind:season style="width: calc(100% - 15ch)" />
-        </p>
+        </div>
         {#if season != 2019}
-            <p class="options">
+            <div class="options">
                 <span>Event Types:</span>
                 <Dropdown
                     items={["Traditional and Remote", "Traditional", "Remote"]}
                     bind:value={eventTypesStr}
                     style="width: calc(100% - 15ch)"
                 />
-            </p>
+            </div>
         {/if}
-        <p class="options">
+        <div class="options">
             <span>Regions:</span>
             <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
-        </p>
-        <p class="options">
+        </div>
+        <div class="options">
             <span>From:</span>
             <DateRange style="width: calc(100% - 15ch)" {season} bind:startDate bind:endDate />
-        </p>
-        <p class="options">
+        </div>
+        <div class="options">
             <span>Matches</span>
             <Dropdown
                 items={["Only events with matches", "All events"]}
                 bind:value={onlyMatchesStr}
                 style="width: calc(100% - 15ch)"
             />
-        </p>
+        </div>
     </Card>
     <Card>
         {#if data}
@@ -171,6 +171,9 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+
+        margin-top: var(--large-gap);
+        margin-bottom: var(--large-gap);
     }
 
     .options span {
