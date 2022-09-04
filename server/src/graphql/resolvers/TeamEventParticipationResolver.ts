@@ -6,6 +6,7 @@ import { Season } from "../../ftc-api/types/Season";
 import DataLoader from "dataloader";
 import { TeamEventParticipation } from "../objects/TeamEventParticipation";
 import { Team } from "../../db/entities/Team";
+import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 
 @Resolver(TeamEventParticipation)
 export class TeamEventParticipationResolver {
@@ -77,6 +78,32 @@ export class TeamEventParticipationResolver {
     })
     awards(@Root() tep: TeamEventParticipation) {
         return async (dl: DataLoader<{ season: Season; eventCode: string; teamNumber: number }, Award[]>) => {
+            return dl.load({ season: tep.season, eventCode: tep.eventCode, teamNumber: tep.teamNumber });
+        };
+    }
+
+    @FieldResolver(() => [TeamMatchParticipation])
+    @Loader<{ season: number; eventCode: string; teamNumber: number }, TeamMatchParticipation[]>(async (ids, _) => {
+        let tmps = await TeamMatchParticipation.find({
+            where: ids as { season: number; eventCode: string; teamNumber: number }[],
+        });
+
+        let groups: TeamMatchParticipation[][] = ids.map((_) => []);
+
+        for (let tmp of tmps) {
+            for (let i = 0; i < ids.length; i++) {
+                let id = ids[i];
+                if (id.season == tmp.season && id.eventCode == tmp.eventCode && id.teamNumber == tmp.teamNumber) {
+                    groups[i].push(tmp);
+                }
+            }
+        }
+        return groups;
+    })
+    matches(@Root() tep: TeamMatchParticipation) {
+        return async (
+            dl: DataLoader<{ season: Season; eventCode: string; teamNumber: number }, TeamMatchParticipation[]>
+        ) => {
             return dl.load({ season: tep.season, eventCode: tep.eventCode, teamNumber: tep.teamNumber });
         };
     }

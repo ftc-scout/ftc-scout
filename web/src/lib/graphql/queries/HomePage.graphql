@@ -1,0 +1,46 @@
+query HomePage {
+    activeTeamsCount(season: 2021)
+    matchesPlayedCount(season: 2021)
+    topTradMatch2021 {
+        ...EventPageMatch
+        event {
+            season
+            code
+            name
+            start
+            published
+            hasStarted
+        }
+    }
+    topRemoteTep2021 {
+        season
+        eventCode
+        teamNumber
+        matches {
+            season
+            eventCode
+            matchId
+            teamNumber
+            match {
+                ...EventPageMatch
+            }
+        }
+        event {
+            season
+            code
+            name
+            start
+            published
+            hasStarted
+        }
+    }
+    todaysEvents {
+        season
+        code
+        name
+        venue
+        city
+        stateOrProvince
+        country
+    }
+}
