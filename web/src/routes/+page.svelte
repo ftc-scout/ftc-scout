@@ -34,7 +34,7 @@
                     <Fa fw icon={TEAMS_ICON} />
                 </div>
                 <div class="info">
-                    <strong>{activeTeamsCount}</strong>
+                    <strong>{activeTeamsCount ?? "..."}</strong>
                     <p>Active Teams</p>
                 </div>
             </a>
@@ -44,7 +44,7 @@
                     <Fa fw icon={MATCHES_ICON} />
                 </div>
                 <div class="info">
-                    <strong>{matchesCount}</strong>
+                    <strong>{matchesCount ?? "..."}</strong>
                     <p>Matches Played</p>
                 </div>
             </a>
@@ -75,7 +75,7 @@
                     {/each}
                 </ul>
             {:else}
-                <SkeletonRow header={false} card={false} rows={5} />
+                <SkeletonRow header={false} card={false} rows={10} />
             {/if}
         </div>
     </Card>
@@ -95,6 +95,9 @@
                     frozen={true}
                     selectedTeam={null}
                 />
+            {:else}
+                <SkeletonRow card={false} rows={5} />
+                <SkeletonRow card={false} rows={5} />
             {/if}
         </div>
 
