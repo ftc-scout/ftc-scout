@@ -4,6 +4,7 @@
     import Card from "../lib/components/Card.svelte";
     import MatchTable from "../lib/components/matches/MatchTable.svelte";
     import SkeletonRow from "../lib/components/skeleton/SkeletonRow.svelte";
+    import { CURRENT_SEASON } from "../lib/constants";
     import { MATCHES_ICON, TEAMS_ICON } from "../lib/icons";
     import { prettyPrintDateRange } from "../lib/util/format/pretty-print-date";
     import type { PageData } from "./$types";
@@ -28,7 +29,7 @@
 
     <Card border={false}>
         <div class="info-box-wrap">
-            <div class="info-box">
+            <a class="info-box" sveltekit:prefetch href="/teams">
                 <div class="icon">
                     <Fa fw icon={TEAMS_ICON} />
                 </div>
@@ -36,9 +37,9 @@
                     <strong>{activeTeamsCount}</strong>
                     <p>Active Teams</p>
                 </div>
-            </div>
+            </a>
 
-            <div class="info-box">
+            <a class="info-box" sveltekit:prefetch href="/events/{CURRENT_SEASON}">
                 <div class="icon">
                     <Fa fw icon={MATCHES_ICON} />
                 </div>
@@ -46,7 +47,7 @@
                     <strong>{matchesCount}</strong>
                     <p>Matches Played</p>
                 </div>
-            </div>
+            </a>
         </div>
 
         <div class="todays-events">
@@ -150,6 +151,13 @@
         border-radius: 8px;
 
         padding: var(--large-padding);
+
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .info-box:hover {
+        filter: brightness(0.9);
     }
 
     .info-box .icon {
