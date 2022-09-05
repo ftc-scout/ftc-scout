@@ -5,7 +5,7 @@ on:
       - 'main'
     paths:
       - 'web/**'
-  workflow_dispatch
+  workflow_dispatch:
 env:
   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 jobs:
