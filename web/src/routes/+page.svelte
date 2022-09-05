@@ -19,6 +19,10 @@
     $: bestRemoteTep = $data?.data.topRemoteTep2021;
 </script>
 
+<svelte:head>
+    <title>FTC Scout</title>
+</svelte:head>
+
 <WidthProvider width="1000px">
     <Card border={false}>
         <div class="title">

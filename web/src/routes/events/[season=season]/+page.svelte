@@ -106,6 +106,10 @@
     }
 </script>
 
+<svelte:head>
+    <title>Events | FTC Scout</title>
+</svelte:head>
+
 <WidthProvider width="1000px">
     <Card>
         <h1>{prettyPrintSeason(season)} Events</h1>
