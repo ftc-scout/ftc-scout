@@ -6,6 +6,7 @@ query EventsSearch(
     $end: DateTime
     $limit: Int!
     $onlyWithMatches: Boolean!
+    $searchText: String!
 ) {
     eventsSearch(
         season: $season
@@ -15,6 +16,7 @@ query EventsSearch(
         end: $end
         onlyWithMatches: $onlyWithMatches
         limit: $limit
+        searchText: $searchText
     ) {
         season
         code

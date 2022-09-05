@@ -13,6 +13,7 @@
     import RegionsDropdown from "../../../lib/components/season-records/RegionsDropdown.svelte";
     import SeasonDropdown from "../../../lib/components/SeasonDropdown.svelte";
     import SkeletonRow from "../../../lib/components/skeleton/SkeletonRow.svelte";
+    import TextInput from "../../../lib/components/TextInput.svelte";
     import WidthProvider from "../../../lib/components/WidthProvider.svelte";
     import type { Season } from "../../../lib/constants";
     import {
@@ -58,6 +59,8 @@
     let onlyMatchesStr = $page.url.searchParams.get("matches") ?? true ? "Only events with matches" : "All events";
     $: onlyMatches = onlyMatchesStr == "Only events with matches";
 
+    let searchText = $page.url.searchParams.get("search") ?? "";
+
     let limit = BATCH_SIZE;
 
     let events: ReadableQuery<EventsSearchQuery>;
@@ -70,17 +73,23 @@
             end: endDate,
             onlyWithMatches: onlyMatches,
             limit,
+            searchText,
         },
     });
     $: data = $events?.data?.eventsSearch ?? null;
 
-    $: changeParam({
-        ["event-types"]: eventTypes == EventTypes.TradAndRemote ? null : eventTypesToStr(eventTypes),
-        region: region == Region.All ? null : regionToString(region),
-        start: dateToStr(startDate),
-        end: dateToStr(endDate),
-        matches: onlyMatches ? null : "false",
-    });
+    $: changeParam(
+        {
+            ["event-types"]: eventTypes == EventTypes.TradAndRemote ? null : eventTypesToStr(eventTypes),
+            region: region == Region.All ? null : regionToString(region),
+            start: dateToStr(startDate),
+            end: dateToStr(endDate),
+            matches: onlyMatches ? null : "false",
+            search: !searchText ? null : searchText,
+        },
+        true,
+        false
+    );
 
     function more() {
         limit += BATCH_SIZE;
@@ -92,6 +101,7 @@
             end: endDate,
             onlyWithMatches: onlyMatches,
             limit,
+            searchText,
         });
     }
 </script>
@@ -122,12 +132,16 @@
             <DateRange style="width: calc(100% - 15ch)" {season} bind:startDate bind:endDate />
         </div>
         <div class="options">
-            <span>Matches</span>
+            <span>Matches:</span>
             <Dropdown
                 items={["Only events with matches", "All events"]}
                 bind:value={onlyMatchesStr}
                 style="width: calc(100% - 15ch)"
             />
+        </div>
+        <div class="options">
+            <span>Search:</span>
+            <TextInput bind:value={searchText} style="width: calc(100% - 15ch)" search />
         </div>
     </Card>
     <Card>

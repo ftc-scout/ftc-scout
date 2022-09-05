@@ -13,6 +13,7 @@ import { DATA_SOURCE } from "../../db/data-source";
 import { Brackets } from "typeorm";
 import { EventTypes } from "./records.ts/EventTypes";
 import { getRegionCodes, Region } from "../../db/entities/types/Region";
+import fuzzysort from "fuzzysort";
 
 @Resolver(Event)
 export class EventResolver {
@@ -28,21 +29,25 @@ export class EventResolver {
     }
 
     @Query(() => [Event])
-    eventsSearch(
+    async eventsSearch(
         @Arg("season", () => Int) season: number,
         @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
         @Arg("region", () => Region) region: Region,
         @Arg("start", () => Date, { nullable: true }) start: Date | null,
         @Arg("end", () => Date, { nullable: true }) end: Date | null,
         @Arg("onlyWithMatches", () => Boolean) onlyWithMatches: boolean,
-        @Arg("limit", () => Int) limit: number
+        @Arg("limit", () => Int) limit: number,
+        @Arg("searchText", () => String, { nullable: true }) searchText: string | null
     ): Promise<Event[]> {
         let query = DATA_SOURCE.getRepository(Event)
             .createQueryBuilder("e")
             .where("e.season = :season", { season })
             .orderBy("e.start", "ASC")
-            .addOrderBy("e.name", "DESC")
-            .limit(limit);
+            .addOrderBy("e.name", "DESC");
+
+        if (!searchText) {
+            query.limit(limit);
+        }
 
         let regionCodes = getRegionCodes(region);
         query.andWhere('e."regionCode" IN (:...regionCodes)', { regionCodes });
@@ -62,7 +67,33 @@ export class EventResolver {
             );
         }
 
-        return query.getMany();
+        let events = await query.getMany();
+
+        if (searchText) {
+            events = fuzzysort
+                .go(searchText, events, {
+                    limit,
+                    keys: ["number", "name"],
+                    // bias older events with same search score.
+                    scoreFn: (a_) => {
+                        let a = a_ as Fuzzysort.KeyResult<Event>[] & { obj: Event };
+
+                        return a[0] || a[1]
+                            ? Math.max(
+                                  a[0] && a.obj
+                                      ? a[0].score - new Date(a.obj.start).getTime() / 1000000000000000
+                                      : -10000000,
+                                  a[1] && a.obj
+                                      ? a[1].score - new Date(a.obj.start).getTime() / 1000000000000000
+                                      : -10000000
+                              )
+                            : (null as any);
+                    },
+                })
+                .map((e) => e.obj);
+        }
+
+        return events;
     }
 
     @FieldResolver(() => [TeamMatchParticipation])
