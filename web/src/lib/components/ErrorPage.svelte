@@ -5,6 +5,10 @@
     export let message: string | null = null;
 </script>
 
+<svelte:head>
+    <title>FTC Scout</title>
+</svelte:head>
+
 <div class="outer">
     <div class="inner">
         <h1>{status ?? $page.status}</h1>
