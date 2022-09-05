@@ -36,7 +36,8 @@
         "reflect-metadata": "^0.1.13",
         "type-graphql": "^1.1.1",
         "type-graphql-dataloader": "^0.5.0",
-        "typeorm": "^0.3.6"
+        "typeorm": "^0.3.6",
+        "got": ">=11.8.5"
     },
     "devDependencies": {
         "@types/compression": "^1.7.2",
