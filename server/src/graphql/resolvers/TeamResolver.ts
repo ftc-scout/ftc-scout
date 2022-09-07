@@ -7,6 +7,8 @@ import { TeamEventParticipation } from "../objects/TeamEventParticipation";
 import { TeamEventParticipation2021 } from "../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
+import { DATA_SOURCE } from "../../db/data-source";
+import fuzzysort from "fuzzysort";
 
 @Resolver(Team)
 export class TeamResolver {
@@ -103,5 +105,43 @@ export class TeamResolver {
         return async (dl: DataLoader<{ season: number; teamNumber: number }, Award[]>) => {
             return dl.load({ season, teamNumber: team.number });
         };
+    }
+
+    @Query(() => [Team])
+    async teamsSearch(
+        @Arg("limit", () => Int) limit: number,
+        @Arg("searchText", () => String, { nullable: true }) searchText: string | null
+    ): Promise<Team[]> {
+        let query = DATA_SOURCE.getRepository(Team).createQueryBuilder("t").orderBy("t.number", "ASC");
+
+        if (!searchText) {
+            query.limit(limit);
+        }
+
+        let teams = await query.getMany();
+
+        if (searchText) {
+            teams.forEach((t) => (t.number = ("" + t.number) as any));
+
+            teams = fuzzysort
+                .go(searchText, teams, {
+                    limit,
+                    keys: ["number", "name"],
+                    // bias older events with same search score.
+                    scoreFn: (a_) => {
+                        let a = a_ as Fuzzysort.KeyResult<Team>[] & { obj: Team };
+
+                        return a[0] || a[1]
+                            ? Math.max(
+                                  a[0] && a.obj ? a[0].score - a.obj.number / 1000000000000 : -10000000,
+                                  a[1] && a.obj ? a[1].score - a.obj.number / 1000000000000 : -10000000
+                              )
+                            : (null as any);
+                    },
+                })
+                .map((t) => t.obj);
+        }
+
+        return teams;
     }
 }

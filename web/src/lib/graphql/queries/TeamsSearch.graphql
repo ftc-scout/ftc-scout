@@ -1,0 +1,6 @@
+query TeamsSearch($limit: Int!, $searchText: String!) {
+    teamsSearch(limit: $limit, searchText: $searchText) {
+        number
+        name
+    }
+}
