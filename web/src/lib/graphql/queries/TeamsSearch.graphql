@@ -1,5 +1,5 @@
-query TeamsSearch($limit: Int!, $searchText: String!) {
-    teamsSearch(limit: $limit, searchText: $searchText) {
+query TeamsSearch($limit: Int!, $region: Region, $searchText: String!) {
+    teamsSearch(limit: $limit, region: $region, searchText: $searchText) {
         number
         name
     }

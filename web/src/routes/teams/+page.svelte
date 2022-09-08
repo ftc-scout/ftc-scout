@@ -5,12 +5,19 @@
     import { query, type ReadableQuery } from "svelte-apollo";
     import FaButton from "../../lib/components/FaButton.svelte";
     import { changeParam } from "../../lib/components/season-records/changeParams";
+    import RegionsDropdown from "../../lib/components/season-records/RegionsDropdown.svelte";
     import SkeletonRow from "../../lib/components/skeleton/SkeletonRow.svelte";
     import TextInput from "../../lib/components/TextInput.svelte";
     import WidthProvider from "../../lib/components/WidthProvider.svelte";
-    import { TeamsSearchDocument, type TeamsSearchQuery } from "../../lib/graphql/generated/graphql-operations";
+    import { Region, TeamsSearchDocument, type TeamsSearchQuery } from "../../lib/graphql/generated/graphql-operations";
+    import { regionFromStr, regionToString } from "../../lib/util/regions";
 
     const BATCH_SIZE = 50;
+
+    console.log();
+    let regionStr: string = regionToString(regionFromStr($page.url.searchParams.get("region") ?? "ALL") ?? Region.All);
+    $: region = regionFromStr(regionStr) ?? Region.All;
+    $: console.log(region);
 
     let searchText = $page.url.searchParams.get("search") ?? "";
 
@@ -20,14 +27,15 @@
     $: teams = query(TeamsSearchDocument, {
         variables: {
             limit,
+            region,
             searchText,
         },
     });
     $: data = $teams?.data?.teamsSearch ?? null;
-    $: console.log(teams);
 
     $: changeParam(
         {
+            region: region == Region.All ? null : regionToString(region),
             search: !searchText ? null : searchText,
         },
         true,
@@ -38,6 +46,7 @@
         limit += BATCH_SIZE;
         teams.refetch({
             limit,
+            region,
             searchText,
         });
     }
@@ -50,6 +59,10 @@
 <WidthProvider width="1000px">
     <Card>
         <h1>Teams</h1>
+        <div class="options">
+            <span>Regions:</span>
+            <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
+        </div>
         <div class="options">
             <span>Search:</span>
             <TextInput bind:value={searchText} style="width: calc(100% - 15ch)" search />
