@@ -9,6 +9,7 @@ import { TeamEventParticipation2019 } from "../../db/entities/team-event-partici
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { DATA_SOURCE } from "../../db/data-source";
 import fuzzysort from "fuzzysort";
+import { getRegionCodes, Region } from "../../db/entities/types/Region";
 
 @Resolver(Team)
 export class TeamResolver {
@@ -110,9 +111,30 @@ export class TeamResolver {
     @Query(() => [Team])
     async teamsSearch(
         @Arg("limit", () => Int) limit: number,
+        @Arg("region", () => Region, { nullable: true }) region: Region | null,
         @Arg("searchText", () => String, { nullable: true }) searchText: string | null
     ): Promise<Team[]> {
         let query = DATA_SOURCE.getRepository(Team).createQueryBuilder("t").orderBy("t.number", "ASC");
+
+        if (region && region != Region.ALL) {
+            let regionCodes = getRegionCodes(region);
+            query.andWhere(
+                `
+            (exists(SELECT *
+                FROM team_event_participation2021 tep2021
+                         JOIN event e on tep2021."eventSeason" = e.season and
+                                         tep2021."eventCode" = e.code
+                WHERE tep2021."teamNumber" = t.number
+                  AND e."regionCode" in (:...regionCodes))
+        OR exists(SELECT *
+                FROM team_event_participation2019 tep2019
+                         JOIN event e on tep2019."eventSeason" = e.season and
+                                         tep2019."eventCode" = e.code
+                WHERE tep2019."teamNumber" = t.number
+                  AND e."regionCode" in (:...regionCodes)))`,
+                { regionCodes }
+            );
+        }
 
         if (!searchText) {
             query.limit(limit);
