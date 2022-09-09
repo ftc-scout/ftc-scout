@@ -6,7 +6,7 @@
     import { page } from "$app/stores";
 </script>
 
-<nav>
+<nav aria-label="Main menu">
     <HamburgerButton />
 
     <Logo />
