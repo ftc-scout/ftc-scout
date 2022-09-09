@@ -44,7 +44,7 @@ export const TEAM_STAT: Stat<FullTep2019> = {
 
 export const RP_STAT: Stat<FullTep2019> = {
     color: StatColor.RED,
-    displayType: StatDisplayType.INTEGER,
+    displayType: StatDisplayType.DECIMAL,
     listName: "Ranking Points (RP)",
     columnName: "RP",
     identifierName: "Ranking Points (RP)",
@@ -64,7 +64,7 @@ export const EVENT_RANK_STAT: Stat<FullTep2019> = {
 
 export const TBP_STAT: Stat<FullTep2019> = {
     color: StatColor.LIGHT_BLUE,
-    displayType: StatDisplayType.INTEGER,
+    displayType: StatDisplayType.DECIMAL,
     listName: "Tie Breaker Points (TBP)",
     columnName: "TBP",
     identifierName: "Tie Breaker Points (TBP)",

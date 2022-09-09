@@ -164,7 +164,11 @@
             {#if hasRp || hasOpr || hasAvg}
                 <InfoIconRow icon={null}>
                     {#if typeof rp == "number"}
-                        <b>{rp}</b> RP{hasOpr || hasAvg ? " · " : ""}
+                        {#if rp == Math.floor(rp)}
+                            <b>{rp}</b> RP{hasOpr || hasAvg ? " · " : ""}
+                        {:else}
+                            <b>{prettyPrintFloat(rp)}</b> RP{hasOpr || hasAvg ? " · " : ""}
+                        {/if}
                     {/if}
                     {#if typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
                         <b>{prettyPrintFloat(teamEvent.stats?.opr?.totalPoints)}</b> OPR{hasAvg ? " · " : ""}
