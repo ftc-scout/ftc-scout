@@ -8,6 +8,7 @@
     import { page } from "$app/stores";
     import { keyPathName } from "../lib/util/key-pathname";
     import Analytics from "../lib/components/Analytics.svelte";
+    import { IS_PROD } from "../lib/constants";
 
     export let data: LayoutData;
     let f: NonNullable<HttpOptions["fetch"]>;
@@ -30,7 +31,9 @@
     <meta name="theme-color" content="#ffffff" />
 </svelte:head>
 
-<Analytics />
+{#if IS_PROD}
+    <Analytics />
+{/if}
 
 <Navbar />
 <Sidebar />
