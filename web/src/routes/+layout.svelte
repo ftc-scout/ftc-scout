@@ -7,6 +7,7 @@
     import type { HttpOptions } from "@apollo/client";
     import { page } from "$app/stores";
     import { keyPathName } from "../lib/util/key-pathname";
+    import Analytics from "../lib/components/Analytics.svelte";
 
     export let data: LayoutData;
     let f: NonNullable<HttpOptions["fetch"]>;
@@ -28,6 +29,8 @@
     <meta name="msapplication-TileColor" content="#2c666e" />
     <meta name="theme-color" content="#ffffff" />
 </svelte:head>
+
+<Analytics />
 
 <Navbar />
 <Sidebar />
