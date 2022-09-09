@@ -8,8 +8,8 @@
     }
 </script>
 
-<div class="wrapper">
-    <button class="hamburger-button" on:click={click}>
+<div class="wrapper" aria-hidden="true">
+    <button class="hamburger-button" on:click={click} aria-expanded="true">
         <Fa icon={faBars} fw size="1.75x" />
     </button>
 </div>

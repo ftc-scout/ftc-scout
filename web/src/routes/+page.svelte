@@ -61,23 +61,25 @@
             <hr />
 
             {#if events}
-                <ul>
-                    {#each events as event}
-                        <li>
-                            <a sveltekit:prefetch href="/events/{event.season}/{event.code}/matches">
-                                <span>{event.name}</span>
-                                <em class="info">
-                                    {event.venue},
-                                    {event.city},
-                                    {event.stateOrProvince},
-                                    {event.country}
-                                </em>
-                            </a>
-                        </li>
-                    {:else}
-                        <p class="no-events">There are no events scheduled for today.</p>
-                    {/each}
-                </ul>
+                {#if events.length}
+                    <ul>
+                        {#each events as event}
+                            <li>
+                                <a sveltekit:prefetch href="/events/{event.season}/{event.code}/matches">
+                                    <span>{event.name}</span>
+                                    <em class="info">
+                                        {event.venue},
+                                        {event.city},
+                                        {event.stateOrProvince},
+                                        {event.country}
+                                    </em>
+                                </a>
+                            </li>
+                        {/each}
+                    </ul>
+                {:else}
+                    <p class="no-events">There are no events scheduled for today.</p>
+                {/if}
             {:else}
                 <SkeletonRow header={false} card={false} rows={10} />
             {/if}
