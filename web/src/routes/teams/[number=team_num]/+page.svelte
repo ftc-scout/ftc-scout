@@ -75,6 +75,12 @@
     <title>
         {!!teamData ? `${teamData.number} ${teamData.name} | FTC Scout` : "Team Page | Ftc Scout"}
     </title>
+    <meta
+        name="description"
+        content={!!teamData
+            ? `Information and matches for team ${teamData.number} ${teamData.name}.`
+            : `Information and matches for team ${$page.params.number}`}
+    />
 </svelte:head>
 
 <Loading store={$team} width={"1000px"} doesNotExist={!teamData}>
