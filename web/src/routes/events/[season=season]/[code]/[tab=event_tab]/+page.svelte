@@ -80,6 +80,12 @@
     <title>
         {!!eventData ? `${eventData.name} | FTC Scout` : "Event Page | Ftc Scout"}
     </title>
+    <meta
+        name="description"
+        content={!!eventData
+            ? `Matches, awards, and statistics for the ${new Date(eventData.start).getFullYear()} ${eventData.name}.`
+            : "Matches, awards, and statistics for an event."}
+    />
 </svelte:head>
 
 <Loading store={$event} width={"1250px"} doesNotExist={!eventData}>

@@ -108,6 +108,7 @@
 
 <svelte:head>
     <title>Events | FTC Scout</title>
+    <meta name="description" content="Find and search for FTC events in the {$page.params.season} season." />
 </svelte:head>
 
 <WidthProvider width="1000px">
