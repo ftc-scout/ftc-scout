@@ -30,6 +30,9 @@
     <meta name="msapplication-TileColor" content="#2c666e" />
     <meta name="theme-color" content="#ffffff" />
     <meta property="og:image" content="/banner.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="620" />
+    <meta property="og:image:type" content="image/png" />
     <meta property="og:title" content="FTCScout" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ftcscout.org" />
