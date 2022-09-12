@@ -30,7 +30,16 @@
     <meta name="msapplication-TileColor" content="#2c666e" />
     <meta name="theme-color" content="#ffffff" />
     <meta property="og:image" content="/favicon-32x32.png" />
-</svelte:head>
+    <meta property="og:title" content="FTCScout" />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://ftcscout.org" />
+    <meta
+        property="og:description"
+        content="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
+    />
+    <meta name="theme-color" content="#2c666e" />
+    <meta name="twitter:card" content="/favicon-32x32.png" /></svelte:head
+>
 
 {#if IS_PROD}
     <Analytics />
