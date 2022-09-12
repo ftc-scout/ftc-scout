@@ -23,8 +23,7 @@
     <title>FTC Scout</title>
     <meta
         name="description"
-        content="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics 
-        and data on all aspects of FTC."
+        content="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
     />
 </svelte:head>
 
