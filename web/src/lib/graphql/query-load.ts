@@ -14,6 +14,8 @@ export async function getData<Data = any, Variables = object>(
     let queryResult = client.query({
         query,
         variables,
+        // No caching if on server
+        ...(!browser && { fetchPolicy: "no-cache" }),
     });
 
     let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
