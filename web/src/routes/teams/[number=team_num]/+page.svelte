@@ -60,9 +60,9 @@
     function gotoSubPage(season: Season) {
         if (browser && $page.routeId == "teams/[number=team_num]") {
             if (season == CURRENT_SEASON) {
-                goto(`/teams/${teamData.number}`, { replaceState: true });
+                goto(`/teams/${$page.params.number}`, { replaceState: true });
             } else {
-                goto(`/teams/${teamData.number}?season=${season}`, { replaceState: true });
+                goto(`/teams/${$page.params.number}?season=${season}`, { replaceState: true });
             }
         }
     }
