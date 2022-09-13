@@ -14,10 +14,8 @@
 
     const BATCH_SIZE = 50;
 
-    console.log();
     let regionStr: string = regionToString(regionFromStr($page.url.searchParams.get("region") ?? "ALL") ?? Region.All);
     $: region = regionFromStr(regionStr) ?? Region.All;
-    $: console.log(region);
 
     let searchText = $page.url.searchParams.get("search") ?? "";
 
