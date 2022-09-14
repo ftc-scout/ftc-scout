@@ -55,6 +55,7 @@
 <svelte:head>
     <title>Teams | FTCScout</title>
     <meta name="description" content="Find and search for FTC teams." />
+    <meta property="og:title" content="Teams | FTCScout" />
 </svelte:head>
 
 <WidthProvider width="1000px">

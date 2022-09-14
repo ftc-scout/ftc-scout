@@ -86,6 +86,7 @@
             ? `Matches, awards, and statistics for the ${new Date(eventData.start).getFullYear()} ${eventData.name}.`
             : "Matches, awards, and statistics for an event."}
     />
+    <meta property="og:title" content={!!eventData ? `${eventData.name} | FTCScout` : "Event Page | FtcScout"} />
 </svelte:head>
 
 <Loading store={$event} width={"1250px"} doesNotExist={!eventData}>

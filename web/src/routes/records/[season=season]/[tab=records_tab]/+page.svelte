@@ -107,6 +107,10 @@
         {`${season} ${$page.params.tab == "teams" ? "Team" : "Match"} Records | FTCScout`}
     </title>
     <meta name="description" content="Records and high scores for the {$page.params.season} season." />
+    <meta
+        property="og:title"
+        content={`${season} ${$page.params.tab == "teams" ? "Team" : "Match"} Records | FTCScout`}
+    />
 </svelte:head>
 
 <WidthProvider width={"1250px"}>
