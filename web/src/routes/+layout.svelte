@@ -33,7 +33,7 @@
     <meta property="og:site_name" content="FTCScout" />
     <meta
         property="og:description"
-        content="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
+        content="FTCScout is a new way to track and scout FIRST Tech Challenge, providing advanced statistics and data on all aspects of FTC."
     />
     <meta property="og:image" content="/banner.png" />
     <meta name="twitter:card" content="summary_large_image" />
