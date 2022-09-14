@@ -14,10 +14,8 @@
 
     const BATCH_SIZE = 50;
 
-    console.log();
     let regionStr: string = regionToString(regionFromStr($page.url.searchParams.get("region") ?? "ALL") ?? Region.All);
     $: region = regionFromStr(regionStr) ?? Region.All;
-    $: console.log(region);
 
     let searchText = $page.url.searchParams.get("search") ?? "";
 
@@ -53,8 +51,9 @@
 </script>
 
 <svelte:head>
-    <title>Teams | FTC Scout</title>
+    <title>Teams | FTCScout</title>
     <meta name="description" content="Find and search for FTC teams." />
+    <meta property="og:title" content="Teams | FTCScout" />
 </svelte:head>
 
 <WidthProvider width="1000px">

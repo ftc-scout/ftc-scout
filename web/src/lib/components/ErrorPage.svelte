@@ -6,7 +6,7 @@
 </script>
 
 <svelte:head>
-    <title>FTC Scout</title>
+    <title>FTCScout</title>
 </svelte:head>
 
 <div class="outer">

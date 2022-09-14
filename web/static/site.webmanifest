@@ -1,6 +1,6 @@
 {
-    "name": "FTC Scout",
-    "short_name": "FTC Scout",
+    "name": "FTCScout",
+    "short_name": "FTCScout",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",

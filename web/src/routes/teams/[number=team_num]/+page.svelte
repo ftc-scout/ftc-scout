@@ -73,13 +73,17 @@
 
 <svelte:head>
     <title>
-        {!!teamData ? `${teamData.number} ${teamData.name} | FTC Scout` : "Team Page | Ftc Scout"}
+        {!!teamData ? `${teamData.number} ${teamData.name} | FTCScout` : "Team Page | FtcScout"}
     </title>
     <meta
         name="description"
         content={!!teamData
             ? `Information and matches for team ${teamData.number} ${teamData.name}.`
             : `Information and matches for team ${$page.params.number}`}
+    />
+    <meta
+        property="og:title"
+        content={!!teamData ? `${teamData.number} ${teamData.name} | FTCScout` : "Team Page | FtcScout"}
     />
 </svelte:head>
 

@@ -1,6 +1,6 @@
 {
     "name": "ftc-scout-web",
-    "description": "The website for Ftc Scout.",
+    "description": "The website for FtcScout.",
     "version": "0.0.1",
     "scripts": {
         "dev": "vite dev",
