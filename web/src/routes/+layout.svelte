@@ -17,6 +17,13 @@
     setClient(getMyClient(f));
 </script>
 
+{#if IS_PROD}
+    <Analytics />
+{/if}
+
+<Navbar />
+<Sidebar />
+
 <svelte:head>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" />
@@ -44,13 +51,6 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://ftcscout.org" />
 </svelte:head>
-
-{#if IS_PROD}
-    <Analytics />
-{/if}
-
-<Navbar />
-<Sidebar />
 
 {#key keyPathName($page.url.pathname)}
     <div id="content">
