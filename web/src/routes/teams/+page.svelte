@@ -53,7 +53,7 @@
 </script>
 
 <svelte:head>
-    <title>Teams | FTC Scout</title>
+    <title>Teams | FTCScout</title>
     <meta name="description" content="Find and search for FTC teams." />
 </svelte:head>
 

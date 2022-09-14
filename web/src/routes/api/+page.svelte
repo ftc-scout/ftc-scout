@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>Api | FTC Scout</title>
+    <title>Api | FTCScout</title>
     <meta
         name="description"
         content="The developer api for FTCScout providing access to all our statistics and data."

@@ -1,5 +1,5 @@
 <svelte:head>
-    <title>About | FTC Scout</title>
+    <title>About | FTCScout</title>
     <meta name="description" content="About FTCScout, a new way to track and scout FIRST Tech Challenge." />
 </svelte:head>
 

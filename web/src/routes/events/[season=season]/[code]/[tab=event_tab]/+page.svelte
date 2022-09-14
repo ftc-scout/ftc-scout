@@ -78,7 +78,7 @@
 
 <svelte:head>
     <title>
-        {!!eventData ? `${eventData.name} | FTC Scout` : "Event Page | Ftc Scout"}
+        {!!eventData ? `${eventData.name} | FTCScout` : "Event Page | FtcScout"}
     </title>
     <meta
         name="description"

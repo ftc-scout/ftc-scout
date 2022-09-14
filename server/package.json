@@ -1,7 +1,7 @@
 {
     "name": "ftc-scout-server",
     "version": "0.0.1",
-    "description": "The server for Ftc Scout.",
+    "description": "The server for FtcScout.",
     "main": "index.js",
     "scripts": {
         "watch": "tsc -w",
