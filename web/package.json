@@ -1,6 +1,6 @@
 {
     "name": "ftc-scout-web",
-    "description": "The website for Ftc Scout.",
+    "description": "The website for FtcScout.",
     "version": "0.0.1",
     "scripts": {
         "dev": "vite dev",
@@ -14,7 +14,7 @@
         "format": "prettier --write --plugin-search-dir=. .",
         "gen": "graphql-codegen",
         "pretty": "prettier --write .",
-        "start": "node build/index.js"
+        "start": "node --trace-gc build/index.js"
     },
     "devDependencies": {
         "@graphql-codegen/cli": "^2.6.2",

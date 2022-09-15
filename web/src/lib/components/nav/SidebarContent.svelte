@@ -7,7 +7,6 @@
         CLOSE_ICON,
         EVENTS_ICON,
         HOME_ICON,
-        REGIONS_ICON,
         SEASON_RECORDS_ICON,
         TEAMS_ICON,
     } from "$lib/icons";
@@ -21,7 +20,7 @@
 <b>
     <span>Navigate:</span>
     <button on:click={() => ($sidebarOpen = false)}>
-        <Fa icon={CLOSE_ICON} size="1.5x" />
+        <Fa icon={CLOSE_ICON} size="1.75x" style="margin-right: var(--gap)" />
     </button>
 </b>
 

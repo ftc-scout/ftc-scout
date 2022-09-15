@@ -5,9 +5,12 @@
     export let season: Season;
 
     export let startDate: Date | null = null;
-    $: startDate = !startDateStr ? null : dateFromStr(startDateStr);
     export let endDate: Date | null = null;
-    $: endDate = !endDateStr ? null : dateFromStr(endDateStr);
+
+    function save() {
+        startDate = !startDateStr ? null : dateFromStr(startDateStr);
+        endDate = !endDateStr ? null : dateFromStr(endDateStr);
+    }
 
     let startDateStr: string = dateToStr(startDate) ?? "";
     let endDateStr: string = dateToStr(endDate) ?? "";
@@ -19,13 +22,27 @@
 </script>
 
 <span {style}>
-    <div>
-        <input type="date" bind:value={startDateStr} aria-label="start date" min={minDate} max={maxDate} />
-    </div>
+    <form on:submit|preventDefault={save}>
+        <input
+            type="date"
+            bind:value={startDateStr}
+            aria-label="start date"
+            min={minDate}
+            max={maxDate}
+            on:focusout={save}
+        />
+    </form>
     to
-    <div>
-        <input type="date" bind:value={endDateStr} aria-label="end date" min={minDate} max={maxDate} />
-    </div>
+    <form on:submit|preventDefault={save}>
+        <input
+            type="date"
+            bind:value={endDateStr}
+            aria-label="end date"
+            min={minDate}
+            max={maxDate}
+            on:focusout={save}
+        />
+    </form>
 </span>
 
 <style>
@@ -35,7 +52,7 @@
         gap: var(--large-gap);
     }
 
-    div {
+    form {
         background: var(--foreground-color);
 
         box-shadow: var(--shadow-color) 0px 2px 5px -1px, var(--shadow-color) 0px 1px 3px -1px;

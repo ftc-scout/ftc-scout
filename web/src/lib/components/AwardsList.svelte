@@ -81,29 +81,22 @@
         color: var(--theme-color);
     }
 
-    ol {
-        list-style: none;
-        counter-reset: list;
+    ol,
+    ul {
+        padding-left: var(--xl-gap);
     }
 
     li {
-        /* margin-top: var(--large-gap); */
-        /* margin-bottom: var(--large-gap); */
-        counter-increment: list;
-
         margin: 0;
         padding: 0;
 
-        /* display: block; */
+        border-radius: 4px;
+
         width: 100%;
     }
 
     li:hover {
         background: var(--hover-color);
-    }
-
-    ol li::marker {
-        content: counter(list) ")\a0";
     }
 
     span {
