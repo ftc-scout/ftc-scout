@@ -42,7 +42,6 @@
     <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#2c666e" />
     <meta name="msapplication-TileColor" content="#2c666e" />
     <meta name="theme-color" content="#ffffff" />
-    <meta property="og:title" content="FTCScout" />
     <meta property="og:site_name" content="FTCScout" />
     <meta
         property="og:description"
