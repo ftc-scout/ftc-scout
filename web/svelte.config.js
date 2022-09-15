@@ -17,7 +17,7 @@ const config = {
                 "img-src": ["self", "fonts.googleapis.com"],
                 "font-src": ["self", "fonts.gstatic.com", "fonts.googleapis.com"],
                 "frame-ancestors": ["self"],
-                "upgrade-insecure-requests": [],
+                "upgrade-insecure-requests": true,
             },
         },
     },
