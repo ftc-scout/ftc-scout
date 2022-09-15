@@ -14,6 +14,6 @@
 <svelte:head>
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-5RC8F6X8NC">
     </script>
-    <script src="/static/js/ga.js">
+    <script src="/js/ga.js">
     </script>
 </svelte:head>
