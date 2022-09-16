@@ -15,7 +15,7 @@ import { DATA_SOURCE } from "./db/data-source";
 import { GraphQLContext } from "./graphql/Context";
 import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
-import { getConnection } from "typeorm";
+import { getConnection, TreeLevelColumn } from "typeorm";
 import compression from "compression";
 import { teamBanner } from "./banners";
 import { resolve } from "path";
@@ -40,6 +40,7 @@ async function main() {
 
     // Initialize the apollo graphql server.
     const apolloServer = new ApolloServer({
+        introspection: true,
         schema: await buildSchema({
             resolvers,
             validate: false,
