@@ -87,6 +87,7 @@
             : "Matches, awards, and statistics for an event."}
     />
     <meta property="og:title" content={!!eventData ? `${eventData.name} | FTCScout` : "Event Page | FtcScout"} />
+    <meta property="og:image" content="/banner.png" />
 </svelte:head>
 
 <Loading store={$event} width={"1250px"} doesNotExist={!eventData}>

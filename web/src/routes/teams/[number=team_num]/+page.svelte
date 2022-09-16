@@ -85,6 +85,8 @@
         property="og:title"
         content={!!teamData ? `${teamData.number} ${teamData.name} | FTCScout` : "Team Page | FtcScout"}
     />
+    <meta property="og:image" content="api.ftcscout.org/banners/{$page.params.number}.png" />
+    <meta property="og:image" content="/banner.png" />
 </svelte:head>
 
 <Loading store={$team} width={"1000px"} doesNotExist={!teamData}>

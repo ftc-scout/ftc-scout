@@ -54,6 +54,7 @@
     <title>Teams | FTCScout</title>
     <meta name="description" content="Find and search for FTC teams." />
     <meta property="og:title" content="Teams | FTCScout" />
+    <meta property="og:image" content="/banner.png" />
 </svelte:head>
 
 <WidthProvider width="1000px">

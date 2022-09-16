@@ -26,6 +26,7 @@
         content="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
     />
     <meta property="og:title" content="FTCScout" />
+    <meta property="og:image" content="/banner.png" />
 </svelte:head>
 
 <WidthProvider width="1000px">

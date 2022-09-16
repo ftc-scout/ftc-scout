@@ -47,7 +47,6 @@
         property="og:description"
         content="FTCScout is a new way to track and scout FIRST Tech Challenge, providing advanced statistics and data on all aspects of FTC."
     />
-    <meta property="og:image" content="/banner.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="theme-color" content="#2c666e" />
     <meta property="og:image:width" content="1200" />

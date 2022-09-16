@@ -17,6 +17,8 @@ import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
 import compression from "compression";
+import { teamBanner } from "./banners";
+import { resolve } from "path";
 
 async function main() {
     // TODO - This is really insecure. Look in to fixing this.
@@ -61,6 +63,14 @@ async function main() {
     apolloServer.applyMiddleware({
         app,
         cors: false,
+    });
+
+    app.get("/banners/:team_num", async (req, res) => {
+        if (/^\d+$/.test(req.params.team_num)) {
+            await teamBanner(+req.params.team_num, res);
+        } else {
+            res.sendFile(resolve("src/res/banner.png"));
+        }
     });
 
     // Start the server

@@ -111,6 +111,7 @@
         property="og:title"
         content={`${season} ${$page.params.tab == "teams" ? "Team" : "Match"} Records | FTCScout`}
     />
+    <meta property="og:image" content="/banner.png" />
 </svelte:head>
 
 <WidthProvider width={"1250px"}>
