@@ -22,6 +22,7 @@ RUN apk --no-cache add ca-certificates wget  && \
         wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.29-r0/glibc-2.29-r0.apk && \
         apk add glibc-2.29-r0.apk
 RUN npm ci
+RUN npm install canvas@2.10.1 --build-from-source
 RUN npm run build
 
 # Production image, copy all the files and run next
