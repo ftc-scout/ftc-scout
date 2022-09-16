@@ -224,7 +224,7 @@ export class SeasonRecords2021Resolver {
             .map((o) => o.toRawSql("2"))
             .filter((o) => o != null)
             .join(", ");
-        if (orderByRaw2.length == 0) orderByRaw = 'tep2."oprTotalpoints" DESC';
+        if (orderByRaw2.length == 0) orderByRaw2 = 'tep2."oprTotalpoints" DESC';
 
         let preFilterQuery = DATA_SOURCE.getRepository(TeamEventParticipation2021)
             .createQueryBuilder("tep2")
@@ -273,8 +273,16 @@ export class SeasonRecords2021Resolver {
             query = query.andWhere("NOT e.remote");
         }
 
-        for (let order of orderIn.slice(0, 5)) {
-            query = order.addSelfToQuery(query);
+        for (let i = 0; i < orderIn.length && i < 5; i++) {
+            let o = orderIn[i];
+            // Don't duplicate order clauses.
+            if (
+                orderIn
+                    .slice(0, i)
+                    .every((o2) => o2.field.fieldName != o.field.fieldName || o2.field.group != o.field.group)
+            ) {
+                query = o.addSelfToQuery(query);
+            }
         }
 
         if (filter != null) {
