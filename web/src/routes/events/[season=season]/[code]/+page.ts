@@ -2,5 +2,5 @@ import { redirect } from "@sveltejs/kit";
 import type { PageLoad } from "./$types";
 
 export const load: PageLoad = async ({ params }) => {
-    throw redirect(302, `/events/${params.season}/${params.code}/matches`);
+    throw redirect(301, `/events/${params.season}/${params.code}/matches`);
 };
