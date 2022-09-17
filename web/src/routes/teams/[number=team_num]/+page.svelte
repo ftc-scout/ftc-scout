@@ -33,6 +33,7 @@
     import { CURRENT_SEASON, type Season } from "../../../lib/constants";
     import SeasonDropdown from "../../../lib/components/SeasonDropdown.svelte";
     import Head from "../../../lib/components/nav/Head.svelte";
+    import Location from "../../../lib/components/Location.svelte";
 
     export let data: PageData;
     let team: Readable<ApolloQueryResult<TeamQuery> | null>;
@@ -107,7 +108,7 @@
         {/if}
 
         <InfoIconRow icon={LOCATION_ICON}>
-            {teamData.city}, {teamData.stateOrProvince}, {teamData.country}
+            <Location {...teamData} />
         </InfoIconRow>
 
         <InfoIconRow icon={ROOKIE_YEAR_ICON}>
@@ -141,8 +142,7 @@
             </InfoIconRow>
 
             <InfoIconRow icon={LOCATION_ICON}>
-                {event.venue}, {event.city}, {event.stateOrProvince},
-                {event.country}
+                <Location {...event} />
             </InfoIconRow>
 
             {#if teamEvent.stats?.rank}

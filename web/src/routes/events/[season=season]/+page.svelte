@@ -9,6 +9,7 @@
     import DateRange from "../../../lib/components/DateRange.svelte";
     import Dropdown from "../../../lib/components/Dropdown.svelte";
     import FaButton from "../../../lib/components/FaButton.svelte";
+    import Location from "../../../lib/components/Location.svelte";
     import Head from "../../../lib/components/nav/Head.svelte";
     import { changeParam } from "../../../lib/components/season-records/changeParams";
     import RegionsDropdown from "../../../lib/components/season-records/RegionsDropdown.svelte";
@@ -159,9 +160,11 @@
                             class:has-matches={hasMatches}
                         >
                             <span>{event.name}</span>
-                            <em class="info"
-                                >{prettyPrintDateRangeString(event.start, event.end)} at {event.venue}, {event.city}, {event.stateOrProvince},
-                                {event.country}
+                            <em class="info">
+                                {prettyPrintDateRangeString(event.start, event.end)} at <Location
+                                    {...event}
+                                    link={false}
+                                />
                             </em>
                         </a>
                     </li>

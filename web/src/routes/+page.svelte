@@ -2,6 +2,7 @@
     import WidthProvider from "$lib/components/WidthProvider.svelte";
     import Fa from "svelte-fa";
     import Card from "../lib/components/Card.svelte";
+    import Location from "../lib/components/Location.svelte";
     import MatchTable from "../lib/components/matches/MatchTable.svelte";
     import Head from "../lib/components/nav/Head.svelte";
     import SkeletonRow from "../lib/components/skeleton/SkeletonRow.svelte";
@@ -70,10 +71,7 @@
                                 <a sveltekit:prefetch href="/events/{event.season}/{event.code}/matches">
                                     <span>{event.name}</span>
                                     <em class="info">
-                                        {event.venue},
-                                        {event.city},
-                                        {event.stateOrProvince},
-                                        {event.country}
+                                        <Location {...event} link={false} />
                                     </em>
                                 </a>
                             </li>

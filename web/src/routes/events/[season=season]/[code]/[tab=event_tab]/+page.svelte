@@ -30,6 +30,7 @@
     import EventStats from "../../../../../lib/components/event-stats/EventStats.svelte";
     import ErrorPage from "../../../../../lib/components/ErrorPage.svelte";
     import Head from "../../../../../lib/components/nav/Head.svelte";
+    import Location from "../../../../../lib/components/Location.svelte";
 
     export let data: PageData;
     let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
@@ -106,8 +107,7 @@
         {/if}
 
         <InfoIconRow icon={LOCATION_ICON}>
-            {eventData.venue}, {eventData.city}, {eventData.stateOrProvince},
-            {eventData.country}
+            <Location {...eventData} />
         </InfoIconRow>
 
         <DataFromFirst />
