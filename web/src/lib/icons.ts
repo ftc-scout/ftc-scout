@@ -3,6 +3,7 @@ import {
     faCalendarAlt,
     faCircleCheck,
     faCode,
+    faGavel,
     faGlobeAmericas,
     faHashtag,
     faHeart,
@@ -33,6 +34,7 @@ export const SPONSOR_ICON = faHeart;
 export const MATCHES_ICON = faBolt;
 export const HOME_ICON = faHome;
 export const ABOUT_ICON = faInfoCircle;
+export const PRIVACY_ICON = faGavel;
 export const USER_ICON = faUserAlt;
 export const LOGIN_ICON = faRightToBracket;
 export const API_ICON = faCode;

@@ -3,6 +3,7 @@
 
     import {
         ABOUT_ICON,
+        PRIVACY_ICON,
         API_ICON,
         CLOSE_ICON,
         EVENTS_ICON,
@@ -32,6 +33,7 @@
 <hr />
 
 <SidebarItem icon={ABOUT_ICON} href="/about">About</SidebarItem>
+<SidebarItem icon={PRIVACY_ICON} href="/privacy">Privacy Policy</SidebarItem>
 <SidebarItem icon={API_ICON} href="/api">API</SidebarItem>
 
 <hr />

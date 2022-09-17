@@ -13,10 +13,11 @@
 <WidthProvider width={"1000px"}>
     <Card>
         <h1>About</h1>
-
-        <a href="/privacy">Our privacy policy.</a>
     </Card>
 </WidthProvider>
 
 <style>
+    * {
+        line-height: 1.5rem;
+    }
 </style>
