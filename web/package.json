@@ -14,7 +14,7 @@
         "format": "prettier --write --plugin-search-dir=. .",
         "gen": "graphql-codegen",
         "pretty": "prettier --write .",
-        "start": "node --trace-gc build/index.js"
+        "start": "node build/index.js"
     },
     "devDependencies": {
         "@graphql-codegen/cli": "^2.6.2",
