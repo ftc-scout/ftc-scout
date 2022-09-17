@@ -89,8 +89,7 @@
             matches: onlyMatches ? null : "false",
             search: !searchText ? null : searchText,
         },
-        true,
-        false
+        true
     );
 
     function more() {

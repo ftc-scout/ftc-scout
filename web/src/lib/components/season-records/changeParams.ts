@@ -3,7 +3,7 @@ import { goto } from "$app/navigation";
 import { page } from "$app/stores";
 import { get } from "svelte/store";
 
-export function changeParam(params: Record<string, string | null>, replaceState = true, reload = true) {
+export function changeParam(params: Record<string, string | null>, replaceState = true) {
     if (browser) {
         let old = get(page).url;
         let oldSearchParams = old.searchParams;
@@ -19,10 +19,6 @@ export function changeParam(params: Record<string, string | null>, replaceState 
 
         let newSearchParams = new URLSearchParams(obj);
 
-        if (reload) {
-            goto(`?${newSearchParams}`, { replaceState });
-        } else {
-            history.replaceState(null, "", `?${newSearchParams}`);
-        }
+        goto(`?${newSearchParams}`, { replaceState, keepfocus: true });
     }
 }
