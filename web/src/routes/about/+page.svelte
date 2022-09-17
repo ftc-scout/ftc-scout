@@ -1,14 +1,10 @@
 <script>
     import Card from "$lib/components/Card.svelte";
+    import Head from "$lib/components/nav/Head.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
 </script>
 
-<svelte:head>
-    <title>About | FTCScout</title>
-    <meta name="description" content="About FTCScout, a new way to track and scout FIRST Tech Challenge." />
-    <meta property="og:title" content="About | FTCScout" />
-    <meta property="og:image" content="/banner.png" />
-</svelte:head>
+<Head title="About | FTCScout" description="About FTCScout, a new way to track and scout FIRST Tech Challenge." />
 
 <WidthProvider width={"1000px"}>
     <Card>

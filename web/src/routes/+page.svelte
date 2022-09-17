@@ -3,6 +3,7 @@
     import Fa from "svelte-fa";
     import Card from "../lib/components/Card.svelte";
     import MatchTable from "../lib/components/matches/MatchTable.svelte";
+    import Head from "../lib/components/nav/Head.svelte";
     import SkeletonRow from "../lib/components/skeleton/SkeletonRow.svelte";
     import { CURRENT_SEASON } from "../lib/constants";
     import { MATCHES_ICON, TEAMS_ICON } from "../lib/icons";
@@ -19,15 +20,10 @@
     $: bestRemoteTep = $data?.data.topRemoteTep2021;
 </script>
 
-<svelte:head>
-    <title>FTCScout</title>
-    <meta
-        name="description"
-        content="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
-    />
-    <meta property="og:title" content="FTCScout" />
-    <meta property="og:image" content="/banner.png" />
-</svelte:head>
+<Head
+    title="FTCScout"
+    description="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
+/>
 
 <WidthProvider width="1000px">
     <Card border={false}>

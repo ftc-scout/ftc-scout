@@ -29,6 +29,7 @@
     import type { Readable } from "svelte/store";
     import EventStats from "../../../../../lib/components/event-stats/EventStats.svelte";
     import ErrorPage from "../../../../../lib/components/ErrorPage.svelte";
+    import Head from "../../../../../lib/components/nav/Head.svelte";
 
     export let data: PageData;
     let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
@@ -76,22 +77,13 @@
     $: hasStats = !!stats.length;
 </script>
 
-<svelte:head>
-    <title>
-        {!!eventData ? `${eventData.name} | FTCScout` : "Event Page | FtcScout"}
-    </title>
-    <meta
-        name="description"
-        content={!!eventData
-            ? `Matches, awards, and statistics for the ${new Date(eventData.start).getFullYear()} ${eventData.name}.`
-            : "Matches, awards, and statistics for an event."}
-    />
-    <meta property="og:title" content={!!eventData ? `${eventData.name} | FTCScout` : "Event Page | FtcScout"} />
-    <meta
-        property="og:image"
-        content="https://api.ftcscout.org/banners/events/{$page.params.season}/{$page.params.code}"
-    />
-</svelte:head>
+<Head
+    title={!!eventData ? `${eventData.name} | FTCScout` : "Event Page | FtcScout"}
+    description={!!eventData
+        ? `Matches, awards, and statistics for the ${new Date(eventData.start).getFullYear()} ${eventData.name}.`
+        : "Matches, awards, and statistics for an event."}
+    image="https://api.ftcscout.org/banners/events/{$page.params.season}/{$page.params.code}"
+/>
 
 <Loading store={$event} width={"1250px"} doesNotExist={!eventData}>
     <ErrorPage slot="error" status={404} message="No event with code {$page.params.code}">

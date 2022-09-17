@@ -1,11 +1,10 @@
-<svelte:head>
-    <title>Api | FTCScout</title>
-    <meta
-        name="description"
-        content="The developer api for FTCScout providing access to all our statistics and data."
-    />
-    <meta property="og:title" content="Api | FTCScout" />
-    <meta property="og:image" content="/banner.png" />
-</svelte:head>
+<script>
+    import Head from "$lib/components/nav/Head.svelte";
+</script>
+
+<Head
+    title="Api | FTCScout"
+    description="The developer api for FTCScout providing access to all our statistics and data."
+/>
 
 <h1>TODO Api</h1>

@@ -1,17 +1,13 @@
 <script>
     import Card from "$lib/components/Card.svelte";
+    import Head from "$lib/components/nav/Head.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
 </script>
 
-<svelte:head>
-    <title>Privacy Policy | FTCScout</title>
-    <meta
-        name="description"
-        content="The Privacy Policy for FTCScout, a new way to track and scout FIRST Tech Challenge."
-    />
-    <meta property="og:title" content="Privacy Policy | FTCScout" />
-    <meta property="og:image" content="/banner.png" />
-</svelte:head>
+<Head
+    title="Privacy Policy | FTCScout"
+    description="The Privacy Policy for FTCScout, a new way to track and scout FIRST Tech Challenge."
+/>
 
 <WidthProvider width={"1000px"}>
     <Card>

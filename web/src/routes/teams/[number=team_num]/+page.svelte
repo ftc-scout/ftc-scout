@@ -32,6 +32,7 @@
     import { browser } from "$app/env";
     import { CURRENT_SEASON, type Season } from "../../../lib/constants";
     import SeasonDropdown from "../../../lib/components/SeasonDropdown.svelte";
+    import Head from "../../../lib/components/nav/Head.svelte";
 
     export let data: PageData;
     let team: Readable<ApolloQueryResult<TeamQuery> | null>;
@@ -71,22 +72,13 @@
     $: gotoSubPage(season);
 </script>
 
-<svelte:head>
-    <title>
-        {!!teamData ? `${teamData.number} ${teamData.name} | FTCScout` : "Team Page | FtcScout"}
-    </title>
-    <meta
-        name="description"
-        content={!!teamData
-            ? `Information and matches for team ${teamData.number} ${teamData.name}.`
-            : `Information and matches for team ${$page.params.number}`}
-    />
-    <meta
-        property="og:title"
-        content={!!teamData ? `${teamData.number} ${teamData.name} | FTCScout` : "Team Page | FtcScout"}
-    />
-    <meta property="og:image" content="https://api.ftcscout.org/banners/teams/{$page.params.number}" />
-</svelte:head>
+<Head
+    title={!!teamData ? `${teamData.number} ${teamData.name} | FTCScout` : "Team Page | FtcScout"}
+    description={!!teamData
+        ? `Information and matches for team ${teamData.number} ${teamData.name}.`
+        : `Information and matches for team ${$page.params.number}`}
+    image="https://api.ftcscout.org/banners/teams/{$page.params.number}"
+/>
 
 <Loading store={$team} width={"1000px"} doesNotExist={!teamData}>
     <ErrorPage slot="error" status={404} message="No team with number {$page.params.number}">

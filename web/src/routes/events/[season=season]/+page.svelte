@@ -9,6 +9,7 @@
     import DateRange from "../../../lib/components/DateRange.svelte";
     import Dropdown from "../../../lib/components/Dropdown.svelte";
     import FaButton from "../../../lib/components/FaButton.svelte";
+    import Head from "../../../lib/components/nav/Head.svelte";
     import { changeParam } from "../../../lib/components/season-records/changeParams";
     import RegionsDropdown from "../../../lib/components/season-records/RegionsDropdown.svelte";
     import SeasonDropdown from "../../../lib/components/SeasonDropdown.svelte";
@@ -106,12 +107,7 @@
     }
 </script>
 
-<svelte:head>
-    <title>Events | FTCScout</title>
-    <meta name="description" content="Find and search for FTC events in the {$page.params.season} season." />
-    <meta property="og:title" content="Events | FTCScout" />
-    <meta property="og:image" content="/banner.png" />
-</svelte:head>
+<Head title="Events | FTCScout" description="Find and search for FTC events in the {$page.params.season} season." />
 
 <WidthProvider width="1000px">
     <Card>

@@ -4,6 +4,7 @@
     import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
     import { query, type ReadableQuery } from "svelte-apollo";
     import FaButton from "../../lib/components/FaButton.svelte";
+    import Head from "../../lib/components/nav/Head.svelte";
     import { changeParam } from "../../lib/components/season-records/changeParams";
     import RegionsDropdown from "../../lib/components/season-records/RegionsDropdown.svelte";
     import SkeletonRow from "../../lib/components/skeleton/SkeletonRow.svelte";
@@ -50,12 +51,7 @@
     }
 </script>
 
-<svelte:head>
-    <title>Teams | FTCScout</title>
-    <meta name="description" content="Find and search for FTC teams." />
-    <meta property="og:title" content="Teams | FTCScout" />
-    <meta property="og:image" content="/banner.png" />
-</svelte:head>
+<Head title="Teams | FTCScout" description="Find and search for FTC teams." />
 
 <WidthProvider width="1000px">
     <Card>
