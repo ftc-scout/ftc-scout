@@ -17,7 +17,7 @@ import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
 import compression from "compression";
-import { teamBanner } from "./banners";
+import { eventBanner, teamBanner } from "./banners";
 import { resolve } from "path";
 
 async function main() {
@@ -66,9 +66,17 @@ async function main() {
         cors: false,
     });
 
-    app.get("/banners/:team_num", async (req, res) => {
+    app.get("/banners/teams/:team_num", async (req, res) => {
         if (/^\d+$/.test(req.params.team_num)) {
             await teamBanner(+req.params.team_num, res);
+        } else {
+            res.sendFile(resolve("src/res/banner.png"));
+        }
+    });
+
+    app.get("/banners/events/:season/:code", async (req, res) => {
+        if (/^\d+$/.test(req.params.season)) {
+            await eventBanner(+req.params.season, req.params.code, res);
         } else {
             res.sendFile(resolve("src/res/banner.png"));
         }
