@@ -13,12 +13,12 @@
 
     export let data: PageData;
 
-    $: activeTeamsCount = $data?.data.activeTeamsCount;
-    $: matchesCount = $data?.data.matchesPlayedCount;
-    $: events = $data?.data.todaysEvents;
+    $: activeTeamsCount = $data?.data?.activeTeamsCount;
+    $: matchesCount = $data?.data?.matchesPlayedCount;
+    $: events = $data?.data?.todaysEvents;
 
-    $: bestTradMatch = $data?.data.topTradMatch2021;
-    $: bestRemoteTep = $data?.data.topRemoteTep2021;
+    $: bestTradMatch = $data?.data?.topTradMatch2021;
+    $: bestRemoteTep = $data?.data?.topRemoteTep2021;
 </script>
 
 <Head
