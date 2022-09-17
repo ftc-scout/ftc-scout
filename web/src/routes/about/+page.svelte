@@ -20,4 +20,14 @@
     * {
         line-height: 1.5rem;
     }
+
+    :not(h1, h2) {
+        font-size: 16px;
+    }
+
+    @media (max-width: 800px) {
+        :not(h1, h2) {
+            font-size: 14px;
+        }
+    }
 </style>
