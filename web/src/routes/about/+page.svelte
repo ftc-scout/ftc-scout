@@ -1,3 +1,8 @@
+<script>
+    import Card from "$lib/components/Card.svelte";
+    import WidthProvider from "$lib/components/WidthProvider.svelte";
+</script>
+
 <svelte:head>
     <title>About | FTCScout</title>
     <meta name="description" content="About FTCScout, a new way to track and scout FIRST Tech Challenge." />
@@ -5,4 +10,13 @@
     <meta property="og:image" content="/banner.png" />
 </svelte:head>
 
-<h1>TODO About</h1>
+<WidthProvider width={"1000px"}>
+    <Card>
+        <h1>About</h1>
+
+        <a href="/privacy">Our privacy policy.</a>
+    </Card>
+</WidthProvider>
+
+<style>
+</style>

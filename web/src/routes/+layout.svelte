@@ -7,8 +7,6 @@
     import type { HttpOptions } from "@apollo/client";
     import { page } from "$app/stores";
     import { keyPathName } from "../lib/util/key-pathname";
-    import Analytics from "../lib/components/Analytics.svelte";
-    import { IS_PROD } from "../lib/constants";
 
     export let data: LayoutData;
     let f: NonNullable<HttpOptions["fetch"]>;
@@ -16,10 +14,6 @@
 
     setClient(getMyClient(f));
 </script>
-
-{#if IS_PROD}
-    <Analytics />
-{/if}
 
 <Navbar />
 <Sidebar />
