@@ -82,8 +82,8 @@
         outline: none;
     }
 
-    div:focus,
-    div:focus-within {
+    form:focus,
+    form:focus-within {
         outline: var(--text-color) 2px solid;
     }
 </style>
