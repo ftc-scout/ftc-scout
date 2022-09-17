@@ -4,6 +4,7 @@ import { Team } from "./db/entities/Team";
 import { Response } from "express";
 import { readFile } from "fs/promises";
 import { TeamEventParticipation2021 } from "./db/entities/team-event-participation/TeamEventParticipation2021";
+import { DATA_SOURCE } from "./db/data-source";
 
 export async function teamBanner(teamNumber: number, res: Response) {
     let teamData = await Team.findOneBy({ number: teamNumber });
@@ -11,11 +12,19 @@ export async function teamBanner(teamNumber: number, res: Response) {
     if (teamData == null) {
         res.sendFile(resolve("src/res/banner.png"));
     } else {
-        let maxOpr = Math.max(
-            ...(await TeamEventParticipation2021.findBy({ teamNumber }))!.map((tep) => tep.opr.totalPoints)
-        );
-        maxOpr = Math.round(maxOpr * 100) / 100;
-        let maxOprStr = isFinite(maxOpr) ? maxOpr + "" : "N/A";
+        let maxOpr =
+            (
+                await DATA_SOURCE.getRepository(TeamEventParticipation2021)
+                    .createQueryBuilder("tep")
+                    .leftJoin("event", "e", 'e.code = tep."eventCode"', { teamNumber })
+                    .where('tep."teamNumber" = :teamNumber')
+                    .andWhere("NOT e.remote")
+                    .orderBy('tep."oprTotalpoints"', "DESC")
+                    .limit(1)
+                    .getOne()
+            )?.opr.totalPoints ?? null;
+
+        let maxOprStr = maxOpr != null ? Math.round(maxOpr * 100) / 100 + "" : "N/A";
 
         registerFont("src/res/Inter-SemiBold.ttf", { family: "InterSB" });
         registerFont("src/res/Inter-Bold.ttf", { family: "InterB" });
