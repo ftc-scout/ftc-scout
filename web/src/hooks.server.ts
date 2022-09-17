@@ -9,7 +9,10 @@ export const handle: Handle = async ({ event, resolve }) => {
         response.headers.set("X-XSS-Protection", "1; mode=block");
         response.headers.set("Referrer-Policy", "same-origin");
         response.headers.set("Permissions-Policy", "camera=(), microphone=()");
-        let canonical = event.url.toString().replace(/^https:\/\/www./, "https://");
+        let canonical = event.url
+            .toString()
+            .replace(/^http:/, "https:")
+            .replace(/^https:\/\/www./, "https://");
         response.headers.set("Link", `<${canonical}>; rel="canonical"`);
     }
 
