@@ -60,8 +60,10 @@
 
     $: if (focusCount == 0) barShown = false;
 
-    $: showSearchResults = searchText && (teamsSearchData.length || eventsSearchData.length) && focusCount;
+    $: anyResults = teamsSearchData.length || eventsSearchData.length;
+    $: showSearchResults = searchText && anyResults && focusCount;
     $: showSkeleton = searchText && focusCount && $searchResults.loading;
+    $: showNoResults = searchText && focusCount && !anyResults;
 
     let resultElement: HTMLElement | null;
     let lastResultHeight: number | null = null;
@@ -151,6 +153,10 @@
         >
             <SkeletonRow rows={20} card={false} header={false} />
         </div>
+    {:else if showNoResults}
+        <div class="result" class:bar-shown={barShown}>
+            <p class="no-results">No Results</p>
+        </div>
     {/if}
 </form>
 
@@ -223,5 +229,15 @@
         text-decoration: none;
 
         border-radius: 8px;
+    }
+
+    .no-results {
+        display: block;
+        text-align: center;
+
+        font-weight: bold;
+        color: var(--secondary-text-color);
+        padding: var(--small-padding);
+        margin: 0;
     }
 </style>
