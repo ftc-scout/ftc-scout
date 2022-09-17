@@ -8,7 +8,11 @@
 
 <WidthProvider width={"1000px"}>
     <Card>
-        <h1>About</h1>
+        <h1>About FTCScout</h1>
+
+        <p>
+            FTCScout is the passion project of a group of programmers at team <a href="/teams/16321">16321 X Drive</a>.
+        </p>
     </Card>
 </WidthProvider>
 
