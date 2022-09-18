@@ -25,6 +25,9 @@
             "timestamptz",
             "tmps",
             "typeorm"
+        ],
+        "cSpell.enableFiletypes": [
+            "svelte"
         ]
     }
 }
