@@ -1,7 +1,9 @@
 <script lang="ts">
+    import { browser } from "$app/env";
     import { page } from "$app/stores";
     import Card from "$lib/components/Card.svelte";
     import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+    import { onDestroy, onMount } from "svelte";
     import { query, type ReadableQuery } from "svelte-apollo";
     import FaButton from "../../lib/components/FaButton.svelte";
     import Head from "../../lib/components/nav/Head.svelte";
@@ -57,6 +59,24 @@
             limit,
             region,
             searchText,
+        });
+    }
+
+    if (browser) {
+        let content = document.getElementById("content")!;
+
+        function checkMore() {
+            if (!currentlyLoading && content.scrollTop + content.clientHeight + 400 >= content.scrollHeight) {
+                more();
+            }
+        }
+
+        onMount(() => {
+            content?.addEventListener("scroll", checkMore);
+        });
+
+        onDestroy(() => {
+            content?.removeEventListener("scroll", checkMore);
         });
     }
 </script>

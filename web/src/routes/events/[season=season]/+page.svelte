@@ -5,6 +5,7 @@
     import { page } from "$app/stores";
     import Card from "$lib/components/Card.svelte";
     import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+    import { onDestroy, onMount } from "svelte";
     import { query, type ReadableQuery } from "svelte-apollo";
     import DateRange from "../../../lib/components/DateRange.svelte";
     import Dropdown from "../../../lib/components/Dropdown.svelte";
@@ -109,6 +110,24 @@
             onlyWithMatches: onlyMatches,
             limit,
             searchText,
+        });
+    }
+
+    if (browser) {
+        let content = document.getElementById("content")!;
+
+        function checkMore() {
+            if (!currentlyLoading && content.scrollTop + content.clientHeight + 600 >= content.scrollHeight) {
+                more();
+            }
+        }
+
+        onMount(() => {
+            content?.addEventListener("scroll", checkMore);
+        });
+
+        onDestroy(() => {
+            content?.removeEventListener("scroll", checkMore);
         });
     }
 </script>
