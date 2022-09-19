@@ -16,7 +16,10 @@
 
 <style>
     .wrap {
-        width: 100%;
+        /* width: 100%; */
+        flex-grow: 1;
+        min-width: 250px;
+        max-width: 300px;
         display: flex;
         align-items: center;
         gap: var(--large-gap);
@@ -51,5 +54,12 @@
         width: 64px;
         height: 64px;
         border-radius: var(--pill-border-radius);
+    }
+
+    @media (max-width: 800px) {
+        img {
+            width: 48px;
+            height: 48px;
+        }
     }
 </style>

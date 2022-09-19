@@ -135,6 +135,12 @@
     .contributors {
         display: flex;
         flex-direction: row;
+        justify-content: center;
         gap: var(--xl-gap);
+
+        max-width: 100%;
+        flex-wrap: wrap;
+
+        margin-bottom: var(--large-gap);
     }
 </style>
