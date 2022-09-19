@@ -78,7 +78,12 @@
             searchText,
         },
     });
-    $: data = $events?.data?.eventsSearch ?? null;
+    let currentlyLoading = true;
+    let currentData: any[] | null = null;
+    $: if ($events?.data?.eventsSearch) {
+        currentData = $events?.data?.eventsSearch ?? null;
+        currentlyLoading = false;
+    }
 
     $: changeParam(
         {
@@ -93,6 +98,7 @@
     );
 
     function more() {
+        currentlyLoading = true;
         limit += BATCH_SIZE;
         events.refetch({
             season: +$page.params.season,
@@ -148,9 +154,9 @@
         </div>
     </Card>
     <Card>
-        {#if data}
+        {#if currentData}
             <ul>
-                {#each data as event}
+                {#each currentData as event}
                     {@const hasMatches = event.matches.some((m) => m.hasBeenPlayed)}
                     <li>
                         <a
@@ -171,7 +177,7 @@
                     <p class="no-events">No Matching Events</p>
                 {/each}
 
-                {#if data.length != 0 && data.length % BATCH_SIZE == 0}
+                {#if currentData.length != 0 && currentData.length % BATCH_SIZE == 0 && !currentlyLoading}
                     <div class="more-wrap">
                         <FaButton icon={faCirclePlus} on:click={more} buttonStyle="font-size: var(--large-font-size)">
                             Show More
@@ -179,7 +185,8 @@
                     </div>
                 {/if}
             </ul>
-        {:else if $events.loading}
+        {/if}
+        {#if $events.loading}
             <SkeletonRow rows={50} card={false} header={false} />
         {/if}
     </Card>

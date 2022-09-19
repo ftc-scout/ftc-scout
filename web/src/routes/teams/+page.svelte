@@ -13,6 +13,11 @@
     import { Region, TeamsSearchDocument, type TeamsSearchQuery } from "../../lib/graphql/generated/graphql-operations";
     import { regionFromStr, regionToString } from "../../lib/util/regions";
 
+    type Team = {
+        number: number;
+        name: string;
+    };
+
     const BATCH_SIZE = 50;
 
     let regionStr: string = regionToString(regionFromStr($page.url.searchParams.get("region") ?? "ALL") ?? Region.All);
@@ -30,7 +35,12 @@
             searchText,
         },
     });
-    $: data = $teams?.data?.teamsSearch ?? null;
+    let currentlyLoading = true;
+    let currentData: Team[] | null = null;
+    $: if ($teams?.data?.teamsSearch) {
+        currentData = $teams?.data?.teamsSearch ?? null;
+        currentlyLoading = false;
+    }
 
     $: changeParam(
         {
@@ -41,6 +51,7 @@
     );
 
     function more() {
+        currentlyLoading = true;
         limit += BATCH_SIZE;
         teams.refetch({
             limit,
@@ -65,9 +76,9 @@
         </div>
     </Card>
     <Card>
-        {#if data}
+        {#if currentData}
             <ul>
-                {#each data as team}
+                {#each currentData as team}
                     <li>
                         <a sveltekit:prefetch href="/teams/{team.number}">
                             <span style="min-width: 5ch; display: inline-block">{team.number}</span>
@@ -80,7 +91,7 @@
                     <p class="no-teams">No Matching Teams</p>
                 {/each}
 
-                {#if data.length != 0 && data.length % BATCH_SIZE == 0}
+                {#if currentData.length != 0 && currentData.length % BATCH_SIZE == 0 && !currentlyLoading}
                     <div class="more-wrap">
                         <FaButton icon={faCirclePlus} on:click={more} buttonStyle="font-size: var(--large-font-size)">
                             Show More
@@ -88,7 +99,8 @@
                     </div>
                 {/if}
             </ul>
-        {:else if $teams.loading}
+        {/if}
+        {#if $teams.loading}
             <SkeletonRow rows={50} card={false} header={false} />
         {/if}
     </Card>
