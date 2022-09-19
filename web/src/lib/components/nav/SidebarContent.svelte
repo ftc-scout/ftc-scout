@@ -26,7 +26,7 @@
 </b>
 
 <SidebarItem icon={HOME_ICON} href="/">Home</SidebarItem>
-<SidebarItem icon={EVENTS_ICON} href="/events">Events</SidebarItem>
+<SidebarItem icon={EVENTS_ICON} href="/events/{CURRENT_SEASON}">Events</SidebarItem>
 <SidebarItem icon={TEAMS_ICON} href="/teams">Teams</SidebarItem>
 <SidebarItem icon={SEASON_RECORDS_ICON} href="/records/{CURRENT_SEASON}/teams">Season Records</SidebarItem>
 
