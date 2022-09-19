@@ -63,19 +63,22 @@
     }
 
     if (browser) {
-        let content = document.getElementById("content")!;
-
         function checkMore() {
+            let content = document.getElementById("content")!;
             if (!currentlyLoading && content.scrollTop + content.clientHeight + 400 >= content.scrollHeight) {
                 more();
             }
         }
 
         onMount(() => {
-            content?.addEventListener("scroll", checkMore);
+            let content = document.getElementById("content")!;
+            setTimeout(() => {
+                content.addEventListener("scroll", checkMore);
+            }, 5);
         });
 
         onDestroy(() => {
+            let content = document.getElementById("content")!;
             content?.removeEventListener("scroll", checkMore);
         });
     }
