@@ -93,7 +93,7 @@
                 name="Jonah Reinis"
                 role="Programmer"
                 imgSrc="/img/jonah.png"
-                alt="Jonah Reinis' avatar: A sepia photo of a man in a suit."
+                alt="A photo of Jonah Reinis."
                 href="https://github.com/Joncode9001"
             />
             <Contributor
