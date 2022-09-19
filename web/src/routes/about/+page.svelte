@@ -73,7 +73,7 @@
         <h3>Beautiful</h3>
         <p>
             Lastly, although this is a matter of opinion, we believe FTCScout is beautiful. We put a lot of effort into
-            the design of FTCScout and think that it looks sleek, modern, and the best looking of the FTC websites.
+            the design of FTCScout and think that it looks sleek, modern, and is the best looking of the FTC websites.
         </p>
 
         <h2>Our Team</h2>
