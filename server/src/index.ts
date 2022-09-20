@@ -1,15 +1,12 @@
 import "dotenv/config";
 
 import "reflect-metadata";
-import {
-    ApolloServerPluginLandingPageDisabled,
-    ApolloServerPluginLandingPageGraphQLPlayground,
-} from "apollo-server-core";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
 import cors from "cors";
 import express from "express";
 import { buildSchema } from "type-graphql";
-import { SERVER_PORT, IS_DEV } from "./constants";
+import { SERVER_PORT } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
 import { DATA_SOURCE } from "./db/data-source";
 import { GraphQLContext } from "./graphql/Context";
