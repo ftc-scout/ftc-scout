@@ -63,7 +63,7 @@
     $: anyResults = teamsSearchData.length || eventsSearchData.length;
     $: showSearchResults = searchText && anyResults && focusCount;
     $: showSkeleton = searchText && focusCount && $searchResults.loading;
-    $: showNoResults = searchText && focusCount && !anyResults;
+    $: showNoResults = searchText && focusCount && !anyResults && !$searchResults.loading;
 
     let resultElement: HTMLElement | null;
     let lastResultHeight: number | null = null;
@@ -143,11 +143,11 @@
                 {/each}
             </ol>
         </div>
-    {:else if showSkeleton && lastResultHeight}
+    {:else if showSkeleton}
         <div
             class="result"
-            style:height={`${lastResultHeight}px`}
-            style:max-height={`${lastResultHeight}px`}
+            style:height={`${lastResultHeight ?? 200}px`}
+            style:max-height={`${lastResultHeight ?? 200}px`}
             style:overflow="hidden"
             class:bar-shown={barShown}
         >
