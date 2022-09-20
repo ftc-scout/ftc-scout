@@ -100,7 +100,7 @@
                 name="Levi Gilbert-Adler"
                 role="Web Admin"
                 imgSrc="/img/levi.png"
-                alt="Levi Gilbert-Adler's avatar: A cartoon drawing of a computer chip on a green background."
+                alt="A photo of Levi Gilbert-Adler"
                 href="https://github.com/Bobrobot1"
             />
         </div>
