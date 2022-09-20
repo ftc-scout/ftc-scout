@@ -51,8 +51,7 @@ async function main() {
             res,
         }),
         plugins: [
-            // Give us a nice graphql playground when in dev.
-            IS_DEV ? ApolloServerPluginLandingPageGraphQLPlayground() : ApolloServerPluginLandingPageDisabled(),
+            ApolloServerPluginLandingPageGraphQLPlayground(),
             ApolloServerLoaderPlugin({
                 typeormGetConnection: getConnection, // for use with TypeORM
             }),
