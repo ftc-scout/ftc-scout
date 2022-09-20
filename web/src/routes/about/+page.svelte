@@ -5,31 +5,33 @@
     import Contributor from "./Contributor.svelte";
 </script>
 
-<Head title="About | FTCScout" description="About FTCScout, a new way to track and scout FIRST Tech Challenge." />
+<Head title="About | FTCScout" description="About FTCScout, a way to track and scout FIRST Tech Challenge." />
 
 <WidthProvider width={"1000px"}>
     <Card>
-        <h1>About FTCScout</h1>
+        <p class="h1big-text">About FTC<em class="h1big-text">Scout</em></p>
 
         <p>
-            FTCScout is a new website that allows you to view teams, events, matches, and statistics for FTC in the vain
-            of the <a href="https://theorangealliance.org/">The Orange Alliance</a>.
+            FTC<i>Scout</i> is a website that allows you to view teams, events, matches, and statistics for FTC in the
+            vain of the <a href="https://theorangealliance.org/">The Orange Alliance</a>.
         </p>
 
         <p>
-            FTCScout is the passion project of a group of programmers at team <a href="/teams/16321">16321 X Drive</a>.
-            It was heavily inspired by the amazing websites
+            FTC<i>Scout</i> is the passion project of a group of programmers at team
+            <a href="/teams/16321">16321 X Drive</a>. It was heavily inspired by the amazing websites
             <a href="https://theorangealliance.org/">The Orange Alliance</a>,
             <a href="https://ftcscores.com/">FTCScores</a>, <a href="http://www.ftcstats.org/">FTC Stats</a>, and
             <a href="https://ftc-events.firstinspires.org/">FTC Events</a>.
         </p>
 
-        <h2>Why FTCScout?</h2>
+        <p class="h2big-text">Why FTC<em class="h2big-text">Scout?</em></p>
 
-        <p>Although FTCScout provides similar features to other websites we believe it has several advantages:</p>
+        <p>
+            Although FTC<em>Scout</em> provides similar features to other websites we believe it has several advantages:
+        </p>
 
         <h3>More Data</h3>
-        <p>FTCScout provides more and more advanced statistics than any other website on the internet.</p>
+        <p>FTC<em>Scout</em> provides more advanced statistics than any other FTC website on the internet.</p>
 
         <p>
             The rankings page for each event provides advanced statistics for each team for every aspect of the game in
@@ -38,7 +40,7 @@
         </p>
 
         <p>
-            As well as viewing these statistics for each team at an event you can also view this data for the whole
+            As well as viewing these statistics for each team at an event you can also view the data for the whole
             season using our highly advanced <a href="/records">Season Records Page</a>. This page provides the same
             data as the event rankings page but for every event of the season. In addition you can use our advanced
             filtering and sorting options to find even more information. For example here you can see the
@@ -51,17 +53,17 @@
         </p>
 
         <p>
-            Finally FTCScout is designed to correctly handle remote events (both statistics and page layout) something
-            that other websites struggle with.
+            Finally FTC<em>Scout</em> is designed to correctly handle remote events (both statistics and page layout).
         </p>
 
         <h3>Fast, Secure, and Accessible</h3>
         <p>
-            We designed FTCScout with performance, security, and accessability in mind. FTCScout pages load fast and
-            with all data at the same time instead of popping in slowly like on some other websites. Because of these
-            optimizations FTCScout receives near perfect <a href="https://en.wikipedia.org/wiki/Google_Lighthouse">
-                Google Lighthouse
-            </a> scores and A+ security ratings from several auditors.
+            We designed FTC<em>Scout</em> with performance, security, and accessability in mind. FTC<em>Scout</em> pages
+            load fast and with all data at the same time instead of popping in slowly. As a result of optimizations FTC<em
+                >Scout</em
+            >
+            receives exceptional <a href="https://en.wikipedia.org/wiki/Google_Lighthouse"> Google Lighthouse </a> scores
+            and A+ security ratings from several auditors.
         </p>
         <div class="image-wrap">
             <img
@@ -70,16 +72,17 @@
             />
         </div>
 
-        <h3>Beautiful</h3>
+        <h3>Beauty</h3>
         <p>
-            Lastly, although this is a matter of opinion, we believe FTCScout is beautiful. We put a lot of effort into
-            the design of FTCScout and think that it looks sleek, modern, and is the best looking of the FTC websites.
+            Lastly, although this is a matter of opinion, we believe FTC<em>Scout</em> is beautiful. We put a lot of effort
+            into the design of FTCScout and think that it looks sleek, modern, and is the best looking of the FTC websites.
         </p>
 
         <h2>Our Team</h2>
         <p>
-            FTCScout was developed by programmers at <a href="/teams/16321">16321 X Drive</a> however it is FOSS and you
-            can contribute to it right now <a href="https://github.com/16321-X-Drive/ftc-scout">on our Github</a>.
+            FTC<em>Scout</em> was developed by programmers at <a href="/teams/16321">16321 X Drive</a> however it is
+            FOSS and you can contribute to it right now
+            <a href="https://github.com/16321-X-Drive/ftc-scout">on our Github</a>.
         </p>
         <div class="contributors">
             <Contributor
@@ -111,7 +114,14 @@
     * {
         line-height: 1.5rem;
     }
-
+    .h1big-text {
+        font-size: 32px;
+        font-weight: bold;
+    }
+    .h2big-text {
+        font-size: 26px;
+        font-weight: bold;
+    }
     :not(h1, h2) {
         font-size: 16px;
     }
