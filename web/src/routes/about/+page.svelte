@@ -9,7 +9,7 @@
 
 <WidthProvider width={"1000px"}>
     <Card>
-        <p class="h1big-text">About FTC<em class="h1big-text">Scout</em></p>
+        <h1>About FTC<em class="h1big-text">Scout</em></h1>
 
         <p>
             FTC<i>Scout</i> is a website that allows you to view teams, events, matches, and statistics for FTC in the
@@ -24,7 +24,7 @@
             <a href="https://ftc-events.firstinspires.org/">FTC Events</a>.
         </p>
 
-        <p class="h2big-text">Why FTC<em class="h2big-text">Scout?</em></p>
+        <h2>Why FTC<em class="h2big-text">Scout?</em></h2>
 
         <p>
             Although FTC<em>Scout</em> provides similar features to other websites we believe it has several advantages:
@@ -114,15 +114,18 @@
     * {
         line-height: 1.5rem;
     }
-    .h1big-text {
+
+    h1 {
         font-size: 32px;
         font-weight: bold;
     }
-    .h2big-text {
+
+    h2 {
         font-size: 26px;
         font-weight: bold;
     }
-    :not(h1, h2) {
+
+    :not(h1, h2, h1 *, h2 *) {
         font-size: 16px;
     }
 
