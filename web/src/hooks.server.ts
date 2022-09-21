@@ -60,7 +60,7 @@ export const handle: Handle = async ({ event, resolve }) => {
 
     let isGoogleBot = event.request.headers.get("User-agent")?.includes("Google") ?? false;
     if (isGoogleBot && event.routeId == "") {
-        console.log("Responsing to Google.");
+        console.log("Responding to Google.");
         response = new Response(FAKE_HOMEPAGE, { headers: { "Content-Type": "text/html" } });
     } else {
         response = await resolve(event);
