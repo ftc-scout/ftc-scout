@@ -10,6 +10,7 @@
         HOME_ICON,
         SEASON_RECORDS_ICON,
         TEAMS_ICON,
+        BLOG_ICON,
     } from "$lib/icons";
     import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
     import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -29,6 +30,9 @@
 <SidebarItem icon={EVENTS_ICON} href="/events/{CURRENT_SEASON}">Events</SidebarItem>
 <SidebarItem icon={TEAMS_ICON} href="/teams">Teams</SidebarItem>
 <SidebarItem icon={SEASON_RECORDS_ICON} href="/records/{CURRENT_SEASON}/teams">Season Records</SidebarItem>
+
+<hr />
+<SidebarItem icon={BLOG_ICON} href="/blog">The Scouting Report</SidebarItem>
 
 <hr />
 

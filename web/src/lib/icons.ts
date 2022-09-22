@@ -1,4 +1,5 @@
 import {
+    faBinoculars,
     faBolt,
     faCalendarAlt,
     faCircleCheck,
@@ -42,3 +43,4 @@ export const CLOSE_ICON = faXmark;
 export const REGIONS_ICON = faGlobeAmericas;
 export const SEASON_RECORDS_ICON = faTrophy;
 export const OPR_ICON = faBolt;
+export const BLOG_ICON = faBinoculars;
