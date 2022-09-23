@@ -115,12 +115,14 @@
         line-height: 1.5rem;
     }
 
-    h1 {
+    h1,
+    h1 * {
         font-size: 32px;
         font-weight: bold;
     }
 
-    h2 {
+    h2,
+    h2 * {
         font-size: 26px;
         font-weight: bold;
     }
