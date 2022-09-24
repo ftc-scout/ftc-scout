@@ -127,7 +127,8 @@
         font-weight: bold;
     }
 
-    :not(h1, h2, h1 *, h2 *) {
+    p,
+    p * {
         font-size: 16px;
     }
 
