@@ -115,6 +115,16 @@
         line-height: 1.5rem;
     }
 
+    p,
+    p * {
+        font-size: 16px;
+    }
+    @media (max-width: 800px) {
+        :not(h1, h2) {
+            font-size: 14px;
+        }
+    }
+
     h1,
     h1 * {
         font-size: 32px;
@@ -125,17 +135,6 @@
     h2 * {
         font-size: 26px;
         font-weight: bold;
-    }
-
-    p,
-    p * {
-        font-size: 16px;
-    }
-
-    @media (max-width: 800px) {
-        :not(h1, h2) {
-            font-size: 14px;
-        }
     }
 
     .image-wrap {
