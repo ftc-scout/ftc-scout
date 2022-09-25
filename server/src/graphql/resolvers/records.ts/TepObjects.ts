@@ -4,15 +4,10 @@ import { TeamEventParticipation } from "../../objects/TeamEventParticipation";
 import { CompareOperator, compareOpToSql } from "./CompareOperator";
 import { Order } from "./Order";
 
-function capitalizeFirstLetter(string: string): string {
-    return string.charAt(0).toUpperCase() + string.slice(1);
-}
-
 export function TepField<G extends object, FN extends object, TG, TFN>(
     Group: G,
     FieldName: FN,
-    getGroupName: (_: TG) => string,
-    getFieldNameGroup: (_: TFN) => string | null,
+    getFieldNameGroup: (_: TFN, postfix: string, group: TG) => string | null,
     getFieldNameSingular: (_: TFN, postfix: string) => string | null
 ) {
     @InputType()
@@ -25,12 +20,7 @@ export function TepField<G extends object, FN extends object, TG, TFN>(
 
         toSqlName(postfix: string): string | null {
             if (this.group != null) {
-                let groupName = getGroupName(this.group);
-                let fieldName = getFieldNameGroup(this.fieldName);
-
-                if (!groupName || !fieldName) return null;
-
-                return groupName + capitalizeFirstLetter(fieldName.toLowerCase());
+                return getFieldNameGroup(this.fieldName, postfix, this.group);
             } else {
                 return getFieldNameSingular(this.fieldName, postfix);
             }
@@ -59,11 +49,7 @@ export function TepOrdering<F extends TTepField, TEP>(TepField: ClassType<F>) {
 
             if (!sqlName) return query;
 
-            if (sqlName.includes(".")) {
-                return query.addOrderBy('"' + sqlName + '"', direction);
-            } else {
-                return query.addOrderBy(`tep.${sqlName}`, direction);
-            }
+            return query.addOrderBy(sqlName, direction);
         }
 
         toRawSql(postfix: string): string | null {
@@ -72,11 +58,7 @@ export function TepOrdering<F extends TTepField, TEP>(TepField: ClassType<F>) {
 
             if (!sqlName) return null;
 
-            if (sqlName.includes(".")) {
-                return '"' + sqlName + '" ' + direction;
-            } else {
-                return `tep${postfix}.\"${sqlName}\" ${direction}`;
-            }
+            return sqlName + " " + direction;
         }
     }
 
@@ -100,7 +82,7 @@ export function TepValue<F extends TTepField>(TepField: ClassType<F>) {
             if (this.value != null) {
                 return "" + this.value;
             } else {
-                return `${prefix}${this.field!.toSqlName("")}`;
+                return this.field!.toSqlName(prefix)!;
             }
         }
     }
@@ -130,7 +112,7 @@ export function TepCondition<V extends TTepValue>(TepValue: ClassType<V>) {
             if (this.lhs.isInvalid() || this.rhs.isInvalid()) return query;
 
             return query.andWhere(
-                `${this.lhs.toSql("tep.")} ${compareOpToSql(this.compareOperator)} ${this.rhs.toSql("tep.")}`
+                `${this.lhs.toSql("")} ${compareOpToSql(this.compareOperator)} ${this.rhs.toSql("")}`
             );
         }
     }
