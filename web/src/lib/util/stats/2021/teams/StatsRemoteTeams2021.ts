@@ -1,7 +1,7 @@
-import { Tep2021Group, type FullStatsGroup2021RemoteFragment } from "../../graphql/generated/graphql-operations";
-import { StatColor } from "./stat-color";
-import { StatDisplayType } from "./stat-display-type";
-import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
+import { Tep2021Group, type FullStatsGroup2021RemoteFragment } from "../../../../graphql/generated/graphql-operations";
+import { StatColor } from "../../stat-color";
+import { StatDisplayType } from "../../stat-display-type";
+import { groupGetter, type StatSet, type StatSetGroup } from "../../StatSet";
 import {
     AUTO_BONUS_STAT,
     AUTO_CAROUSEL_STAT,

@@ -31,10 +31,10 @@
     } from "../../../../lib/graphql/generated/graphql-operations";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
     import { prettyPrintSeason } from "../../../../lib/util/format/pretty-print-season";
-    import type { FullTep2021Remote } from "../../../../lib/util/stats/StatsRemoteTeams2021";
-    import type { FullTep2021Traditional } from "../../../../lib/util/stats/StatsTradTeams2021";
+    import type { FullTep2021Remote } from "../../../../lib/util/stats/2021/teams/StatsRemoteTeams2021";
+    import type { FullTep2021Traditional } from "../../../../lib/util/stats/2021/teams/StatsTradTeams2021";
     import { eventTypesFromStr, eventTypesToStr, readDateFromUrl } from "./+page";
-    import type { FullTep2019 } from "../../../../lib/util/stats/StatsTeams2019";
+    import type { FullTep2019 } from "../../../../lib/util/stats/2019/teams/StatsTeams2019";
     import SeasonDropdown from "../../../../lib/components/SeasonDropdown.svelte";
     import type { Season } from "../../../../lib/constants";
     import Head from "../../../../lib/components/nav/Head.svelte";

@@ -68,7 +68,10 @@
     import { get, writable, type Writable } from "svelte/store";
     import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
     import type { Stat } from "../../util/stats/Stat";
-    import { STAT_SET_TEAMS_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemoteTeams2021";
+    import {
+        STAT_SET_TEAMS_2021_REMOTE,
+        type FullTep2021Remote,
+    } from "../../util/stats/2021/teams/StatsRemoteTeams2021";
     import {
         AUTO_OPR_STAT,
         AVERAGE_STAT,
@@ -79,12 +82,12 @@
         STAT_SET_TEAMS_2021_SHARED,
         TEAM_STAT,
         TELEOP_OPR_STAT,
-    } from "../../util/stats/StatsSharedTeams2021";
+    } from "../../util/stats/2021/teams/StatsSharedTeams2021";
     import {
         RECORD_STAT,
         STAT_SET_TEAMS_2021_TRAD,
         type FullTep2021Traditional,
-    } from "../../util/stats/StatsTradTeams2021";
+    } from "../../util/stats/2021/teams/StatsTradTeams2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
     import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";

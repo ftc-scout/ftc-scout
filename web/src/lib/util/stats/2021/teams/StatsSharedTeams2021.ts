@@ -1,8 +1,8 @@
-import { makeStat, type Stat } from "./Stat";
-import { StatColor } from "./stat-color";
-import { StatDisplayType } from "./stat-display-type";
+import { makeStat, type Stat } from "../../Stat";
+import { StatColor } from "../../stat-color";
+import { StatDisplayType } from "../../stat-display-type";
 import type { FullTep2021Remote } from "./StatsRemoteTeams2021";
-import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
+import { groupGetter, type StatSet, type StatSetGroup } from "../../StatSet";
 import type { FullTep2021Traditional } from "./StatsTradTeams2021";
 import { Tep2021FieldName, Tep2021Group } from "$lib/graphql/generated/graphql-operations";
 

@@ -2,11 +2,11 @@ import {
     Tep2021FieldName,
     Tep2021Group,
     type FullStatsGroup2021TradFragment,
-} from "../../graphql/generated/graphql-operations";
-import { makeStat, type Stat } from "./Stat";
-import { StatColor } from "./stat-color";
-import { StatDisplayType } from "./stat-display-type";
-import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
+} from "../../../../graphql/generated/graphql-operations";
+import { makeStat, type Stat } from "../../Stat";
+import { StatColor } from "../../stat-color";
+import { StatDisplayType } from "../../stat-display-type";
+import { groupGetter, type StatSet, type StatSetGroup } from "../../StatSet";
 import {
     AUTO_BONUS_INDIVIDUAL_STAT,
     AUTO_BONUS_STAT,

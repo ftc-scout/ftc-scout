@@ -2,11 +2,11 @@ import {
     Tep2019FieldName,
     Tep2019Group,
     type FullStatsGroup2019Fragment,
-} from "../../graphql/generated/graphql-operations";
-import { makeStat, type Stat } from "./Stat";
-import { StatColor } from "./stat-color";
-import { StatDisplayType } from "./stat-display-type";
-import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
+} from "../../../../graphql/generated/graphql-operations";
+import { makeStat, type Stat } from "../../Stat";
+import { StatColor } from "../../stat-color";
+import { StatDisplayType } from "../../stat-display-type";
+import { groupGetter, type StatSet, type StatSetGroup } from "../../StatSet";
 
 export type FullTep2019 = {
     team: {

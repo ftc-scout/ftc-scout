@@ -19,13 +19,13 @@
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
     import type { Stat } from "../../util/stats/Stat";
-    import { PLAYED_STAT, EVENT_RANK_STAT, RP_STAT, TEAM_STAT } from "../../util/stats/StatsSharedTeams2021";
+    import { PLAYED_STAT, EVENT_RANK_STAT, RP_STAT, TEAM_STAT } from "../../util/stats/2021/teams/StatsSharedTeams2021";
     import {
         AVERAGE_STAT,
         MAX_STAT,
         STAT_SET_2021_REMOTE,
         type FullTep2021Remote,
-    } from "../../util/stats/StatsRemoteTeams2021";
+    } from "../../util/stats/2021/teams/StatsRemoteTeams2021";
     import { SortType } from "../SortButton.svelte";
     import LocallyResolvedStatsTable from "../stats/LocallyResolvedStatsTable.svelte";
     import type { ChosenSort } from "../stats/StatsTable.svelte";
