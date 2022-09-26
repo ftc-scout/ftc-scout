@@ -264,7 +264,7 @@ export class TeamSeasonRecords2021Resolver {
 
         if (orderIn.length == 0) {
             // In case they didn't provide an order
-            query = query.orderBy('tep."oprTotalpoints"', "DESC");
+            query = query.orderBy('tep."oprTotalpoints"', "DESC", "NULLS LAST");
         }
 
         if (eventTypes == EventTypes.REMOTE) {

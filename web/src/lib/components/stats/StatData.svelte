@@ -27,7 +27,9 @@
     $: value = read as number;
 </script>
 
-{#if stat.displayType == StatDisplayType.TEAM}
+{#if read == null}
+    <td class="{stat.color} na" title={stat.identifierName}>N/A</td>
+{:else if stat.displayType == StatDisplayType.TEAM}
     <StatTeam {team} bind:selectedTeam bind:selectedTeamName on:hover-team on:un-hover-team />
 {:else if stat.displayType == StatDisplayType.EVENT}
     <StatEvent {event} on:hover-team on:un-hover-team />
@@ -84,5 +86,10 @@
 
     td.purple {
         background: var(--purple-stat-color-transparent);
+    }
+
+    td.na {
+        color: var(--secondary-text-color);
+        font-size: var(--small-font-size);
     }
 </style>

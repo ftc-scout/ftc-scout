@@ -4,7 +4,7 @@ import {
     Tep2021FieldName,
     type RecordsEventFragment,
 } from "../../graphql/generated/graphql-operations";
-import type { Stat } from "./Stat";
+import { DisplayWhen, type Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
 
@@ -18,6 +18,7 @@ export const EVENT_STAT_2021: Stat<T> = {
     listName: "Event",
     columnName: "Event",
     identifierName: "Event",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => ({
         name: s.data.event.name,
         start: s.data.event.start,
@@ -44,6 +45,7 @@ export const EVENT_STAT_2019: Stat<T> = {
     listName: "Event",
     columnName: "Event",
     identifierName: "Event",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => ({
         name: s.data.event.name,
         start: s.data.event.start,

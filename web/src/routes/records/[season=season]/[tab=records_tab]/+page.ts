@@ -62,7 +62,7 @@ export function eventTypesToStr(str: EventTypes): "Traditional" | "Remote" | "Tr
 
 export const load: PageLoad = async ({ fetch, params, url }) => {
     if (params.season == "2021") {
-        let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad;
+        let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.TradAndRemote;
         let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
 
         let start = readDateFromUrl(url.searchParams.get("start"));

@@ -31,13 +31,12 @@
     } from "../../../../lib/graphql/generated/graphql-operations";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
     import { prettyPrintSeason } from "../../../../lib/util/format/pretty-print-season";
-    import type { FullTep2021Remote } from "../../../../lib/util/stats/2021/teams/StatsRemoteTeams2021";
-    import type { FullTep2021Traditional } from "../../../../lib/util/stats/2021/teams/StatsTradTeams2021";
     import { eventTypesFromStr, eventTypesToStr, readDateFromUrl } from "./+page";
     import type { FullTep2019 } from "../../../../lib/util/stats/2019/teams/StatsTeams2019";
     import SeasonDropdown from "../../../../lib/components/SeasonDropdown.svelte";
     import type { Season } from "../../../../lib/constants";
     import Head from "../../../../lib/components/nav/Head.svelte";
+    import type { FullTep2021Shared } from "../../../../lib/util/stats/2021/teams/StatsSharedTeams2021";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -74,7 +73,7 @@
     $: ({ teams2021, matches2021, teams2019 } = data);
 
     $: dataTeams2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
-    let dataTeams2021Teps: StatData<FullTep2021Traditional | FullTep2021Remote>[] | undefined;
+    let dataTeams2021Teps: StatData<FullTep2021Shared>[] | undefined;
     $: dataTeams2021Teps = dataTeams2021?.teps?.map((t) => ({
         rank: t.rank,
         preFilterRank: t.preFilterRank,
@@ -98,7 +97,7 @@
     })) as any;
 
     let eventTypesStr: "Traditional" | "Remote" | "Traditional and Remote" = eventTypesToStr(
-        eventTypesFromStr($page.url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad
+        eventTypesFromStr($page.url.searchParams.get("event-types") ?? "") ?? EventTypes.TradAndRemote
     );
     $: eventTypes = eventTypesFromStr(eventTypesStr) ?? EventTypes.Trad;
 
@@ -131,7 +130,7 @@
             <div>
                 <span>Event Types:</span>
                 <Dropdown
-                    items={["Traditional", "Remote", "Traditional and Remote"]}
+                    items={["Traditional and Remote", "Traditional", "Remote"]}
                     bind:value={eventTypesStr}
                     style="width: calc(100% - 15ch)"
                 />

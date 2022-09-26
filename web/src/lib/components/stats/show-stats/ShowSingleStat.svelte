@@ -63,4 +63,10 @@
     .purple {
         background: var(--purple-stat-color-transparent);
     }
+
+    div:empty::after {
+        content: "N/A";
+        color: var(--secondary-text-color);
+        font-size: var(--small-font-size);
+    }
 </style>

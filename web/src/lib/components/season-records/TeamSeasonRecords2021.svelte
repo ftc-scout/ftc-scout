@@ -32,15 +32,8 @@
 
     let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_TEAM_2021);
 
-    export function getStatSet2021Teams(eventTypes: EventTypes): StatSet<unknown, unknown> {
-        return [
-            ...(eventTypes == EventTypes.Remote
-                ? STAT_SET_TEAMS_2021_REMOTE
-                : eventTypes == EventTypes.Trad
-                ? STAT_SET_TEAMS_2021_TRAD
-                : STAT_SET_TEAMS_2021_SHARED),
-            ...STAT_SET_EVENT_2021,
-        ];
+    export function getStatSet2021Teams(_eventTypes: EventTypes): StatSet<unknown, unknown> {
+        return [...STAT_SET_TEAMS_2021_SHARED, ...STAT_SET_EVENT_2021];
     }
 
     function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
@@ -69,10 +62,6 @@
     import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
     import type { Stat } from "../../util/stats/Stat";
     import {
-        STAT_SET_TEAMS_2021_REMOTE,
-        type FullTep2021Remote,
-    } from "../../util/stats/2021/teams/StatsRemoteTeams2021";
-    import {
         AUTO_OPR_STAT,
         AVERAGE_STAT,
         ENDGAME_OPR_STAT,
@@ -82,12 +71,10 @@
         STAT_SET_TEAMS_2021_SHARED,
         TEAM_STAT,
         TELEOP_OPR_STAT,
-    } from "../../util/stats/2021/teams/StatsSharedTeams2021";
-    import {
+        type FullTep2021Remote,
         RECORD_STAT,
-        STAT_SET_TEAMS_2021_TRAD,
         type FullTep2021Traditional,
-    } from "../../util/stats/2021/teams/StatsTradTeams2021";
+    } from "../../util/stats/2021/teams/StatsSharedTeams2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
     import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
@@ -124,7 +111,7 @@
         $shownStats = stats;
     } catch {}
 
-    $: $shownStats = filterStatSet(statSet as any, $shownStats);
+    $: $shownStats = filterStatSet($shownStats, eventTypes);
 
     $currentSort = getCurrentSortFromUrl($page.url);
 
@@ -143,7 +130,7 @@
             sort: isDefaultSort ? null : $currentSort.stat.identifierName,
             ["sort-dir"]: isDefaultSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
-            ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
+            ["event-types"]: eventTypes == EventTypes.TradAndRemote ? null : eventTypesToStr(eventTypes),
             ["shown-stats"]: isDefaultShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
             region: region == Region.All ? null : regionToString(region),
             page: currPage == 1 ? null : "" + currPage,

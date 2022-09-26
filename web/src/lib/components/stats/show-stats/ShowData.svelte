@@ -13,7 +13,8 @@
     $: value = stat.read(data);
 </script>
 
-{#if typeof value == "string"}
+<!-- svelte-ignore empty-block -->
+{#if value == null}{:else if typeof value == "string"}
     {value}
 {:else if typeof value == "object" && "number" in value}
     {value.number}

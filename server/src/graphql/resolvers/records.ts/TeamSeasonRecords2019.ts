@@ -231,7 +231,7 @@ export class TeamSeasonRecords2019Resolver {
 
         if (orderIn.length == 0) {
             // In case they didn't provide an order
-            query = query.orderBy('tep."oprTotalpoints"', "DESC");
+            query = query.orderBy('tep."oprTotalpoints"', "DESC", "NULLS LAST");
         }
 
         for (let i = 0; i < orderIn.length && i < 5; i++) {

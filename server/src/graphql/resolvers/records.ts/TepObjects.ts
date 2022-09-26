@@ -49,7 +49,7 @@ export function TepOrdering<F extends TTepField, TEP>(TepField: ClassType<F>) {
 
             if (!sqlName) return query;
 
-            return query.addOrderBy(sqlName, direction);
+            return query.addOrderBy(sqlName, direction, "NULLS LAST");
         }
 
         toRawSql(postfix: string): string | null {
@@ -58,7 +58,7 @@ export function TepOrdering<F extends TTepField, TEP>(TepField: ClassType<F>) {
 
             if (!sqlName) return null;
 
-            return sqlName + " " + direction;
+            return `${sqlName} ${direction} NULLS LAST`;
         }
     }
 

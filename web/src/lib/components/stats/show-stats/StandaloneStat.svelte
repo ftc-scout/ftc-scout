@@ -47,6 +47,12 @@
         overflow: hidden;
     }
 
+    li div:empty::after {
+        content: "N/A";
+        color: var(--secondary-text-color);
+        font-size: var(--small-font-size);
+    }
+
     @media (max-width: 500px) {
         li div {
             min-width: 100px;

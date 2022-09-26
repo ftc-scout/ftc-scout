@@ -1,10 +1,59 @@
-import { makeStat, type Stat } from "../../Stat";
+import { DisplayWhen, makeStat, makeStatMaybe, type Stat } from "../../Stat";
 import { StatColor } from "../../stat-color";
 import { StatDisplayType } from "../../stat-display-type";
-import type { FullTep2021Remote } from "./StatsRemoteTeams2021";
 import { groupGetter, type StatSet, type StatSetGroup } from "../../StatSet";
-import type { FullTep2021Traditional } from "./StatsTradTeams2021";
-import { Tep2021FieldName, Tep2021Group } from "$lib/graphql/generated/graphql-operations";
+import {
+    Tep2021FieldName,
+    Tep2021Group,
+    type FullStatsGroup2021TradFragment,
+} from "$lib/graphql/generated/graphql-operations";
+import type { FullStatsGroup2021RemoteFragment } from "../../../../graphql/generated/graphql-operations";
+
+export type FullTep2021Traditional = {
+    team: {
+        number: number;
+        name: string;
+    };
+    stats: {
+        __typename?: "TeamEventStats2021Traditional";
+        rank: number;
+        rp: number;
+        tb1: number;
+        tb2: number;
+        wins: number;
+        losses: number;
+        ties: number;
+        dqs: number;
+        qualMatchesPlayed: number;
+        total: FullStatsGroup2021TradFragment;
+        average: FullStatsGroup2021TradFragment;
+        opr: FullStatsGroup2021TradFragment;
+        min: FullStatsGroup2021TradFragment;
+        max: FullStatsGroup2021TradFragment;
+        standardDev: FullStatsGroup2021TradFragment;
+    };
+};
+
+export type FullTep2021Remote = {
+    team: {
+        number: number;
+        name: string;
+    };
+    stats: {
+        __typename?: "TeamEventStats2021Traditional";
+        rank: number;
+        rp: number;
+        tb1: number;
+        tb2: number;
+        qualMatchesPlayed: number;
+        total: FullStatsGroup2021RemoteFragment;
+        average: FullStatsGroup2021RemoteFragment;
+        opr: FullStatsGroup2021RemoteFragment;
+        min: FullStatsGroup2021RemoteFragment;
+        max: FullStatsGroup2021RemoteFragment;
+        standardDev: FullStatsGroup2021RemoteFragment;
+    };
+};
 
 export type FullTep2021Shared = FullTep2021Traditional | FullTep2021Remote;
 
@@ -14,6 +63,7 @@ export const TEAM_STAT: Stat<FullTep2021Shared> = {
     listName: "Team",
     columnName: "Team",
     identifierName: "Team",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.team,
     apiField: { fieldName: Tep2021FieldName.TeamNumber },
 };
@@ -24,6 +74,7 @@ export const RP_STAT: Stat<FullTep2021Shared> = {
     listName: "Ranking Points (RP)",
     columnName: "RP",
     identifierName: "Ranking Points (RP)",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.rp,
     apiField: { fieldName: Tep2021FieldName.Rp },
 };
@@ -34,6 +85,7 @@ export const EVENT_RANK_STAT: Stat<FullTep2021Shared> = {
     listName: "Ranking",
     columnName: "Rank",
     identifierName: "Event Ranking",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.rank,
     apiField: { fieldName: Tep2021FieldName.Rank },
 };
@@ -44,6 +96,7 @@ export const TBP_STAT: Stat<FullTep2021Shared> = {
     listName: "Tie Breaker Points (TBP)",
     columnName: "TBP",
     identifierName: "Tie Breaker Points (TBP)",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.tb1,
     apiField: { fieldName: Tep2021FieldName.Tb1 },
 };
@@ -54,6 +107,7 @@ export const TBP2_STAT: Stat<FullTep2021Shared> = {
     listName: "Tie Breaker Points 2 (TBP2)",
     columnName: "TBP2",
     identifierName: "Tie Breaker Points 2 (TBP2)",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.tb2,
     apiField: { fieldName: Tep2021FieldName.Tb2 },
 };
@@ -64,6 +118,7 @@ export const PLAYED_STAT: Stat<FullTep2021Shared> = {
     listName: "Matches Played",
     columnName: "Played",
     identifierName: "Qual Matches Played",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.qualMatchesPlayed,
     apiField: { fieldName: Tep2021FieldName.QualMatchesPlayed },
 };
@@ -75,6 +130,7 @@ export const TOTAL_STAT: Stat<Group> = makeStat(
     "Total Points",
     "",
     "Total Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.TotalPoints
 );
 export const TOTAL_NP_STAT: Stat<Group> = makeStat(
@@ -82,6 +138,7 @@ export const TOTAL_NP_STAT: Stat<Group> = makeStat(
     "Total Points No Penalties",
     "np",
     "Total Points No Penalties",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.TotalPointsNp
 );
 
@@ -92,6 +149,7 @@ export const AUTO_STAT: Stat<Group> = makeStat(
     "Auto Points",
     "Auto",
     "Auto Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoPoints
 );
 
@@ -100,6 +158,7 @@ export const AUTO_FREIGHT_STAT: Stat<Group> = makeStat(
     "Auto Freight Points",
     "Auto Freight",
     "Auto Freight Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoFreightPoints
 );
 export const AUTO_FREIGHT1_STAT: Stat<Group> = makeStat(
@@ -107,6 +166,7 @@ export const AUTO_FREIGHT1_STAT: Stat<Group> = makeStat(
     "Level 1",
     "Auto Freight 1",
     "Auto Freight Points Level 1",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoFreightPointsLevel_1
 );
 export const AUTO_FREIGHT2_STAT: Stat<Group> = makeStat(
@@ -114,6 +174,7 @@ export const AUTO_FREIGHT2_STAT: Stat<Group> = makeStat(
     "Level 2",
     "Auto Freight 2",
     "Auto Freight Points Level 2",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoFreightPointsLevel_2
 );
 export const AUTO_FREIGHT3_STAT: Stat<Group> = makeStat(
@@ -121,6 +182,7 @@ export const AUTO_FREIGHT3_STAT: Stat<Group> = makeStat(
     "Level 3",
     "Auto Freight 3",
     "Auto Freight Points Level 3",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoFreightPointsLevel_3
 );
 export const AUTO_FREIGHT_STORAGE_STAT: Stat<Group> = makeStat(
@@ -128,6 +190,7 @@ export const AUTO_FREIGHT_STORAGE_STAT: Stat<Group> = makeStat(
     "Storage",
     "Auto Storage",
     "Auto Freight Points Storage",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoFreightPointsStorage
 );
 
@@ -136,6 +199,7 @@ export const AUTO_CAROUSEL_STAT: Stat<Group> = makeStat(
     "Auto Carousel Points",
     "Auto Carousel",
     "Auto Carousel Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoCarouselPoints
 );
 
@@ -144,6 +208,7 @@ export const AUTO_NAV_STAT: Stat<Group> = makeStat(
     "Auto Navigation Points",
     "Auto Nav",
     "Auto Navigation Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoNavigationPoints
 );
 
@@ -152,6 +217,7 @@ export const AUTO_BONUS_STAT: Stat<Group> = makeStat(
     "Auto Bonus Points",
     "Bonus",
     "Auto Bonus Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoBonusPoints
 );
 
@@ -162,6 +228,7 @@ export const DC_STAT: Stat<Group> = makeStat(
     "Driver Controlled Points",
     "Teleop",
     "Driver Controlled Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.DriverControlledPoints
 );
 
@@ -170,6 +237,7 @@ export const DC_ALLIANCE_STAT: Stat<Group> = makeStat(
     "Alliance Hub Points",
     "Hub",
     "Driver Controlled Alliance Hub Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.DriverControlledAllianceHubPoints
 );
 export const DC_ALLIANCE1_STAT: Stat<Group> = makeStat(
@@ -177,6 +245,7 @@ export const DC_ALLIANCE1_STAT: Stat<Group> = makeStat(
     "Level 1",
     "Hub 1",
     "Driver Controlled Alliance Hub Level 1 Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.DriverControlledAllianceHubPointsLevel_1
 );
 export const DC_ALLIANCE2_STAT: Stat<Group> = makeStat(
@@ -184,6 +253,7 @@ export const DC_ALLIANCE2_STAT: Stat<Group> = makeStat(
     "Level 2",
     "Hub 2",
     "Driver Controlled Alliance Hub Level 2 Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.DriverControlledAllianceHubPointsLevel_2
 );
 export const DC_ALLIANCE3_STAT: Stat<Group> = makeStat(
@@ -191,6 +261,7 @@ export const DC_ALLIANCE3_STAT: Stat<Group> = makeStat(
     "Level 3",
     "Hub 3",
     "Driver Controlled Alliance Hub Level 3 Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.DriverControlledAllianceHubPointsLevel_3
 );
 
@@ -199,6 +270,7 @@ export const DC_STORAGE_STAT: Stat<Group> = makeStat(
     "Storage Points",
     "Storage",
     "Driver Controlled Storage Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.DriverControlledStoragePoints
 );
 
@@ -209,6 +281,7 @@ export const ENDGAME_STAT: Stat<Group> = makeStat(
     "Endgame Points",
     "Endgame",
     "Endgame Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.EndgamePoints
 );
 
@@ -217,6 +290,7 @@ export const ENDGAME_DELIVERY_STAT: Stat<Group> = makeStat(
     "Delivery Points",
     "Delivery",
     "Endgame Delivery Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.EndgameDeliveryPoints
 );
 
@@ -225,6 +299,7 @@ export const ENDGAME_CAPPING_STAT: Stat<Group> = makeStat(
     "Capping Points",
     "Capping",
     "Endgame Capping Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.CappingPoints
 );
 
@@ -233,6 +308,7 @@ export const ENDGAME_PARKING_STAT: Stat<Group> = makeStat(
     "Parking Points",
     "Endgame Park",
     "Endgame Parking Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.EndgameParkingPoints
 );
 
@@ -241,6 +317,7 @@ export const ENDGAME_BALANCED_STAT: Stat<Group> = makeStat(
     "Hub Balanced Points",
     "Hub Balanced",
     "Endgame Alliance Hub Balanced Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AllianceBalancedPoints
 );
 
@@ -251,6 +328,7 @@ export const PENALTIES_STAT: Stat<Group> = makeStat(
     "Penalty Points",
     "Penalties",
     "Penalty Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.PenaltyPoints
 );
 
@@ -259,6 +337,7 @@ export const PENALTIES_MAJOR_STAT: Stat<Group> = makeStat(
     "Major Penalty Points",
     "Majors",
     "Major Penalty Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.MajorPenaltyPoints
 );
 
@@ -267,6 +346,7 @@ export const PENALTIES_MINOR_STAT: Stat<Group> = makeStat(
     "Minor Penalty Points",
     "Minors",
     "Minor Penalty Points",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.MinorPenaltyPoints
 );
 
@@ -275,6 +355,7 @@ export const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Endgame Park Individual",
     "Endgame Parking Points Individual",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.EndgameParkingPointsIndividual
 );
 
@@ -286,6 +367,7 @@ export const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Auto Nav Individual",
     "Auto Navigation Points Individual",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoNavigationPointsIndividual
 );
 
@@ -294,7 +376,90 @@ export const AUTO_BONUS_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Bonus Individual",
     "Auto Bonus Points Individual",
+    DisplayWhen.ALWAYS,
     Tep2021FieldName.AutoBonusPointsIndividual
+);
+
+// Trad Only --------------------------------------------------------------------------------------------------------------
+
+export const WINS_STAT: Stat<FullTep2021Shared> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    listName: "Wins",
+    columnName: "Wins",
+    identifierName: "Wins",
+    displayWhen: DisplayWhen.TRAD,
+    read: (s) => ("wins" in s.data.stats ? s.data.stats.wins : null),
+    apiField: { fieldName: Tep2021FieldName.Wins },
+};
+
+export const lOSSES_STAT: Stat<FullTep2021Shared> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    listName: "Losses",
+    columnName: "Losses",
+    identifierName: "Losses",
+    displayWhen: DisplayWhen.TRAD,
+    read: (s) => ("losses" in s.data.stats ? s.data.stats.losses : null),
+    apiField: { fieldName: Tep2021FieldName.Losses },
+};
+
+export const TIES_STAT: Stat<FullTep2021Shared> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    listName: "Ties",
+    columnName: "Ties",
+    identifierName: "Ties",
+    displayWhen: DisplayWhen.TRAD,
+    read: (s) => ("ties" in s.data.stats ? s.data.stats.ties : null),
+    apiField: { fieldName: Tep2021FieldName.Ties },
+};
+
+export const RECORD_STAT: Stat<FullTep2021Shared> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.RECORD,
+    listName: "Record",
+    columnName: "Record",
+    identifierName: "Event Record",
+    displayWhen: DisplayWhen.TRAD,
+    read: (s) =>
+        "wins" in s.data.stats
+            ? { wins: s.data.stats.wins, losses: s.data.stats.losses, ties: s.data.stats.ties }
+            : null,
+    apiField: { fieldName: Tep2021FieldName.Wins },
+};
+
+export const DQ_STAT: Stat<FullTep2021Shared> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    listName: "Disqualifications (DQs)",
+    columnName: "DQs",
+    identifierName: "Disqualifications (DQs)",
+    displayWhen: DisplayWhen.TRAD,
+    read: (s) => ("dqs" in s.data.stats ? s.data.stats.dqs : null),
+    apiField: { fieldName: Tep2021FieldName.Dq },
+};
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+const DC_SHARED_STAT: Stat<Group> = makeStatMaybe(
+    "driverControlledSharedHubPoints",
+    "Shared Hub Points",
+    "Shared",
+    "Driver Controlled Shared Hub Points",
+    DisplayWhen.TRAD,
+    Tep2021FieldName.DriverControlledSharedHubPoints
+);
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+const ENDGAME_TIPPED_STAT: Stat<Group> = makeStatMaybe(
+    "sharedUnbalancedPoints",
+    "Shared Tipped Points",
+    "Shared Tipped ",
+    "Endgame Shared Hub Tipped Points",
+    DisplayWhen.TRAD,
+    Tep2021FieldName.SharedUnbalancedPoints
 );
 
 export let STAT_SET_TEAMS_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
@@ -302,7 +467,19 @@ export let STAT_SET_TEAMS_2021_SHARED: StatSet<FullTep2021Traditional, Group> = 
         name: "Team's Event Performance",
         type: "standalone",
         set: {
-            standalone: [TEAM_STAT, EVENT_RANK_STAT, RP_STAT, TBP_STAT, TBP2_STAT, PLAYED_STAT],
+            standalone: [
+                TEAM_STAT,
+                EVENT_RANK_STAT,
+                RP_STAT,
+                TBP_STAT,
+                TBP2_STAT,
+                PLAYED_STAT,
+                WINS_STAT,
+                lOSSES_STAT,
+                TIES_STAT,
+                RECORD_STAT,
+                DQ_STAT,
+            ],
         },
     },
     {
@@ -488,6 +665,10 @@ export let STAT_SET_TEAMS_2021_SHARED: StatSet<FullTep2021Traditional, Group> = 
                             ],
                         },
                         {
+                            stat: DC_SHARED_STAT,
+                            nestedStats: [],
+                        },
+                        {
                             stat: DC_STORAGE_STAT,
                             nestedStats: [],
                         },
@@ -506,6 +687,10 @@ export let STAT_SET_TEAMS_2021_SHARED: StatSet<FullTep2021Traditional, Group> = 
                         },
                         {
                             stat: ENDGAME_BALANCED_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: ENDGAME_TIPPED_STAT,
                             nestedStats: [],
                         },
                         {

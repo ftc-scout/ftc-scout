@@ -15,7 +15,7 @@ export function exportStatsCSV<T>(eventName: string, data: StatData<T>[], stats:
         stats.forEach((s) => {
             let value = s.read(d);
             value = distillStatRead(value);
-            obj[s.listName] = value;
+            obj[s.listName] = value ?? "";
         });
         return obj;
     });
