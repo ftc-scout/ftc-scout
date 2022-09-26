@@ -228,6 +228,7 @@ export class MatchSeasonRecords2021Resolver {
                 'pre_rank."eventCode" = s."eventCode" AND pre_rank."matchId" = s."matchId" AND pre_rank.alliance = s.alliance'
             )
             .addSelect("pre_rank.pre_filter_rank", "pre_filter_rank")
+            .addSelect("e.remote")
             .where('m."hasBeenPlayed"')
             .andWhere("e.season = 2021")
             .limit(limit)
@@ -268,8 +269,6 @@ export class MatchSeasonRecords2021Resolver {
         }
 
         let [{ entities, raw }, count] = await Promise.all([await query.getRawAndEntities(), await query.getCount()]);
-
-        // console.log(entities.length)
 
         let scores: MatchRecordRow[] = entities.map((e) => {
             let rawRow = raw.find((r) => r.s_eventCode == e.eventCode && r.s_matchId == e.matchId);

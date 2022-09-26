@@ -10,6 +10,7 @@ import { SortType } from "$lib/components/SortButton.svelte";
 import { getMyClient } from "$lib/graphql/client";
 import {
     EventTypes,
+    MatchSeasonRecords2021Document,
     Order,
     Region,
     TeamSeasonRecords2019Document,
@@ -61,17 +62,17 @@ export function eventTypesToStr(str: EventTypes): "Traditional" | "Remote" | "Tr
 
 export const load: PageLoad = async ({ fetch, params, url }) => {
     if (params.season == "2021") {
+        let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad;
+        let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
+
+        let start = readDateFromUrl(url.searchParams.get("start"));
+        let end = readDateFromUrl(url.searchParams.get("end"));
+
+        let take = +(url.searchParams.get("take") ?? "50");
+        let page = +(url.searchParams.get("page") ?? "1");
+
         if (params.tab == "teams") {
-            let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.Trad;
             let statSet = getStatSet2021Teams(eventTypes);
-
-            let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
-
-            let start = readDateFromUrl(url.searchParams.get("start"));
-            let end = readDateFromUrl(url.searchParams.get("end"));
-
-            let take = +(url.searchParams.get("take") ?? "50");
-            let page = +(url.searchParams.get("page") ?? "1");
 
             let order: Tep2021Ordering[] = [
                 {
@@ -115,7 +116,20 @@ export const load: PageLoad = async ({ fetch, params, url }) => {
                 teams2021: recordsData,
             };
         } else if (params.tab == "matches") {
-            return {};
+            let recordsData = await getData(getMyClient(fetch), MatchSeasonRecords2021Document, {
+                skip: Math.max((page - 1) * take, 0),
+                take,
+                filter: null,
+                order: [],
+                eventTypes,
+                region,
+                start,
+                end,
+            });
+
+            return {
+                matches2021: recordsData,
+            };
         } else {
             throw "impossible";
         }

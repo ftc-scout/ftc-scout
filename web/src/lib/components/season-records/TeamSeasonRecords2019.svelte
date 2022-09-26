@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
     type Data = FullTep2019;
 
-    let DEFUALT_SHOWN_STATS: Stat<Data>[] = [
+    let DEFAULT_SHOWN_STATS: Stat<Data>[] = [
         TEAM_STAT,
         OPR_STAT,
         NP_OPR_STAT,
@@ -33,7 +33,7 @@
     let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_TEAM_2019);
 
     export function getStatSet2019Teams(): StatSet<unknown, unknown> {
-        return [...STAT_SET_2019, ...STAT_SET_EVENT_2019];
+        return [...STAT_SET_TEAMS_2019, ...STAT_SET_EVENT_2019];
     }
 
     function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
@@ -79,11 +79,11 @@
         NP_OPR_STAT,
         OPR_STAT,
         RECORD_STAT,
-        STAT_SET_2019,
+        STAT_SET_TEAMS_2019,
         TEAM_STAT,
         TELEOP_OPR_STAT,
         type FullTep2019,
-    } from "../../util/stats/Stats2019";
+    } from "../../util/stats/StatsTeams2019";
 
     export let region: Region;
     export let data: StatData<Data>[];
@@ -112,19 +112,19 @@
     let selectedTeam: number | null = null;
     let selectedTeamName: string | null = null;
 
-    $: isDefualtSort =
+    $: isDefaultSort =
         $currentSort.type == DEFAULT_SORT_TEAM_2019.type &&
         $currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2019.stat.identifierName;
-    $: isDefualtShownStats = arraysEqual(
-        DEFUALT_SHOWN_STATS.map((s) => s.identifierName),
+    $: isDefaultShownStats = arraysEqual(
+        DEFAULT_SHOWN_STATS.map((s) => s.identifierName),
         $shownStats.map((s) => s.identifierName)
     );
     $: if ($page.params.tab == "teams")
         changeParam({
-            sort: isDefualtSort ? null : $currentSort.stat.identifierName,
-            ["sort-dir"]: isDefualtSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
+            sort: isDefaultSort ? null : $currentSort.stat.identifierName,
+            ["sort-dir"]: isDefaultSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
-            ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
+            ["shown-stats"]: isDefaultShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
             region: region == Region.All ? null : regionToString(region),
             page: currPage == 1 ? null : "" + currPage,
             start: dateToStr(startDate),

@@ -1,149 +1,289 @@
 import {
-    Tep2021FieldName,
-    Tep2021Group,
-    type FullStatsGroup2021TradFragment,
+    Tep2019FieldName,
+    Tep2019Group,
+    type FullStatsGroup2019Fragment,
 } from "../../graphql/generated/graphql-operations";
 import { makeStat, type Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
-import {
-    AUTO_BONUS_INDIVIDUAL_STAT,
-    AUTO_BONUS_STAT,
-    AUTO_CAROUSEL_STAT,
-    AUTO_FREIGHT1_STAT,
-    AUTO_FREIGHT2_STAT,
-    AUTO_FREIGHT3_STAT,
-    AUTO_FREIGHT_STAT,
-    AUTO_FREIGHT_STORAGE_STAT,
-    AUTO_NAV_INDIVIDUAL_STAT,
-    AUTO_NAV_STAT,
-    AUTO_STAT,
-    DC_ALLIANCE1_STAT,
-    DC_ALLIANCE2_STAT,
-    DC_ALLIANCE3_STAT,
-    DC_ALLIANCE_STAT,
-    DC_STAT,
-    DC_STORAGE_STAT,
-    ENDGAME_BALANCED_STAT,
-    ENDGAME_CAPPING_STAT,
-    ENDGAME_DELIVERY_STAT,
-    ENDGAME_PARKING_INDIVIDUAL_STAT,
-    ENDGAME_PARKING_STAT,
-    ENDGAME_STAT,
-    PENALTIES_MAJOR_STAT,
-    PENALTIES_MINOR_STAT,
-    PENALTIES_STAT,
-    PLAYED_STAT,
-    EVENT_RANK_STAT,
-    RP_STAT,
-    TBP2_STAT,
-    TBP_STAT,
-    TEAM_STAT,
-    TOTAL_NP_STAT,
-    TOTAL_STAT,
-} from "./StatsShared2021";
 
-export type FullTep2021Traditional = {
+export type FullTep2019 = {
     team: {
         number: number;
         name: string;
     };
     stats: {
-        __typename?: "TeamEventStats2021Traditional";
+        __typename?: "TeamEventStats2019Traditional";
         rank: number;
-        rp: number;
-        tb1: number;
-        tb2: number;
+        rp2019: number;
+        tb: number;
         wins: number;
         losses: number;
         ties: number;
         dqs: number;
         qualMatchesPlayed: number;
-        total: FullStatsGroup2021TradFragment;
-        average: FullStatsGroup2021TradFragment;
-        opr: FullStatsGroup2021TradFragment;
-        min: FullStatsGroup2021TradFragment;
-        max: FullStatsGroup2021TradFragment;
-        standardDev: FullStatsGroup2021TradFragment;
+        total: FullStatsGroup2019Fragment;
+        average: FullStatsGroup2019Fragment;
+        opr: FullStatsGroup2019Fragment;
+        min: FullStatsGroup2019Fragment;
+        max: FullStatsGroup2019Fragment;
+        standardDev: FullStatsGroup2019Fragment;
     };
 };
 
-export const WINS_STAT: Stat<FullTep2021Traditional> = {
+export const TEAM_STAT: Stat<FullTep2019> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.TEAM,
+    listName: "Team",
+    columnName: "Team",
+    identifierName: "Team",
+    read: (s) => s.data.team,
+    apiField: { fieldName: Tep2019FieldName.TeamNumber },
+};
+
+export const RP_STAT: Stat<FullTep2019> = {
+    color: StatColor.RED,
+    displayType: StatDisplayType.DECIMAL,
+    listName: "Ranking Points (RP)",
+    columnName: "RP",
+    identifierName: "Ranking Points (RP)",
+    read: (s) => s.data.stats.rp2019,
+    apiField: { fieldName: Tep2019FieldName.Rp },
+};
+
+export const EVENT_RANK_STAT: Stat<FullTep2019> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.RANK,
+    listName: "Ranking",
+    columnName: "Rank",
+    identifierName: "Event Ranking",
+    read: (s) => s.data.stats.rank,
+    apiField: { fieldName: Tep2019FieldName.Rank },
+};
+
+export const TBP_STAT: Stat<FullTep2019> = {
+    color: StatColor.LIGHT_BLUE,
+    displayType: StatDisplayType.DECIMAL,
+    listName: "Tie Breaker Points (TBP)",
+    columnName: "TBP",
+    identifierName: "Tie Breaker Points (TBP)",
+    read: (s) => s.data.stats.tb,
+    apiField: { fieldName: Tep2019FieldName.Tb },
+};
+
+export const PLAYED_STAT: Stat<FullTep2019> = {
+    color: StatColor.GREEN,
+    displayType: StatDisplayType.INTEGER,
+    listName: "Matches Played",
+    columnName: "Played",
+    identifierName: "Qual Matches Played",
+    read: (s) => s.data.stats.qualMatchesPlayed,
+    apiField: { fieldName: Tep2019FieldName.QualMatchesPlayed },
+};
+
+export const WINS_STAT: Stat<FullTep2019> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
     listName: "Wins",
     columnName: "Wins",
     identifierName: "Wins",
     read: (s) => s.data.stats.wins,
-    apiField: { fieldName: Tep2021FieldName.Wins },
+    apiField: { fieldName: Tep2019FieldName.Wins },
 };
 
-export const lOSSES_STAT: Stat<FullTep2021Traditional> = {
+export const LOSSES_STAT: Stat<FullTep2019> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
     listName: "Losses",
     columnName: "Losses",
     identifierName: "Losses",
     read: (s) => s.data.stats.losses,
-    apiField: { fieldName: Tep2021FieldName.Losses },
+    apiField: { fieldName: Tep2019FieldName.Losses },
 };
 
-export const TIES_STAT: Stat<FullTep2021Traditional> = {
+export const TIES_STAT: Stat<FullTep2019> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
     listName: "Ties",
     columnName: "Ties",
     identifierName: "Ties",
     read: (s) => s.data.stats.ties,
-    apiField: { fieldName: Tep2021FieldName.Ties },
+    apiField: { fieldName: Tep2019FieldName.Ties },
 };
 
-export const RECORD_STAT: Stat<FullTep2021Traditional> = {
+export const RECORD_STAT: Stat<FullTep2019> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.RECORD,
     listName: "Record",
     columnName: "Record",
     identifierName: "Event Record",
     read: (s) => ({ wins: s.data.stats.wins, losses: s.data.stats.losses, ties: s.data.stats.ties }),
-    apiField: { fieldName: Tep2021FieldName.Wins },
+    apiField: { fieldName: Tep2019FieldName.Wins },
 };
 
-export const DQ_STAT: Stat<FullTep2021Traditional> = {
+export const DQ_STAT: Stat<FullTep2019> = {
     color: StatColor.GREEN,
     displayType: StatDisplayType.INTEGER,
     listName: "Disqualifications (DQs)",
     columnName: "DQs",
     identifierName: "Disqualifications (DQs)",
     read: (s) => s.data.stats.dqs,
-    apiField: { fieldName: Tep2021FieldName.Dq },
+    apiField: { fieldName: Tep2019FieldName.Dq },
 };
 
-type Group = FullTep2021Traditional["stats"]["total"];
+type Group = FullTep2019["stats"]["total"];
 
-// ------------------------------------------------------------------------------------------------------------------------
-
-const DC_SHARED_STAT: Stat<Group> = makeStat(
-    "driverControlledSharedHubPoints",
-    "Shared Hub Points",
-    "Shared",
-    "Driver Controlled Shared Hub Points",
-    Tep2021FieldName.DriverControlledSharedHubPoints
+export const TOTAL_STAT: Stat<Group> = makeStat(
+    "totalPoints",
+    "Total Points",
+    "",
+    "Total Points",
+    Tep2019FieldName.TotalPoints
+);
+export const TOTAL_NP_STAT: Stat<Group> = makeStat(
+    "totalPointsNp",
+    "Total Points No Penalties",
+    "np",
+    "Total Points No Penalties",
+    Tep2019FieldName.TotalPointsNp
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const ENDGAME_TIPPED_STAT: Stat<Group> = makeStat(
-    "sharedUnbalancedPoints",
-    "Shared Tipped Points",
-    "Shared Tipped ",
-    "Endgame Shared Hub Tipped Points",
-    Tep2021FieldName.SharedUnbalancedPoints
+export const AUTO_STAT: Stat<Group> = makeStat(
+    "autoPoints",
+    "Auto Points",
+    "Auto",
+    "Auto Points",
+    Tep2019FieldName.AutoPoints
+);
+
+export const AUTO_NAV_STAT: Stat<Group> = makeStat(
+    "autoNavigationPoints",
+    "Auto Navigation Points",
+    "Auto Nav",
+    "Auto Navigation Points",
+    Tep2019FieldName.AutoNavigationPoints
+);
+
+export const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
+    "autoNavigationPointsIndividual",
+    "Individual",
+    "Auto Nav Individual",
+    "Auto Navigation Points Individual",
+    Tep2019FieldName.AutoNavigationPointsIndividual
+);
+
+export const AUTO_REPOSITION_STAT: Stat<Group> = makeStat(
+    "autoRepositioningPoints",
+    "Auto Repositioning Points",
+    "Auto Reposition",
+    "Auto Repositioning Points",
+    Tep2019FieldName.AutoRepositioningPoints
+);
+
+export const AUTO_DELIVERY_STAT: Stat<Group> = makeStat(
+    "autoDeliveryPoints",
+    "Auto Delivery Points",
+    "Auto Delivery",
+    "Auto Delivery Points",
+    Tep2019FieldName.AutoDeliveryPoints
+);
+
+export const AUTO_PLACEMENT_STAT: Stat<Group> = makeStat(
+    "autoPlacementPoints",
+    "Auto Placement Points",
+    "Auto Placement",
+    "Auto Placement Points",
+    Tep2019FieldName.AutoPlacementPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
+export const DC_STAT: Stat<Group> = makeStat(
+    "dcPoints",
+    "Driver Controlled Points",
+    "Teleop",
+    "Driver Controlled Points",
+    Tep2019FieldName.DriverControlledPoints
+);
+
+export const DC_DELIVERY_STAT: Stat<Group> = makeStat(
+    "dcDeliveryPoints",
+    "Delivery Points",
+    "Delivery",
+    "Driver Controlled Delivery Points",
+    Tep2019FieldName.DcDeliveryPoints
+);
+
+export const DC_PLACEMENT_STAT: Stat<Group> = makeStat(
+    "dcPlacementPoints",
+    "Placement Points",
+    "Placement",
+    "Driver Controlled Placement Points",
+    Tep2019FieldName.DcPlacementPoints
+);
+
+export const DC_SKYSCRAPER_STAT: Stat<Group> = makeStat(
+    "dcSkyscraperBonusPoints",
+    "Skyscraper Points",
+    "Skyscraper",
+    "Driver Controlled Skyscraper Bonus Points",
+    Tep2019FieldName.DcSkyscraperPoints
+);
+
+// ------------------------------------------------------------------------------------------------------------------------
+
+export const ENDGAME_STAT: Stat<Group> = makeStat(
+    "endgamePoints",
+    "Endgame Points",
+    "Endgame",
+    "Endgame Points",
+    Tep2019FieldName.EndgamePoints
+);
+
+export const ENDGAME_CAPPING_STAT: Stat<Group> = makeStat(
+    "cappingPoints",
+    "Capping Points",
+    "Capping",
+    "Endgame Capping Points",
+    Tep2019FieldName.CappingPoints
+);
+
+export const ENDGAME_CAPPING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
+    "cappingPointsIndividual",
+    "Individual",
+    "Capping Individual",
+    "Endgame Capping Points Individual",
+    Tep2019FieldName.CappingPointsIndividual
+);
+
+export const ENDGAME_PARKING_STAT: Stat<Group> = makeStat(
+    "parkingPoints",
+    "Parking Points",
+    "Parking",
+    "Endgame Parking Points",
+    Tep2019FieldName.EndgameParkingPoints
+);
+
+export const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
+    "parkingPointsIndividual",
+    "Individual",
+    "Parking Individual",
+    "Endgame Parking Points Individual",
+    Tep2019FieldName.EndgameParkingPointsIndividual
+);
+
+export const ENDGAME_FOUNDATION_STAT: Stat<Group> = makeStat(
+    "foundationMovedPoints",
+    "Foundation Moved Points",
+    "Foundation Moved",
+    "Endgame Foundation Moved Points",
+    Tep2019FieldName.FoundationMovedPoints
+);
+
+export let STAT_SET_TEAMS_2019: StatSet<FullTep2019, Group> = [
     {
         name: "Team's Event Performance",
         type: "standalone",
@@ -153,10 +293,9 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                 EVENT_RANK_STAT,
                 RP_STAT,
                 TBP_STAT,
-                TBP2_STAT,
                 PLAYED_STAT,
                 WINS_STAT,
-                lOSSES_STAT,
+                LOSSES_STAT,
                 TIES_STAT,
                 RECORD_STAT,
                 DQ_STAT,
@@ -181,7 +320,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "TOT",
                             "Total",
                             "Total",
-                            Tep2021Group.Total
+                            Tep2019Group.Total
                         ),
                 },
                 {
@@ -197,8 +336,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "AVG",
                             "Average",
                             "Average",
-
-                            Tep2021Group.Avg,
+                            Tep2019Group.Avg,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -215,7 +353,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "OPR",
                             "OPR",
                             "OPR",
-                            Tep2021Group.Opr,
+                            Tep2019Group.Opr,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -232,7 +370,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "MIN",
                             "Minimum",
                             "Minimum",
-                            Tep2021Group.Min
+                            Tep2019Group.Min
                         ),
                 },
                 {
@@ -248,7 +386,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "MAX",
                             "Maximum",
                             "Maximum",
-                            Tep2021Group.Max
+                            Tep2019Group.Max
                         ),
                 },
                 {
@@ -264,7 +402,7 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                             "DEV",
                             "Std. Dev.",
                             "Standard Deviation",
-                            Tep2021Group.Dev,
+                            Tep2019Group.Dev,
                             StatDisplayType.DECIMAL
                         ),
                 },
@@ -282,28 +420,15 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     stat: AUTO_STAT,
                     nestedStats: [
                         {
-                            stat: AUTO_FREIGHT_STAT,
-                            nestedStats: [
-                                {
-                                    stat: AUTO_FREIGHT1_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: AUTO_FREIGHT2_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: AUTO_FREIGHT3_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: AUTO_FREIGHT_STORAGE_STAT,
-                                    nestedStats: [],
-                                },
-                            ],
+                            stat: AUTO_DELIVERY_STAT,
+                            nestedStats: [],
                         },
                         {
-                            stat: AUTO_CAROUSEL_STAT,
+                            stat: AUTO_PLACEMENT_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_REPOSITION_STAT,
                             nestedStats: [],
                         },
                         {
@@ -315,43 +440,21 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                                 },
                             ],
                         },
-                        {
-                            stat: AUTO_BONUS_STAT,
-                            nestedStats: [
-                                {
-                                    stat: AUTO_BONUS_INDIVIDUAL_STAT,
-                                    nestedStats: [],
-                                },
-                            ],
-                        },
                     ],
                 },
                 {
                     stat: DC_STAT,
                     nestedStats: [
                         {
-                            stat: DC_ALLIANCE_STAT,
-                            nestedStats: [
-                                {
-                                    stat: DC_ALLIANCE1_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: DC_ALLIANCE2_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: DC_ALLIANCE3_STAT,
-                                    nestedStats: [],
-                                },
-                            ],
-                        },
-                        {
-                            stat: DC_SHARED_STAT,
+                            stat: DC_DELIVERY_STAT,
                             nestedStats: [],
                         },
                         {
-                            stat: DC_STORAGE_STAT,
+                            stat: DC_PLACEMENT_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_SKYSCRAPER_STAT,
                             nestedStats: [],
                         },
                     ],
@@ -360,19 +463,16 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                     stat: ENDGAME_STAT,
                     nestedStats: [
                         {
-                            stat: ENDGAME_DELIVERY_STAT,
-                            nestedStats: [],
-                        },
-                        {
                             stat: ENDGAME_CAPPING_STAT,
-                            nestedStats: [],
+                            nestedStats: [
+                                {
+                                    stat: ENDGAME_CAPPING_INDIVIDUAL_STAT,
+                                    nestedStats: [],
+                                },
+                            ],
                         },
                         {
-                            stat: ENDGAME_TIPPED_STAT,
-                            nestedStats: [],
-                        },
-                        {
-                            stat: ENDGAME_BALANCED_STAT,
+                            stat: ENDGAME_FOUNDATION_STAT,
                             nestedStats: [],
                         },
                         {
@@ -386,28 +486,12 @@ export let STAT_SET_2021_TRAD: StatSet<FullTep2021Traditional, Group> = [
                         },
                     ],
                 },
-                {
-                    stat: PENALTIES_STAT,
-                    nestedStats: [
-                        {
-                            stat: PENALTIES_MAJOR_STAT,
-                            nestedStats: [],
-                        },
-                        {
-                            stat: PENALTIES_MINOR_STAT,
-                            nestedStats: [],
-                        },
-                    ],
-                },
             ],
         },
     },
 ];
 
-const SCORES = STAT_SET_2021_TRAD.find((s) => s.name == "Match Scores")!.set as StatSetGroup<
-    FullTep2021Traditional,
-    Group
->;
+const SCORES = STAT_SET_TEAMS_2019.find((s) => s.name == "Match Scores")!.set as StatSetGroup<FullTep2019, Group>;
 const AVG = SCORES.groups.find((g) => g.shortName == "AVG")!;
 const MAX = SCORES.groups.find((g) => g.shortName == "MAX")!;
 const OPR = SCORES.groups.find((g) => g.shortName == "OPR")!;
@@ -415,3 +499,7 @@ const OPR = SCORES.groups.find((g) => g.shortName == "OPR")!;
 export const AVERAGE_STAT = AVG.get(TOTAL_STAT);
 export const MAX_STAT = MAX.get(TOTAL_STAT);
 export const OPR_STAT = OPR.get(TOTAL_STAT);
+export const NP_OPR_STAT = OPR.get(TOTAL_NP_STAT);
+export const AUTO_OPR_STAT = OPR.get(AUTO_STAT);
+export const TELEOP_OPR_STAT = OPR.get(DC_STAT);
+export const ENDGAME_OPR_STAT = OPR.get(ENDGAME_STAT);

@@ -1,7 +1,7 @@
 <script lang="ts" context="module">
     type Data = FullTep2021Traditional | FullTep2021Remote;
 
-    let DEFUALT_SHOWN_STATS: Stat<Data>[] = [
+    let DEFAULT_SHOWN_STATS: Stat<Data>[] = [
         TEAM_STAT,
         OPR_STAT,
         NP_OPR_STAT,
@@ -35,10 +35,10 @@
     export function getStatSet2021Teams(eventTypes: EventTypes): StatSet<unknown, unknown> {
         return [
             ...(eventTypes == EventTypes.Remote
-                ? STAT_SET_2021_REMOTE
+                ? STAT_SET_TEAMS_2021_REMOTE
                 : eventTypes == EventTypes.Trad
-                ? STAT_SET_2021_TRAD
-                : STAT_SET_2021_SHARED),
+                ? STAT_SET_TEAMS_2021_TRAD
+                : STAT_SET_TEAMS_2021_SHARED),
             ...STAT_SET_EVENT_2021,
         ];
     }
@@ -68,7 +68,7 @@
     import { get, writable, type Writable } from "svelte/store";
     import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
     import type { Stat } from "../../util/stats/Stat";
-    import { STAT_SET_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemote2021";
+    import { STAT_SET_TEAMS_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemoteTeams2021";
     import {
         AUTO_OPR_STAT,
         AVERAGE_STAT,
@@ -76,11 +76,15 @@
         NP_OPR_STAT,
         OPR_STAT,
         EVENT_RANK_STAT,
-        STAT_SET_2021_SHARED,
+        STAT_SET_TEAMS_2021_SHARED,
         TEAM_STAT,
         TELEOP_OPR_STAT,
-    } from "../../util/stats/StatsShared2021";
-    import { RECORD_STAT, STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
+    } from "../../util/stats/StatsSharedTeams2021";
+    import {
+        RECORD_STAT,
+        STAT_SET_TEAMS_2021_TRAD,
+        type FullTep2021Traditional,
+    } from "../../util/stats/StatsTradTeams2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
     import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
@@ -124,20 +128,20 @@
     let selectedTeam: number | null = null;
     let selectedTeamName: string | null = null;
 
-    $: isDefualtSort =
+    $: isDefaultSort =
         $currentSort.type == DEFAULT_SORT_TEAM_2021.type &&
         $currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2021.stat.identifierName;
-    $: isDefualtShownStats = arraysEqual(
-        DEFUALT_SHOWN_STATS.map((s) => s.identifierName),
+    $: isDefaultShownStats = arraysEqual(
+        DEFAULT_SHOWN_STATS.map((s) => s.identifierName),
         $shownStats.map((s) => s.identifierName)
     );
     $: if ($page.params.tab == "teams")
         changeParam({
-            sort: isDefualtSort ? null : $currentSort.stat.identifierName,
-            ["sort-dir"]: isDefualtSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
+            sort: isDefaultSort ? null : $currentSort.stat.identifierName,
+            ["sort-dir"]: isDefaultSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
             ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
-            ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
+            ["shown-stats"]: isDefaultShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
             region: region == Region.All ? null : regionToString(region),
             page: currPage == 1 ? null : "" + currPage,
             start: dateToStr(startDate),

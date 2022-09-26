@@ -34,7 +34,7 @@ import {
     TEAM_STAT,
     TOTAL_NP_STAT,
     TOTAL_STAT,
-} from "./StatsShared2021";
+} from "./StatsSharedTeams2021";
 
 export type FullTep2021Remote = {
     team: {
@@ -59,7 +59,7 @@ export type FullTep2021Remote = {
 
 type Group = FullTep2021Remote["stats"]["total"];
 
-export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
+export let STAT_SET_TEAMS_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
     {
         name: "Team's Event Performance",
         type: "standalone",
@@ -284,7 +284,7 @@ export let STAT_SET_2021_REMOTE: StatSet<FullTep2021Remote, Group> = [
     },
 ];
 
-const SCORES = STAT_SET_2021_REMOTE.find((s) => s.name == "Match Scores")!.set as StatSetGroup<
+const SCORES = STAT_SET_TEAMS_2021_REMOTE.find((s) => s.name == "Match Scores")!.set as StatSetGroup<
     FullTep2021Remote,
     Group
 >;

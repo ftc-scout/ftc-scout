@@ -1,0 +1,12 @@
+fragment FullMatchScoresAlliance on MatchScoresAlliance {
+    __typename
+    ... on MatchScores2019Alliance {
+        ...FullMatchScores2019Alliance
+    }
+    ... on MatchScores2021TraditionalAlliance {
+        ...FullMatchScores2021TraditionalAlliance
+    }
+    ... on MatchScores2021Remote {
+        ...FullMatchScores2021Remote
+    }
+}

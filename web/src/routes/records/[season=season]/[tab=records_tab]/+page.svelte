@@ -24,15 +24,17 @@
     import {
         EventTypes,
         Region,
+        type MatchScoresAlliance,
+        type MatchSeasonRecords2021Query,
         type TeamSeasonRecords2019Query,
         type TeamSeasonRecords2021Query,
     } from "../../../../lib/graphql/generated/graphql-operations";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
     import { prettyPrintSeason } from "../../../../lib/util/format/pretty-print-season";
-    import type { FullTep2021Remote } from "../../../../lib/util/stats/StatsRemote2021";
-    import type { FullTep2021Traditional } from "../../../../lib/util/stats/StatsTrad2021";
+    import type { FullTep2021Remote } from "../../../../lib/util/stats/StatsRemoteTeams2021";
+    import type { FullTep2021Traditional } from "../../../../lib/util/stats/StatsTradTeams2021";
     import { eventTypesFromStr, eventTypesToStr, readDateFromUrl } from "./+page";
-    import type { FullTep2019 } from "../../../../lib/util/stats/Stats2019";
+    import type { FullTep2019 } from "../../../../lib/util/stats/StatsTeams2019";
     import SeasonDropdown from "../../../../lib/components/SeasonDropdown.svelte";
     import type { Season } from "../../../../lib/constants";
     import Head from "../../../../lib/components/nav/Head.svelte";
@@ -67,15 +69,24 @@
 
     export let data: PageData;
     let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query> | null> | undefined;
+    let matches2021: Readable<ApolloQueryResult<MatchSeasonRecords2021Query> | null> | undefined;
     let teams2019: Readable<ApolloQueryResult<TeamSeasonRecords2019Query> | null> | undefined;
-    $: ({ teams2021, teams2019 } = data);
+    $: ({ teams2021, matches2021, teams2019 } = data);
 
-    $: data2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
-    let data2021Teams: StatData<FullTep2021Traditional | FullTep2021Remote>[] | undefined;
-    $: data2021Teams = data2021?.teps.map((t) => ({
+    $: dataTeams2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
+    let dataTeams2021Teps: StatData<FullTep2021Traditional | FullTep2021Remote>[] | undefined;
+    $: dataTeams2021Teps = dataTeams2021?.teps?.map((t) => ({
         rank: t.rank,
         preFilterRank: t.preFilterRank,
         data: t.tep,
+    })) as any;
+
+    $: dataMatches2021 = !$matches2021 ? undefined : $matches2021.data.matchRecords2021;
+    let dataMatches2021Scores: StatData<MatchScoresAlliance>[] | undefined;
+    $: dataMatches2021Scores = dataMatches2021?.scores?.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.score,
     })) as any;
 
     $: data2019 = !$teams2019 ? undefined : $teams2019.data.teamRecords2019;
@@ -143,18 +154,20 @@
         ]}
         bind:selectedName={selectedPage}
     >
-        <TabContent name="Matches">Matches</TabContent>
+        <TabContent name="Matches">
+            {console.log(dataMatches2021Scores)}
+        </TabContent>
 
         <TabContent name="Teams">
-            {#if data2021 && data2021Teams}
-                {@const totalCount = data2021.count}
+            {#if dataTeams2021 && dataTeams2021Teps}
+                {@const totalCount = dataTeams2021.count}
                 <!-- TODO add this to query -->
                 {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
-                {@const page = data2021.offset / pageSize + 1}
+                {@const page = dataTeams2021.offset / pageSize + 1}
 
                 <TeamSeasonRecords2021
                     {eventTypes}
-                    data={data2021Teams}
+                    data={dataTeams2021Teps}
                     currPage={page}
                     {totalCount}
                     {pageSize}

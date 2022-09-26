@@ -1,9 +1,9 @@
 import { makeStat, type Stat } from "./Stat";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
-import type { FullTep2021Remote } from "./StatsRemote2021";
+import type { FullTep2021Remote } from "./StatsRemoteTeams2021";
 import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
-import type { FullTep2021Traditional } from "./StatsTrad2021";
+import type { FullTep2021Traditional } from "./StatsTradTeams2021";
 import { Tep2021FieldName, Tep2021Group } from "$lib/graphql/generated/graphql-operations";
 
 export type FullTep2021Shared = FullTep2021Traditional | FullTep2021Remote;
@@ -297,7 +297,7 @@ export const AUTO_BONUS_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     Tep2021FieldName.AutoBonusPointsIndividual
 );
 
-export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
+export let STAT_SET_TEAMS_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
     {
         name: "Team's Event Performance",
         type: "standalone",
@@ -537,7 +537,7 @@ export let STAT_SET_2021_SHARED: StatSet<FullTep2021Traditional, Group> = [
     },
 ];
 
-const SCORES = STAT_SET_2021_SHARED.find((s) => s.name == "Match Scores")!.set as StatSetGroup<
+const SCORES = STAT_SET_TEAMS_2021_SHARED.find((s) => s.name == "Match Scores")!.set as StatSetGroup<
     FullTep2021Traditional,
     Group
 >;
