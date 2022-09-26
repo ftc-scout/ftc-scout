@@ -22,7 +22,7 @@ Finally FTCScout is designed to correctly handle remote events (both statistics 
 
 We designed FTCScout with performance, security, and accessability in mind. FTCScout pages load fast and with all data at the same time instead of popping in slowly like on some other websites. Because of these optimizations FTCScout receives near perfect [Google Lighthouse](https://en.wikipedia.org/wiki/Google_Lighthouse) scores and A+ security ratings from several auditors.
 
-![A screenshot of FTCScout's lighthouse scores showing 99% for Performance, 97% for Accessibility, 100% for Best Practices, and 100% for SEO.](ftcscout.org/img/lighthouse.png)
+![A screenshot of FTCScout's lighthouse scores showing 99% for Performance, 97% for Accessibility, 100% for Best Practices, and 100% for SEO.](web/static/img/lighthouse.png)
 
 ### Beautiful
 
