@@ -111,8 +111,6 @@
         $shownStats = stats;
     } catch {}
 
-    $: $shownStats = filterStatSet($shownStats, eventTypes);
-
     $currentSort = getCurrentSortFromUrl($page.url);
 
     let selectedTeam: number | null = null;
