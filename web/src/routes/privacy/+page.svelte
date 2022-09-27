@@ -12,7 +12,7 @@
 <WidthProvider width={"1000px"}>
     <Card>
         <h1>Privacy Policy</h1>
-        <em>Last Revision: September 16th, 2022.</em>
+        <em style="color: var(--secondary-text-color)">Last Revision: September 16th, 2022.</em>
 
         <p>
             By your continued use of the FTC<em>Scout</em> Website, you agree to the privacy policy located on this
@@ -77,9 +77,5 @@
     h2 {
         font-size: 26px;
         font-weight: bold;
-    }
-
-    em {
-        color: var(--secondary-text-color);
     }
 </style>
