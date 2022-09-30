@@ -8,7 +8,8 @@ export function TepField<G extends object, FN extends object, TG, TFN>(
     Group: G,
     FieldName: FN,
     getFieldNameGroup: (_: TFN, postfix: string, group: TG) => string | null,
-    getFieldNameSingular: (_: TFN, postfix: string) => string | null
+    getFieldNameSingular: (_: TFN, postfix: string) => string | null,
+    isStringIn: (_1: TG | null, _2: TFN) => boolean
 ) {
     @InputType()
     abstract class TepField {
@@ -25,6 +26,10 @@ export function TepField<G extends object, FN extends object, TG, TFN>(
                 return getFieldNameSingular(this.fieldName, postfix);
             }
         }
+
+        isString(): boolean {
+            return isStringIn(this.group, this.fieldName);
+        }
     }
 
     return TepField;
@@ -32,6 +37,8 @@ export function TepField<G extends object, FN extends object, TG, TFN>(
 
 interface TTepField {
     toSqlName(postfix: string): string | null;
+
+    isString(): boolean;
 }
 
 export function TepOrdering<F extends TTepField, TEP>(TepField: ClassType<F>) {
@@ -75,7 +82,7 @@ export function TepValue<F extends TTepField>(TepField: ClassType<F>) {
         field!: F | null;
 
         isInvalid(): boolean {
-            return this.value == null && this.field == null;
+            return (this.value == null && this.field == null) || this.field?.isString() == true;
         }
 
         toSql(prefix: string): string {

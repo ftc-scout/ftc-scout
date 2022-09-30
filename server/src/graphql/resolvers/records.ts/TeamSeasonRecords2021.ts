@@ -89,7 +89,7 @@ function getFieldNameSingular(fn: Tep2021FieldName, postfix: string): string | n
         [Tep2021FieldName.DQ]: `tep${postfix}.dq`,
         [Tep2021FieldName.QUAL_MATCHES_PLAYED]: `tep${postfix}."qualMatchesPlayed"`,
         [Tep2021FieldName.TEAM_NUMBER]: `tep${postfix}."teamNumber"`,
-        [Tep2021FieldName.EVENT_NAME]: `e${postfix}"."name`,
+        [Tep2021FieldName.EVENT_NAME]: `e${postfix}.name`,
     };
 
     return map[fn] ?? null;
@@ -137,7 +137,13 @@ function getFieldNameGroup(fn: Tep2021FieldName, postfix: string, group: Tep2021
 registerEnumType(Tep2021FieldName, { name: "TEP2021FieldName" });
 
 @InputType()
-class Tep2021Field extends TepField(Tep2021Group, Tep2021FieldName, getFieldNameGroup, getFieldNameSingular) {}
+class Tep2021Field extends TepField(
+    Tep2021Group,
+    Tep2021FieldName,
+    getFieldNameGroup,
+    getFieldNameSingular,
+    (_, fn) => fn == Tep2021FieldName.EVENT_NAME
+) {}
 
 @InputType()
 class Tep2021Ordering extends TepOrdering<Tep2021Field, TeamEventParticipation2021>(Tep2021Field) {}

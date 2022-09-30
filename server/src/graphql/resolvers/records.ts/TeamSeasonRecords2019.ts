@@ -110,7 +110,13 @@ function getFieldNameGroup(fn: Tep2019FieldName, postfix: string, group: Tep2019
 }
 
 @InputType()
-class Tep2019Field extends TepField(Tep2019Group, Tep2019FieldName, getFieldNameGroup, getFieldNameSingular) {}
+class Tep2019Field extends TepField(
+    Tep2019Group,
+    Tep2019FieldName,
+    getFieldNameGroup,
+    getFieldNameSingular,
+    (_, fn) => fn == Tep2019FieldName.EVENT_NAME
+) {}
 
 @InputType()
 class Tep2019Ordering extends TepOrdering<Tep2019Field, TeamEventParticipation2019>(Tep2019Field) {}
