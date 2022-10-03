@@ -1,5 +1,6 @@
 import {
     EventTypes,
+    MatchGroup,
     type Tep2019Field,
     type Tep2019Group,
     type Tep2021Field,
@@ -29,7 +30,7 @@ export function groupGetter<T, U>(
     shortNameAdd: string,
     longNameAdd: string,
     identifierNameAdd: string,
-    apiGroup: Tep2021Group | Tep2019Group,
+    apiGroup: Tep2021Group | Tep2019Group | MatchGroup,
     displayTypeOverride: StatDisplayType | null = null
 ): Stat<T> {
     return {

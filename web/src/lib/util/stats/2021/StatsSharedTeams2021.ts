@@ -1,13 +1,13 @@
-import { DisplayWhen, makeStat, makeStatMaybe, type Stat } from "../../Stat";
-import { StatColor } from "../../stat-color";
-import { StatDisplayType } from "../../stat-display-type";
-import { groupGetter, type StatSet, type StatSetGroup } from "../../StatSet";
+import { DisplayWhen, makeStat, makeStatMaybe, type Stat } from "../Stat";
+import { StatColor } from "../stat-color";
+import { StatDisplayType } from "../stat-display-type";
+import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
 import {
     Tep2021FieldName,
     Tep2021Group,
     type FullStatsGroup2021TradFragment,
 } from "$lib/graphql/generated/graphql-operations";
-import type { FullStatsGroup2021RemoteFragment } from "../../../../graphql/generated/graphql-operations";
+import type { FullStatsGroup2021RemoteFragment } from "../../../graphql/generated/graphql-operations";
 
 export type FullTep2021Traditional = {
     team: {

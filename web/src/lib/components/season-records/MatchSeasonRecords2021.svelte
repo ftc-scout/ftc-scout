@@ -1,156 +1,147 @@
 <script lang="ts" context="module">
-    // type Data = FullTep2021Traditional | FullTep2021Remote;
+    import { get, writable, type Writable } from "svelte/store";
+    import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
+    import {
+        STAT_SET_MATCHES_2021_SHARED,
+        THIS_TOTAL_POINTS_STAT,
+        THIS_AUTO_POINTS_STAT,
+        THIS_DC_POINTS_STAT,
+        type FullScores2021Shared,
+        THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_FREIGHT_STAT,
+        THIS_DC_ALLIANCE_3_STAT,
+        THIS_DC_SHARED_STAT,
+        THIS_END_SHARED_STAT,
+        THIS_END_DELIVERED_STAT,
+        THIS_END_CAPPED_STAT,
+    } from "../../util/stats/2021/StatsSharedMatches2021";
+    import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
+    import type { Stat } from "../../util/stats/Stat";
+    import { findInStatSet, type StatSet } from "../../util/stats/StatSet";
+    import { SortType } from "../SortButton.svelte";
+    import type { ChosenSort, StatData } from "../stats/StatsTable.svelte";
 
-    // let DEFUALT_SHOWN_STATS: Stat<Data>[] = [
-    //     TEAM_STAT,
-    //     OPR_STAT,
-    //     NP_OPR_STAT,
-    //     AUTO_OPR_STAT,
-    //     TELEOP_OPR_STAT,
-    //     ENDGAME_OPR_STAT,
-    //     AVERAGE_STAT,
-    //     EVENT_RANK_STAT,
-    //     EVENT_STAT_2021 as any,
-    //     RECORD_STAT,
-    // ];
+    type Data = FullScores2021Shared;
 
-    // let shownStats: Writable<Stat<Data>[]> = writable([
-    //     TEAM_STAT,
-    //     OPR_STAT,
-    //     NP_OPR_STAT,
-    //     AUTO_OPR_STAT,
-    //     TELEOP_OPR_STAT,
-    //     ENDGAME_OPR_STAT,
-    //     AVERAGE_STAT,
-    //     EVENT_RANK_STAT,
-    //     EVENT_STAT_2021 as any,
-    //     RECORD_STAT,
-    // ]);
-    // export const DEFAULT_SORT_TEAM_2021: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
+    let DEFAULT_SHOWN_STATS: Stat<Data>[] = [
+        THIS_TOTAL_POINTS_STAT,
+        THIS_AUTO_POINTS_STAT,
+        THIS_DC_POINTS_STAT,
+        THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_FREIGHT_STAT,
+        THIS_DC_ALLIANCE_3_STAT,
+        THIS_DC_SHARED_STAT,
+        THIS_END_SHARED_STAT,
+        THIS_END_DELIVERED_STAT,
+        THIS_END_CAPPED_STAT,
+    ];
 
-    // let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
+    let shownStats: Writable<Stat<Data>[]> = writable([
+        THIS_TOTAL_POINTS_STAT,
+        THIS_AUTO_POINTS_STAT,
+        THIS_DC_POINTS_STAT,
+        THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_FREIGHT_STAT,
+        THIS_DC_ALLIANCE_3_STAT,
+        THIS_DC_SHARED_STAT,
+        THIS_END_SHARED_STAT,
+        THIS_END_DELIVERED_STAT,
+        THIS_END_CAPPED_STAT,
+    ]);
+    export const DEFAULT_SORT_MATCH_2021: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };
 
-    // let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_TEAM_2021);
+    let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 
-    // export function getStatSet2021Teams(eventTypes: EventTypes): StatSet<unknown, unknown> {
-    //     return [
-    //         ...(eventTypes == EventTypes.Remote
-    //             ? STAT_SET_2021_REMOTE
-    //             : eventTypes == EventTypes.Trad
-    //             ? STAT_SET_2021_TRAD
-    //             : STAT_SET_2021_SHARED),
-    //         ...STAT_SET_EVENT_2021,
-    //     ];
-    // }
+    let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_MATCH_2021);
 
-    // function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
-    //     let eventTypes = EventTypes.Trad;
-    //     let statSet = getStatSet2021Teams(eventTypes);
+    export function getStatSet2021Matches(): StatSet<unknown, unknown> {
+        return [...STAT_SET_MATCHES_2021_SHARED];
+    }
 
-    //     let sortStatIdenName = url.searchParams.get("sort") ?? null;
-    //     if (sortStatIdenName) {
-    //         let sortStat = findInStatSet(statSet, sortStatIdenName);
-    //         let direction = url.searchParams.get("sort-dir") == "reverse" ? SortType.LOW_HIGH : SortType.HIGH_LOW;
-    //         if (sortStat) {
-    //             return {
-    //                 stat: sortStat,
-    //                 type: direction,
-    //             };
-    //         }
-    //     }
-    //     return get(currentSort);
-    // }
+    function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
+        let statSet = getStatSet2021Matches();
 
-    // export let team2021SearchParams: string = "";
+        let sortStatIdenName = url.searchParams.get("sort") ?? null;
+        if (sortStatIdenName) {
+            let sortStat = findInStatSet(statSet, sortStatIdenName);
+            let direction = url.searchParams.get("sort-dir") == "reverse" ? SortType.LOW_HIGH : SortType.HIGH_LOW;
+            if (sortStat) {
+                return {
+                    stat: sortStat,
+                    type: direction,
+                };
+            }
+        }
+        return get(currentSort);
+    }
+
+    export let match2021SearchParams: string = "";
 </script>
 
 <script lang="ts">
-    // import { get, writable, type Writable } from "svelte/store";
-    // import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
-    // import type { Stat } from "../../util/stats/Stat";
-    // import { STAT_SET_2021_REMOTE, type FullTep2021Remote } from "../../util/stats/StatsRemote2021";
-    // import {
-    //     AUTO_OPR_STAT,
-    //     AVERAGE_STAT,
-    //     ENDGAME_OPR_STAT,
-    //     NP_OPR_STAT,
-    //     OPR_STAT,
-    //     EVENT_RANK_STAT,
-    //     STAT_SET_2021_SHARED,
-    //     TEAM_STAT,
-    //     TELEOP_OPR_STAT,
-    // } from "../../util/stats/StatsShared2021";
-    // import { RECORD_STAT, STAT_SET_2021_TRAD, type FullTep2021Traditional } from "../../util/stats/StatsTrad2021";
-    // import { SortType } from "../SortButton.svelte";
-    // import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
-    // import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
-    // import TeamSelectionBar from "../TeamSelectionBar.svelte";
-    // import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
-    // import { EVENT_STAT_2021, STAT_SET_EVENT_2021 } from "$lib/util/stats/StatsEvent";
-    // import { changeParam } from "./changeParams";
-    // import { page } from "$app/stores";
-    // import { arraysEqual } from "$lib/util/array-eq";
-    // import { regionToString } from "$lib/util/regions";
-    // import { dateToStr } from "$lib/util/format/pretty-print-date";
-    // import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab]/+page";
+    import TeamSelectionBar from "../TeamSelectionBar.svelte";
+    import { page } from "$app/stores";
+    import { arraysEqual } from "../../util/array-eq";
+    import { changeParam } from "./changeParams";
+    import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab]/+page";
+    import { regionToString } from "../../util/regions";
+    import { dateToStr } from "../../util/format/pretty-print-date";
+    import StatsTable from "../stats/StatsTable.svelte";
 
-    // export let eventTypes: EventTypes;
-    // export let region: Region;
-    // export let data: StatData<Data>[];
-    // export let currPage: number;
-    // export let totalCount: number;
-    // export let pageSize: number;
-    // export let startDate: Date | null;
-    // export let endDate: Date | null;
+    export let eventTypes: EventTypes;
+    export let region: Region;
+    export let data: StatData<Data>[];
+    export let currPage: number;
+    export let totalCount: number;
+    export let pageSize: number;
+    export let startDate: Date | null;
+    export let endDate: Date | null;
 
-    // let statSet: StatSet<unknown, unknown> = getStatSet2021Teams(eventTypes);
-    // $: statSet = getStatSet2021Teams(eventTypes);
+    let statSet: StatSet<unknown, unknown> = getStatSet2021Matches();
+    $: statSet = getStatSet2021Matches();
 
-    // try {
-    //     let startFilter = simpleJsonToFilter(JSON.parse($page.url.searchParams.get("filter") ?? ""), statSet);
-    //     if (startFilter) $currentFilters = startFilter;
-    // } catch {}
+    try {
+        let startFilter = simpleJsonToFilter(JSON.parse($page.url.searchParams.get("filter") ?? ""), statSet);
+        if (startFilter) $currentFilters = startFilter;
+    } catch {}
 
-    // try {
-    //     let parsed = JSON.parse($page.url.searchParams.get("shown-stats") ?? "");
-    //     let stats = parsed.map((s: string) => findInStatSet(statSet, s));
-    //     $shownStats = stats;
-    // } catch {}
+    try {
+        let parsed = JSON.parse($page.url.searchParams.get("shown-stats") ?? "");
+        let stats = parsed.map((s: string) => findInStatSet(statSet, s));
+        $shownStats = stats;
+    } catch {}
 
-    // $: $shownStats = filterStatSet(statSet as any, $shownStats);
+    $currentSort = getCurrentSortFromUrl($page.url);
 
-    // $currentSort = getCurrentSortFromUrl($page.url);
+    let selectedTeam: number | null = null;
+    let selectedTeamName: string | null = null;
 
-    // let selectedTeam: number | null = null;
-    // let selectedTeamName: string | null = null;
+    $: isDefaultSort =
+        $currentSort.type == DEFAULT_SORT_MATCH_2021.type &&
+        $currentSort.stat.identifierName == DEFAULT_SORT_MATCH_2021.stat.identifierName;
+    $: isDefaultShownStats = arraysEqual(
+        DEFAULT_SHOWN_STATS.map((s) => s.identifierName),
+        $shownStats.map((s) => s.identifierName)
+    );
+    $: if ($page.params.tab == "matches")
+        changeParam({
+            sort: isDefaultSort ? null : $currentSort.stat.identifierName,
+            ["sort-dir"]: isDefaultSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
+            filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
+            ["event-types"]: eventTypes == EventTypes.TradAndRemote ? null : eventTypesToStr(eventTypes),
+            ["shown-stats"]: isDefaultShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
+            region: region == Region.All ? null : regionToString(region),
+            page: currPage == 1 ? null : "" + currPage,
+            start: dateToStr(startDate),
+            end: dateToStr(endDate),
+        });
+    $: if ($page.params.tab == "matches") match2021SearchParams = $page.url.searchParams.toString();
 
-    // $: isDefualtSort =
-    //     $currentSort.type == DEFAULT_SORT_TEAM_2021.type &&
-    //     $currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2021.stat.identifierName;
-    // $: isDefualtShownStats = arraysEqual(
-    //     DEFUALT_SHOWN_STATS.map((s) => s.identifierName),
-    //     $shownStats.map((s) => s.identifierName)
-    // );
-    // $: if ($page.params.tab == "teams")
-    //     changeParam({
-    //         sort: isDefualtSort ? null : $currentSort.stat.identifierName,
-    //         ["sort-dir"]: isDefualtSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
-    //         filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
-    //         ["event-types"]: eventTypes == EventTypes.Trad ? null : eventTypesToStr(eventTypes),
-    //         ["shown-stats"]: isDefualtShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
-    //         region: region == Region.All ? null : regionToString(region),
-    //         page: currPage == 1 ? null : "" + currPage,
-    //         start: dateToStr(startDate),
-    //         end: dateToStr(endDate),
-    //     });
-    // $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
-
-    // function change() {
-    //     currPage = 0;
-    // }
+    function change() {
+        currPage = 0;
+    }
 </script>
 
-<!-- 
 {#if selectedTeam && selectedTeamName}
     <TeamSelectionBar tep={null} number={selectedTeam} name={selectedTeamName} />
 {/if}
@@ -161,13 +152,13 @@
     {shownStats}
     bind:selectedTeam
     bind:selectedTeamName
-    defaultSort={DEFAULT_SORT_TEAM_2021}
+    defaultSort={DEFAULT_SORT_MATCH_2021}
     bind:currentSort={$currentSort}
     bind:currentFilters={$currentFilters}
-    fileName={"Team Season Records 2021"}
+    fileName={"Match Season Records 2021"}
     pagination
     bind:page={currPage}
     {totalCount}
     {pageSize}
     on:change={change}
-/> -->
+/>

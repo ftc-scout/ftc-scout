@@ -44,4 +44,5 @@ fragment FullMatchScores2021TraditionalAlliance on MatchScores2021TraditionalAll
     endgamePoints
     penaltyPoints
     totalPoints
+    totalPointsNp
 }

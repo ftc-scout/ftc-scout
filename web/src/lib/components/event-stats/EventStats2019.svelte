@@ -33,7 +33,7 @@
         TBP_STAT,
         TEAM_STAT,
         type FullTep2019,
-    } from "../../util/stats/2019/teams/StatsTeams2019";
+    } from "../../util/stats/2019/StatsTeams2019";
     import { SortType } from "../SortButton.svelte";
     import LocallyResolvedStatsTable from "../stats/LocallyResolvedStatsTable.svelte";
     import type { ChosenSort } from "../stats/StatsTable.svelte";

@@ -74,7 +74,7 @@
         type FullTep2021Remote,
         RECORD_STAT,
         type FullTep2021Traditional,
-    } from "../../util/stats/2021/teams/StatsSharedTeams2021";
+    } from "../../util/stats/2021/StatsSharedTeams2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
     import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";

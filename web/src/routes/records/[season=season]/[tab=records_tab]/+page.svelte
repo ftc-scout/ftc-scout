@@ -32,11 +32,14 @@
     import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
     import { prettyPrintSeason } from "../../../../lib/util/format/pretty-print-season";
     import { eventTypesFromStr, eventTypesToStr, readDateFromUrl } from "./+page";
-    import type { FullTep2019 } from "../../../../lib/util/stats/2019/teams/StatsTeams2019";
+    import type { FullTep2019 } from "../../../../lib/util/stats/2019/StatsTeams2019";
     import SeasonDropdown from "../../../../lib/components/SeasonDropdown.svelte";
     import type { Season } from "../../../../lib/constants";
     import Head from "../../../../lib/components/nav/Head.svelte";
-    import type { FullTep2021Shared } from "../../../../lib/util/stats/2021/teams/StatsSharedTeams2021";
+    import type { FullTep2021Shared } from "../../../../lib/util/stats/2021/StatsSharedTeams2021";
+    import MatchSeasonRecords2021, {
+        match2021SearchParams,
+    } from "../../../../lib/components/season-records/MatchSeasonRecords2021.svelte";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -51,6 +54,13 @@
                     return team2021SearchParams;
                 case 2019:
                     return team2019SearchParams;
+            }
+        } else if (name.toLocaleLowerCase() == "matches") {
+            switch (season) {
+                case 2021:
+                    return match2021SearchParams;
+                case 2019:
+                    return null;
             }
         } else {
             return null;
@@ -154,7 +164,25 @@
         bind:selectedName={selectedPage}
     >
         <TabContent name="Matches">
-            {console.log(dataMatches2021Scores)}
+            {#if dataMatches2021 && dataMatches2021Scores}
+                {@const totalCount = dataMatches2021.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataMatches2021.offset / pageSize + 1}
+
+                <MatchSeasonRecords2021
+                    {eventTypes}
+                    data={dataMatches2021Scores}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                />
+            {:else}
+                <SkeletonRow rows={50} card={false} header={false} />
+            {/if}
         </TabContent>
 
         <TabContent name="Teams">

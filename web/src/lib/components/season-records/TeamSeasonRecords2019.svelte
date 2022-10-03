@@ -83,7 +83,7 @@
         TEAM_STAT,
         TELEOP_OPR_STAT,
         type FullTep2019,
-    } from "../../util/stats/2019/teams/StatsTeams2019";
+    } from "../../util/stats/2019/StatsTeams2019";
 
     export let region: Region;
     export let data: StatData<Data>[];

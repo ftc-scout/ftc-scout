@@ -64,15 +64,15 @@ function getFieldNameGroup(fn: Match2021FieldName, postfix: string, group: Match
         [Match2021FieldName.AUTO_CAROUSEL_POINTS]: `${g}."autoCarouselPoints"`,
         [Match2021FieldName.AUTO_NAVIGATION_POINTS]: `${g}."autoNavigationPoints"`,
         [Match2021FieldName.AUTO_FREIGHT_POINTS]: `${g}."autoFreightPoints"`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_1]: `(${g}."autoFreight1" * 6)`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_2]: `(${g}."autoFreight2" * 6)`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_3]: `(${g}."autoFreight3" * 6)`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_STORAGE]: `(${g}."autoStorageFreight") * 2"`,
+        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_1]: `(${g}."autoFreight1")`,
+        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_2]: `(${g}."autoFreight2")`,
+        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_3]: `(${g}."autoFreight3")`,
+        [Match2021FieldName.AUTO_FREIGHT_POINTS_STORAGE]: `(${g}."autoStorageFreight")"`,
         [Match2021FieldName.AUTO_BONUS_POINTS]: `${g}."autoBonusPoints"`,
         [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS]: `${g}."driverControlledAllianceHubPoints"`,
-        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_1]: `(${g}."driverControlledFreight1" * 2)`,
-        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_2]: `(${g}."driverControlledFreight2" * 4)`,
-        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_3]: `(${g}."driverControlledFreight3" * 6)`,
+        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_1]: `(${g}."driverControlledFreight1")`,
+        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_2]: `(${g}."driverControlledFreight2")`,
+        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_3]: `(${g}."driverControlledFreight3")`,
         [Match2021FieldName.DRIVER_CONTROLLED_SHARED_HUB_POINTS]: `${g}."driverControlledSharedHubPoints"`,
         [Match2021FieldName.DRIVER_CONTROLLED_STORAGE_POINTS]: `${g}."driverControlledStoragePoints"`,
         [Match2021FieldName.ENDGAME_DELIVERY_POINTS]: `${g}."endgameDeliveryPoints"`,
@@ -94,7 +94,13 @@ function getFieldNameGroup(fn: Match2021FieldName, postfix: string, group: Match
 }
 
 @InputType()
-class Match2021Field extends TepField(MatchGroup, Match2021FieldName, getFieldNameGroup, getFieldNameSingular) {}
+class Match2021Field extends TepField(
+    MatchGroup,
+    Match2021FieldName,
+    getFieldNameGroup,
+    getFieldNameSingular,
+    () => false
+) {}
 
 @InputType()
 class Match2021Ordering extends TepOrdering<Match2021Field, MatchScores2021>(Match2021Field) {}
@@ -113,7 +119,7 @@ abstract class Match2021Filter {
     @Field(() => [Match2021Filter], { nullable: true })
     all!: Match2021Filter[] | null;
 
-    @Field(() => Match2021Filter, { nullable: true })
+    @Field(() => Match2021Condition, { nullable: true })
     condition!: Match2021Condition | null;
 
     toBrackets(): Brackets {
@@ -159,18 +165,31 @@ export class MatchSeasonRecords2021Resolver {
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<MatchRecords> {
+        let order: Match2021Ordering[] = [];
+        for (let i = 0; i < orderIn.length && i < 5; i++) {
+            let o = orderIn[i];
+            // Don't duplicate order clauses.
+            if (
+                orderIn
+                    .slice(0, i)
+                    .every((o2) => o2.field.fieldName != o.field.fieldName || o2.field.group != o.field.group)
+            ) {
+                order.push(o);
+            }
+        }
+
         let limit = Math.min(takeIn, 50);
 
         let regionCodes = getRegionCodes(region);
 
-        let orderByRaw = orderIn
+        let orderByRaw = order
             .slice(0, 1)
             .map((o) => o.toRawSql(""))
             .filter((o) => o != null)
             .join(", ");
         if (orderByRaw.length == 0) orderByRaw = 's."totalPoints" DESC';
 
-        let orderByRaw2 = orderIn
+        let orderByRaw2 = order
             .slice(0, 1)
             .map((o) => o.toRawSql("2"))
             .filter((o) => o != null)
@@ -241,7 +260,7 @@ export class MatchSeasonRecords2021Resolver {
         if (start) query = query.andWhere("e.end >= :start", { start });
         if (end) query = query.andWhere("e.end <= :end", { end });
 
-        if (orderIn.length == 0) {
+        if (order.length == 0) {
             // In case they didn't provide an order
             query = query.orderBy('s."totalPoints"', "DESC");
         }
@@ -252,16 +271,8 @@ export class MatchSeasonRecords2021Resolver {
             query = query.andWhere("NOT e.remote");
         }
 
-        for (let i = 0; i < orderIn.length && i < 5; i++) {
-            let o = orderIn[i];
-            // Don't duplicate order clauses.
-            if (
-                orderIn
-                    .slice(0, i)
-                    .every((o2) => o2.field.fieldName != o.field.fieldName || o2.field.group != o.field.group)
-            ) {
-                query = o.addSelfToQuery(query);
-            }
+        for (let o of order) {
+            query = o.addSelfToQuery(query);
         }
 
         if (filter != null) {

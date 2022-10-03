@@ -55,6 +55,7 @@ export class MatchScores2021TradAllianceGraphql {
         this.endgamePoints = dbScore.endgamePoints;
         this.penaltyPoints = dbScore.penaltyPoints;
         this.totalPoints = dbScore.totalPoints;
+        this.totalPointsNp = dbScore.totalPointsNp;
     }
 
     @Field(() => Int)
@@ -191,6 +192,9 @@ export class MatchScores2021TradAllianceGraphql {
 
     @Field(() => Int)
     totalPoints: number;
+
+    @Field(() => Int)
+    totalPointsNp: number;
 }
 
 @ObjectType("MatchScores2021Traditional")

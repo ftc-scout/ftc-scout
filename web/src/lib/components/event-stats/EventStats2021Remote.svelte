@@ -28,7 +28,7 @@
         MAX_STAT,
         STAT_SET_TEAMS_2021_SHARED,
         type FullTep2021Shared,
-    } from "../../util/stats/2021/teams/StatsSharedTeams2021";
+    } from "../../util/stats/2021/StatsSharedTeams2021";
     import { SortType } from "../SortButton.svelte";
     import LocallyResolvedStatsTable from "../stats/LocallyResolvedStatsTable.svelte";
     import type { ChosenSort } from "../stats/StatsTable.svelte";
