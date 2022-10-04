@@ -16,6 +16,7 @@ import { getConnection } from "typeorm";
 import compression from "compression";
 import { eventBanner, teamBanner } from "./banners";
 import { resolve } from "path";
+import { ApiReq } from "./db/entities/ApiReq";
 
 async function main() {
     // TODO - This is really insecure. Look in to fixing this.
@@ -34,6 +35,15 @@ async function main() {
     );
 
     app.use(compression());
+
+    app.use(express.json());
+
+    app.use("/graphql", (req, _, next) => {
+        if (!("x-wl3" in req.headers)) {
+            ApiReq.save({ req: req.body, headers: req.rawHeaders as any });
+        }
+        next();
+    });
 
     // Initialize the apollo graphql server.
     const apolloServer = new ApolloServer({

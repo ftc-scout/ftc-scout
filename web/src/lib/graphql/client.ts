@@ -15,6 +15,9 @@ export function getMyClient(fetch: NonNullable<HttpOptions["fetch"]>): ApolloCli
     const link = new HttpLink({
         uri: SERVER_ORIGIN,
         credentials: "omit",
+        headers: {
+            "x-wl3": "ABC",
+        },
         fetch,
     });
 
