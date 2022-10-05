@@ -21,7 +21,8 @@
         <p>
             The FTC<em>Scout</em> Api can be queried at
             <a href="https://api.ftcscout.org/graphql">api.ftcscout.org/graphql</a>
-            or you can try the playground at the same address<span class="maybe-hide"> or right here on FTCScout</span>.
+            or you can try the playground at the same address
+            <span class="maybe-hide"> or right here on FTCScout</span>.
         </p>
 
         <iframe class="maybe-hide" src="https://api.ftcscout.org/graphql" title="FTCScout Api Playground" />
