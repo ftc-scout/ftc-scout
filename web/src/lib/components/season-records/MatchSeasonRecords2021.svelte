@@ -34,6 +34,7 @@
         THIS_END_SHARED_STAT,
         THIS_END_DELIVERED_STAT,
         THIS_END_CAPPED_STAT,
+        EVENT_STAT_2021_MATCHES,
     ];
 
     let shownStats: Writable<Stat<Data>[]> = writable([
@@ -47,6 +48,7 @@
         THIS_END_SHARED_STAT,
         THIS_END_DELIVERED_STAT,
         THIS_END_CAPPED_STAT,
+        EVENT_STAT_2021_MATCHES,
     ]);
     export const DEFAULT_SORT_MATCH_2021: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };
 
@@ -87,7 +89,7 @@
     import { regionToString } from "../../util/regions";
     import { dateToStr } from "../../util/format/pretty-print-date";
     import StatsTable from "../stats/StatsTable.svelte";
-    import { STAT_SET_EVENT_2021_MATCHES } from "../../util/stats/StatsEvent";
+    import { EVENT_STAT_2021_MATCHES, STAT_SET_EVENT_2021_MATCHES } from "../../util/stats/StatsEvent";
 
     export let eventTypes: EventTypes;
     export let region: Region;
