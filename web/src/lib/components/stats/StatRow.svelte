@@ -16,9 +16,15 @@
     export let showRanks: boolean;
 
     let teamHovered = false;
+
+    function handleClick(e: MouseEvent) {
+        if (!(e.target as HTMLElement | null)?.classList?.contains("event")) {
+            seeStatsData = dataRow;
+        }
+    }
 </script>
 
-<tr class:zebra-stripe={zebraStripe} class:team-hovered={teamHovered} on:click={() => (seeStatsData = dataRow)}>
+<tr class:zebra-stripe={zebraStripe} class:team-hovered={teamHovered} on:click={handleClick}>
     {#if showRanks}
         <StatDataComp
             stat={rankPreFilter ? PRE_FILTER_RANK_STAT : RANK_STAT}
