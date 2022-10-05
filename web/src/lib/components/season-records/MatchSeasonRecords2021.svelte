@@ -55,7 +55,7 @@
     let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_MATCH_2021);
 
     export function getStatSet2021Matches(): StatSet<unknown, unknown> {
-        return [...STAT_SET_MATCHES_2021_SHARED];
+        return [...STAT_SET_MATCHES_2021_SHARED, ...STAT_SET_EVENT_2021_MATCHES];
     }
 
     function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
@@ -87,6 +87,7 @@
     import { regionToString } from "../../util/regions";
     import { dateToStr } from "../../util/format/pretty-print-date";
     import StatsTable from "../stats/StatsTable.svelte";
+    import { STAT_SET_EVENT_2021_MATCHES } from "../../util/stats/StatsEvent";
 
     export let eventTypes: EventTypes;
     export let region: Region;

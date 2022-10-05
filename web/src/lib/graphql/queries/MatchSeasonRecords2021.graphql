@@ -21,6 +21,16 @@ query MatchSeasonRecords2021(
         scores {
             score {
                 ...FullMatchScoresAlliance
+                ... on MatchScores2021TraditionalAlliance {
+                    event {
+                        ...RecordsEvent
+                    }
+                }
+                ... on MatchScores2021Remote {
+                    event {
+                        ...RecordsEvent
+                    }
+                }
             }
             rank
             preFilterRank
