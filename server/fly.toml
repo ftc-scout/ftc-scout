@@ -6,7 +6,6 @@ kill_timeout = 5
 processes = []
 
 [build]
-  builder = "heroku/buildpacks:20"
 
 [build.args]
   NODE_ENV="production"

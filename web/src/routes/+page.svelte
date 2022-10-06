@@ -2,7 +2,9 @@
     import WidthProvider from "$lib/components/WidthProvider.svelte";
     import Fa from "svelte-fa";
     import Card from "../lib/components/Card.svelte";
+    import Location from "../lib/components/Location.svelte";
     import MatchTable from "../lib/components/matches/MatchTable.svelte";
+    import Head from "../lib/components/nav/Head.svelte";
     import SkeletonRow from "../lib/components/skeleton/SkeletonRow.svelte";
     import { CURRENT_SEASON } from "../lib/constants";
     import { MATCHES_ICON, TEAMS_ICON } from "../lib/icons";
@@ -11,21 +13,18 @@
 
     export let data: PageData;
 
-    $: activeTeamsCount = $data?.data.activeTeamsCount;
-    $: matchesCount = $data?.data.matchesPlayedCount;
-    $: events = $data?.data.todaysEvents;
+    $: activeTeamsCount = $data?.data?.activeTeamsCount;
+    $: matchesCount = $data?.data?.matchesPlayedCount;
+    $: events = $data?.data?.todaysEvents;
 
-    $: bestTradMatch = $data?.data.topTradMatch2021;
-    $: bestRemoteTep = $data?.data.topRemoteTep2021;
+    $: bestTradMatch = $data?.data?.topTradMatch2021;
+    $: bestRemoteTep = $data?.data?.topRemoteTep2021;
 </script>
 
-<svelte:head>
-    <title>FTCScout</title>
-    <meta
-        name="description"
-        content="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
-    />
-</svelte:head>
+<Head
+    title="FTCScout"
+    description="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
+/>
 
 <WidthProvider width="1000px">
     <Card border={false}>
@@ -72,10 +71,7 @@
                                 <a sveltekit:prefetch href="/events/{event.season}/{event.code}/matches">
                                     <span>{event.name}</span>
                                     <em class="info">
-                                        {event.venue},
-                                        {event.city},
-                                        {event.stateOrProvince},
-                                        {event.country}
+                                        <Location {...event} link={false} />
                                     </em>
                                 </a>
                             </li>

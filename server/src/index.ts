@@ -1,15 +1,12 @@
 import "dotenv/config";
 
 import "reflect-metadata";
-import {
-    ApolloServerPluginLandingPageDisabled,
-    ApolloServerPluginLandingPageGraphQLPlayground,
-} from "apollo-server-core";
+import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import { ApolloServer } from "apollo-server-express";
 import cors from "cors";
 import express from "express";
 import { buildSchema } from "type-graphql";
-import { SERVER_PORT, IS_DEV } from "./constants";
+import { SERVER_PORT } from "./constants";
 import { resolvers } from "./graphql/resolvers/resolvers";
 import { DATA_SOURCE } from "./db/data-source";
 import { GraphQLContext } from "./graphql/Context";
@@ -17,6 +14,8 @@ import { setupApiWatchers } from "./ftc-api/setup-watchers";
 import { ApolloServerLoaderPlugin } from "type-graphql-dataloader";
 import { getConnection } from "typeorm";
 import compression from "compression";
+import { eventBanner, teamBanner } from "./banners";
+import { resolve } from "path";
 
 async function main() {
     // TODO - This is really insecure. Look in to fixing this.
@@ -38,6 +37,7 @@ async function main() {
 
     // Initialize the apollo graphql server.
     const apolloServer = new ApolloServer({
+        introspection: true,
         schema: await buildSchema({
             resolvers,
             validate: false,
@@ -48,8 +48,7 @@ async function main() {
             res,
         }),
         plugins: [
-            // Give us a nice graphql playground when in dev.
-            IS_DEV ? ApolloServerPluginLandingPageGraphQLPlayground() : ApolloServerPluginLandingPageDisabled(),
+            ApolloServerPluginLandingPageGraphQLPlayground(),
             ApolloServerLoaderPlugin({
                 typeormGetConnection: getConnection, // for use with TypeORM
             }),
@@ -61,6 +60,22 @@ async function main() {
     apolloServer.applyMiddleware({
         app,
         cors: false,
+    });
+
+    app.get("/banners/teams/:team_num", async (req, res) => {
+        if (/^\d+$/.test(req.params.team_num)) {
+            await teamBanner(+req.params.team_num, res);
+        } else {
+            res.sendFile(resolve("src/res/banner.png"));
+        }
+    });
+
+    app.get("/banners/events/:season/:code", async (req, res) => {
+        if (/^\d+$/.test(req.params.season)) {
+            await eventBanner(+req.params.season, req.params.code, res);
+        } else {
+            res.sendFile(resolve("src/res/banner.png"));
+        }
     });
 
     // Start the server

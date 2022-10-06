@@ -5,10 +5,13 @@
     import { page } from "$app/stores";
     import Card from "$lib/components/Card.svelte";
     import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+    import { onDestroy, onMount } from "svelte";
     import { query, type ReadableQuery } from "svelte-apollo";
     import DateRange from "../../../lib/components/DateRange.svelte";
     import Dropdown from "../../../lib/components/Dropdown.svelte";
     import FaButton from "../../../lib/components/FaButton.svelte";
+    import Location from "../../../lib/components/Location.svelte";
+    import Head from "../../../lib/components/nav/Head.svelte";
     import { changeParam } from "../../../lib/components/season-records/changeParams";
     import RegionsDropdown from "../../../lib/components/season-records/RegionsDropdown.svelte";
     import SeasonDropdown from "../../../lib/components/SeasonDropdown.svelte";
@@ -76,7 +79,12 @@
             searchText,
         },
     });
-    $: data = $events?.data?.eventsSearch ?? null;
+    let currentlyLoading = true;
+    let currentData: any[] | null = null;
+    $: if ($events?.data?.eventsSearch) {
+        currentData = $events?.data?.eventsSearch ?? null;
+        currentlyLoading = false;
+    }
 
     $: changeParam(
         {
@@ -87,11 +95,11 @@
             matches: onlyMatches ? null : "false",
             search: !searchText ? null : searchText,
         },
-        true,
-        false
+        true
     );
 
     function more() {
+        currentlyLoading = true;
         limit += BATCH_SIZE;
         events.refetch({
             season: +$page.params.season,
@@ -104,13 +112,28 @@
             searchText,
         });
     }
+
+    if (browser) {
+        function checkMore() {
+            let content = document.getElementById("content")!;
+            if (!currentlyLoading && content.scrollTop + content.clientHeight + 400 >= content.scrollHeight) {
+                more();
+            }
+        }
+
+        onMount(() => {
+            let content = document.getElementById("content")!;
+            content.addEventListener("scroll", checkMore);
+        });
+
+        onDestroy(() => {
+            let content = document.getElementById("content")!;
+            content?.removeEventListener("scroll", checkMore);
+        });
+    }
 </script>
 
-<svelte:head>
-    <title>Events | FTCScout</title>
-    <meta name="description" content="Find and search for FTC events in the {$page.params.season} season." />
-    <meta property="og:title" content="Events | FTCScout" />
-</svelte:head>
+<Head title="Events | FTCScout" description="Find and search for FTC events in the {$page.params.season} season." />
 
 <WidthProvider width="1000px">
     <Card>
@@ -151,9 +174,9 @@
         </div>
     </Card>
     <Card>
-        {#if data}
+        {#if currentData}
             <ul>
-                {#each data as event}
+                {#each currentData as event}
                     {@const hasMatches = event.matches.some((m) => m.hasBeenPlayed)}
                     <li>
                         <a
@@ -162,9 +185,11 @@
                             class:has-matches={hasMatches}
                         >
                             <span>{event.name}</span>
-                            <em class="info"
-                                >{prettyPrintDateRangeString(event.start, event.end)} at {event.venue}, {event.city}, {event.stateOrProvince},
-                                {event.country}
+                            <em class="info">
+                                {prettyPrintDateRangeString(event.start, event.end)} at <Location
+                                    {...event}
+                                    link={false}
+                                />
                             </em>
                         </a>
                     </li>
@@ -172,7 +197,7 @@
                     <p class="no-events">No Matching Events</p>
                 {/each}
 
-                {#if data.length != 0 && data.length % BATCH_SIZE == 0}
+                {#if currentData.length != 0 && currentData.length % BATCH_SIZE == 0 && !currentlyLoading}
                     <div class="more-wrap">
                         <FaButton icon={faCirclePlus} on:click={more} buttonStyle="font-size: var(--large-font-size)">
                             Show More
@@ -180,7 +205,8 @@
                     </div>
                 {/if}
             </ul>
-        {:else if $events.loading}
+        {/if}
+        {#if $events.loading}
             <SkeletonRow rows={50} card={false} header={false} />
         {/if}
     </Card>

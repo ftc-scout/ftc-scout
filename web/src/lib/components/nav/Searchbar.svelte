@@ -1,7 +1,7 @@
 <script lang="ts">
     import { SearchDocument, type SearchQuery } from "$lib/graphql/generated/graphql-operations";
     import { query, type ReadableQuery } from "svelte-apollo";
-    import { afterNavigate, beforeNavigate, goto, prefetch } from "$app/navigation";
+    import { goto, prefetch } from "$app/navigation";
     import SkeletonRow from "../skeleton/SkeletonRow.svelte";
     import SearchbarInput from "./SearchbarInput.svelte";
 
@@ -60,8 +60,10 @@
 
     $: if (focusCount == 0) barShown = false;
 
-    $: showSearchResults = searchText && (teamsSearchData.length || eventsSearchData.length) && focusCount;
+    $: anyResults = teamsSearchData.length || eventsSearchData.length;
+    $: showSearchResults = searchText && anyResults && focusCount;
     $: showSkeleton = searchText && focusCount && $searchResults.loading;
+    $: showNoResults = searchText && focusCount && !anyResults && !$searchResults.loading;
 
     let resultElement: HTMLElement | null;
     let lastResultHeight: number | null = null;
@@ -141,15 +143,19 @@
                 {/each}
             </ol>
         </div>
-    {:else if showSkeleton && lastResultHeight}
+    {:else if showSkeleton}
         <div
             class="result"
-            style:height={`${lastResultHeight}px`}
-            style:max-height={`${lastResultHeight}px`}
+            style:height={`${lastResultHeight ?? 200}px`}
+            style:max-height={`${lastResultHeight ?? 200}px`}
             style:overflow="hidden"
             class:bar-shown={barShown}
         >
             <SkeletonRow rows={20} card={false} header={false} />
+        </div>
+    {:else if showNoResults}
+        <div class="result" class:bar-shown={barShown}>
+            <p class="no-results">No Results</p>
         </div>
     {/if}
 </form>
@@ -223,5 +229,15 @@
         text-decoration: none;
 
         border-radius: 8px;
+    }
+
+    .no-results {
+        display: block;
+        text-align: center;
+
+        font-weight: bold;
+        color: var(--secondary-text-color);
+        padding: var(--small-padding);
+        margin: 0;
     }
 </style>

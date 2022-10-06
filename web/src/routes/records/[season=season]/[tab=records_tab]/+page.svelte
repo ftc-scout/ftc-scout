@@ -35,6 +35,7 @@
     import type { FullTep2019 } from "../../../../lib/util/stats/Stats2019";
     import SeasonDropdown from "../../../../lib/components/SeasonDropdown.svelte";
     import type { Season } from "../../../../lib/constants";
+    import Head from "../../../../lib/components/nav/Head.svelte";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -102,16 +103,10 @@
     $: gotoSubPage(season, selectedPage);
 </script>
 
-<svelte:head>
-    <title>
-        {`${season} ${$page.params.tab == "teams" ? "Team" : "Match"} Records | FTCScout`}
-    </title>
-    <meta name="description" content="Records and high scores for the {$page.params.season} season." />
-    <meta
-        property="og:title"
-        content={`${season} ${$page.params.tab == "teams" ? "Team" : "Match"} Records | FTCScout`}
-    />
-</svelte:head>
+<Head
+    title={`${season} ${$page.params.tab == "teams" ? "Team" : "Match"} Records | FTCScout`}
+    description="Records and high scores for the {$page.params.season} season."
+/>
 
 <WidthProvider width={"1250px"}>
     <Card>

@@ -1,8 +1,10 @@
 import {
+    faBinoculars,
     faBolt,
     faCalendarAlt,
     faCircleCheck,
     faCode,
+    faGavel,
     faGlobeAmericas,
     faHashtag,
     faHeart,
@@ -33,6 +35,7 @@ export const SPONSOR_ICON = faHeart;
 export const MATCHES_ICON = faBolt;
 export const HOME_ICON = faHome;
 export const ABOUT_ICON = faInfoCircle;
+export const PRIVACY_ICON = faGavel;
 export const USER_ICON = faUserAlt;
 export const LOGIN_ICON = faRightToBracket;
 export const API_ICON = faCode;
@@ -40,3 +43,4 @@ export const CLOSE_ICON = faXmark;
 export const REGIONS_ICON = faGlobeAmericas;
 export const SEASON_RECORDS_ICON = faTrophy;
 export const OPR_ICON = faBolt;
+export const BLOG_ICON = faBinoculars;

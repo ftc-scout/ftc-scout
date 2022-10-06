@@ -45,6 +45,7 @@
         shown = !shown;
         setTimeout(() => this_?.focus(), 1);
     }}
+    aria-label="Search"
 >
     <Fa icon={faSearch} size="1.25x" />
 </button>

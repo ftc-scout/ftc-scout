@@ -6,6 +6,7 @@ WORKDIR /app
 COPY . .
 COPY .env.prod .env
 COPY codegen.yml.prod codegen.yml
+COPY svelte.config.js.prod svelte.config.js
 
 RUN npm ci
 RUN npm run build

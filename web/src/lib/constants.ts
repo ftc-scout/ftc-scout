@@ -9,4 +9,4 @@ export const CURRENT_SEASON = 2021;
 export const ALL_SEASONS = [2019 as const, 2021 as const];
 export type Season = 2021 | 2019;
 
-export const EMAIL = "robotics@k12.xrds.org";
+export const EMAIL = "contact@ftcscout.org";

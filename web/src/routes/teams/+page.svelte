@@ -1,9 +1,12 @@
 <script lang="ts">
+    import { browser } from "$app/env";
     import { page } from "$app/stores";
     import Card from "$lib/components/Card.svelte";
     import { faCirclePlus } from "@fortawesome/free-solid-svg-icons";
+    import { onDestroy, onMount } from "svelte";
     import { query, type ReadableQuery } from "svelte-apollo";
     import FaButton from "../../lib/components/FaButton.svelte";
+    import Head from "../../lib/components/nav/Head.svelte";
     import { changeParam } from "../../lib/components/season-records/changeParams";
     import RegionsDropdown from "../../lib/components/season-records/RegionsDropdown.svelte";
     import SkeletonRow from "../../lib/components/skeleton/SkeletonRow.svelte";
@@ -11,6 +14,11 @@
     import WidthProvider from "../../lib/components/WidthProvider.svelte";
     import { Region, TeamsSearchDocument, type TeamsSearchQuery } from "../../lib/graphql/generated/graphql-operations";
     import { regionFromStr, regionToString } from "../../lib/util/regions";
+
+    type Team = {
+        number: number;
+        name: string;
+    };
 
     const BATCH_SIZE = 50;
 
@@ -29,18 +37,23 @@
             searchText,
         },
     });
-    $: data = $teams?.data?.teamsSearch ?? null;
+    let currentlyLoading = true;
+    let currentData: Team[] | null = null;
+    $: if ($teams?.data?.teamsSearch) {
+        currentData = $teams?.data?.teamsSearch ?? null;
+        currentlyLoading = false;
+    }
 
     $: changeParam(
         {
             region: region == Region.All ? null : regionToString(region),
             search: !searchText ? null : searchText,
         },
-        true,
-        false
+        true
     );
 
     function more() {
+        currentlyLoading = true;
         limit += BATCH_SIZE;
         teams.refetch({
             limit,
@@ -48,13 +61,30 @@
             searchText,
         });
     }
+
+    if (browser) {
+        function checkMore() {
+            let content = document.getElementById("content")!;
+            if (!currentlyLoading && content.scrollTop + content.clientHeight + 400 >= content.scrollHeight) {
+                more();
+            }
+        }
+
+        onMount(() => {
+            let content = document.getElementById("content")!;
+            setTimeout(() => {
+                content.addEventListener("scroll", checkMore);
+            }, 5);
+        });
+
+        onDestroy(() => {
+            let content = document.getElementById("content")!;
+            content?.removeEventListener("scroll", checkMore);
+        });
+    }
 </script>
 
-<svelte:head>
-    <title>Teams | FTCScout</title>
-    <meta name="description" content="Find and search for FTC teams." />
-    <meta property="og:title" content="Teams | FTCScout" />
-</svelte:head>
+<Head title="Teams | FTCScout" description="Find and search for FTC teams." />
 
 <WidthProvider width="1000px">
     <Card>
@@ -69,9 +99,9 @@
         </div>
     </Card>
     <Card>
-        {#if data}
+        {#if currentData}
             <ul>
-                {#each data as team}
+                {#each currentData as team}
                     <li>
                         <a sveltekit:prefetch href="/teams/{team.number}">
                             <span style="min-width: 5ch; display: inline-block">{team.number}</span>
@@ -84,7 +114,7 @@
                     <p class="no-teams">No Matching Teams</p>
                 {/each}
 
-                {#if data.length != 0 && data.length % BATCH_SIZE == 0}
+                {#if currentData.length != 0 && currentData.length % BATCH_SIZE == 0 && !currentlyLoading}
                     <div class="more-wrap">
                         <FaButton icon={faCirclePlus} on:click={more} buttonStyle="font-size: var(--large-font-size)">
                             Show More
@@ -92,7 +122,8 @@
                     </div>
                 {/if}
             </ul>
-        {:else if $teams.loading}
+        {/if}
+        {#if $teams.loading}
             <SkeletonRow rows={50} card={false} header={false} />
         {/if}
     </Card>

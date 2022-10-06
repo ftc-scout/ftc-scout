@@ -7,10 +7,8 @@
     export let startDate: Date | null = null;
     export let endDate: Date | null = null;
 
-    function save() {
-        startDate = !startDateStr ? null : dateFromStr(startDateStr);
-        endDate = !endDateStr ? null : dateFromStr(endDateStr);
-    }
+    $: startDate = !startDateStr ? null : dateFromStr(startDateStr);
+    $: endDate = !endDateStr ? null : dateFromStr(endDateStr);
 
     let startDateStr: string = dateToStr(startDate) ?? "";
     let endDateStr: string = dateToStr(endDate) ?? "";
@@ -22,26 +20,12 @@
 </script>
 
 <span {style}>
-    <form on:submit|preventDefault={save}>
-        <input
-            type="date"
-            bind:value={startDateStr}
-            aria-label="start date"
-            min={minDate}
-            max={maxDate}
-            on:focusout={save}
-        />
+    <form>
+        <input type="date" bind:value={startDateStr} aria-label="start date" min={minDate} max={maxDate} />
     </form>
     to
-    <form on:submit|preventDefault={save}>
-        <input
-            type="date"
-            bind:value={endDateStr}
-            aria-label="end date"
-            min={minDate}
-            max={maxDate}
-            on:focusout={save}
-        />
+    <form>
+        <input type="date" bind:value={endDateStr} aria-label="end date" min={minDate} max={maxDate} />
     </form>
 </span>
 
@@ -82,8 +66,8 @@
         outline: none;
     }
 
-    div:focus,
-    div:focus-within {
+    form:focus,
+    form:focus-within {
         outline: var(--text-color) 2px solid;
     }
 </style>
