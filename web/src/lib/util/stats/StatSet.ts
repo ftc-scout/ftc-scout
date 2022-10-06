@@ -35,9 +35,9 @@ export function groupGetter<T, U>(
 ): Stat<T> {
     return {
         read: (t: StatData<T>) => stat.read(getInner(t)),
-        columnName: `${stat.columnName} ${shortNameAdd}`,
-        listName: `${stat.listName} ${longNameAdd}`,
-        identifierName: `${stat.identifierName} ${identifierNameAdd}`,
+        columnName: `${stat.columnName} ${shortNameAdd}`.trim(),
+        listName: `${stat.listName} ${longNameAdd}`.trim(),
+        identifierName: `${stat.identifierName} ${identifierNameAdd}`.trim(),
         displayType: displayTypeOverride ?? stat.displayType,
         color,
         displayWhen: stat.displayWhen,
