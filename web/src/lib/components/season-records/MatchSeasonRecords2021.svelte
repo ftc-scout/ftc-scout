@@ -14,6 +14,9 @@
         THIS_END_SHARED_STAT,
         THIS_END_DELIVERED_STAT,
         THIS_END_CAPPED_STAT,
+        TEAM_1,
+        TEAM_2,
+        TEAM_3,
     } from "../../util/stats/2021/StatsSharedMatches2021";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
@@ -34,6 +37,9 @@
         THIS_END_SHARED_STAT,
         THIS_END_DELIVERED_STAT,
         THIS_END_CAPPED_STAT,
+        TEAM_1,
+        TEAM_2,
+        TEAM_3,
         EVENT_STAT_2021_MATCHES,
     ];
 
@@ -48,6 +54,9 @@
         THIS_END_SHARED_STAT,
         THIS_END_DELIVERED_STAT,
         THIS_END_CAPPED_STAT,
+        TEAM_1,
+        TEAM_2,
+        TEAM_3,
         EVENT_STAT_2021_MATCHES,
     ]);
     export const DEFAULT_SORT_MATCH_2021: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };

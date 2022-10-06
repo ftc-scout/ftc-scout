@@ -48,7 +48,7 @@
             on:click={toggle}
         >
             {#if nested.length}
-                <ExpandButton bind:open style={`position:absolute; left: calc(${nestingDepth * 4} * var(--gap))`} />
+                <ExpandButton bind:open style={`position:absolute; left: calc(${nestingDepth * 4 + 1} * var(--gap))`} />
             {/if}
 
             {stat.listName}

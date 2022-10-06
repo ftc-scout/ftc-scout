@@ -38,8 +38,9 @@ enum Match2021FieldName {
     TOTAL_POINTS,
     TOTAL_POINTS_NP,
     //
-    // TEAM1_NUMBER,
-    // TEAM2_NUMBER,
+    TEAM1_NUMBER,
+    TEAM2_NUMBER,
+    TEAM3_NUMBER,
     MATCH_NUMBER,
     EVENT_NAME,
 }
@@ -48,8 +49,6 @@ registerEnumType(Match2021FieldName, { name: "Match2021FieldName" });
 
 function getFieldNameSingular(fn: Match2021FieldName, postfix: string): string | null {
     let map: Partial<Record<Match2021FieldName, string>> = {
-        // [Match2021FieldName.TEAM1_NUMBER]: `teamNumber`,
-        // [Match2021FieldName.TEAM2_NUMBER]: `teamNumber`,
         [Match2021FieldName.MATCH_NUMBER]: `(s${postfix}."matchId" % 1000)`,
         [Match2021FieldName.EVENT_NAME]: `e${postfix}.name`,
     };
@@ -88,6 +87,10 @@ function getFieldNameGroup(fn: Match2021FieldName, postfix: string, group: Match
         [Match2021FieldName.PENALTY_POINTS]: `${g}."penaltyPoints"`,
         [Match2021FieldName.TOTAL_POINTS]: `${g}."totalPoints"`,
         [Match2021FieldName.TOTAL_POINTS_NP]: `${g}."totalPointsNp"`,
+
+        [Match2021FieldName.TEAM1_NUMBER]: `${g}t1."teamNumber"`,
+        [Match2021FieldName.TEAM2_NUMBER]: `${g}t2."teamNumber"`,
+        [Match2021FieldName.TEAM3_NUMBER]: `${g}t3."teamNumber"`,
     };
 
     return map[fn] ?? null;
@@ -209,6 +212,36 @@ export class MatchSeasonRecords2021Resolver {
                 "os2",
                 'os2."eventCode" = s2."eventCode" AND os2."matchId" = s2."matchId" AND os2.alliance <> s2.alliance'
             )
+            .leftJoin(
+                "team_match_participation",
+                "s2t1",
+                `s2.season = s2t1.season AND s2."eventCode" = s2t1."eventCode" AND s2."matchId" = s2t1."matchId" AND s2t1.station = (CASE WHEN s2.alliance = '0' THEN '0' ELSE '3' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "s2t2",
+                `s2.season = s2t2.season AND s2."eventCode" = s2t2."eventCode" AND s2."matchId" = s2t2."matchId" AND s2t2.station = (CASE WHEN s2.alliance = '0' THEN '1' ELSE '4' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "s2t3",
+                `s2.season = s2t3.season AND s2."eventCode" = s2t3."eventCode" AND s2."matchId" = s2t3."matchId" AND s2t3.station = (CASE WHEN s2.alliance = '0' THEN '2' ELSE '5' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "os2t1",
+                `s2.season = os2t1.season AND s2."eventCode" = os2t1."eventCode" AND s2."matchId" = os2t1."matchId" AND os2t1.station = (CASE WHEN s2.alliance = '0' THEN '3' ELSE '0' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "os2t2",
+                `s2.season = os2t2.season AND s2."eventCode" = os2t2."eventCode" AND s2."matchId" = os2t2."matchId" AND os2t2.station = (CASE WHEN s2.alliance = '0' THEN '4' ELSE '1' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "os2t3",
+                `s2.season = os2t3.season AND s2."eventCode" = os2t3."eventCode" AND s2."matchId" = os2t3."matchId" AND os2t3.station = (CASE WHEN s2.alliance = '0' THEN '5' ELSE '2' END)::team_match_participation_station_enum`
+            )
             .select([
                 `RANK() OVER (ORDER BY ${orderByRaw2}) as pre_filter_rank`,
                 's2."eventCode"',
@@ -239,6 +272,36 @@ export class MatchSeasonRecords2021Resolver {
                 "match_scores2021",
                 "os",
                 'os."eventCode" = s."eventCode" AND os."matchId" = s."matchId" AND os.alliance <> s.alliance'
+            )
+            .leftJoin(
+                "team_match_participation",
+                "st1",
+                `s.season = st1.season AND s."eventCode" = st1."eventCode" AND s."matchId" = st1."matchId" AND st1.station = (CASE WHEN s.alliance = '0' THEN '0' ELSE '3' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "st2",
+                `s.season = st2.season AND s."eventCode" = st2."eventCode" AND s."matchId" = st2."matchId" AND st2.station = (CASE WHEN s.alliance = '0' THEN '1' ELSE '4' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "st3",
+                `s.season = st3.season AND s."eventCode" = st3."eventCode" AND s."matchId" = st3."matchId" AND st3.station = (CASE WHEN s.alliance = '0' THEN '2' ELSE '5' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "ost1",
+                `s.season = ost1.season AND s."eventCode" = ost1."eventCode" AND s."matchId" = ost1."matchId" AND ost1.station = (CASE WHEN s.alliance = '0' THEN '3' ELSE '0' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "ost2",
+                `s.season = ost2.season AND s."eventCode" = ost2."eventCode" AND s."matchId" = ost2."matchId" AND ost2.station = (CASE WHEN s.alliance = '0' THEN '4' ELSE '1' END)::team_match_participation_station_enum`
+            )
+            .leftJoin(
+                "team_match_participation",
+                "ost3",
+                `s.season = ost3.season AND s."eventCode" = ost3."eventCode" AND s."matchId" = ost3."matchId" AND ost3.station = (CASE WHEN s.alliance = '0' THEN '5' ELSE '2' END)::team_match_participation_station_enum`
             )
             .addSelect(`RANK() OVER (ORDER BY ${orderByRaw}) as post_filter_rank`)
             .leftJoin(

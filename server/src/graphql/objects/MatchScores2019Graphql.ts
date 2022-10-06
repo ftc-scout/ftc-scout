@@ -1,5 +1,6 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { MatchScores2019 } from "../../db/entities/MatchScores2019";
+import { Alliance } from "../../db/entities/types/Alliance";
 import { Season } from "../../ftc-api/types/Season";
 
 @ObjectType("MatchScores2019Alliance", { simpleResolvers: true })
@@ -8,6 +9,7 @@ export class MatchScores2019AllianceGraphql {
         this.season = dbScore.season;
         this.eventCode = dbScore.eventCode;
         this.matchId = dbScore.matchId;
+        this.alliance = dbScore.alliance;
 
         this.navigated1 = dbScore.navigated1;
         this.navigated2 = dbScore.navigated2;
@@ -54,6 +56,9 @@ export class MatchScores2019AllianceGraphql {
 
     @Field(() => Int)
     matchId: number;
+
+    @Field(() => Alliance)
+    alliance: Alliance;
 
     @Field()
     navigated1: boolean;

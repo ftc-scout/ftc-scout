@@ -25,10 +25,31 @@ query MatchSeasonRecords2021(
                     event {
                         ...RecordsEvent
                     }
+                    teams {
+                        season
+                        eventCode
+                        matchId
+                        teamNumber
+                        station
+                        team {
+                            number
+                            name
+                        }
+                    }
                 }
                 ... on MatchScores2021Remote {
                     event {
                         ...RecordsEvent
+                    }
+                    team {
+                        season
+                        eventCode
+                        matchId
+                        teamNumber
+                        team {
+                            number
+                            name
+                        }
                     }
                 }
             }

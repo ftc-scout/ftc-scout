@@ -28,7 +28,11 @@
 </script>
 
 {#if read == null}
-    <td class="{stat.color} na" title={stat.identifierName}>N/A</td>
+    {#if stat.displayType != StatDisplayType.TEAM}
+        <td class="{stat.color} na" title={stat.identifierName}>N/A</td>
+    {:else}
+        <td />
+    {/if}
 {:else if stat.displayType == StatDisplayType.TEAM}
     <StatTeam {team} bind:selectedTeam bind:selectedTeamName on:hover-team on:un-hover-team />
 {:else if stat.displayType == StatDisplayType.EVENT}

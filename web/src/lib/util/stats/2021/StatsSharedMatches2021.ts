@@ -1,11 +1,13 @@
 import {
     Match2021FieldName,
     MatchGroup,
+    Station,
     type MatchScores2021Remote,
     type MatchScores2021TraditionalAlliance,
 } from "../../../graphql/generated/graphql-operations";
 import { DisplayWhen, makeStat, makeStatMaybe, type Stat } from "../Stat";
 import { StatColor } from "../stat-color";
+import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
 
 export type FullScores2021Shared = MatchScores2021TraditionalAlliance | MatchScores2021Remote;
@@ -269,6 +271,76 @@ export const PENALTIES_MINOR_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.MinorPenaltyPoints
 );
 
+// ------------------------------------------------------------------------------------------------------------------------
+
+type TeamsT =
+    | {
+          teams: {
+              station: Station;
+              team: {
+                  number: number;
+                  name: string;
+              };
+          }[];
+      }
+    | {
+          team: {
+              team: {
+                  number: number;
+                  name: string;
+              };
+          };
+      };
+
+function extractTeam(data: TeamsT, num: 1 | 2 | 3): { number: number; name: string } | null {
+    if ("team" in data) {
+        if (num == 1) return data.team.team;
+        return null;
+    } else {
+        switch (num) {
+            case 1:
+                return data.teams.find((t) => t.station == Station.Blue_1 || t.station == Station.Red_1)?.team ?? null;
+            case 2:
+                return data.teams.find((t) => t.station == Station.Blue_2 || t.station == Station.Red_2)?.team ?? null;
+            case 3:
+                return data.teams.find((t) => t.station == Station.Blue_3 || t.station == Station.Red_3)?.team ?? null;
+        }
+    }
+}
+
+export const TEAM_1: Stat<TeamsT> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.TEAM,
+    listName: "Team 1",
+    columnName: "Team 1",
+    identifierName: "Team 1",
+    displayWhen: DisplayWhen.ALWAYS,
+    read: (s) => extractTeam(s.data, 1),
+    apiField: { fieldName: Match2021FieldName.Team1Number },
+};
+
+export const TEAM_2: Stat<TeamsT> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.TEAM,
+    listName: "Team 2",
+    columnName: "Team 2",
+    identifierName: "Team 2",
+    displayWhen: DisplayWhen.ALWAYS,
+    read: (s) => extractTeam(s.data, 2),
+    apiField: { fieldName: Match2021FieldName.Team2Number },
+};
+
+export const TEAM_3: Stat<TeamsT> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.TEAM,
+    listName: "Team 3",
+    columnName: "Team 3",
+    identifierName: "Team 3",
+    displayWhen: DisplayWhen.ALWAYS,
+    read: (s) => extractTeam(s.data, 3),
+    apiField: { fieldName: Match2021FieldName.Team3Number },
+};
+
 export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScores2021Shared> = [
     {
         name: "Match Scores",
@@ -399,6 +471,37 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                             nestedStats: [],
                         },
                     ],
+                },
+            ],
+        },
+    },
+    {
+        name: "Match Info",
+        type: "group",
+        set: {
+            groups: [
+                {
+                    longName: "This",
+                    shortName: "THIS",
+                    description: "Teams on the alliance the row is about.",
+                    color: StatColor.RED,
+                    get: (s) =>
+                        groupGetter((t) => ({ ...t, data: t.data }), s, StatColor.WHITE, "", "", "", MatchGroup.This),
+                },
+            ],
+
+            groupStats: [
+                {
+                    stat: TEAM_1,
+                    nestedStats: [],
+                },
+                {
+                    stat: TEAM_2,
+                    nestedStats: [],
+                },
+                {
+                    stat: TEAM_3,
+                    nestedStats: [],
                 },
             ],
         },
