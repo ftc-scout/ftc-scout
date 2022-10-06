@@ -1,4 +1,4 @@
-fragment FullMatchScores2021TraditionAlliance on MatchScores2021TraditionalAlliance {
+fragment FullMatchScores2021TraditionalAlliance on MatchScores2021TraditionalAlliance {
     season
     eventCode
     matchId
@@ -44,4 +44,5 @@ fragment FullMatchScores2021TraditionAlliance on MatchScores2021TraditionalAllia
     endgamePoints
     penaltyPoints
     totalPoints
+    totalPointsNp
 }

@@ -1,0 +1,62 @@
+query MatchSeasonRecords2021(
+    $skip: Int!
+    $take: Int!
+    $filter: Match2021Filter
+    $order: [Match2021Ordering!]!
+    $eventTypes: EventTypes!
+    $region: Region!
+    $start: DateTime
+    $end: DateTime
+) {
+    matchRecords2021(
+        skip: $skip
+        take: $take
+        filter: $filter
+        order: $order
+        eventTypes: $eventTypes
+        region: $region
+        start: $start
+        end: $end
+    ) {
+        scores {
+            score {
+                ...FullMatchScoresAlliance
+                ... on MatchScores2021TraditionalAlliance {
+                    event {
+                        ...RecordsEvent
+                    }
+                    teams {
+                        season
+                        eventCode
+                        matchId
+                        teamNumber
+                        station
+                        team {
+                            number
+                            name
+                        }
+                    }
+                }
+                ... on MatchScores2021Remote {
+                    event {
+                        ...RecordsEvent
+                    }
+                    team {
+                        season
+                        eventCode
+                        matchId
+                        teamNumber
+                        team {
+                            number
+                            name
+                        }
+                    }
+                }
+            }
+            rank
+            preFilterRank
+        }
+        offset
+        count
+    }
+}

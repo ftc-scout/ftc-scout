@@ -79,8 +79,6 @@
         border-spacing: 0;
         display: block;
 
-        width: fit-content;
-
         margin-bottom: var(--vl-gap);
     }
 </style>

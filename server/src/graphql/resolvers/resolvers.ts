@@ -3,8 +3,11 @@ import { AwardResolver } from "./AwardResolver";
 import { EventResolver } from "./EventResolver";
 import { HomePageResolver } from "./HomePageResolver";
 import { MatchResolver } from "./MatchResolver";
-import { SeasonRecords2019Resolver } from "./records.ts/SeasonRecords2019";
-import { SeasonRecords2021Resolver } from "./records.ts/SeasonRecords2021";
+import { MatchSeasonRecords2021Resolver } from "./records.ts/MatchSeasonRecords2021";
+import { TeamSeasonRecords2019Resolver } from "./records.ts/TeamSeasonRecords2019";
+import { TeamSeasonRecords2021Resolver } from "./records.ts/TeamSeasonRecords2021";
+import { Scores2019Resolver } from "./scores/Scores2019Resolver";
+import { Scores2021RemoteResolver, Scores2021TradResolver } from "./scores/Scores2021Resolver";
 import { SearchResolver } from "./SearchResolver";
 import { TeamEventParticipationResolver } from "./TeamEventParticipationResolver";
 import { TeamResolver } from "./TeamResolver";
@@ -16,7 +19,11 @@ export const resolvers: NonEmptyArray<Function> = [
     AwardResolver,
     SearchResolver,
     TeamEventParticipationResolver,
-    SeasonRecords2021Resolver,
-    SeasonRecords2019Resolver,
+    TeamSeasonRecords2021Resolver,
+    MatchSeasonRecords2021Resolver,
+    TeamSeasonRecords2019Resolver,
     HomePageResolver,
+    Scores2021TradResolver,
+    Scores2021RemoteResolver,
+    Scores2019Resolver,
 ];

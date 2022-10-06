@@ -46,6 +46,7 @@ export class MatchScores2021RemoteGraphql {
         this.endgamePoints = dbScore.endgamePoints;
         this.penaltyPoints = dbScore.penaltyPoints;
         this.totalPoints = dbScore.totalPoints;
+        this.totalPointsNp = dbScore.totalPointsNp;
     }
 
     @Field(() => Int)
@@ -158,4 +159,7 @@ export class MatchScores2021RemoteGraphql {
 
     @Field(() => Int)
     totalPoints: number;
+
+    @Field(() => Int)
+    totalPointsNp: number;
 }

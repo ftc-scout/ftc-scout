@@ -4,9 +4,9 @@ fragment FullMatchScores2021Traditional on MatchScores2021Traditional {
     matchId
     randomization
     red {
-        ...FullMatchScores2021TraditionAlliance
+        ...FullMatchScores2021TraditionalAlliance
     }
     blue {
-        ...FullMatchScores2021TraditionAlliance
+        ...FullMatchScores2021TraditionalAlliance
     }
 }

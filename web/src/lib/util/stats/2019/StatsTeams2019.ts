@@ -2,11 +2,11 @@ import {
     Tep2019FieldName,
     Tep2019Group,
     type FullStatsGroup2019Fragment,
-} from "../../graphql/generated/graphql-operations";
-import { makeStat, type Stat } from "./Stat";
-import { StatColor } from "./stat-color";
-import { StatDisplayType } from "./stat-display-type";
-import { groupGetter, type StatSet, type StatSetGroup } from "./StatSet";
+} from "../../../graphql/generated/graphql-operations";
+import { DisplayWhen, makeStat, type Stat } from "../Stat";
+import { StatColor } from "../stat-color";
+import { StatDisplayType } from "../stat-display-type";
+import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
 
 export type FullTep2019 = {
     team: {
@@ -38,6 +38,7 @@ export const TEAM_STAT: Stat<FullTep2019> = {
     listName: "Team",
     columnName: "Team",
     identifierName: "Team",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.team,
     apiField: { fieldName: Tep2019FieldName.TeamNumber },
 };
@@ -48,6 +49,7 @@ export const RP_STAT: Stat<FullTep2019> = {
     listName: "Ranking Points (RP)",
     columnName: "RP",
     identifierName: "Ranking Points (RP)",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.rp2019,
     apiField: { fieldName: Tep2019FieldName.Rp },
 };
@@ -58,6 +60,7 @@ export const EVENT_RANK_STAT: Stat<FullTep2019> = {
     listName: "Ranking",
     columnName: "Rank",
     identifierName: "Event Ranking",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.rank,
     apiField: { fieldName: Tep2019FieldName.Rank },
 };
@@ -68,6 +71,7 @@ export const TBP_STAT: Stat<FullTep2019> = {
     listName: "Tie Breaker Points (TBP)",
     columnName: "TBP",
     identifierName: "Tie Breaker Points (TBP)",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.tb,
     apiField: { fieldName: Tep2019FieldName.Tb },
 };
@@ -78,6 +82,7 @@ export const PLAYED_STAT: Stat<FullTep2019> = {
     listName: "Matches Played",
     columnName: "Played",
     identifierName: "Qual Matches Played",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.qualMatchesPlayed,
     apiField: { fieldName: Tep2019FieldName.QualMatchesPlayed },
 };
@@ -88,6 +93,7 @@ export const WINS_STAT: Stat<FullTep2019> = {
     listName: "Wins",
     columnName: "Wins",
     identifierName: "Wins",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.wins,
     apiField: { fieldName: Tep2019FieldName.Wins },
 };
@@ -98,6 +104,7 @@ export const LOSSES_STAT: Stat<FullTep2019> = {
     listName: "Losses",
     columnName: "Losses",
     identifierName: "Losses",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.losses,
     apiField: { fieldName: Tep2019FieldName.Losses },
 };
@@ -108,6 +115,7 @@ export const TIES_STAT: Stat<FullTep2019> = {
     listName: "Ties",
     columnName: "Ties",
     identifierName: "Ties",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.ties,
     apiField: { fieldName: Tep2019FieldName.Ties },
 };
@@ -118,6 +126,7 @@ export const RECORD_STAT: Stat<FullTep2019> = {
     listName: "Record",
     columnName: "Record",
     identifierName: "Event Record",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => ({ wins: s.data.stats.wins, losses: s.data.stats.losses, ties: s.data.stats.ties }),
     apiField: { fieldName: Tep2019FieldName.Wins },
 };
@@ -128,6 +137,7 @@ export const DQ_STAT: Stat<FullTep2019> = {
     listName: "Disqualifications (DQs)",
     columnName: "DQs",
     identifierName: "Disqualifications (DQs)",
+    displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.stats.dqs,
     apiField: { fieldName: Tep2019FieldName.Dq },
 };
@@ -139,6 +149,7 @@ export const TOTAL_STAT: Stat<Group> = makeStat(
     "Total Points",
     "",
     "Total Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.TotalPoints
 );
 export const TOTAL_NP_STAT: Stat<Group> = makeStat(
@@ -146,6 +157,7 @@ export const TOTAL_NP_STAT: Stat<Group> = makeStat(
     "Total Points No Penalties",
     "np",
     "Total Points No Penalties",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.TotalPointsNp
 );
 
@@ -156,6 +168,7 @@ export const AUTO_STAT: Stat<Group> = makeStat(
     "Auto Points",
     "Auto",
     "Auto Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.AutoPoints
 );
 
@@ -164,6 +177,7 @@ export const AUTO_NAV_STAT: Stat<Group> = makeStat(
     "Auto Navigation Points",
     "Auto Nav",
     "Auto Navigation Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.AutoNavigationPoints
 );
 
@@ -172,6 +186,7 @@ export const AUTO_NAV_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Auto Nav Individual",
     "Auto Navigation Points Individual",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.AutoNavigationPointsIndividual
 );
 
@@ -180,6 +195,7 @@ export const AUTO_REPOSITION_STAT: Stat<Group> = makeStat(
     "Auto Repositioning Points",
     "Auto Reposition",
     "Auto Repositioning Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.AutoRepositioningPoints
 );
 
@@ -188,6 +204,7 @@ export const AUTO_DELIVERY_STAT: Stat<Group> = makeStat(
     "Auto Delivery Points",
     "Auto Delivery",
     "Auto Delivery Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.AutoDeliveryPoints
 );
 
@@ -196,6 +213,7 @@ export const AUTO_PLACEMENT_STAT: Stat<Group> = makeStat(
     "Auto Placement Points",
     "Auto Placement",
     "Auto Placement Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.AutoPlacementPoints
 );
 
@@ -206,6 +224,7 @@ export const DC_STAT: Stat<Group> = makeStat(
     "Driver Controlled Points",
     "Teleop",
     "Driver Controlled Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.DriverControlledPoints
 );
 
@@ -214,6 +233,7 @@ export const DC_DELIVERY_STAT: Stat<Group> = makeStat(
     "Delivery Points",
     "Delivery",
     "Driver Controlled Delivery Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.DcDeliveryPoints
 );
 
@@ -222,6 +242,7 @@ export const DC_PLACEMENT_STAT: Stat<Group> = makeStat(
     "Placement Points",
     "Placement",
     "Driver Controlled Placement Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.DcPlacementPoints
 );
 
@@ -230,6 +251,7 @@ export const DC_SKYSCRAPER_STAT: Stat<Group> = makeStat(
     "Skyscraper Points",
     "Skyscraper",
     "Driver Controlled Skyscraper Bonus Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.DcSkyscraperPoints
 );
 
@@ -240,6 +262,7 @@ export const ENDGAME_STAT: Stat<Group> = makeStat(
     "Endgame Points",
     "Endgame",
     "Endgame Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.EndgamePoints
 );
 
@@ -248,6 +271,7 @@ export const ENDGAME_CAPPING_STAT: Stat<Group> = makeStat(
     "Capping Points",
     "Capping",
     "Endgame Capping Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.CappingPoints
 );
 
@@ -256,6 +280,7 @@ export const ENDGAME_CAPPING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Capping Individual",
     "Endgame Capping Points Individual",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.CappingPointsIndividual
 );
 
@@ -264,6 +289,7 @@ export const ENDGAME_PARKING_STAT: Stat<Group> = makeStat(
     "Parking Points",
     "Parking",
     "Endgame Parking Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.EndgameParkingPoints
 );
 
@@ -272,6 +298,7 @@ export const ENDGAME_PARKING_INDIVIDUAL_STAT: Stat<Group> = makeStat(
     "Individual",
     "Parking Individual",
     "Endgame Parking Points Individual",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.EndgameParkingPointsIndividual
 );
 
@@ -280,10 +307,11 @@ export const ENDGAME_FOUNDATION_STAT: Stat<Group> = makeStat(
     "Foundation Moved Points",
     "Foundation Moved",
     "Endgame Foundation Moved Points",
+    DisplayWhen.ALWAYS,
     Tep2019FieldName.FoundationMovedPoints
 );
 
-export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
+export let STAT_SET_TEAMS_2019: StatSet<FullTep2019, Group> = [
     {
         name: "Team's Event Performance",
         type: "standalone",
@@ -491,7 +519,7 @@ export let STAT_SET_2019: StatSet<FullTep2019, Group> = [
     },
 ];
 
-const SCORES = STAT_SET_2019.find((s) => s.name == "Match Scores")!.set as StatSetGroup<FullTep2019, Group>;
+const SCORES = STAT_SET_TEAMS_2019.find((s) => s.name == "Match Scores")!.set as StatSetGroup<FullTep2019, Group>;
 const AVG = SCORES.groups.find((g) => g.shortName == "AVG")!;
 const MAX = SCORES.groups.find((g) => g.shortName == "MAX")!;
 const OPR = SCORES.groups.find((g) => g.shortName == "OPR")!;

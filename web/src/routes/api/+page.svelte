@@ -11,16 +11,18 @@
 
 <WidthProvider width="1600px">
     <Card>
-        <h1>FTCScout Api</h1>
+        <h1>FTC<em>Scout</em> Api</h1>
 
-        <p>The FTCScout Api provides access to all of the FTCScout data and statistics.</p>
+        <p>The FTC<em>Scout</em> Api provides access to all of the FTC<em>Scout</em>'s data and statistics.</p>
         <p>
-            The FTCScout Api uses <a href="https://graphql.org/">GraphQL</a> allowing you to access as much or as little
-            data as you need in the shape that is most available to you.
+            The FTC<em>Scout</em> Api uses <a href="https://graphql.org/">GraphQL</a> allowing you to access as much or as
+            little data as you need in the shape that is most convenient to you.
         </p>
         <p>
-            The FTCScout Api can be queried at <a href="https://api.ftcscout.org/graphql">api.ftcscout.org/graphql</a>
-            or you can try the playground at the same address <span class="maybe-hide">or right here on FTCScout</span>.
+            The FTC<em>Scout</em> Api can be queried at
+            <a href="https://api.ftcscout.org/graphql">api.ftcscout.org/graphql</a>
+            or you can try the playground at the same address
+            <span class="maybe-hide"> or right here on FTCScout</span>.
         </p>
 
         <iframe class="maybe-hide" src="https://api.ftcscout.org/graphql" title="FTCScout Api Playground" />
@@ -32,7 +34,8 @@
         line-height: 1.5rem;
     }
 
-    :not(h1, h2) {
+    p,
+    p * {
         font-size: 16px;
     }
 
@@ -40,6 +43,12 @@
         :not(h1, h2) {
             font-size: 14px;
         }
+    }
+
+    h1,
+    h1 * {
+        font-size: 32px;
+        font-weight: bold;
     }
 
     iframe {

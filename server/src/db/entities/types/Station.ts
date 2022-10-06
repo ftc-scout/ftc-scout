@@ -1,4 +1,5 @@
 import { registerEnumType } from "type-graphql";
+import { Alliance } from "./Alliance";
 
 export enum Station {
     RED_1 = 0,
@@ -28,6 +29,14 @@ export function stationIsRed(station: Station) {
 
 export function stationIsBlue(station: Station) {
     return station == Station.BLUE_1 || station == Station.BLUE_2 || station == Station.BLUE_3;
+}
+
+export function stationMatchesAlliance(alliance: Alliance, station: Station): boolean {
+    return (
+        (alliance == Alliance.RED && stationIsRed(station)) ||
+        (alliance == Alliance.BLUE && stationIsBlue(station)) ||
+        alliance == Alliance.SOLO
+    );
 }
 
 registerEnumType(Station, {

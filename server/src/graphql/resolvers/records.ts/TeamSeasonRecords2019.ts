@@ -2,10 +2,9 @@ import { Arg, Field, InputType, Int, Query, registerEnumType, Resolver } from "t
 import { DATA_SOURCE } from "../../../db/data-source";
 import { Event } from "../../../db/entities/Event";
 import { getRegionCodes, Region } from "../../../db/entities/types/Region";
-import { TeamEventParticipation } from "../../../graphql/objects/TeamEventParticipation";
+import { TeamEventParticipation } from "../../objects/TeamEventParticipation";
 import { TepCondition, TepField, TepOrdering, TepRecordRow, TepRecords, TepValue } from "./TepObjects";
 import { TeamEventParticipation2019 } from "../../../db/entities/team-event-participation/TeamEventParticipation2019";
-import { TepStats2019 } from "../../../db/entities/team-event-participation/TepStats2019";
 import { Brackets } from "typeorm";
 
 enum Tep2019Group {
@@ -67,56 +66,56 @@ registerEnumType(Tep2019FieldName, { name: "TEP2019FieldName" });
 
 function getFieldNameSingular(fn: Tep2019FieldName, postfix: string): string | null {
     let map: Partial<Record<Tep2019FieldName, keyof TeamEventParticipation2019 | `e.${keyof Event}` | string>> = {
-        [Tep2019FieldName.RP]: "rp",
-        [Tep2019FieldName.TB]: "tb",
-        [Tep2019FieldName.RANK]: "rank",
-        [Tep2019FieldName.WINS]: "wins",
-        [Tep2019FieldName.LOSSES]: "losses",
-        [Tep2019FieldName.TIES]: "ties",
-        [Tep2019FieldName.DQ]: "dq",
-        [Tep2019FieldName.QUAL_MATCHES_PLAYED]: "qualMatchesPlayed",
-        [Tep2019FieldName.TEAM_NUMBER]: "teamNumber",
-        [Tep2019FieldName.EVENT_NAME]: `e${postfix}"."name`,
+        [Tep2019FieldName.RP]: `tep${postfix}.rp`,
+        [Tep2019FieldName.TB]: `tep${postfix}.tb`,
+        [Tep2019FieldName.RANK]: `tep${postfix}.rank`,
+        [Tep2019FieldName.WINS]: `tep${postfix}.wins`,
+        [Tep2019FieldName.LOSSES]: `tep${postfix}.losses`,
+        [Tep2019FieldName.TIES]: `tep${postfix}.ties`,
+        [Tep2019FieldName.DQ]: `tep${postfix}.dq`,
+        [Tep2019FieldName.QUAL_MATCHES_PLAYED]: `tep${postfix}.qualMatchesPlayed`,
+        [Tep2019FieldName.TEAM_NUMBER]: `tep${postfix}.teamNumber`,
+        [Tep2019FieldName.EVENT_NAME]: `e${postfix}.name`,
     };
 
     return map[fn] ?? null;
 }
 
-function getFieldNameGroup(fn: Tep2019FieldName): string | null {
-    let map: Partial<Record<Tep2019FieldName, keyof TepStats2019>> = {
-        [Tep2019FieldName.AUTO_NAVIGATION_POINTS]: "autoNavigationPoints",
-        [Tep2019FieldName.AUTO_NAVIGATION_POINTS_INDIVIDUAL]: "autoNavigationPointsIndividual",
-        [Tep2019FieldName.AUTO_REPOSITIONING_POINTS]: "autoRepositioningPoints",
-        [Tep2019FieldName.AUTO_DELIVERY_POINTS]: "autoDeliveryPoints",
-        [Tep2019FieldName.AUTO_PLACEMENT_POINTS]: "autoPlacementPoints",
-        [Tep2019FieldName.DC_DELIVERY_POINTS]: "dcDeliveryPoints",
-        [Tep2019FieldName.DC_PLACEMENT_POINTS]: "dcPlacementPoints",
-        [Tep2019FieldName.DC_SKYSCRAPER_POINTS]: "dcSkyscraperBonusPoints",
-        [Tep2019FieldName.CAPPING_POINTS]: "cappingPoints",
-        [Tep2019FieldName.CAPPING_POINTS_INDIVIDUAL]: "cappingPointsIndividual",
-        [Tep2019FieldName.FOUNDATION_MOVED_POINTS]: "foundationMovedPoints",
-        [Tep2019FieldName.ENDGAME_PARKING_POINTS]: "parkingPoints",
-        [Tep2019FieldName.ENDGAME_PARKING_POINTS_INDIVIDUAL]: "parkingPointsIndividual",
-        [Tep2019FieldName.CAPPING_POINTS]: "cappingPoints",
-        [Tep2019FieldName.AUTO_POINTS]: "autoPoints",
-        [Tep2019FieldName.DRIVER_CONTROLLED_POINTS]: "dcPoints",
-        [Tep2019FieldName.ENDGAME_POINTS]: "endgamePoints",
-        [Tep2019FieldName.TOTAL_POINTS]: "totalPoints",
-        [Tep2019FieldName.TOTAL_POINTS_NP]: "totalPointsNp",
+function getFieldNameGroup(fn: Tep2019FieldName, postfix: string, group: Tep2019Group): string | null {
+    let g = getGroupName(group);
+
+    let map: Partial<Record<Tep2019FieldName, string>> = {
+        [Tep2019FieldName.AUTO_NAVIGATION_POINTS]: `tep${postfix}."${g}Autonavigationpoints"`,
+        [Tep2019FieldName.AUTO_NAVIGATION_POINTS_INDIVIDUAL]: `tep${postfix}."${g}Autonavigationpointsindividual"`,
+        [Tep2019FieldName.AUTO_REPOSITIONING_POINTS]: `tep${postfix}."${g}Autorepositioningpoints"`,
+        [Tep2019FieldName.AUTO_DELIVERY_POINTS]: `tep${postfix}."${g}Autodeliverypoints"`,
+        [Tep2019FieldName.AUTO_PLACEMENT_POINTS]: `tep${postfix}."${g}Autoplacementpoints"`,
+        [Tep2019FieldName.DC_DELIVERY_POINTS]: `tep${postfix}."${g}Dcdeliverypoints"`,
+        [Tep2019FieldName.DC_PLACEMENT_POINTS]: `tep${postfix}."${g}Dcplacementpoints"`,
+        [Tep2019FieldName.DC_SKYSCRAPER_POINTS]: `tep${postfix}."${g}Dcskyscraperbonuspoints"`,
+        [Tep2019FieldName.CAPPING_POINTS]: `tep${postfix}."${g}Cappingpoints"`,
+        [Tep2019FieldName.CAPPING_POINTS_INDIVIDUAL]: `tep${postfix}."${g}Cappingpointsindividual"`,
+        [Tep2019FieldName.FOUNDATION_MOVED_POINTS]: `tep${postfix}."${g}Foundationmovedpoints"`,
+        [Tep2019FieldName.ENDGAME_PARKING_POINTS]: `tep${postfix}."${g}Parkingpoints"`,
+        [Tep2019FieldName.ENDGAME_PARKING_POINTS_INDIVIDUAL]: `tep${postfix}."${g}Parkingpointsindividual"`,
+        [Tep2019FieldName.CAPPING_POINTS]: `tep${postfix}."${g}Cappingpoints"`,
+        [Tep2019FieldName.AUTO_POINTS]: `tep${postfix}."${g}Autopoints"`,
+        [Tep2019FieldName.DRIVER_CONTROLLED_POINTS]: `tep${postfix}."${g}Dcpoints"`,
+        [Tep2019FieldName.ENDGAME_POINTS]: `tep${postfix}."${g}Endgamepoints"`,
+        [Tep2019FieldName.TOTAL_POINTS]: `tep${postfix}."${g}Totalpoints"`,
+        [Tep2019FieldName.TOTAL_POINTS_NP]: `tep${postfix}."${g}Totalpointsnp"`,
     };
 
     return map[fn] ?? null;
 }
-
-registerEnumType(Tep2019FieldName, { name: "TEP2019FieldName" });
 
 @InputType()
 class Tep2019Field extends TepField(
     Tep2019Group,
     Tep2019FieldName,
-    getGroupName,
     getFieldNameGroup,
-    getFieldNameSingular
+    getFieldNameSingular,
+    (_, fn) => fn == Tep2019FieldName.EVENT_NAME
 ) {}
 
 @InputType()
@@ -171,7 +170,7 @@ abstract class Tep2019Filter {
 }
 
 @Resolver()
-export class SeasonRecords2019Resolver {
+export class TeamSeasonRecords2019Resolver {
     @Query(() => TepRecords)
     async teamRecords2019(
         @Arg("region", () => Region) region: Region,
@@ -205,8 +204,11 @@ export class SeasonRecords2019Resolver {
             .leftJoin("event", "e2", 'e2.season = 2019 AND e2.code = tep2."eventCode"')
             .select([`RANK() OVER (ORDER BY ${orderByRaw2}) as pre_filter_rank`, '"eventCode"', '"teamNumber"'])
             .where("tep2.hasStats")
-            .andWhere("e2.season = 2019")
-            .andWhere('e2."regionCode" IN (:...regionCodes)', { regionCodes });
+            .andWhere("e2.season = 2019");
+
+        if (region != Region.ALL) {
+            preFilterQuery = preFilterQuery.andWhere('e2."regionCode" IN (:...regionCodes)', { regionCodes });
+        }
 
         if (start) preFilterQuery = preFilterQuery.andWhere("e2.end >= :start", { start });
         if (end) preFilterQuery = preFilterQuery.andWhere("e2.end <= :end", { end });
@@ -223,16 +225,19 @@ export class SeasonRecords2019Resolver {
             .addSelect("pre_rank.pre_filter_rank", "pre_filter_rank")
             .where("tep.hasStats")
             .andWhere("e.season = 2019")
-            .andWhere('e."regionCode" IN (:...regionCodes)', { regionCodes })
             .limit(limit)
             .offset(skip);
+
+        if (region != Region.ALL) {
+            query = query.andWhere('e."regionCode" IN (:...regionCodes)', { regionCodes });
+        }
 
         if (start) query = query.andWhere("e.end >= :start", { start });
         if (end) query = query.andWhere("e.end <= :end", { end });
 
         if (orderIn.length == 0) {
             // In case they didn't provide an order
-            query = query.orderBy('tep."oprTotalpoints"', "DESC");
+            query = query.orderBy('tep."oprTotalpoints"', "DESC", "NULLS LAST");
         }
 
         for (let i = 0; i < orderIn.length && i < 5; i++) {

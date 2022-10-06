@@ -80,7 +80,7 @@ function statFilterTypeToApi(type: StatFilterType): CompareOperator {
     }[type];
 }
 
-function read<T>(data: StatData<T>, val: Stat<T> | number): number | string {
+function read<T>(data: StatData<T>, val: Stat<T> | number): number | string | null {
     if (typeof val == "number") {
         return val;
     } else {
@@ -103,6 +103,8 @@ export function statDataMatchesSingleFilter<T>(
 
     let lhsValue = read(data, filter.lhs);
     let rhsValue = read(data, filter.rhs);
+
+    if (lhsValue == null || rhsValue == null) return false;
 
     switch (filter.operator) {
         case StatFilterType.LT:

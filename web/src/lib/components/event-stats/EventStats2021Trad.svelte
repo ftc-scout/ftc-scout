@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-    type S = FullTep2021Traditional;
+    type S = FullTep2021Shared;
     const defaultSort: ChosenSort<S> = {
         stat: EVENT_RANK_STAT,
         type: SortType.LOW_HIGH,
@@ -21,14 +21,17 @@
     import { writable, type Writable } from "svelte/store";
     import { emptyFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
-    import { PLAYED_STAT, EVENT_RANK_STAT, RP_STAT, TEAM_STAT } from "../../util/stats/StatsShared2021";
     import {
-        STAT_SET_2021_TRAD,
+        PLAYED_STAT,
+        EVENT_RANK_STAT,
+        RP_STAT,
+        TEAM_STAT,
+        type FullTep2021Shared,
         AVERAGE_STAT,
-        type FullTep2021Traditional,
-        MAX_STAT,
         OPR_STAT,
-    } from "../../util/stats/StatsTrad2021";
+        MAX_STAT,
+        STAT_SET_TEAMS_2021_SHARED,
+    } from "../../util/stats/2021/StatsSharedTeams2021";
     import { SortType } from "../SortButton.svelte";
     import LocallyResolvedStatsTable from "../stats/LocallyResolvedStatsTable.svelte";
     import type { ChosenSort } from "../stats/StatsTable.svelte";
@@ -45,7 +48,7 @@
     bind:currentSort={$currentSort}
     bind:currentFilters={$currentFilters}
     bind:selectedTeam
-    statSet={STAT_SET_2021_TRAD}
+    statSet={STAT_SET_TEAMS_2021_SHARED}
     fileName={`${eventName} Rankings`}
     showRanks={["Event Ranking", "Ranking Points (RP)", "Total Points Average"].indexOf(
         $currentSort.stat.identifierName

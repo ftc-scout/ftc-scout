@@ -18,8 +18,7 @@
         <a
             sveltekit:prefetch
             href={`/events/${event.season}/${event.code}/matches`}
-            class="inner"
-            on:click|stopPropagation
+            class="inner event"
             on:mouseenter={() => dispatch("hover-team")}
             on:mouseleave={() => dispatch("un-hover-team")}
         >

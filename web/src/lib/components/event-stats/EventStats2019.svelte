@@ -29,11 +29,11 @@
         OPR_STAT,
         PLAYED_STAT,
         RP_STAT,
-        STAT_SET_2019,
+        STAT_SET_TEAMS_2019,
         TBP_STAT,
         TEAM_STAT,
         type FullTep2019,
-    } from "../../util/stats/Stats2019";
+    } from "../../util/stats/2019/StatsTeams2019";
     import { SortType } from "../SortButton.svelte";
     import LocallyResolvedStatsTable from "../stats/LocallyResolvedStatsTable.svelte";
     import type { ChosenSort } from "../stats/StatsTable.svelte";
@@ -50,7 +50,7 @@
     bind:currentSort={$currentSort}
     bind:currentFilters={$currentFilters}
     bind:selectedTeam
-    statSet={STAT_SET_2019}
+    statSet={STAT_SET_TEAMS_2019}
     fileName={`${eventName} Rankings`}
     showRanks={["Event Ranking", "Ranking Points (RP)", "Total Points Average"].indexOf(
         $currentSort.stat.identifierName

@@ -1,44 +1,76 @@
 <script lang="ts" context="module">
-    type Data = FullTep2021Traditional | FullTep2021Remote;
+    import { get, writable, type Writable } from "svelte/store";
+    import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
+    import {
+        STAT_SET_MATCHES_2021_SHARED,
+        THIS_TOTAL_POINTS_STAT,
+        THIS_AUTO_POINTS_STAT,
+        THIS_DC_POINTS_STAT,
+        type FullScores2021Shared,
+        THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_FREIGHT_STAT,
+        THIS_DC_ALLIANCE_3_STAT,
+        THIS_DC_SHARED_STAT,
+        THIS_END_SHARED_STAT,
+        THIS_END_DELIVERED_STAT,
+        THIS_END_CAPPED_STAT,
+        TEAM_1,
+        TEAM_2,
+        TEAM_3,
+    } from "../../util/stats/2021/StatsSharedMatches2021";
+    import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
+    import type { Stat } from "../../util/stats/Stat";
+    import { findInStatSet, type StatSet } from "../../util/stats/StatSet";
+    import { SortType } from "../SortButton.svelte";
+    import type { ChosenSort, StatData } from "../stats/StatsTable.svelte";
+
+    type Data = FullScores2021Shared;
 
     let DEFAULT_SHOWN_STATS: Stat<Data>[] = [
-        TEAM_STAT,
-        OPR_STAT,
-        NP_OPR_STAT,
-        AUTO_OPR_STAT,
-        TELEOP_OPR_STAT,
-        ENDGAME_OPR_STAT,
-        AVERAGE_STAT,
-        EVENT_RANK_STAT,
-        EVENT_STAT_2021 as any,
-        RECORD_STAT,
+        THIS_TOTAL_POINTS_STAT,
+        THIS_AUTO_POINTS_STAT,
+        THIS_DC_POINTS_STAT,
+        THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_FREIGHT_STAT,
+        THIS_DC_ALLIANCE_3_STAT,
+        THIS_DC_SHARED_STAT,
+        THIS_END_SHARED_STAT,
+        THIS_END_DELIVERED_STAT,
+        THIS_END_CAPPED_STAT,
+        TEAM_1,
+        TEAM_2,
+        TEAM_3,
+        EVENT_STAT_2021_MATCHES,
     ];
 
     let shownStats: Writable<Stat<Data>[]> = writable([
-        TEAM_STAT,
-        OPR_STAT,
-        NP_OPR_STAT,
-        AUTO_OPR_STAT,
-        TELEOP_OPR_STAT,
-        ENDGAME_OPR_STAT,
-        AVERAGE_STAT,
-        EVENT_RANK_STAT,
-        EVENT_STAT_2021 as any,
-        RECORD_STAT,
+        THIS_TOTAL_POINTS_STAT,
+        THIS_AUTO_POINTS_STAT,
+        THIS_DC_POINTS_STAT,
+        THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_FREIGHT_STAT,
+        THIS_DC_ALLIANCE_3_STAT,
+        THIS_DC_SHARED_STAT,
+        THIS_END_SHARED_STAT,
+        THIS_END_DELIVERED_STAT,
+        THIS_END_CAPPED_STAT,
+        TEAM_1,
+        TEAM_2,
+        TEAM_3,
+        EVENT_STAT_2021_MATCHES,
     ]);
-    export const DEFAULT_SORT_TEAM_2021: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
+    export const DEFAULT_SORT_MATCH_2021: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };
 
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 
-    let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_TEAM_2021);
+    let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_MATCH_2021);
 
-    export function getStatSet2021Teams(_eventTypes: EventTypes): StatSet<unknown, unknown> {
-        return [...STAT_SET_TEAMS_2021_SHARED, ...STAT_SET_EVENT_2021];
+    export function getStatSet2021Matches(): StatSet<unknown, unknown> {
+        return [...STAT_SET_MATCHES_2021_SHARED, ...STAT_SET_EVENT_2021_MATCHES];
     }
 
     function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
-        let eventTypes = EventTypes.Trad;
-        let statSet = getStatSet2021Teams(eventTypes);
+        let statSet = getStatSet2021Matches();
 
         let sortStatIdenName = url.searchParams.get("sort") ?? null;
         if (sortStatIdenName) {
@@ -54,39 +86,19 @@
         return get(currentSort);
     }
 
-    export let team2021SearchParams: string = "";
+    export let match2021SearchParams: string = "";
 </script>
 
 <script lang="ts">
-    import { get, writable, type Writable } from "svelte/store";
-    import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
-    import type { Stat } from "../../util/stats/Stat";
-    import {
-        AUTO_OPR_STAT,
-        AVERAGE_STAT,
-        ENDGAME_OPR_STAT,
-        NP_OPR_STAT,
-        OPR_STAT,
-        EVENT_RANK_STAT,
-        STAT_SET_TEAMS_2021_SHARED,
-        TEAM_STAT,
-        TELEOP_OPR_STAT,
-        type FullTep2021Remote,
-        RECORD_STAT,
-        type FullTep2021Traditional,
-    } from "../../util/stats/2021/StatsSharedTeams2021";
-    import { SortType } from "../SortButton.svelte";
-    import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
-    import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
-    import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
-    import { EVENT_STAT_2021, STAT_SET_EVENT_2021 } from "$lib/util/stats/StatsEvent";
-    import { changeParam } from "./changeParams";
     import { page } from "$app/stores";
-    import { arraysEqual } from "$lib/util/array-eq";
-    import { regionToString } from "$lib/util/regions";
-    import { dateToStr } from "$lib/util/format/pretty-print-date";
+    import { arraysEqual } from "../../util/array-eq";
+    import { changeParam } from "./changeParams";
     import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab]/+page";
+    import { regionToString } from "../../util/regions";
+    import { dateToStr } from "../../util/format/pretty-print-date";
+    import StatsTable from "../stats/StatsTable.svelte";
+    import { EVENT_STAT_2021_MATCHES, STAT_SET_EVENT_2021_MATCHES } from "../../util/stats/StatsEvent";
 
     export let eventTypes: EventTypes;
     export let region: Region;
@@ -97,8 +109,8 @@
     export let startDate: Date | null;
     export let endDate: Date | null;
 
-    let statSet: StatSet<unknown, unknown> = getStatSet2021Teams(eventTypes);
-    $: statSet = getStatSet2021Teams(eventTypes);
+    let statSet: StatSet<unknown, unknown> = getStatSet2021Matches();
+    $: statSet = getStatSet2021Matches();
 
     try {
         let startFilter = simpleJsonToFilter(JSON.parse($page.url.searchParams.get("filter") ?? ""), statSet);
@@ -117,13 +129,13 @@
     let selectedTeamName: string | null = null;
 
     $: isDefaultSort =
-        $currentSort.type == DEFAULT_SORT_TEAM_2021.type &&
-        $currentSort.stat.identifierName == DEFAULT_SORT_TEAM_2021.stat.identifierName;
+        $currentSort.type == DEFAULT_SORT_MATCH_2021.type &&
+        $currentSort.stat.identifierName == DEFAULT_SORT_MATCH_2021.stat.identifierName;
     $: isDefaultShownStats = arraysEqual(
         DEFAULT_SHOWN_STATS.map((s) => s.identifierName),
         $shownStats.map((s) => s.identifierName)
     );
-    $: if ($page.params.tab == "teams")
+    $: if ($page.params.tab == "matches")
         changeParam({
             sort: isDefaultSort ? null : $currentSort.stat.identifierName,
             ["sort-dir"]: isDefaultSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
@@ -135,7 +147,7 @@
             start: dateToStr(startDate),
             end: dateToStr(endDate),
         });
-    $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
+    $: if ($page.params.tab == "matches") match2021SearchParams = $page.url.searchParams.toString();
 
     function change() {
         currPage = 0;
@@ -152,10 +164,10 @@
     {shownStats}
     bind:selectedTeam
     bind:selectedTeamName
-    defaultSort={DEFAULT_SORT_TEAM_2021}
+    defaultSort={DEFAULT_SORT_MATCH_2021}
     bind:currentSort={$currentSort}
     bind:currentFilters={$currentFilters}
-    fileName={"Team Season Records 2021"}
+    fileName={"Match Season Records 2021"}
     pagination
     bind:page={currPage}
     {totalCount}

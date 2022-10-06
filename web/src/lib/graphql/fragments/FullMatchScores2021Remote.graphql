@@ -36,4 +36,5 @@ fragment FullMatchScores2021Remote on MatchScores2021Remote {
     endgamePoints
     penaltyPoints
     totalPoints
+    totalPointsNp
 }

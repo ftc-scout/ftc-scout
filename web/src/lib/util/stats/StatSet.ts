@@ -1,5 +1,12 @@
-import type { Tep2019Field, Tep2019Group, Tep2021Field, Tep2021Group } from "$lib/graphql/generated/graphql-operations";
-import type { Stat, StatData } from "./Stat";
+import {
+    EventTypes,
+    MatchGroup,
+    type Tep2019Field,
+    type Tep2019Group,
+    type Tep2021Field,
+    type Tep2021Group,
+} from "$lib/graphql/generated/graphql-operations";
+import { DisplayWhen, type Stat, type StatData } from "./Stat";
 import type { StatColor } from "./stat-color";
 import type { StatDisplayType } from "./stat-display-type";
 
@@ -23,16 +30,17 @@ export function groupGetter<T, U>(
     shortNameAdd: string,
     longNameAdd: string,
     identifierNameAdd: string,
-    apiGroup: Tep2021Group | Tep2019Group,
+    apiGroup: Tep2021Group | Tep2019Group | MatchGroup,
     displayTypeOverride: StatDisplayType | null = null
 ): Stat<T> {
     return {
         read: (t: StatData<T>) => stat.read(getInner(t)),
-        columnName: `${stat.columnName} ${shortNameAdd}`,
-        listName: `${stat.listName} ${longNameAdd}`,
-        identifierName: `${stat.identifierName} ${identifierNameAdd}`,
+        columnName: `${stat.columnName} ${shortNameAdd}`.trim(),
+        listName: `${stat.listName} ${longNameAdd}`.trim(),
+        identifierName: `${stat.identifierName} ${identifierNameAdd}`.trim(),
         displayType: displayTypeOverride ?? stat.displayType,
         color,
+        displayWhen: stat.displayWhen,
         apiField: {
             ...stat.apiField,
             group: apiGroup,
@@ -66,21 +74,24 @@ function flattenNestedStat<T>(nestedStat: NestedStat<T>): Stat<T>[] {
     return [nestedStat.stat, ...nestedStat.nestedStats.flatMap(flattenNestedStat)];
 }
 
-function nestedStatContains<T, U>(group: StatGroup<T, U>, nestedStat: NestedStat<U>, stat: Stat<T>): boolean {
+export function shouldDisplay(displayWhen: DisplayWhen, eventTypes: EventTypes): boolean {
     return (
-        group.get(nestedStat.stat).identifierName == stat.identifierName ||
-        nestedStat.nestedStats.some((ns) => nestedStatContains(group, ns, stat))
+        displayWhen == DisplayWhen.ALWAYS ||
+        eventTypes == EventTypes.TradAndRemote ||
+        (eventTypes == EventTypes.Trad && displayWhen == DisplayWhen.TRAD) ||
+        (eventTypes == EventTypes.Remote && displayWhen == DisplayWhen.REMOTE)
     );
 }
 
-export function filterStatSet<T, U>(statSet: StatSet<T, U>, filterList: Stat<T>[]): Stat<T>[] {
-    return filterList.filter((s) =>
-        statSet.some((set) => {
-            return set.type == "standalone"
-                ? set.set.standalone.some((ss) => ss.identifierName == s.identifierName)
-                : set.set.groups.some((g) => set.set.groupStats.some((gs) => nestedStatContains(g, gs, s)));
-        })
-    );
+export function filterStatSet<T>(filterList: Stat<T>[], eventTypes: EventTypes): Stat<T>[] {
+    return filterList.filter((s) => {
+        return (
+            s.displayWhen == DisplayWhen.ALWAYS ||
+            eventTypes == EventTypes.TradAndRemote ||
+            (eventTypes == EventTypes.Trad && s.displayWhen == DisplayWhen.TRAD) ||
+            (eventTypes == EventTypes.Remote && s.displayWhen == DisplayWhen.REMOTE)
+        );
+    });
 }
 
 export function findInStatSet<T, U>(statSet: StatSet<T, U>, identifierName: string): Stat<T> | null {
