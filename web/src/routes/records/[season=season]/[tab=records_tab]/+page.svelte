@@ -158,33 +158,11 @@
 
     <TabbedCard
         names={[
-            [MATCHES_ICON, "Matches"],
             [TEAMS_ICON, "Teams"],
+            [MATCHES_ICON, "Matches"],
         ]}
         bind:selectedName={selectedPage}
     >
-        <TabContent name="Matches">
-            {#if dataMatches2021 && dataMatches2021Scores}
-                {@const totalCount = dataMatches2021.count}
-                <!-- TODO add this to query -->
-                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
-                {@const page = dataMatches2021.offset / pageSize + 1}
-
-                <MatchSeasonRecords2021
-                    {eventTypes}
-                    data={dataMatches2021Scores}
-                    currPage={page}
-                    {totalCount}
-                    {pageSize}
-                    {region}
-                    {startDate}
-                    {endDate}
-                />
-            {:else}
-                <SkeletonRow rows={50} card={false} header={false} />
-            {/if}
-        </TabContent>
-
         <TabContent name="Teams">
             {#if dataTeams2021 && dataTeams2021Teps}
                 {@const totalCount = dataTeams2021.count}
@@ -210,6 +188,28 @@
 
                 <TeamSeasonRecords2019
                     data={data2019Teams}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                />
+            {:else}
+                <SkeletonRow rows={50} card={false} header={false} />
+            {/if}
+        </TabContent>
+
+        <TabContent name="Matches">
+            {#if dataMatches2021 && dataMatches2021Scores}
+                {@const totalCount = dataMatches2021.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataMatches2021.offset / pageSize + 1}
+
+                <MatchSeasonRecords2021
+                    {eventTypes}
+                    data={dataMatches2021Scores}
                     currPage={page}
                     {totalCount}
                     {pageSize}
