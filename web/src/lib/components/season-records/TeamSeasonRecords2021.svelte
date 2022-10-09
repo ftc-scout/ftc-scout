@@ -77,7 +77,7 @@
     } from "../../util/stats/2021/StatsSharedTeams2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
-    import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
+    import { findInStatSet, type StatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import { EVENT_STAT_2021, STAT_SET_EVENT_2021 } from "$lib/util/stats/StatsEvent";
@@ -137,8 +137,8 @@
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 
-    function change() {
-        currPage = 0;
+    export function change() {
+        currPage = 1;
     }
 </script>
 

@@ -155,8 +155,8 @@
         });
     $: if ($page.params.tab == "matches") match2021SearchParams = $page.url.searchParams.toString();
 
-    function change() {
-        currPage = 0;
+    export function change() {
+        currPage = 1;
     }
 </script>
 

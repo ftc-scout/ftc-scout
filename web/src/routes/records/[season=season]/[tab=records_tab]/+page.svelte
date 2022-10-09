@@ -121,6 +121,8 @@
 
     let selectedPage: string = $page.params.tab;
     $: gotoSubPage(season, selectedPage);
+
+    let childrenChange: () => void = () => {};
 </script>
 
 <Head
@@ -142,17 +144,24 @@
                 <Dropdown
                     items={["Traditional and Remote", "Traditional", "Remote"]}
                     bind:value={eventTypesStr}
+                    on:change={childrenChange}
                     style="width: calc(100% - 15ch)"
                 />
             </div>
         {/if}
         <div>
             <span>Regions:</span>
-            <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
+            <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" on:change={childrenChange} />
         </div>
         <div>
             <span>From:</span>
-            <DateRange style="width: calc(100% - 15ch)" {season} bind:startDate bind:endDate />
+            <DateRange
+                style="width: calc(100% - 15ch)"
+                {season}
+                bind:startDate
+                bind:endDate
+                on:change={childrenChange}
+            />
         </div>
     </Card>
 
@@ -179,6 +188,7 @@
                     {region}
                     {startDate}
                     {endDate}
+                    bind:change={childrenChange}
                 />
             {:else if data2019 && data2019Teams}
                 {@const totalCount = data2019.count}
@@ -194,6 +204,7 @@
                     {region}
                     {startDate}
                     {endDate}
+                    bind:change={childrenChange}
                 />
             {:else}
                 <SkeletonRow rows={50} card={false} header={false} />
@@ -216,6 +227,7 @@
                     {region}
                     {startDate}
                     {endDate}
+                    bind:change={childrenChange}
                 />
             {:else}
                 <SkeletonRow rows={50} card={false} header={false} />

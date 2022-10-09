@@ -7,7 +7,7 @@
 </script>
 
 <div {style}>
-    <select bind:value>
+    <select bind:value on:change>
         {#each REGION_GROUPS as group}
             <optgroup>
                 {#each group as region}

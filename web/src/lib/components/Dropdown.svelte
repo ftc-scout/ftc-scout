@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
+
     export let items: string[];
     export let value: string | null = null;
 
@@ -6,7 +8,7 @@
 </script>
 
 <div {style}>
-    <select bind:value>
+    <select bind:value on:change>
         {#each items as item}
             <option>{item}</option>
         {/each}

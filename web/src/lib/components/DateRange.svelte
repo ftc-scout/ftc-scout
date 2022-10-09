@@ -21,11 +21,11 @@
 
 <span {style}>
     <form>
-        <input type="date" bind:value={startDateStr} aria-label="start date" min={minDate} max={maxDate} />
+        <input type="date" bind:value={startDateStr} aria-label="start date" min={minDate} max={maxDate} on:change />
     </form>
     to
     <form>
-        <input type="date" bind:value={endDateStr} aria-label="end date" min={minDate} max={maxDate} />
+        <input type="date" bind:value={endDateStr} aria-label="end date" min={minDate} max={maxDate} on:change />
     </form>
 </span>
 
