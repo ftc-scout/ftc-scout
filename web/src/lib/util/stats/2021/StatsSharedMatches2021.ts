@@ -1,4 +1,5 @@
 import {
+    Alliance,
     Match2021FieldName,
     MatchGroup,
     Station,
@@ -361,7 +362,7 @@ export const EVENT_STAT: Stat<{ event: RecordsEventFragment }> = {
     apiField: { fieldName: Match2021FieldName.EventName },
 };
 
-export const MATH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } }> = {
+export const MATCH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } }> = {
     color: StatColor.WHITE,
     displayType: StatDisplayType.STRING,
     listName: "Match Number",
@@ -370,6 +371,21 @@ export const MATH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } }
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.match.matchDescription,
     apiField: { fieldName: Match2021FieldName.MatchNumber },
+};
+
+function capitalizeFirstLetter(str: string) {
+    return str.charAt(0).toUpperCase() + str.slice(1).toLocaleLowerCase();
+}
+
+export const ALLIANCE_STAT: Stat<{ alliance?: Alliance }> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.STRING,
+    listName: "Alliance",
+    columnName: "Alliance",
+    identifierName: "Alliance",
+    displayWhen: DisplayWhen.TRAD,
+    read: (s) => ("alliance" in s.data ? capitalizeFirstLetter(s.data.alliance) : "Solo"),
+    apiField: { fieldName: Match2021FieldName.Alliance },
 };
 
 export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScores2021Shared> = [
@@ -579,7 +595,7 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
         name: "Info",
         type: "standalone",
         set: {
-            standalone: [MATH_DESCRIPTION_STAT as any, EVENT_STAT as any],
+            standalone: [MATCH_DESCRIPTION_STAT as any, ALLIANCE_STAT as any, EVENT_STAT as any],
         },
     },
 ];

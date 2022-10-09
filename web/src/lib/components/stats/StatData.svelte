@@ -42,7 +42,7 @@
 {:else if stat.displayType == StatDisplayType.RECORD}
     <td class={stat.color} title={stat.identifierName}>{record.wins}-{record.losses}-{record.ties}</td>
 {:else}
-    <td class={stat.color} title={stat.identifierName}>
+    <td class={stat.color} class:rank={stat.displayType == StatDisplayType.RANK} title={stat.identifierName}>
         {#if stat.displayType == StatDisplayType.INTEGER}
             {value}
         {:else if stat.displayType == StatDisplayType.DECIMAL}
@@ -68,7 +68,7 @@
         }
     }
 
-    td.white {
+    td.rank {
         font-weight: bold;
     }
 

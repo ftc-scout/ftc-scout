@@ -42,6 +42,7 @@ enum Match2021FieldName {
     TEAM2_NUMBER,
     TEAM3_NUMBER,
     MATCH_NUMBER,
+    ALLIANCE,
     EVENT_NAME,
 }
 
@@ -50,6 +51,7 @@ registerEnumType(Match2021FieldName, { name: "Match2021FieldName" });
 function getFieldNameSingular(fn: Match2021FieldName, postfix: string): string | null {
     let map: Partial<Record<Match2021FieldName, string>> = {
         [Match2021FieldName.MATCH_NUMBER]: `s${postfix}."matchId"`,
+        [Match2021FieldName.ALLIANCE]: `s${postfix}."alliance"`,
         [Match2021FieldName.EVENT_NAME]: `e${postfix}.name`,
     };
 
@@ -102,7 +104,7 @@ class Match2021Field extends TepField(
     Match2021FieldName,
     getFieldNameGroup,
     getFieldNameSingular,
-    () => false
+    (_, f) => f == Match2021FieldName.EVENT_NAME || f == Match2021FieldName.ALLIANCE
 ) {}
 
 @InputType()

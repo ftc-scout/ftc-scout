@@ -18,7 +18,8 @@
         TEAM_2,
         TEAM_3,
         EVENT_STAT,
-        MATH_DESCRIPTION_STAT,
+        MATCH_DESCRIPTION_STAT,
+        ALLIANCE_STAT,
     } from "../../util/stats/2021/StatsSharedMatches2021";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
@@ -42,8 +43,9 @@
         TEAM_1,
         TEAM_2,
         TEAM_3,
-        MATH_DESCRIPTION_STAT,
-        EVENT_STAT,
+        MATCH_DESCRIPTION_STAT as any,
+        ALLIANCE_STAT as any,
+        EVENT_STAT as any,
     ];
 
     let shownStats: Writable<Stat<Data>[]> = writable([
@@ -60,8 +62,9 @@
         TEAM_1,
         TEAM_2,
         TEAM_3,
-        MATH_DESCRIPTION_STAT,
-        EVENT_STAT,
+        MATCH_DESCRIPTION_STAT as any,
+        ALLIANCE_STAT as any,
+        EVENT_STAT as any,
     ]);
     export const DEFAULT_SORT_MATCH_2021: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };
 

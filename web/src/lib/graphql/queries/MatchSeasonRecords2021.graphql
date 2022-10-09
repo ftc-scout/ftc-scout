@@ -22,6 +22,7 @@ query MatchSeasonRecords2021(
             score {
                 __typename
                 ... on MatchScores2021TraditionalAlliance {
+                    alliance
                     event {
                         ...RecordsEvent
                     }
@@ -81,6 +82,7 @@ query MatchSeasonRecords2021(
                     ...FullMatchScores2021Remote
                 }
                 ... on MatchScores2019Alliance {
+                    alliance
                     match {
                         season
                         eventCode
