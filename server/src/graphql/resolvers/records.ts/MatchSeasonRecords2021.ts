@@ -377,7 +377,9 @@ export class MatchSeasonRecords2021Resolver {
         let [{ entities, raw }, count] = await Promise.all([await query.getRawAndEntities(), await query.getCount()]);
 
         let scores: MatchRecordRow[] = entities.map((e) => {
-            let rawRow = raw.find((r) => r.s_eventCode == e.eventCode && r.s_matchId == e.matchId);
+            let rawRow = raw.find(
+                (r) => r.s_eventCode == e.eventCode && r.s_matchId == e.matchId && r.s_alliance == e.alliance
+            );
             return {
                 score: rawRow.e_remote
                     ? new MatchScores2021RemoteGraphql(e)
