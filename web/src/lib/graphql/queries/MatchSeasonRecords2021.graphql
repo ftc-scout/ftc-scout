@@ -25,6 +25,12 @@ query MatchSeasonRecords2021(
                     event {
                         ...RecordsEvent
                     }
+                    match {
+                        season
+                        eventCode
+                        id
+                        matchDescription
+                    }
                     teams {
                         season
                         eventCode
@@ -56,6 +62,12 @@ query MatchSeasonRecords2021(
                     event {
                         ...RecordsEvent
                     }
+                    match {
+                        season
+                        eventCode
+                        id
+                        matchDescription
+                    }
                     team {
                         season
                         eventCode
@@ -69,6 +81,12 @@ query MatchSeasonRecords2021(
                     ...FullMatchScores2021Remote
                 }
                 ... on MatchScores2019Alliance {
+                    match {
+                        season
+                        eventCode
+                        id
+                        matchDescription
+                    }
                     ...FullMatchScores2019Alliance
                 }
             }

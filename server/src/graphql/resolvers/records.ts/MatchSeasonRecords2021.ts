@@ -49,7 +49,7 @@ registerEnumType(Match2021FieldName, { name: "Match2021FieldName" });
 
 function getFieldNameSingular(fn: Match2021FieldName, postfix: string): string | null {
     let map: Partial<Record<Match2021FieldName, string>> = {
-        [Match2021FieldName.MATCH_NUMBER]: `(s${postfix}."matchId" % 1000)`,
+        [Match2021FieldName.MATCH_NUMBER]: `s${postfix}."matchId"`,
         [Match2021FieldName.EVENT_NAME]: `e${postfix}.name`,
     };
 

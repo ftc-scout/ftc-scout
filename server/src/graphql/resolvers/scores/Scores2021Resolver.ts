@@ -8,6 +8,7 @@ import { TeamMatchParticipation } from "../../../db/entities/TeamMatchParticipat
 import { stationMatchesAlliance } from "../../../db/entities/types/Station";
 import { Alliance, otherAlliance } from "../../../db/entities/types/Alliance";
 import { MatchScores2021 } from "../../../db/entities/MatchScores2021";
+import { Match } from "../../../db/entities/Match";
 
 @Resolver(MatchScores2021TradAllianceGraphql)
 export class Scores2021TradResolver {
@@ -24,6 +25,27 @@ export class Scores2021TradResolver {
             return dl.load({
                 season: score.season,
                 code: score.eventCode,
+            });
+        };
+    }
+
+    @FieldResolver(() => Match)
+    @Loader<{ eventSeason: number; eventCode: string; id: number }, Match>(async (ids, _) => {
+        let matches = await Match.find({
+            where: ids as { eventSeason: number; eventCode: string; id: number }[],
+        });
+
+        return ids.map(
+            (id) =>
+                matches.find((t) => t.eventSeason == id.eventSeason && t.eventCode == id.eventCode && t.id == id.id)!
+        );
+    })
+    match(@Root() score: MatchScores2021TradAllianceGraphql) {
+        return async (dl: DataLoader<{ eventSeason: number; eventCode: string; id: number }, Event>) => {
+            return dl.load({
+                eventSeason: score.season,
+                eventCode: score.eventCode,
+                id: score.matchId,
             });
         };
     }
@@ -105,6 +127,27 @@ export class Scores2021RemoteResolver {
             return dl.load({
                 season: score.season,
                 code: score.eventCode,
+            });
+        };
+    }
+
+    @FieldResolver(() => Match)
+    @Loader<{ eventSeason: number; eventCode: string; id: number }, Match>(async (ids, _) => {
+        let matches = await Match.find({
+            where: ids as { eventSeason: number; eventCode: string; id: number }[],
+        });
+
+        return ids.map(
+            (id) =>
+                matches.find((t) => t.eventSeason == id.eventSeason && t.eventCode == id.eventCode && t.id == id.id)!
+        );
+    })
+    match(@Root() score: MatchScores2021RemoteGraphql) {
+        return async (dl: DataLoader<{ eventSeason: number; eventCode: string; id: number }, Event>) => {
+            return dl.load({
+                eventSeason: score.season,
+                eventCode: score.eventCode,
+                id: score.matchId,
             });
         };
     }

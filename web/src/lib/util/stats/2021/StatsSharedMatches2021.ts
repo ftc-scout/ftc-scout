@@ -4,6 +4,7 @@ import {
     Station,
     type MatchScores2021Remote,
     type MatchScores2021TraditionalAlliance,
+    type RecordsEventFragment,
 } from "../../../graphql/generated/graphql-operations";
 import { DisplayWhen, makeStat, makeStatMaybe, type Stat } from "../Stat";
 import { StatColor } from "../stat-color";
@@ -341,9 +342,37 @@ export const TEAM_3: Stat<TeamsT> = {
     apiField: { fieldName: Match2021FieldName.Team3Number },
 };
 
+export const EVENT_STAT: Stat<{ event: RecordsEventFragment }> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.EVENT,
+    listName: "Event",
+    columnName: "Event",
+    identifierName: "Event",
+    displayWhen: DisplayWhen.ALWAYS,
+    read: (s) => ({
+        name: s.data.event.name,
+        start: s.data.event.start,
+        end: s.data.event.end,
+        code: s.data.event.code,
+        season: s.data.event.season,
+    }),
+    apiField: { fieldName: Match2021FieldName.EventName },
+};
+
+export const MATH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } }> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.STRING,
+    listName: "Match Number",
+    columnName: "Match Num",
+    identifierName: "Match Number",
+    displayWhen: DisplayWhen.ALWAYS,
+    read: (s) => s.data.match.matchDescription,
+    apiField: { fieldName: Match2021FieldName.MatchNumber },
+};
+
 export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScores2021Shared> = [
     {
-        name: "Match Scores",
+        name: "Scores",
         type: "group",
         set: {
             groups: [
@@ -492,7 +521,7 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
         },
     },
     {
-        name: "Match Info",
+        name: "Teams",
         type: "group",
         set: {
             groups: [
@@ -538,9 +567,16 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
             ],
         },
     },
+    {
+        name: "Info",
+        type: "standalone",
+        set: {
+            standalone: [MATH_DESCRIPTION_STAT, EVENT_STAT],
+        },
+    },
 ];
 
-const SCORES = STAT_SET_MATCHES_2021_SHARED.find((s) => s.name == "Match Scores")!.set as StatSetGroup<
+const SCORES = STAT_SET_MATCHES_2021_SHARED.find((s) => s.name == "Scores")!.set as StatSetGroup<
     FullScores2021Shared,
     FullScores2021Shared
 >;

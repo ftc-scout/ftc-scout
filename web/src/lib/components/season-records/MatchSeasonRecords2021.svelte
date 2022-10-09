@@ -17,6 +17,8 @@
         TEAM_1,
         TEAM_2,
         TEAM_3,
+        EVENT_STAT,
+        MATH_DESCRIPTION_STAT,
     } from "../../util/stats/2021/StatsSharedMatches2021";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
@@ -40,7 +42,8 @@
         TEAM_1,
         TEAM_2,
         TEAM_3,
-        EVENT_STAT_2021_MATCHES,
+        MATH_DESCRIPTION_STAT,
+        EVENT_STAT,
     ];
 
     let shownStats: Writable<Stat<Data>[]> = writable([
@@ -57,7 +60,8 @@
         TEAM_1,
         TEAM_2,
         TEAM_3,
-        EVENT_STAT_2021_MATCHES,
+        MATH_DESCRIPTION_STAT,
+        EVENT_STAT,
     ]);
     export const DEFAULT_SORT_MATCH_2021: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };
 
@@ -66,7 +70,7 @@
     let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_MATCH_2021);
 
     export function getStatSet2021Matches(): StatSet<unknown, unknown> {
-        return [...STAT_SET_MATCHES_2021_SHARED, ...STAT_SET_EVENT_2021_MATCHES];
+        return [...STAT_SET_MATCHES_2021_SHARED];
     }
 
     function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
@@ -98,7 +102,6 @@
     import { regionToString } from "../../util/regions";
     import { dateToStr } from "../../util/format/pretty-print-date";
     import StatsTable from "../stats/StatsTable.svelte";
-    import { EVENT_STAT_2021_MATCHES, STAT_SET_EVENT_2021_MATCHES } from "../../util/stats/StatsEvent";
 
     export let eventTypes: EventTypes;
     export let region: Region;

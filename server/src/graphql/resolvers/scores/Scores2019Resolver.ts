@@ -5,6 +5,7 @@ import DataLoader from "dataloader";
 import { MatchScores2019AllianceGraphql } from "../../objects/MatchScores2019Graphql";
 import { TeamMatchParticipation } from "../../../db/entities/TeamMatchParticipation";
 import { stationMatchesAlliance } from "../../../db/entities/types/Station";
+import { Match } from "../../../db/entities/Match";
 
 @Resolver(MatchScores2019AllianceGraphql)
 export class Scores2019Resolver {
@@ -21,6 +22,27 @@ export class Scores2019Resolver {
             return dl.load({
                 season: score.season,
                 code: score.eventCode,
+            });
+        };
+    }
+
+    @FieldResolver(() => Match)
+    @Loader<{ eventSeason: number; eventCode: string; id: number }, Match>(async (ids, _) => {
+        let matches = await Match.find({
+            where: ids as { eventSeason: number; eventCode: string; id: number }[],
+        });
+
+        return ids.map(
+            (id) =>
+                matches.find((t) => t.eventSeason == id.eventSeason && t.eventCode == id.eventCode && t.id == id.id)!
+        );
+    })
+    match(@Root() score: MatchScores2019AllianceGraphql) {
+        return async (dl: DataLoader<{ eventSeason: number; eventCode: string; id: number }, Event>) => {
+            return dl.load({
+                eventSeason: score.season,
+                eventCode: score.eventCode,
+                id: score.matchId,
             });
         };
     }
