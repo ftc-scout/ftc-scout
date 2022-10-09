@@ -33,11 +33,11 @@ export class MatchScores2020 extends BaseEntity {
     @Column("int8")
     randomization!: number;
 
-    @Column("enum", { enum: WobbleEndPositions })
-    wobbleEndPositions!: WobbleEndPositions;
+    @Column()
+    autoWobble!: boolean;
 
-    @Column("enum", { enum: WobbleEndPositions, nullable: true })
-    wobbleEndPositions2!: WobbleEndPositions | null;
+    @Column()
+    autoWobble2!: boolean;
 
     @Column("enum", { enum: AutoNavigation2020 })
     autoNavigation!: AutoNavigation2020;
@@ -45,14 +45,8 @@ export class MatchScores2020 extends BaseEntity {
     @Column("enum", { enum: AutoNavigation2020, nullable: true })
     autoNavigation2!: AutoNavigation2020 | null;
 
-    @Column()
-    autoBonus!: boolean;
-
-    @Column("bool", { nullable: true })
-    autoBonus2!: boolean;
-
     @Column("int8")
-    autoStorageFreight!: number;
+    autoPowershots!: number;
 
     @Column("int8")
     autoGoalLow!: number;
@@ -64,37 +58,28 @@ export class MatchScores2020 extends BaseEntity {
     autoGoalHigh!: number;
 
     @Column("int8")
-    driverControlledStorageFreight!: number;
+    driverControlledLow!: number;
 
     @Column("int8")
-    driverControlledFreight1!: number;
+    driverControlledMid!: number;
 
     @Column("int8")
-    driverControlledFreight2!: number;
+    driverControlledHigh!: number;
+
+    @Column("enum", { enum: WobbleEndPositions })
+    wobbleEndPositions!: WobbleEndPositions;
+
+    @Column("enum", { enum: WobbleEndPositions, nullable: true })
+    wobbleEndPositions2!: WobbleEndPositions | null;
 
     @Column("int8")
-    driverControlledFreight3!: number;
-
-    @Column("int8", { nullable: true })
-    sharedFreight!: number | null;
+    endgameRingsOnWobble!: number;
 
     @Column("int8")
-    endgameDucksDelivered!: number;
-
-    @Column()
-    allianceBalanced!: boolean;
-
-    @Column("bool", { nullable: true })
-    sharedUnbalanced!: boolean | null;
-
-    @Column("enum", { enum: EndgamePark2021 })
-    endgamePark!: EndgamePark2021;
-
-    @Column("enum", { enum: EndgamePark2021, nullable: true })
-    endgamePark2!: EndgamePark2021 | null;
+    endgameRingsOnWobble2!: number;
 
     @Column("int8")
-    capped!: number;
+    endgamePowershots!: number;
 
     @Column("int8")
     minorPenalties!: number;
@@ -103,16 +88,13 @@ export class MatchScores2020 extends BaseEntity {
     majorPenalties!: number;
 
     @Column("int8")
-    autoCarouselPoints!: number;
-
-    @Column("int8")
     autoNavigationPoints!: number;
 
     @Column("int8")
-    autoFreightPoints!: number;
+    autoGoalPoints!: number;
 
     @Column("int8")
-    autoBonusPoints!: number;
+    autoWobblePoints!: number;
 
     @Column("int8")
     driverControlledAllianceHubPoints!: number;
