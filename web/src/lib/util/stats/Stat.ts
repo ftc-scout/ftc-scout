@@ -136,7 +136,7 @@ export function makeStatMaybe<T, S>(
         columnName,
         identifierName,
         displayWhen,
-        read: (s) => (key in s.data ? (s.data[key as unknown as keyof T] as any) : null),
+        read: (s) => (s.data && key in s.data ? (s.data[key as unknown as keyof T] as any) : null),
         apiField: {
             fieldName: apiFieldName,
             group: apiGroupName,

@@ -11,9 +11,9 @@ import { StatColor } from "../stat-color";
 import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
 
-export type FullScores2021Shared = MatchScores2021TraditionalAlliance | MatchScores2021Remote;
+export type FullScores2021Shared = MatchScores2021TraditionalAlliance | MatchScores2021Remote | null;
 
-const TOTAL_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
+const TOTAL_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "totalPoints",
     "Total Points",
     "Total",
@@ -23,7 +23,7 @@ const TOTAL_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
     null
 );
 
-const TOTAL_POINTS_NP_STAT: Stat<FullScores2021Shared> = makeStat(
+const TOTAL_POINTS_NP_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "totalPointsNp",
     "Total Points No Penalties",
     "Total NP",
@@ -35,7 +35,7 @@ const TOTAL_POINTS_NP_STAT: Stat<FullScores2021Shared> = makeStat(
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const AUTO_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoPoints",
     "Auto Points",
     "Auto",
@@ -44,7 +44,7 @@ const AUTO_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoPoints
 );
 
-const AUTO_FREIGHT_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_FREIGHT_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoFreightPoints",
     "Auto Freight Points",
     "Auto Freight",
@@ -53,7 +53,7 @@ const AUTO_FREIGHT_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoFreightPoints
 );
 
-const AUTO_FREIGHT1_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_FREIGHT1_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoFreight1",
     "Level 1 Freight",
     "Auto Freight 1",
@@ -62,7 +62,7 @@ const AUTO_FREIGHT1_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoFreightPointsLevel_1
 );
 
-const AUTO_FREIGHT2_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_FREIGHT2_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoFreight2",
     "Level 2 Freight",
     "Auto Freight 2",
@@ -71,7 +71,7 @@ const AUTO_FREIGHT2_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoFreightPointsLevel_2
 );
 
-const AUTO_FREIGHT3_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_FREIGHT3_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoFreight3",
     "Level 3 Freight",
     "Auto Freight 3",
@@ -80,7 +80,7 @@ const AUTO_FREIGHT3_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoFreightPointsLevel_3
 );
 
-const AUTO_FREIGHT_STORAGE_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_FREIGHT_STORAGE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoStorageFreight",
     "Storage Freight",
     "Auto Storage",
@@ -89,7 +89,7 @@ const AUTO_FREIGHT_STORAGE_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoFreightPointsLevel_3
 );
 
-const AUTO_CAROUSEL_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_CAROUSEL_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoCarouselPoints",
     "Auto Carousel Points",
     "Auto Carousel",
@@ -98,7 +98,7 @@ const AUTO_CAROUSEL_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoCarouselPoints
 );
 
-const AUTO_NAV_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_NAV_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoNavigationPoints",
     "Auto Navigation Points",
     "Auto Nav",
@@ -107,7 +107,7 @@ const AUTO_NAV_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.AutoNavigationPoints
 );
 
-const AUTO_BONUS_STAT: Stat<FullScores2021Shared> = makeStat(
+const AUTO_BONUS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "autoBonusPoints",
     "Auto Bonus Points",
     "Bonus",
@@ -118,7 +118,7 @@ const AUTO_BONUS_STAT: Stat<FullScores2021Shared> = makeStat(
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const DC_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
+const DC_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "driverControlledPoints",
     "Driver Controlled Points",
     "Teleop",
@@ -127,7 +127,7 @@ const DC_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.DriverControlledPoints
 );
 
-const DC_ALLIANCE_STAT: Stat<FullScores2021Shared> = makeStat(
+const DC_ALLIANCE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "driverControlledAllianceHubPoints",
     "Alliance Hub Points",
     "Hub",
@@ -137,7 +137,7 @@ const DC_ALLIANCE_STAT: Stat<FullScores2021Shared> = makeStat(
 );
 
 //TODO
-const DC_ALLIANCE1_STAT: Stat<FullScores2021Shared> = makeStat(
+const DC_ALLIANCE1_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "driverControlledFreight1",
     "Level 1 Freight",
     "Hub 1",
@@ -147,7 +147,7 @@ const DC_ALLIANCE1_STAT: Stat<FullScores2021Shared> = makeStat(
 );
 
 //TODO
-const DC_ALLIANCE2_STAT: Stat<FullScores2021Shared> = makeStat(
+const DC_ALLIANCE2_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "driverControlledFreight2",
     "Level 2 Freight",
     "Hub 2",
@@ -157,7 +157,7 @@ const DC_ALLIANCE2_STAT: Stat<FullScores2021Shared> = makeStat(
 );
 
 //TODO
-const DC_ALLIANCE3_STAT: Stat<FullScores2021Shared> = makeStat(
+const DC_ALLIANCE3_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "driverControlledFreight3",
     "Level 3 Freight",
     "Hub 3",
@@ -167,7 +167,7 @@ const DC_ALLIANCE3_STAT: Stat<FullScores2021Shared> = makeStat(
 );
 
 //TODO
-export const DC_STORAGE_STAT: Stat<FullScores2021Shared> = makeStat(
+export const DC_STORAGE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "driverControlledStoragePoints",
     "Storage Freight",
     "Storage",
@@ -187,7 +187,7 @@ const DC_SHARED_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const ENDGAME_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
+export const ENDGAME_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "endgamePoints",
     "Endgame Points",
     "Endgame",
@@ -196,7 +196,7 @@ export const ENDGAME_POINTS_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.EndgamePoints
 );
 
-export const ENDGAME_DELIVERY_STAT: Stat<FullScores2021Shared> = makeStat(
+export const ENDGAME_DELIVERY_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "endgameDeliveryPoints",
     "Delivery Points",
     "Delivery",
@@ -205,7 +205,7 @@ export const ENDGAME_DELIVERY_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.EndgameDeliveryPoints
 );
 
-export const ENDGAME_CAPPING_STAT: Stat<FullScores2021Shared> = makeStat(
+export const ENDGAME_CAPPING_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "cappingPoints",
     "Capping Points",
     "Capping",
@@ -214,7 +214,7 @@ export const ENDGAME_CAPPING_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.CappingPoints
 );
 
-export const ENDGAME_PARKING_STAT: Stat<FullScores2021Shared> = makeStat(
+export const ENDGAME_PARKING_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "endgameParkingPoints",
     "Parking Points",
     "Endgame Park",
@@ -223,7 +223,7 @@ export const ENDGAME_PARKING_STAT: Stat<FullScores2021Shared> = makeStat(
     Match2021FieldName.EndgameParkingPoints
 );
 
-export const ENDGAME_BALANCED_STAT: Stat<FullScores2021Shared> = makeStat(
+export const ENDGAME_BALANCED_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "allianceBalancedPoints",
     "Hub Balanced Points",
     "Hub Balanced",
@@ -243,7 +243,7 @@ const ENDGAME_TIPPED_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const PENALTIES_STAT: Stat<FullScores2021Shared> = makeStat(
+export const PENALTIES_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "penaltyPoints",
     "Penalty Points",
     "Penalties",
@@ -253,7 +253,7 @@ export const PENALTIES_STAT: Stat<FullScores2021Shared> = makeStat(
 );
 
 // TODO
-export const PENALTIES_MAJOR_STAT: Stat<FullScores2021Shared> = makeStat(
+export const PENALTIES_MAJOR_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "majorPenalties",
     "Major Penalties",
     "Majors",
@@ -263,7 +263,7 @@ export const PENALTIES_MAJOR_STAT: Stat<FullScores2021Shared> = makeStat(
 );
 
 // TODO
-export const PENALTIES_MINOR_STAT: Stat<FullScores2021Shared> = makeStat(
+export const PENALTIES_MINOR_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "minorPenalties",
     "Minor Penalties",
     "Minors",
@@ -293,8 +293,10 @@ type TeamsT =
           };
       };
 
-function extractTeam(data: TeamsT, num: 1 | 2 | 3): { number: number; name: string } | null {
-    if ("team" in data) {
+function extractTeam(data: TeamsT | null, num: 1 | 2 | 3): { number: number; name: string } | null {
+    if (data == null) {
+        return null;
+    } else if ("team" in data) {
         if (num == 1) return data.team.team;
         return null;
     } else {
@@ -309,7 +311,7 @@ function extractTeam(data: TeamsT, num: 1 | 2 | 3): { number: number; name: stri
     }
 }
 
-export const TEAM_1: Stat<TeamsT> = {
+export const TEAM_1: Stat<TeamsT | null> = {
     color: StatColor.WHITE,
     displayType: StatDisplayType.TEAM,
     listName: "Team 1",
@@ -320,7 +322,7 @@ export const TEAM_1: Stat<TeamsT> = {
     apiField: { fieldName: Match2021FieldName.Team1Number },
 };
 
-export const TEAM_2: Stat<TeamsT> = {
+export const TEAM_2: Stat<TeamsT | null> = {
     color: StatColor.WHITE,
     displayType: StatDisplayType.TEAM,
     listName: "Team 2",
@@ -331,7 +333,7 @@ export const TEAM_2: Stat<TeamsT> = {
     apiField: { fieldName: Match2021FieldName.Team2Number },
 };
 
-export const TEAM_3: Stat<TeamsT> = {
+export const TEAM_3: Stat<TeamsT | null> = {
     color: StatColor.WHITE,
     displayType: StatDisplayType.TEAM,
     listName: "Team 3",
@@ -391,7 +393,10 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                     color: StatColor.RED,
                     get: (s) =>
                         groupGetter(
-                            (t) => ({ ...t, data: "opponentsScore" in t.data ? t.data.opponentsScore : null }),
+                            (t) => ({
+                                ...t,
+                                data: t.data && "opponentsScore" in t.data ? t.data.opponentsScore : null,
+                            }),
                             s,
                             StatColor.RED,
                             "Opp",
@@ -540,7 +545,10 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                     color: StatColor.RED,
                     get: (s) =>
                         groupGetter(
-                            (t) => ({ ...t, data: "opponentsScore" in t.data ? t.data.opponentsScore : null }),
+                            (t) => ({
+                                ...t,
+                                data: t.data && "opponentsScore" in t.data ? t.data.opponentsScore : null,
+                            }),
                             s,
                             StatColor.WHITE,
                             "Opp",
@@ -571,7 +579,7 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
         name: "Info",
         type: "standalone",
         set: {
-            standalone: [MATH_DESCRIPTION_STAT, EVENT_STAT],
+            standalone: [MATH_DESCRIPTION_STAT as any, EVENT_STAT as any],
         },
     },
 ];
