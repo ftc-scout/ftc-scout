@@ -351,9 +351,25 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                     longName: "This",
                     shortName: "THIS",
                     description: "Points scored by the alliance the row is about.",
+                    color: StatColor.BLUE,
+                    get: (s) =>
+                        groupGetter((t) => ({ ...t, data: t.data }), s, StatColor.BLUE, "", "", "", MatchGroup.This),
+                },
+                {
+                    longName: "Opp",
+                    shortName: "OPP",
+                    description: "Points scored by the opposing alliance.",
                     color: StatColor.RED,
                     get: (s) =>
-                        groupGetter((t) => ({ ...t, data: t.data }), s, StatColor.RED, "", "", "", MatchGroup.This),
+                        groupGetter(
+                            (t) => ({ ...t, data: "opponentsScore" in t.data ? t.data.opponentsScore : null }),
+                            s,
+                            StatColor.RED,
+                            "Opp",
+                            "Opponent",
+                            "Opponent",
+                            MatchGroup.This
+                        ),
                 },
             ],
 
@@ -484,9 +500,25 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                     longName: "This",
                     shortName: "THIS",
                     description: "Teams on the alliance the row is about.",
-                    color: StatColor.RED,
+                    color: StatColor.BLUE,
                     get: (s) =>
                         groupGetter((t) => ({ ...t, data: t.data }), s, StatColor.WHITE, "", "", "", MatchGroup.This),
+                },
+                {
+                    longName: "Opp",
+                    shortName: "OPP",
+                    description: "Teams on the opposing alliance.",
+                    color: StatColor.RED,
+                    get: (s) =>
+                        groupGetter(
+                            (t) => ({ ...t, data: "opponentsScore" in t.data ? t.data.opponentsScore : null }),
+                            s,
+                            StatColor.WHITE,
+                            "Opp",
+                            "Opponent",
+                            "Opponent",
+                            MatchGroup.This
+                        ),
                 },
             ],
 

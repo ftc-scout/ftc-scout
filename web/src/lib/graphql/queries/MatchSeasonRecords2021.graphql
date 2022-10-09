@@ -20,7 +20,7 @@ query MatchSeasonRecords2021(
     ) {
         scores {
             score {
-                ...FullMatchScoresAlliance
+                __typename
                 ... on MatchScores2021TraditionalAlliance {
                     event {
                         ...RecordsEvent
@@ -35,6 +35,21 @@ query MatchSeasonRecords2021(
                             number
                             name
                         }
+                    }
+                    ...FullMatchScores2021TraditionalAlliance
+                    opponentsScore {
+                        teams {
+                            season
+                            eventCode
+                            matchId
+                            teamNumber
+                            station
+                            team {
+                                number
+                                name
+                            }
+                        }
+                        ...FullMatchScores2021TraditionalAlliance
                     }
                 }
                 ... on MatchScores2021Remote {
@@ -51,6 +66,10 @@ query MatchSeasonRecords2021(
                             name
                         }
                     }
+                    ...FullMatchScores2021Remote
+                }
+                ... on MatchScores2019Alliance {
+                    ...FullMatchScores2019Alliance
                 }
             }
             rank
