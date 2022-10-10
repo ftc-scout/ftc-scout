@@ -418,7 +418,7 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                             "Opp",
                             "Opponent",
                             "Opponent",
-                            MatchGroup.This
+                            MatchGroup.Other
                         ),
                 },
             ],
@@ -570,7 +570,7 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                             "Opp",
                             "Opponent",
                             "Opponent",
-                            MatchGroup.This
+                            MatchGroup.Other
                         ),
                 },
             ],
