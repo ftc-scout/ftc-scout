@@ -94,6 +94,30 @@
     }
 
     export let match2021SearchParams: string = "";
+
+    export function resetMatch2021SearchParams() {
+        shownStats.set([
+            THIS_TOTAL_POINTS_STAT,
+            THIS_AUTO_POINTS_STAT,
+            THIS_DC_POINTS_STAT,
+            THIS_ENDGAME_POINTS_STAT,
+            THIS_AUTO_FREIGHT_STAT,
+            THIS_DC_ALLIANCE_3_STAT,
+            THIS_DC_SHARED_STAT,
+            THIS_END_SHARED_STAT,
+            THIS_END_DELIVERED_STAT,
+            THIS_END_CAPPED_STAT,
+            TEAM_1,
+            TEAM_2,
+            TEAM_3,
+            MATCH_DESCRIPTION_STAT as any,
+            ALLIANCE_STAT as any,
+            EVENT_STAT as any,
+        ]);
+        currentSort.set(DEFAULT_SORT_MATCH_2021);
+        currentFilters.set(emptyFilter());
+        match2021SearchParams = "";
+    }
 </script>
 
 <script lang="ts">

@@ -12,9 +12,11 @@
     import Card from "../../../../lib/components/Card.svelte";
     import Dropdown from "../../../../lib/components/Dropdown.svelte";
     import TeamSeasonRecords2021, {
+        resetTeam2021SearchParams,
         team2021SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
     import TeamSeasonRecords2019, {
+        resetTeam2019SearchParams,
         team2019SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2019.svelte";
     import SkeletonRow from "../../../../lib/components/skeleton/SkeletonRow.svelte";
@@ -39,7 +41,10 @@
     import type { FullTep2021Shared } from "../../../../lib/util/stats/2021/StatsSharedTeams2021";
     import MatchSeasonRecords2021, {
         match2021SearchParams,
+        resetMatch2021SearchParams,
     } from "../../../../lib/components/season-records/MatchSeasonRecords2021.svelte";
+    import FaButton from "../../../../lib/components/FaButton.svelte";
+    import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -123,6 +128,25 @@
     $: gotoSubPage(season, selectedPage);
 
     let childrenChange: () => void = () => {};
+
+    let dateKey = 0;
+    function reset() {
+        if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
+            resetTeam2021SearchParams();
+            resetTeam2019SearchParams();
+            resetMatch2021SearchParams();
+
+            eventTypesStr = "Traditional and Remote";
+            regionStr = "All";
+            startDate = null;
+            endDate = null;
+            dateKey++;
+
+            goto(`/records/${season}/${selectedPage}`, {
+                replaceState: true,
+            });
+        }
+    }
 </script>
 
 <Head
@@ -155,14 +179,21 @@
         </div>
         <div>
             <span>From:</span>
-            <DateRange
-                style="width: calc(100% - 15ch)"
-                {season}
-                bind:startDate
-                bind:endDate
-                on:change={childrenChange}
-            />
+            {#key dateKey}
+                <DateRange
+                    style="width: calc(100% - 15ch)"
+                    {season}
+                    bind:startDate
+                    bind:endDate
+                    on:change={childrenChange}
+                />
+            {/key}
         </div>
+        {#if $page.url.search != ""}
+            <FaButton icon={faTrash} buttonStyle="font-size: var(--medium-font-size); width: 100%" on:click={reset}
+                >Reset All</FaButton
+            >
+        {/if}
     </Card>
 
     <TabbedCard

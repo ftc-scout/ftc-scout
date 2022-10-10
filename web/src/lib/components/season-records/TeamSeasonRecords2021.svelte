@@ -55,6 +55,24 @@
     }
 
     export let team2021SearchParams: string = "";
+
+    export function resetTeam2021SearchParams() {
+        shownStats.set([
+            TEAM_STAT,
+            OPR_STAT,
+            NP_OPR_STAT,
+            AUTO_OPR_STAT,
+            TELEOP_OPR_STAT,
+            ENDGAME_OPR_STAT,
+            AVERAGE_STAT,
+            EVENT_RANK_STAT,
+            EVENT_STAT_2021 as any,
+            RECORD_STAT,
+        ]);
+        currentSort.set(DEFAULT_SORT_TEAM_2021);
+        currentFilters.set(emptyFilter());
+        team2021SearchParams = "";
+    }
 </script>
 
 <script lang="ts">
