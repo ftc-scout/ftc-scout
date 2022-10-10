@@ -215,12 +215,8 @@
         gap: var(--gap);
     }
 
-    .name {
-        font-style: italic;
-    }
-
     .loc {
         color: var(--secondary-text-color);
-        /* font-size: var(--small-font-size); */
+        font-style: italic;
     }
 </style>
