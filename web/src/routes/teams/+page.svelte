@@ -6,6 +6,7 @@
     import { onDestroy, onMount } from "svelte";
     import { query, type ReadableQuery } from "svelte-apollo";
     import FaButton from "../../lib/components/FaButton.svelte";
+    import Location from "../../lib/components/Location.svelte";
     import Head from "../../lib/components/nav/Head.svelte";
     import { changeParam } from "../../lib/components/season-records/changeParams";
     import RegionsDropdown from "../../lib/components/season-records/RegionsDropdown.svelte";
@@ -104,10 +105,11 @@
                 {#each currentData as team}
                     <li>
                         <a sveltekit:prefetch href="/teams/{team.number}">
-                            <span style="min-width: 5ch; display: inline-block">{team.number}</span>
-                            <em class="info">
-                                {team.name}
-                            </em>
+                            <span class="num" style="min-width: 5ch; display: inline-block">{team.number}</span>
+                            <span class="info">
+                                <span class="name">{team.name}</span>
+                                <span class="loc"><Location {...team} link={false} /></span>
+                            </span>
                         </a>
                     </li>
                 {:else}
@@ -161,6 +163,8 @@
 
     li:hover {
         background: var(--hover-color);
+
+        border-radius: 6px;
     }
 
     a {
@@ -168,14 +172,14 @@
         height: 100%;
         color: inherit;
 
-        display: block;
+        display: flex;
+        align-items: center;
+        gap: var(--large-gap);
         padding: var(--small-padding);
-
-        border-radius: 6px;
     }
 
     li:not(:last-child) a {
-        margin-bottom: var(--gap);
+        margin-bottom: var(--large-gap);
     }
 
     a:hover {
@@ -198,5 +202,25 @@
         justify-content: center;
 
         font-size: var(--large-font-size);
+    }
+
+    .num {
+        text-align: center;
+        font-size: var(--large-font-size);
+    }
+
+    .info {
+        display: flex;
+        flex-direction: column;
+        gap: var(--gap);
+    }
+
+    .name {
+        font-style: italic;
+    }
+
+    .loc {
+        color: var(--secondary-text-color);
+        /* font-size: var(--small-font-size); */
     }
 </style>
