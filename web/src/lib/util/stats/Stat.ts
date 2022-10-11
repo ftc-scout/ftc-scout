@@ -144,6 +144,32 @@ export function makeStatMaybe<T, S>(
     };
 }
 
+export function makeStatFn<T>(
+    fn: (_: StatData<T>) => any,
+    listName: string,
+    columnName: string,
+    identifierName: string,
+    displayWhen: DisplayWhen,
+    apiFieldName: Tep2021FieldName | Tep2019FieldName | Match2021FieldName,
+    apiGroupName: Tep2021Group | Tep2019Group | MatchGroup | null = null,
+    color: StatColor = StatColor.PURPLE,
+    displayType: StatDisplayType = StatDisplayType.INTEGER
+): Stat<T> {
+    return {
+        color,
+        displayType,
+        listName,
+        columnName,
+        identifierName,
+        displayWhen,
+        read: (s) => fn(s),
+        apiField: {
+            fieldName: apiFieldName,
+            group: apiGroupName,
+        } as Tep2021Field | Tep2019Field | Match2021Field,
+    };
+}
+
 export function distillStatRead(data: ReturnType<Stat<unknown>["read"]>): number | string | null {
     if (data == null) {
         return null;

@@ -7,7 +7,7 @@ import {
     type MatchScores2021TraditionalAlliance,
     type RecordsEventFragment,
 } from "../../../graphql/generated/graphql-operations";
-import { DisplayWhen, makeStat, makeStatMaybe, type Stat } from "../Stat";
+import { DisplayWhen, makeStatFn, makeStatMaybe, type Stat } from "../Stat";
 import { StatColor } from "../stat-color";
 import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
@@ -54,29 +54,29 @@ const AUTO_FREIGHT_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     Match2021FieldName.AutoFreightPoints
 );
 
-const AUTO_FREIGHT1_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "autoFreight1",
-    "Level 1 Freight",
+const AUTO_FREIGHT1_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.autoFreight1 * 6 : null),
+    "Level 1 Freight Points",
     "Auto Freight 1",
-    "Auto Freight Level 1",
+    "Auto Freight Level 1 Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.AutoFreightPointsLevel_1
 );
 
-const AUTO_FREIGHT2_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "autoFreight2",
-    "Level 2 Freight",
+const AUTO_FREIGHT2_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.autoFreight2 * 6 : null),
+    "Level 2 Freight Points",
     "Auto Freight 2",
-    "Auto Freight Level 2",
+    "Auto Freight Level 2 Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.AutoFreightPointsLevel_2
 );
 
-const AUTO_FREIGHT3_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "autoFreight3",
-    "Level 3 Freight",
+const AUTO_FREIGHT3_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.autoFreight3 * 6 : null),
+    "Level 3 Freight Points",
     "Auto Freight 3",
-    "Auto Freight Level 3",
+    "Auto Freight Level 3 Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.AutoFreightPointsLevel_3
 );
@@ -137,42 +137,38 @@ const DC_ALLIANCE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     Match2021FieldName.DriverControlledAllianceHubPoints
 );
 
-//TODO
-const DC_ALLIANCE1_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "driverControlledFreight1",
-    "Level 1 Freight",
+const DC_ALLIANCE1_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.driverControlledFreight1 * 2 : null),
+    "Level 1 Freight Points",
     "Hub 1",
-    "Driver Controlled Alliance Hub Level 1 Freight",
+    "Driver Controlled Alliance Hub Level 1 Freight Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.DriverControlledAllianceHubPointsLevel_1
 );
 
-//TODO
-const DC_ALLIANCE2_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "driverControlledFreight2",
-    "Level 2 Freight",
+const DC_ALLIANCE2_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.driverControlledFreight2 * 4 : null),
+    "Level 2 Freight Points",
     "Hub 2",
-    "Driver Controlled Alliance Hub Level 2 Freight",
+    "Driver Controlled Alliance Hub Level 2 Freight Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.DriverControlledAllianceHubPointsLevel_2
 );
 
-//TODO
-const DC_ALLIANCE3_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "driverControlledFreight3",
-    "Level 3 Freight",
+const DC_ALLIANCE3_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.driverControlledFreight3 * 4 : null),
+    "Level 3 Freight Points",
     "Hub 3",
-    "Driver Controlled Alliance Hub Level 3 Freight",
+    "Driver Controlled Alliance Hub Level 3 Freight Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.DriverControlledAllianceHubPointsLevel_3
 );
 
-//TODO
 export const DC_STORAGE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     "driverControlledStoragePoints",
-    "Storage Freight",
+    "Storage Freight Points",
     "Storage",
-    "Driver Controlled Storage Freight",
+    "Driver Controlled Storage Freight Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.DriverControlledStoragePoints
 );
@@ -253,22 +249,20 @@ export const PENALTIES_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
     Match2021FieldName.PenaltyPoints
 );
 
-// TODO
-export const PENALTIES_MAJOR_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "majorPenalties",
-    "Major Penalties",
+export const PENALTIES_MAJOR_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.majorPenalties * -30 : null),
+    "Major Penalty Points",
     "Majors",
-    "Major Penalties",
+    "Major Penalty Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.MajorPenaltyPoints
 );
 
-// TODO
-export const PENALTIES_MINOR_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "minorPenalties",
-    "Minor Penalties",
+export const PENALTIES_MINOR_STAT: Stat<FullScores2021Shared> = makeStatFn(
+    (s) => (s.data ? s.data.minorPenalties * -10 : null),
+    "Minor Penalty Points",
     "Minors",
-    "Minor Penalties",
+    "Minor Penalty Points",
     DisplayWhen.ALWAYS,
     Match2021FieldName.MinorPenaltyPoints
 );
