@@ -141,10 +141,6 @@
             startDate = null;
             endDate = null;
             dateKey++;
-
-            goto(`/records/${season}/${selectedPage}`, {
-                replaceState: true,
-            });
         }
     }
 </script>

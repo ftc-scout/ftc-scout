@@ -161,7 +161,6 @@
     $: isDefaultSort =
         $currentSort.type == DEFAULT_SORT_MATCH_2021.type &&
         $currentSort.stat.identifierName == DEFAULT_SORT_MATCH_2021.stat.identifierName;
-    console.log($shownStats);
     $: isDefaultShownStats = arraysEqual(
         DEFAULT_SHOWN_STATS.map((s) => s.identifierName),
         $shownStats.map((s) => s.identifierName)
