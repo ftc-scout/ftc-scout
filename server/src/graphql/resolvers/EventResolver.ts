@@ -14,6 +14,7 @@ import { Brackets } from "typeorm";
 import { EventTypes } from "./records.ts/EventTypes";
 import { getRegionCodes, Region } from "../../db/entities/types/Region";
 import fuzzysort from "fuzzysort";
+import { TeamEventParticipation2020 } from "../../db/entities/team-event-participation/TeamEventParticipation2020";
 
 @Resolver(Event)
 export class EventResolver {
@@ -135,11 +136,17 @@ export class EventResolver {
     @FieldResolver(() => [TeamEventParticipation])
     @Loader<{ eventSeason: number; eventCode: string }, TeamEventParticipation[]>(async (ids, _) => {
         let ids2021 = ids.filter((id) => id.eventSeason == 2021);
+        let ids2020 = ids.filter((id) => id.eventSeason == 2020);
         let ids2019 = ids.filter((id) => id.eventSeason == 2019);
 
         let teps2021P = ids2021.length
             ? TeamEventParticipation2021.find({
                   where: ids2021 as { eventSeason: number; eventCode: string }[],
+              })
+            : [];
+        let teps2020P = ids2020.length
+            ? TeamEventParticipation2020.find({
+                  where: ids2020 as { eventSeason: number; eventCode: string }[],
               })
             : [];
         let teps2019P = ids2019.length
@@ -148,8 +155,8 @@ export class EventResolver {
               })
             : [];
 
-        let [teps2021, teps2019] = await Promise.all([teps2021P, teps2019P]);
-        let teps = [...teps2021, ...teps2019];
+        let [teps2021, teps2020, teps2019] = await Promise.all([teps2021P, teps2020P, teps2019P]);
+        let teps = [...teps2021, ...teps2020, ...teps2019];
 
         let groups: TeamEventParticipation[][] = ids.map((_) => []);
 

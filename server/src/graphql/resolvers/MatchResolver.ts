@@ -10,58 +10,72 @@ import { MatchScoresUnion } from "../objects/MatchScoresUnion";
 import DataLoader from "dataloader";
 import { MatchScores2019Graphql } from "../objects/MatchScores2019Graphql";
 import { MatchScores2019 } from "../../db/entities/MatchScores2019";
+import { MatchScores2020 } from "../../db/entities/MatchScores2020";
+import { MatchScores2020RemoteGraphql } from "../objects/MatchScores2020RemoteGraphql";
+import { MatchScores2020TradGraphql } from "../objects/MatchScores2020TradGraphql";
 
 @Resolver(Match)
 export class MatchResolver {
     // Ugly hack because type-graphql-dataloader can't deal with eager fields.
     @FieldResolver(() => MatchScoresUnion, { nullable: true })
-    @Loader<{ season: Season; eventCode: string; matchId: number }, (MatchScores2021 | MatchScores2019)[]>(
-        async (ids, _) => {
-            let ids2021 = ids.filter((id) => id.season == 2021);
-            let ids2019 = ids.filter((id) => id.season == 2019);
+    @Loader<
+        { season: Season; eventCode: string; matchId: number },
+        (MatchScores2021 | MatchScores2020 | MatchScores2019)[]
+    >(async (ids, _) => {
+        let ids2021 = ids.filter((id) => id.season == 2021);
+        let ids2020 = ids.filter((id) => id.season == 2020);
+        let ids2019 = ids.filter((id) => id.season == 2019);
 
-            let scores2021P = ids2021.length
-                ? await MatchScores2021.find({
-                      where: ids2021 as {
-                          season: Season;
-                          eventCode: string;
-                          matchId: number;
-                      }[],
-                  })
-                : [];
-            let scores2019P = ids2019.length
-                ? await MatchScores2019.find({
-                      where: ids2019 as {
-                          season: Season;
-                          eventCode: string;
-                          matchId: number;
-                      }[],
-                  })
-                : [];
+        let scores2021P = ids2021.length
+            ? await MatchScores2021.find({
+                  where: ids2021 as {
+                      season: Season;
+                      eventCode: string;
+                      matchId: number;
+                  }[],
+              })
+            : [];
+        let scores2020P = ids2020.length
+            ? await MatchScores2020.find({
+                  where: ids2020 as {
+                      season: Season;
+                      eventCode: string;
+                      matchId: number;
+                  }[],
+              })
+            : [];
+        let scores2019P = ids2019.length
+            ? await MatchScores2019.find({
+                  where: ids2019 as {
+                      season: Season;
+                      eventCode: string;
+                      matchId: number;
+                  }[],
+              })
+            : [];
 
-            let [scores2021, scores2019] = await Promise.all([scores2021P, scores2019P]);
-            let scores = [...scores2021, ...scores2019];
+        let [scores2021, scores2020, scores2019] = await Promise.all([scores2021P, scores2020P, scores2019P]);
+        let scores = [...scores2021, ...scores2020, ...scores2019];
 
-            let groups: (MatchScores2021 | MatchScores2019)[][] = ids.map((_) => []);
+        let groups: (MatchScores2021 | MatchScores2020 | MatchScores2019)[][] = ids.map((_) => []);
 
-            for (let s of scores) {
-                for (let i = 0; i < ids.length; i++) {
-                    let id = ids[i];
-                    if (id.season == s.season && id.eventCode == s.eventCode && id.matchId == s.matchId) {
-                        groups[i].push(s);
-                        break;
-                    }
+        for (let s of scores) {
+            for (let i = 0; i < ids.length; i++) {
+                let id = ids[i];
+                if (id.season == s.season && id.eventCode == s.eventCode && id.matchId == s.matchId) {
+                    groups[i].push(s);
+                    break;
                 }
             }
-
-            return groups;
         }
-    )
+
+        return groups;
+    })
     async scores(@Root() _match: Match) {
         return async (
             dl: DataLoader<
                 { season: Season; eventCode: string; matchId: number },
-                (MatchScores2021 | MatchScores2019)[]
+                (MatchScores2021 | MatchScores2020 | MatchScores2019)[]
             >
         ) => {
             let scores = await dl.load({
@@ -84,6 +98,21 @@ export class MatchResolver {
                             return new MatchScores2021TradGraphql(
                                 scores[1] as MatchScores2021,
                                 scores[0] as MatchScores2021
+                            );
+                    }
+                } else if (_match.eventSeason == Season.ULTIMATE_GOAL) {
+                    switch (scores[0].alliance) {
+                        case Alliance.SOLO:
+                            return new MatchScores2020RemoteGraphql(scores[0] as MatchScores2020);
+                        case Alliance.RED:
+                            return new MatchScores2020TradGraphql(
+                                scores[0] as MatchScores2020,
+                                scores[1] as MatchScores2020
+                            );
+                        case Alliance.BLUE:
+                            return new MatchScores2020TradGraphql(
+                                scores[1] as MatchScores2020,
+                                scores[0] as MatchScores2020
                             );
                     }
                 } else if (_match.eventSeason == Season.SKYSTONE) {

@@ -13,6 +13,9 @@ export class TeamEventParticipation2020 extends BaseEntity {
     @PrimaryColumn("int")
     teamNumber!: number;
 
+    @Column()
+    isRemote!: boolean;
+
     @Column("int", { nullable: true })
     @Index()
     rp!: number | null;
