@@ -59,8 +59,11 @@
         <h3>Fast, Secure, and Accessible</h3>
         <p>
             We designed FTC<em>Scout</em> with performance, security, and accessability in mind. FTC<em>Scout</em> pages
-            load fast and with all data at the same time instead of popping in slowly. As a result of optimizations FTC
-            <em> Scout </em> receives exceptional
+            load fast and with all data at the same time instead of popping in slowly. As a result of optimizations FTC<em
+            >
+                Scout
+            </em>
+            receives exceptional
             <a href="https://en.wikipedia.org/wiki/Google_Lighthouse"> Google Lighthouse </a> scores and A+ security ratings
             from several auditors.
         </p>
