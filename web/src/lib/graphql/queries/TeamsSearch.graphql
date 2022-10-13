@@ -2,5 +2,8 @@ query TeamsSearch($limit: Int!, $region: Region, $searchText: String!) {
     teamsSearch(limit: $limit, region: $region, searchText: $searchText) {
         number
         name
+        city
+        stateOrProvince
+        country
     }
 }

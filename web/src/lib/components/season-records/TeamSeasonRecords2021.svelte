@@ -55,6 +55,24 @@
     }
 
     export let team2021SearchParams: string = "";
+
+    export function resetTeam2021SearchParams() {
+        shownStats.set([
+            TEAM_STAT,
+            OPR_STAT,
+            NP_OPR_STAT,
+            AUTO_OPR_STAT,
+            TELEOP_OPR_STAT,
+            ENDGAME_OPR_STAT,
+            AVERAGE_STAT,
+            EVENT_RANK_STAT,
+            EVENT_STAT_2021 as any,
+            RECORD_STAT,
+        ]);
+        currentSort.set(DEFAULT_SORT_TEAM_2021);
+        currentFilters.set(emptyFilter());
+        team2021SearchParams = "";
+    }
 </script>
 
 <script lang="ts">
@@ -77,7 +95,7 @@
     } from "../../util/stats/2021/StatsSharedTeams2021";
     import { SortType } from "../SortButton.svelte";
     import StatsTable, { type ChosenSort, type StatData } from "../stats/StatsTable.svelte";
-    import { filterStatSet, findInStatSet, type StatSet } from "../../util/stats/StatSet";
+    import { findInStatSet, type StatSet } from "../../util/stats/StatSet";
     import TeamSelectionBar from "../TeamSelectionBar.svelte";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import { EVENT_STAT_2021, STAT_SET_EVENT_2021 } from "$lib/util/stats/StatsEvent";
@@ -137,8 +155,8 @@
         });
     $: if ($page.params.tab == "teams") team2021SearchParams = $page.url.searchParams.toString();
 
-    function change() {
-        currPage = 0;
+    export function change() {
+        currPage = 1;
     }
 </script>
 

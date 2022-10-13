@@ -10,15 +10,23 @@ import {
     DEFAULT_SORT_TEAM_2019,
     getStatSet2019Teams,
 } from "$lib/components/season-records/TeamSeasonRecords2019.svelte";
+import {
+    DEFAULT_SORT_MATCH_2019,
+    getStatSet2019Matches,
+} from "$lib/components/season-records/MatchSeasonRecords2019.svelte";
 import { SortType } from "$lib/components/SortButton.svelte";
 import { getMyClient } from "$lib/graphql/client";
 import {
     EventTypes,
+    MatchSeasonRecords2019Document,
     MatchSeasonRecords2021Document,
     Order,
     Region,
     TeamSeasonRecords2019Document,
     TeamSeasonRecords2021Document,
+    type Match2019Field,
+    type Match2019Filter,
+    type Match2019Ordering,
     type Match2021Field,
     type Match2021Filter,
     type Match2021Ordering,
@@ -68,15 +76,16 @@ export function eventTypesToStr(str: EventTypes): "Traditional" | "Remote" | "Tr
 }
 
 export const load: PageLoad = async ({ fetch, params, url }) => {
+    let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
+
+    let start = readDateFromUrl(url.searchParams.get("start"));
+    let end = readDateFromUrl(url.searchParams.get("end"));
+
+    let take = +(url.searchParams.get("take") ?? "50");
+    let page = +(url.searchParams.get("page") ?? "1");
+
     if (params.season == "2021") {
         let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.TradAndRemote;
-        let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
-
-        let start = readDateFromUrl(url.searchParams.get("start"));
-        let end = readDateFromUrl(url.searchParams.get("end"));
-
-        let take = +(url.searchParams.get("take") ?? "50");
-        let page = +(url.searchParams.get("page") ?? "1");
 
         if (params.tab == "teams") {
             let statSet = getStatSet2021Teams(eventTypes);
@@ -173,14 +182,6 @@ export const load: PageLoad = async ({ fetch, params, url }) => {
         if (params.tab == "teams") {
             let statSet = getStatSet2019Teams();
 
-            let region = regionFromStr(url.searchParams.get("region") ?? "All") ?? Region.All;
-
-            let start = readDateFromUrl(url.searchParams.get("start"));
-            let end = readDateFromUrl(url.searchParams.get("end"));
-
-            let take = +(url.searchParams.get("take") ?? "50");
-            let page = +(url.searchParams.get("page") ?? "1");
-
             let order: Tep2019Ordering[] = [
                 {
                     field: DEFAULT_SORT_TEAM_2019.stat.apiField as Tep2019Field,
@@ -222,7 +223,48 @@ export const load: PageLoad = async ({ fetch, params, url }) => {
                 teams2019: recordsData,
             };
         } else if (params.tab == "matches") {
-            return {};
+            let statSet = getStatSet2019Matches();
+
+            let order: Match2019Ordering[] = [
+                {
+                    field: DEFAULT_SORT_MATCH_2019.stat.apiField as Match2019Field,
+                    order: DEFAULT_SORT_MATCH_2019.type == SortType.HIGH_LOW ? Order.Desc : Order.Asc,
+                },
+            ];
+            let sortStatIdenName = url.searchParams.get("sort") ?? null;
+            if (sortStatIdenName) {
+                let sortStat = findInStatSet(statSet, sortStatIdenName);
+                if (sortStat) {
+                    let field = sortStat.apiField;
+                    let direction = url.searchParams.get("sort-dir") == "reverse" ? Order.Asc : Order.Desc;
+                    order = [{ field: field as Match2019Field, order: direction }, ...order];
+                }
+            }
+
+            let filter = emptyFilter();
+            let filterParam = url.searchParams.get("filter") ?? null;
+            if (filterParam != null) {
+                try {
+                    let parsed = JSON.parse(filterParam);
+                    let urlFilter = simpleJsonToFilter(parsed, statSet);
+                    if (urlFilter) filter = urlFilter;
+                } catch {}
+            }
+            let apiFilter = filterToApiFilter(filter);
+
+            let recordsData = await getData(getMyClient(fetch), MatchSeasonRecords2019Document, {
+                skip: Math.max((page - 1) * take, 0),
+                take,
+                filter: apiFilter as Match2019Filter,
+                order,
+                region,
+                start,
+                end,
+            });
+
+            return {
+                matches2019: recordsData,
+            };
         } else {
             throw "impossible";
         }

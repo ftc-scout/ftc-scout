@@ -5,6 +5,9 @@ import DataLoader from "dataloader";
 import { MatchScores2019AllianceGraphql } from "../../objects/MatchScores2019Graphql";
 import { TeamMatchParticipation } from "../../../db/entities/TeamMatchParticipation";
 import { stationMatchesAlliance } from "../../../db/entities/types/Station";
+import { Match } from "../../../db/entities/Match";
+import { Alliance, otherAlliance } from "../../../db/entities/types/Alliance";
+import { MatchScores2019 } from "../../../db/entities/MatchScores2019";
 
 @Resolver(MatchScores2019AllianceGraphql)
 export class Scores2019Resolver {
@@ -21,6 +24,27 @@ export class Scores2019Resolver {
             return dl.load({
                 season: score.season,
                 code: score.eventCode,
+            });
+        };
+    }
+
+    @FieldResolver(() => Match)
+    @Loader<{ eventSeason: number; eventCode: string; id: number }, Match>(async (ids, _) => {
+        let matches = await Match.find({
+            where: ids as { eventSeason: number; eventCode: string; id: number }[],
+        });
+
+        return ids.map(
+            (id) =>
+                matches.find((t) => t.eventSeason == id.eventSeason && t.eventCode == id.eventCode && t.id == id.id)!
+        );
+    })
+    match(@Root() score: MatchScores2019AllianceGraphql) {
+        return async (dl: DataLoader<{ eventSeason: number; eventCode: string; id: number }, Event>) => {
+            return dl.load({
+                eventSeason: score.season,
+                eventCode: score.eventCode,
+                id: score.matchId,
             });
         };
     }
@@ -45,6 +69,44 @@ export class Scores2019Resolver {
                 matchId: score.matchId,
             });
             return all.filter((t) => stationMatchesAlliance(score.alliance, t.station));
+        };
+    }
+
+    @FieldResolver(() => MatchScores2019AllianceGraphql)
+    @Loader<{ season: number; eventCode: string; matchId: number; alliance: Alliance }, MatchScores2019>(
+        async (ids, _) => {
+            let mappedIds = ids.map((id) => ({
+                ...id,
+                alliance: otherAlliance(id.alliance),
+            }));
+
+            let teams = await MatchScores2019.find({
+                where: mappedIds,
+            });
+
+            return ids.map(
+                (id) =>
+                    teams.find(
+                        (t) =>
+                            t.season == id.season &&
+                            t.eventCode == id.eventCode &&
+                            t.matchId == id.matchId &&
+                            t.alliance != id.alliance
+                    )!
+            );
+        }
+    )
+    opponentsScore(@Root() score: MatchScores2019AllianceGraphql) {
+        return async (
+            dl: DataLoader<{ season: number; eventCode: string; matchId: number; alliance: Alliance }, MatchScores2019>
+        ) => {
+            let oppScore = await dl.load({
+                season: score.season,
+                eventCode: score.eventCode,
+                matchId: score.matchId,
+                alliance: score.alliance,
+            });
+            return new MatchScores2019AllianceGraphql(oppScore);
         };
     }
 }

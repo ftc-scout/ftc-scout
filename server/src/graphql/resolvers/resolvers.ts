@@ -3,6 +3,7 @@ import { AwardResolver } from "./AwardResolver";
 import { EventResolver } from "./EventResolver";
 import { HomePageResolver } from "./HomePageResolver";
 import { MatchResolver } from "./MatchResolver";
+import { MatchSeasonRecords2019Resolver } from "./records.ts/MatchSeasonRecords2019";
 import { MatchSeasonRecords2021Resolver } from "./records.ts/MatchSeasonRecords2021";
 import { TeamSeasonRecords2019Resolver } from "./records.ts/TeamSeasonRecords2019";
 import { TeamSeasonRecords2021Resolver } from "./records.ts/TeamSeasonRecords2021";
@@ -22,6 +23,7 @@ export const resolvers: NonEmptyArray<Function> = [
     TeamSeasonRecords2021Resolver,
     MatchSeasonRecords2021Resolver,
     TeamSeasonRecords2019Resolver,
+    MatchSeasonRecords2019Resolver,
     HomePageResolver,
     Scores2021TradResolver,
     Scores2021RemoteResolver,

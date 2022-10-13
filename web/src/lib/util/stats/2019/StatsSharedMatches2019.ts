@@ -1,270 +1,189 @@
 import {
     Alliance,
-    Match2021FieldName,
+    Match2019FieldName,
     MatchGroup,
     Station,
-    type MatchScores2021Remote,
-    type MatchScores2021TraditionalAlliance,
+    type MatchScores2019Alliance,
     type RecordsEventFragment,
 } from "../../../graphql/generated/graphql-operations";
 import { DisplayWhen, makeStatFn, makeStatMaybe, type Stat } from "../Stat";
 import { StatColor } from "../stat-color";
 import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
+import { TOTAL_NP_STAT } from "./StatsTeams2019";
 
-export type FullScores2021Shared = MatchScores2021TraditionalAlliance | MatchScores2021Remote | null;
+export type FullScores2019Shared = MatchScores2019Alliance;
 
-const TOTAL_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
+const TOTAL_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
     "totalPoints",
     "Total Points",
     "Total",
     "Total Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.TotalPoints,
+    Match2019FieldName.TotalPoints,
     null
 );
 
-const TOTAL_POINTS_NP_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
+const TOTAL_POINTS_NP_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
     "totalPointsNp",
     "Total Points No Penalties",
     "Total NP",
     "Total Points No Penalties",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.TotalPointsNp,
+    Match2019FieldName.TotalPointsNp,
     null
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const AUTO_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
+const AUTO_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
     "autoPoints",
     "Auto Points",
     "Auto",
     "Auto Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoPoints
+    Match2019FieldName.AutoPoints
 );
 
-const AUTO_FREIGHT_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "autoFreightPoints",
-    "Auto Freight Points",
-    "Auto Freight",
-    "Auto Freight Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoFreightPoints
-);
-
-const AUTO_FREIGHT1_STAT: Stat<FullScores2021Shared> = makeStatFn(
-    (s) => (s.data ? s.data.autoFreight1 * 6 : null),
-    "Level 1 Freight Points",
-    "Auto Freight 1",
-    "Auto Freight Level 1 Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoFreightPointsLevel_1
-);
-
-const AUTO_FREIGHT2_STAT: Stat<FullScores2021Shared> = makeStatFn(
-    (s) => (s.data ? s.data.autoFreight2 * 6 : null),
-    "Level 2 Freight Points",
-    "Auto Freight 2",
-    "Auto Freight Level 2 Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoFreightPointsLevel_2
-);
-
-const AUTO_FREIGHT3_STAT: Stat<FullScores2021Shared> = makeStatFn(
-    (s) => (s.data ? s.data.autoFreight3 * 6 : null),
-    "Level 3 Freight Points",
-    "Auto Freight 3",
-    "Auto Freight Level 3 Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoFreightPointsLevel_3
-);
-
-const AUTO_FREIGHT_STORAGE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "autoStorageFreight",
-    "Storage Freight",
-    "Auto Storage",
-    "Auto Freight Storage",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoFreightPointsLevel_3
-);
-
-const AUTO_CAROUSEL_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "autoCarouselPoints",
-    "Auto Carousel Points",
-    "Auto Carousel",
-    "Auto Carousel Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoCarouselPoints
-);
-
-const AUTO_NAV_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
+const AUTO_NAV_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
     "autoNavigationPoints",
     "Auto Navigation Points",
     "Auto Nav",
     "Auto Navigation Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoNavigationPoints
+    Match2019FieldName.AutoNavigationPoints
 );
 
-const AUTO_BONUS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "autoBonusPoints",
-    "Auto Bonus Points",
-    "Bonus",
-    "Auto Bonus Points",
+const AUTO_REPOSITIONING_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "autoRepositioningPoints",
+    "Auto Repositioning Points",
+    "Repositioning",
+    "Auto Repositioning Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.AutoBonusPoints
+    Match2019FieldName.AutoRepositioningPoints
+);
+
+const AUTO_DELIVERY_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "autoDeliveryPoints",
+    "Auto Delivery Points",
+    "Auto Delivery",
+    "Auto Delivery Points",
+    DisplayWhen.ALWAYS,
+    Match2019FieldName.AutoDeliveryPoints
+);
+
+export const AUTO_PLACEMENT_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "autoPlacementPoints",
+    "Auto Placement Points",
+    "Auto Placement",
+    "Auto Placement Points",
+    DisplayWhen.ALWAYS,
+    Match2019FieldName.AutoPlacementPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const DC_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "driverControlledPoints",
+const DC_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "dcPoints",
     "Driver Controlled Points",
     "Teleop",
     "Driver Controlled Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.DriverControlledPoints
+    Match2019FieldName.DriverControlledPoints
 );
 
-const DC_ALLIANCE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "driverControlledAllianceHubPoints",
-    "Alliance Hub Points",
-    "Hub",
-    "Driver Controlled Alliance Hub Points",
+const DC_DELIVERY_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "dcDeliveryPoints",
+    "Delivery Points",
+    "Delivery",
+    "Driver Controlled Delivery Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.DriverControlledAllianceHubPoints
+    Match2019FieldName.DcDeliveryPoints
 );
 
-const DC_ALLIANCE1_STAT: Stat<FullScores2021Shared> = makeStatFn(
-    (s) => (s.data ? s.data.driverControlledFreight1 * 2 : null),
-    "Level 1 Freight Points",
-    "Hub 1",
-    "Driver Controlled Alliance Hub Level 1 Freight Points",
+const DC_PLACEMENT_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "dcPlacementPoints",
+    "Placement Points",
+    "Placement",
+    "Driver Controlled Placement Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.DriverControlledAllianceHubPointsLevel_1
+    Match2019FieldName.DcPlacementPoints
 );
 
-const DC_ALLIANCE2_STAT: Stat<FullScores2021Shared> = makeStatFn(
-    (s) => (s.data ? s.data.driverControlledFreight2 * 4 : null),
-    "Level 2 Freight Points",
-    "Hub 2",
-    "Driver Controlled Alliance Hub Level 2 Freight Points",
+const DC_SKYSCRAPER_BONUS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "dcSkyscraperBonusPoints",
+    "Skyscraper Points",
+    "Skyscapper",
+    "Driver Controlled Skyscapper Bonus Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.DriverControlledAllianceHubPointsLevel_2
-);
-
-const DC_ALLIANCE3_STAT: Stat<FullScores2021Shared> = makeStatFn(
-    (s) => (s.data ? s.data.driverControlledFreight3 * 4 : null),
-    "Level 3 Freight Points",
-    "Hub 3",
-    "Driver Controlled Alliance Hub Level 3 Freight Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.DriverControlledAllianceHubPointsLevel_3
-);
-
-export const DC_STORAGE_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "driverControlledStoragePoints",
-    "Storage Freight Points",
-    "Storage",
-    "Driver Controlled Storage Freight Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.DriverControlledStoragePoints
-);
-
-const DC_SHARED_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "driverControlledSharedHubPoints",
-    "Shared Hub Points",
-    "Shared",
-    "Driver Controlled Shared Hub Points",
-    DisplayWhen.TRAD,
-    Match2021FieldName.DriverControlledSharedHubPoints
+    Match2019FieldName.DcSkyscraperBonusPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const ENDGAME_POINTS_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
+export const ENDGAME_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
     "endgamePoints",
     "Endgame Points",
     "Endgame",
     "Endgame Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.EndgamePoints
+    Match2019FieldName.EndgamePoints
 );
 
-export const ENDGAME_DELIVERY_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "endgameDeliveryPoints",
-    "Delivery Points",
-    "Delivery",
-    "Endgame Delivery Points",
-    DisplayWhen.ALWAYS,
-    Match2021FieldName.EndgameDeliveryPoints
-);
-
-export const ENDGAME_CAPPING_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
+export const ENDGAME_CAPPING_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
     "cappingPoints",
     "Capping Points",
     "Capping",
     "Endgame Capping Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.CappingPoints
+    Match2019FieldName.CappingPoints
 );
 
-export const ENDGAME_PARKING_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "endgameParkingPoints",
+export const ENDGAME_PARKING_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "parkingPoints",
     "Parking Points",
     "Endgame Park",
     "Endgame Parking Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.EndgameParkingPoints
+    Match2019FieldName.EndgameParkingPoints
 );
 
-export const ENDGAME_BALANCED_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "allianceBalancedPoints",
-    "Hub Balanced Points",
-    "Hub Balanced",
-    "Endgame Alliance Hub Balanced Points",
+export const ENDGAME_FOUNDATION_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+    "foundationMovedPoints",
+    "Foundation Moved Points",
+    "Foundation Moves",
+    "Endgame Foundation Moved Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.AllianceBalancedPoints
-);
-
-const ENDGAME_TIPPED_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
-    "sharedUnbalancedPoints",
-    "Shared Tipped Points",
-    "Shared Tipped ",
-    "Endgame Shared Hub Tipped Points",
-    DisplayWhen.TRAD,
-    Match2021FieldName.SharedUnbalancedPoints
+    Match2019FieldName.FoundationMovedPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const PENALTIES_STAT: Stat<FullScores2021Shared> = makeStatMaybe(
+export const PENALTIES_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
     "penaltyPoints",
     "Penalty Points",
     "Penalties",
     "Penalty Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.PenaltyPoints
+    Match2019FieldName.PenaltyPoints
 );
 
-export const PENALTIES_MAJOR_STAT: Stat<FullScores2021Shared> = makeStatFn(
+export const PENALTIES_MAJOR_STAT: Stat<FullScores2019Shared> = makeStatFn(
     (s) => (s.data ? s.data.majorPenalties * -30 : null),
     "Major Penalty Points",
     "Majors",
     "Major Penalty Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.MajorPenaltyPoints
+    Match2019FieldName.MajorPenaltyPoints
 );
 
-export const PENALTIES_MINOR_STAT: Stat<FullScores2021Shared> = makeStatFn(
+export const PENALTIES_MINOR_STAT: Stat<FullScores2019Shared> = makeStatFn(
     (s) => (s.data ? s.data.minorPenalties * -10 : null),
     "Minor Penalty Points",
     "Minors",
     "Minor Penalty Points",
     DisplayWhen.ALWAYS,
-    Match2021FieldName.MinorPenaltyPoints
+    Match2019FieldName.MinorPenaltyPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -314,7 +233,7 @@ export const TEAM_1: Stat<TeamsT | null> = {
     identifierName: "Team 1",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => extractTeam(s.data, 1),
-    apiField: { fieldName: Match2021FieldName.Team1Number },
+    apiField: { fieldName: Match2019FieldName.Team1Number },
 };
 
 export const TEAM_2: Stat<TeamsT | null> = {
@@ -325,7 +244,7 @@ export const TEAM_2: Stat<TeamsT | null> = {
     identifierName: "Team 2",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => extractTeam(s.data, 2),
-    apiField: { fieldName: Match2021FieldName.Team2Number },
+    apiField: { fieldName: Match2019FieldName.Team2Number },
 };
 
 export const TEAM_3: Stat<TeamsT | null> = {
@@ -336,7 +255,7 @@ export const TEAM_3: Stat<TeamsT | null> = {
     identifierName: "Team 3",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => extractTeam(s.data, 3),
-    apiField: { fieldName: Match2021FieldName.Team3Number },
+    apiField: { fieldName: Match2019FieldName.Team3Number },
 };
 
 export const EVENT_STAT: Stat<{ event: RecordsEventFragment }> = {
@@ -353,7 +272,7 @@ export const EVENT_STAT: Stat<{ event: RecordsEventFragment }> = {
         code: s.data.event.code,
         season: s.data.event.season,
     }),
-    apiField: { fieldName: Match2021FieldName.EventName },
+    apiField: { fieldName: Match2019FieldName.EventName },
 };
 
 export const MATCH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } }> = {
@@ -364,7 +283,7 @@ export const MATCH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } 
     identifierName: "Match Number",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.match.matchDescription,
-    apiField: { fieldName: Match2021FieldName.MatchNumber },
+    apiField: { fieldName: Match2019FieldName.MatchNumber },
 };
 
 function capitalizeFirstLetter(str: string) {
@@ -379,10 +298,10 @@ export const ALLIANCE_STAT: Stat<{ alliance?: Alliance }> = {
     identifierName: "Alliance",
     displayWhen: DisplayWhen.TRAD,
     read: (s) => ("alliance" in s.data ? capitalizeFirstLetter(s.data.alliance) : "Solo"),
-    apiField: { fieldName: Match2021FieldName.Alliance },
+    apiField: { fieldName: Match2019FieldName.Alliance },
 };
 
-export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScores2021Shared> = [
+export let STAT_SET_MATCHES_2019: StatSet<FullScores2019Shared, FullScores2019Shared> = [
     {
         name: "Scores",
         type: "group",
@@ -430,36 +349,19 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                     stat: AUTO_POINTS_STAT,
                     nestedStats: [
                         {
-                            stat: AUTO_FREIGHT_STAT,
-                            nestedStats: [
-                                {
-                                    stat: AUTO_FREIGHT1_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: AUTO_FREIGHT2_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: AUTO_FREIGHT3_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: AUTO_FREIGHT_STORAGE_STAT,
-                                    nestedStats: [],
-                                },
-                            ],
+                            stat: AUTO_DELIVERY_STAT,
+                            nestedStats: [],
                         },
                         {
-                            stat: AUTO_CAROUSEL_STAT,
+                            stat: AUTO_PLACEMENT_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_REPOSITIONING_STAT,
                             nestedStats: [],
                         },
                         {
                             stat: AUTO_NAV_STAT,
-                            nestedStats: [],
-                        },
-                        {
-                            stat: AUTO_BONUS_STAT,
                             nestedStats: [],
                         },
                     ],
@@ -468,28 +370,15 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                     stat: DC_POINTS_STAT,
                     nestedStats: [
                         {
-                            stat: DC_ALLIANCE_STAT,
-                            nestedStats: [
-                                {
-                                    stat: DC_ALLIANCE1_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: DC_ALLIANCE2_STAT,
-                                    nestedStats: [],
-                                },
-                                {
-                                    stat: DC_ALLIANCE3_STAT,
-                                    nestedStats: [],
-                                },
-                            ],
-                        },
-                        {
-                            stat: DC_STORAGE_STAT,
+                            stat: DC_DELIVERY_STAT,
                             nestedStats: [],
                         },
                         {
-                            stat: DC_SHARED_STAT,
+                            stat: DC_PLACEMENT_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_SKYSCRAPER_BONUS_STAT,
                             nestedStats: [],
                         },
                     ],
@@ -498,19 +387,11 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
                     stat: ENDGAME_POINTS_STAT,
                     nestedStats: [
                         {
-                            stat: ENDGAME_DELIVERY_STAT,
-                            nestedStats: [],
-                        },
-                        {
                             stat: ENDGAME_CAPPING_STAT,
                             nestedStats: [],
                         },
                         {
-                            stat: ENDGAME_BALANCED_STAT,
-                            nestedStats: [],
-                        },
-                        {
-                            stat: ENDGAME_TIPPED_STAT,
+                            stat: ENDGAME_FOUNDATION_STAT,
                             nestedStats: [],
                         },
                         {
@@ -594,19 +475,17 @@ export let STAT_SET_MATCHES_2021_SHARED: StatSet<FullScores2021Shared, FullScore
     },
 ];
 
-const SCORES = STAT_SET_MATCHES_2021_SHARED.find((s) => s.name == "Scores")!.set as StatSetGroup<
-    FullScores2021Shared,
-    FullScores2021Shared
+const SCORES = STAT_SET_MATCHES_2019.find((s) => s.name == "Scores")!.set as StatSetGroup<
+    FullScores2019Shared,
+    FullScores2019Shared
 >;
 const THIS = SCORES.groups.find((g) => g.shortName == "THIS")!;
 
-export const THIS_TOTAL_POINTS_STAT = THIS.get(TOTAL_POINTS_STAT);
+export const THIS_TOTAL_POINTS_NP_STAT = THIS.get(TOTAL_POINTS_NP_STAT);
 export const THIS_AUTO_POINTS_STAT = THIS.get(AUTO_POINTS_STAT);
 export const THIS_DC_POINTS_STAT = THIS.get(DC_POINTS_STAT);
 export const THIS_ENDGAME_POINTS_STAT = THIS.get(ENDGAME_POINTS_STAT);
-export const THIS_AUTO_FREIGHT_STAT = THIS.get(AUTO_FREIGHT_STAT);
-export const THIS_DC_ALLIANCE_3_STAT = THIS.get(DC_ALLIANCE3_STAT);
-export const THIS_DC_SHARED_STAT = THIS.get(DC_SHARED_STAT);
-export const THIS_END_SHARED_STAT = THIS.get(ENDGAME_TIPPED_STAT);
-export const THIS_END_DELIVERED_STAT = THIS.get(ENDGAME_DELIVERY_STAT);
 export const THIS_END_CAPPED_STAT = THIS.get(ENDGAME_CAPPING_STAT);
+export const THIS_AUTO_PLACEMENT_STAT = THIS.get(AUTO_PLACEMENT_STAT);
+export const THIS_DC_SKYSCRAPER_STAT = THIS.get(DC_SKYSCRAPER_BONUS_STAT);
+export const THIS_CAPPING_STAT = THIS.get(ENDGAME_CAPPING_STAT);

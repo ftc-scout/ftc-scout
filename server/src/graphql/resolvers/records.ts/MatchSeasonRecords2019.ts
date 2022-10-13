@@ -1,34 +1,23 @@
 import { Arg, Field, InputType, Int, Query, registerEnumType, Resolver } from "type-graphql";
 import { DATA_SOURCE } from "../../../db/data-source";
-import { EventTypes } from "./EventTypes";
 import { getRegionCodes, Region } from "../../../db/entities/types/Region";
 import { TepCondition, TepField, TepOrdering, TepValue } from "./TepObjects";
 import { Brackets } from "typeorm";
-import { MatchScores2021 } from "../../../db/entities/MatchScores2021";
 import { MatchGroup, MatchRecordRow, MatchRecords } from "./MatchObjects";
-import { MatchScores2021TradAllianceGraphql } from "../../objects/MatchScores2021TradGraphql";
-import { MatchScores2021RemoteGraphql } from "../../objects/MatchScores2021RemoteGraphql";
+import { MatchScores2019 } from "../../../db/entities/MatchScores2019";
+import { MatchScores2019AllianceGraphql } from "../../objects/MatchScores2019Graphql";
 
-enum Match2021FieldName {
-    AUTO_CAROUSEL_POINTS,
+enum Match2019FieldName {
     AUTO_NAVIGATION_POINTS,
-    AUTO_FREIGHT_POINTS,
-    AUTO_FREIGHT_POINTS_LEVEL_1,
-    AUTO_FREIGHT_POINTS_LEVEL_2,
-    AUTO_FREIGHT_POINTS_LEVEL_3,
-    AUTO_FREIGHT_POINTS_STORAGE,
-    AUTO_BONUS_POINTS,
-    DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS,
-    DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_1,
-    DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_2,
-    DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_3,
-    DRIVER_CONTROLLED_SHARED_HUB_POINTS,
-    DRIVER_CONTROLLED_STORAGE_POINTS,
-    ENDGAME_DELIVERY_POINTS,
-    ALLIANCE_BALANCED_POINTS,
-    SHARED_UNBALANCED_POINTS,
-    ENDGAME_PARKING_POINTS,
+    AUTO_REPOSITIONING_POINTS,
+    AUTO_DELIVERY_POINTS,
+    AUTO_PLACEMENT_POINTS,
+    DC_DELIVERY_POINTS,
+    DC_PLACEMENT_POINTS,
+    DC_SKYSCRAPER_BONUS_POINTS,
     CAPPING_POINTS,
+    ENDGAME_PARKING_POINTS,
+    FOUNDATION_MOVED_POINTS,
     MAJOR_PENALTY_POINTS,
     MINOR_PENALTY_POINTS,
     AUTO_POINTS,
@@ -46,98 +35,90 @@ enum Match2021FieldName {
     EVENT_NAME,
 }
 
-registerEnumType(Match2021FieldName, { name: "Match2021FieldName" });
+registerEnumType(Match2019FieldName, { name: "Match2019FieldName" });
 
-function getFieldNameSingular(fn: Match2021FieldName, postfix: string): string | null {
-    let map: Partial<Record<Match2021FieldName, string>> = {
-        [Match2021FieldName.MATCH_NUMBER]: `s${postfix}."matchId"`,
-        [Match2021FieldName.ALLIANCE]: `s${postfix}."alliance"`,
-        [Match2021FieldName.EVENT_NAME]: `e${postfix}.name`,
+function getFieldNameSingular(fn: Match2019FieldName, postfix: string): string | null {
+    let map: Partial<Record<Match2019FieldName, string>> = {
+        [Match2019FieldName.MATCH_NUMBER]: `s${postfix}."matchId"`,
+        [Match2019FieldName.ALLIANCE]: `s${postfix}."alliance"`,
+        [Match2019FieldName.EVENT_NAME]: `e${postfix}.name`,
     };
 
     return map[fn] ?? null;
 }
 
-function getFieldNameGroup(fn: Match2021FieldName, postfix: string, group: MatchGroup): string | null {
+function getFieldNameGroup(fn: Match2019FieldName, postfix: string, group: MatchGroup): string | null {
     let g = (group == MatchGroup.THIS ? "s" : "os") + postfix;
 
-    let map: Partial<Record<Match2021FieldName, string>> = {
-        [Match2021FieldName.AUTO_CAROUSEL_POINTS]: `${g}."autoCarouselPoints"`,
-        [Match2021FieldName.AUTO_NAVIGATION_POINTS]: `${g}."autoNavigationPoints"`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS]: `${g}."autoFreightPoints"`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_1]: `(${g}."autoFreight1" * 6)`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_2]: `(${g}."autoFreight2" * 6)`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_LEVEL_3]: `(${g}."autoFreight3" * 6)`,
-        [Match2021FieldName.AUTO_FREIGHT_POINTS_STORAGE]: `(${g}."autoStorageFreight")"`,
-        [Match2021FieldName.AUTO_BONUS_POINTS]: `${g}."autoBonusPoints"`,
-        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS]: `${g}."driverControlledAllianceHubPoints"`,
-        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_1]: `(${g}."driverControlledFreight1" * 2)`,
-        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_2]: `(${g}."driverControlledFreight2" * 4)`,
-        [Match2021FieldName.DRIVER_CONTROLLED_ALLIANCE_HUB_POINTS_LEVEL_3]: `(${g}."driverControlledFreight3" * 6)`,
-        [Match2021FieldName.DRIVER_CONTROLLED_SHARED_HUB_POINTS]: `${g}."driverControlledSharedHubPoints"`,
-        [Match2021FieldName.DRIVER_CONTROLLED_STORAGE_POINTS]: `${g}."driverControlledStoragePoints"`,
-        [Match2021FieldName.ENDGAME_DELIVERY_POINTS]: `${g}."endgameDeliveryPoints"`,
-        [Match2021FieldName.ALLIANCE_BALANCED_POINTS]: `${g}."allianceBalancedPoints"`,
-        [Match2021FieldName.SHARED_UNBALANCED_POINTS]: `${g}."sharedUnbalancedPoints"`,
-        [Match2021FieldName.ENDGAME_PARKING_POINTS]: `${g}."endgameParkingPoints"`,
-        [Match2021FieldName.CAPPING_POINTS]: `${g}."cappingPoints"`,
-        [Match2021FieldName.MAJOR_PENALTY_POINTS]: `(${g}."majorPenalties" * -30)`,
-        [Match2021FieldName.MINOR_PENALTY_POINTS]: `(${g}."minorPenalties" * -10)`,
-        [Match2021FieldName.AUTO_POINTS]: `${g}."autoPoints"`,
-        [Match2021FieldName.DRIVER_CONTROLLED_POINTS]: `${g}."driverControlledPoints"`,
-        [Match2021FieldName.ENDGAME_POINTS]: `${g}."endgamePoints"`,
-        [Match2021FieldName.PENALTY_POINTS]: `${g}."penaltyPoints"`,
-        [Match2021FieldName.TOTAL_POINTS]: `${g}."totalPoints"`,
-        [Match2021FieldName.TOTAL_POINTS_NP]: `${g}."totalPointsNp"`,
+    let map: Partial<Record<Match2019FieldName, string>> = {
+        [Match2019FieldName.AUTO_NAVIGATION_POINTS]: `${g}."autoNavigationPoints"`,
+        [Match2019FieldName.AUTO_REPOSITIONING_POINTS]: `${g}."autoRepositioningPoints"`,
+        [Match2019FieldName.AUTO_DELIVERY_POINTS]: `${g}."autoDeliveryPoints"`,
+        [Match2019FieldName.AUTO_PLACEMENT_POINTS]: `(${g}."autoStonesPlaced" * 4)`,
+        [Match2019FieldName.DC_DELIVERY_POINTS]: `${g}."dcDeliveryPoints"`,
+        [Match2019FieldName.DC_PLACEMENT_POINTS]: `${g}."dcPlacementPoints"`,
+        [Match2019FieldName.DC_SKYSCRAPER_BONUS_POINTS]: `${g}."dcSkyscraperBonusPoints"`,
+        [Match2019FieldName.CAPPING_POINTS]: `${g}."cappingPoints"`,
+        [Match2019FieldName.ENDGAME_PARKING_POINTS]: `${g}."parkingPoints"`,
+        [Match2019FieldName.FOUNDATION_MOVED_POINTS]: `${g}."foundationMovedPoints"`,
 
-        [Match2021FieldName.TEAM1_NUMBER]: `${g}t1."teamNumber"`,
-        [Match2021FieldName.TEAM2_NUMBER]: `${g}t2."teamNumber"`,
-        [Match2021FieldName.TEAM3_NUMBER]: `${g}t3."teamNumber"`,
+        [Match2019FieldName.MAJOR_PENALTY_POINTS]: `(${g}."majorPenalties" * -30)`,
+        [Match2019FieldName.MINOR_PENALTY_POINTS]: `(${g}."minorPenalties" * -10)`,
+        [Match2019FieldName.AUTO_POINTS]: `${g}."autoPoints"`,
+        [Match2019FieldName.DRIVER_CONTROLLED_POINTS]: `${g}."dcPoints"`,
+        [Match2019FieldName.ENDGAME_POINTS]: `${g}."endgamePoints"`,
+        [Match2019FieldName.PENALTY_POINTS]: `${g}."penaltyPoints"`,
+        [Match2019FieldName.TOTAL_POINTS]: `${g}."totalPoints"`,
+        [Match2019FieldName.TOTAL_POINTS_NP]: `${g}."totalPointsNp"`,
+
+        [Match2019FieldName.TEAM1_NUMBER]: `${g}t1."teamNumber"`,
+        [Match2019FieldName.TEAM2_NUMBER]: `${g}t2."teamNumber"`,
+        [Match2019FieldName.TEAM3_NUMBER]: `${g}t3."teamNumber"`,
     };
 
     return map[fn] ?? null;
 }
 
 @InputType()
-class Match2021Field extends TepField(
+class Match2019Field extends TepField(
     MatchGroup,
-    Match2021FieldName,
+    Match2019FieldName,
     getFieldNameGroup,
     getFieldNameSingular,
-    (_, f) => f == Match2021FieldName.EVENT_NAME || f == Match2021FieldName.ALLIANCE
+    (_, f) => f == Match2019FieldName.EVENT_NAME || f == Match2019FieldName.ALLIANCE
 ) {}
 
 @InputType()
-class Match2021Ordering extends TepOrdering<Match2021Field, MatchScores2021>(Match2021Field) {}
+class Match2019Ordering extends TepOrdering<Match2019Field, MatchScores2019>(Match2019Field) {}
 
 @InputType()
-class Match2021Value extends TepValue(Match2021Field) {}
+class Match2019Value extends TepValue(Match2019Field) {}
 
-function isTeamField(field: Match2021Field | null): boolean {
+function isTeamField(field: Match2019Field | null): boolean {
     return (
-        field?.fieldName == Match2021FieldName.TEAM1_NUMBER ||
-        field?.fieldName == Match2021FieldName.TEAM2_NUMBER ||
-        field?.fieldName == Match2021FieldName.TEAM3_NUMBER
+        field?.fieldName == Match2019FieldName.TEAM1_NUMBER ||
+        field?.fieldName == Match2019FieldName.TEAM2_NUMBER ||
+        field?.fieldName == Match2019FieldName.TEAM3_NUMBER
     );
 }
 
 @InputType()
-class Match2021Condition extends TepCondition(Match2021Value) {
+class Match2019Condition extends TepCondition(Match2019Value) {
     hasTeam(): boolean {
         return this.lhs != null && isTeamField(this.lhs.field);
     }
 }
 
 @InputType()
-abstract class Match2021Filter {
-    @Field(() => [Match2021Filter], { nullable: true })
-    any!: Match2021Filter[] | null;
+abstract class Match2019Filter {
+    @Field(() => [Match2019Filter], { nullable: true })
+    any!: Match2019Filter[] | null;
 
-    @Field(() => [Match2021Filter], { nullable: true })
-    all!: Match2021Filter[] | null;
+    @Field(() => [Match2019Filter], { nullable: true })
+    all!: Match2019Filter[] | null;
 
-    @Field(() => Match2021Condition, { nullable: true })
-    condition!: Match2021Condition | null;
+    @Field(() => Match2019Condition, { nullable: true })
+    condition!: Match2019Condition | null;
 
     toBrackets(): Brackets {
         let any = this.any;
@@ -177,19 +158,18 @@ abstract class Match2021Filter {
 }
 
 @Resolver()
-export class MatchSeasonRecords2021Resolver {
+export class MatchSeasonRecords2019Resolver {
     @Query(() => MatchRecords)
-    async matchRecords2021(
-        @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
+    async matchRecords2019(
         @Arg("region", () => Region) region: Region,
         @Arg("start", () => Date, { nullable: true }) start: Date | null,
         @Arg("end", () => Date, { nullable: true }) end: Date | null,
-        @Arg("order", () => [Match2021Ordering]) orderIn: Match2021Ordering[],
-        @Arg("filter", () => Match2021Filter, { nullable: true }) filter: Match2021Filter | null,
+        @Arg("order", () => [Match2019Ordering]) orderIn: Match2019Ordering[],
+        @Arg("filter", () => Match2019Filter, { nullable: true }) filter: Match2019Filter | null,
         @Arg("take", () => Int) takeIn: number,
         @Arg("skip", () => Int) skip: number
     ): Promise<MatchRecords> {
-        let order: Match2021Ordering[] = [];
+        let order: Match2019Ordering[] = [];
         for (let i = 0; i < orderIn.length && i < 5; i++) {
             let o = orderIn[i];
             // Don't duplicate order clauses.
@@ -214,25 +194,25 @@ export class MatchSeasonRecords2021Resolver {
             .map((o) => o.toRawSql(""))
             .filter((o) => o != null)
             .join(", ");
-        if (orderByRaw.length == 0) orderByRaw = 's."totalPoints" DESC';
+        if (orderByRaw.length == 0) orderByRaw = 's."totalPointsNp" DESC';
 
         let orderByRaw2 = order
             .slice(0, 1)
             .map((o) => o.toRawSql("2"))
             .filter((o) => o != null)
             .join(", ");
-        if (orderByRaw2.length == 0) orderByRaw2 = 's2."totalPoints" DESC';
+        if (orderByRaw2.length == 0) orderByRaw2 = 's2."totalPointsNp" DESC';
 
-        let preFilterQuery = DATA_SOURCE.getRepository(MatchScores2021)
+        let preFilterQuery = DATA_SOURCE.getRepository(MatchScores2019)
             .createQueryBuilder("s2")
-            .leftJoin("event", "e2", 'e2.season = 2021 AND e2.code = s2."eventCode"')
+            .leftJoin("event", "e2", 'e2.season = 2019 AND e2.code = s2."eventCode"')
             .leftJoin(
                 "match",
                 "m2",
-                'm2."eventSeason" = 2021 AND m2."eventCode" = s2."eventCode" AND m2.id = s2."matchId"'
+                'm2."eventSeason" = 2019 AND m2."eventCode" = s2."eventCode" AND m2.id = s2."matchId"'
             )
             .leftJoin(
-                "match_scores2021",
+                "match_scores2019",
                 "os2",
                 'os2."eventCode" = s2."eventCode" AND os2."matchId" = s2."matchId" AND os2.alliance <> s2.alliance'
             )
@@ -243,7 +223,7 @@ export class MatchSeasonRecords2021Resolver {
                 's2."alliance"',
             ])
             .where('m2."hasBeenPlayed"')
-            .andWhere("e2.season = 2021");
+            .andWhere("e2.season = 2019");
 
         if (orderHasTeam || filterHasTeam) {
             preFilterQuery = preFilterQuery
@@ -286,18 +266,12 @@ export class MatchSeasonRecords2021Resolver {
         if (start) preFilterQuery = preFilterQuery.andWhere("e2.end >= :start", { start });
         if (end) preFilterQuery = preFilterQuery.andWhere("e2.end <= :end", { end });
 
-        if (eventTypes == EventTypes.REMOTE) {
-            preFilterQuery = preFilterQuery.andWhere("e2.remote");
-        } else if (eventTypes == EventTypes.TRAD) {
-            preFilterQuery = preFilterQuery.andWhere("NOT e2.remote");
-        }
-
-        let query = DATA_SOURCE.getRepository(MatchScores2021)
+        let query = DATA_SOURCE.getRepository(MatchScores2019)
             .createQueryBuilder("s")
-            .leftJoin("event", "e", 'e.season = 2021 AND e.code = s."eventCode"')
-            .leftJoin("match", "m", 'm."eventSeason" = 2021 AND m."eventCode" = s."eventCode" AND m.id = s."matchId"')
+            .leftJoin("event", "e", 'e.season = 2019 AND e.code = s."eventCode"')
+            .leftJoin("match", "m", 'm."eventSeason" = 2019 AND m."eventCode" = s."eventCode" AND m.id = s."matchId"')
             .leftJoin(
-                "match_scores2021",
+                "match_scores2019",
                 "os",
                 'os."eventCode" = s."eventCode" AND os."matchId" = s."matchId" AND os.alliance <> s.alliance'
             )
@@ -310,7 +284,7 @@ export class MatchSeasonRecords2021Resolver {
             .addSelect("pre_rank.pre_filter_rank", "pre_filter_rank")
             .addSelect("e.remote")
             .where('m."hasBeenPlayed"')
-            .andWhere("e.season = 2021")
+            .andWhere("e.season = 2019")
             .limit(limit)
             .offset(skip);
 
@@ -357,13 +331,7 @@ export class MatchSeasonRecords2021Resolver {
 
         if (order.length == 0) {
             // In case they didn't provide an order
-            query = query.orderBy('s."totalPoints"', "DESC");
-        }
-
-        if (eventTypes == EventTypes.REMOTE) {
-            query = query.andWhere("e.remote");
-        } else if (eventTypes == EventTypes.TRAD) {
-            query = query.andWhere("NOT e.remote");
+            query = query.orderBy('s."totalPointsNp"', "DESC");
         }
 
         for (let o of order) {
@@ -381,9 +349,7 @@ export class MatchSeasonRecords2021Resolver {
                 (r) => r.s_eventCode == e.eventCode && r.s_matchId == e.matchId && r.s_alliance == e.alliance
             );
             return {
-                score: rawRow.e_remote
-                    ? new MatchScores2021RemoteGraphql(e)
-                    : new MatchScores2021TradAllianceGraphql(e),
+                score: new MatchScores2019AllianceGraphql(e),
                 rank: rawRow.post_filter_rank as number,
                 preFilterRank: rawRow.pre_filter_rank as number,
             };

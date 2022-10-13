@@ -1,45 +1,22 @@
 <script lang="ts" context="module">
     import { get, writable, type Writable } from "svelte/store";
-    import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
-    import {
-        STAT_SET_MATCHES_2021_SHARED,
-        THIS_TOTAL_POINTS_STAT,
-        THIS_AUTO_POINTS_STAT,
-        THIS_DC_POINTS_STAT,
-        type FullScores2021Shared,
-        THIS_ENDGAME_POINTS_STAT,
-        THIS_AUTO_FREIGHT_STAT,
-        THIS_DC_ALLIANCE_3_STAT,
-        THIS_DC_SHARED_STAT,
-        THIS_END_SHARED_STAT,
-        THIS_END_DELIVERED_STAT,
-        THIS_END_CAPPED_STAT,
-        TEAM_1,
-        TEAM_2,
-        TEAM_3,
-        EVENT_STAT,
-        MATCH_DESCRIPTION_STAT,
-        ALLIANCE_STAT,
-    } from "../../util/stats/2021/StatsSharedMatches2021";
+    import { Region } from "../../graphql/generated/graphql-operations";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
     import { findInStatSet, type StatSet } from "../../util/stats/StatSet";
     import { SortType } from "../SortButton.svelte";
     import type { ChosenSort, StatData } from "../stats/StatsTable.svelte";
 
-    type Data = FullScores2021Shared;
+    type Data = FullScores2019Shared;
 
     let DEFAULT_SHOWN_STATS: Stat<Data>[] = [
-        THIS_TOTAL_POINTS_STAT,
+        THIS_TOTAL_POINTS_NP_STAT,
         THIS_AUTO_POINTS_STAT,
         THIS_DC_POINTS_STAT,
         THIS_ENDGAME_POINTS_STAT,
-        THIS_AUTO_FREIGHT_STAT,
-        THIS_DC_ALLIANCE_3_STAT,
-        THIS_DC_SHARED_STAT,
-        THIS_END_SHARED_STAT,
-        THIS_END_DELIVERED_STAT,
-        THIS_END_CAPPED_STAT,
+        THIS_AUTO_PLACEMENT_STAT,
+        THIS_DC_SKYSCRAPER_STAT,
+        THIS_CAPPING_STAT,
         TEAM_1,
         TEAM_2,
         TEAM_3,
@@ -49,16 +26,13 @@
     ];
 
     let shownStats: Writable<Stat<Data>[]> = writable([
-        THIS_TOTAL_POINTS_STAT,
+        THIS_TOTAL_POINTS_NP_STAT,
         THIS_AUTO_POINTS_STAT,
         THIS_DC_POINTS_STAT,
         THIS_ENDGAME_POINTS_STAT,
-        THIS_AUTO_FREIGHT_STAT,
-        THIS_DC_ALLIANCE_3_STAT,
-        THIS_DC_SHARED_STAT,
-        THIS_END_SHARED_STAT,
-        THIS_END_DELIVERED_STAT,
-        THIS_END_CAPPED_STAT,
+        THIS_AUTO_PLACEMENT_STAT,
+        THIS_DC_SKYSCRAPER_STAT,
+        THIS_CAPPING_STAT,
         TEAM_1,
         TEAM_2,
         TEAM_3,
@@ -66,18 +40,21 @@
         ALLIANCE_STAT as any,
         EVENT_STAT as any,
     ]);
-    export const DEFAULT_SORT_MATCH_2021: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };
+    export const DEFAULT_SORT_MATCH_2019: ChosenSort<Data> = {
+        stat: THIS_TOTAL_POINTS_NP_STAT,
+        type: SortType.HIGH_LOW,
+    };
 
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 
-    let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_MATCH_2021);
+    let currentSort: Writable<ChosenSort<Data>> = writable(DEFAULT_SORT_MATCH_2019);
 
-    export function getStatSet2021Matches(): StatSet<unknown, unknown> {
-        return [...STAT_SET_MATCHES_2021_SHARED];
+    export function getStatSet2019Matches(): StatSet<unknown, unknown> {
+        return [...STAT_SET_MATCHES_2019];
     }
 
     function getCurrentSortFromUrl(url: URL): ChosenSort<Data> {
-        let statSet = getStatSet2021Matches();
+        let statSet = getStatSet2019Matches();
 
         let sortStatIdenName = url.searchParams.get("sort") ?? null;
         if (sortStatIdenName) {
@@ -93,20 +70,17 @@
         return get(currentSort);
     }
 
-    export let match2021SearchParams: string = "";
+    export let match2019SearchParams: string = "";
 
-    export function resetMatch2021SearchParams() {
+    export function resetMatch2019SearchParams() {
         shownStats.set([
-            THIS_TOTAL_POINTS_STAT,
+            THIS_TOTAL_POINTS_NP_STAT,
             THIS_AUTO_POINTS_STAT,
             THIS_DC_POINTS_STAT,
             THIS_ENDGAME_POINTS_STAT,
-            THIS_AUTO_FREIGHT_STAT,
-            THIS_DC_ALLIANCE_3_STAT,
-            THIS_DC_SHARED_STAT,
-            THIS_END_SHARED_STAT,
-            THIS_END_DELIVERED_STAT,
-            THIS_END_CAPPED_STAT,
+            THIS_AUTO_PLACEMENT_STAT,
+            THIS_DC_SKYSCRAPER_STAT,
+            THIS_CAPPING_STAT,
             TEAM_1,
             TEAM_2,
             TEAM_3,
@@ -114,9 +88,9 @@
             ALLIANCE_STAT as any,
             EVENT_STAT as any,
         ]);
-        currentSort.set(DEFAULT_SORT_MATCH_2021);
+        currentSort.set(DEFAULT_SORT_MATCH_2019);
         currentFilters.set(emptyFilter());
-        match2021SearchParams = "";
+        match2019SearchParams = "";
     }
 </script>
 
@@ -125,12 +99,27 @@
     import { page } from "$app/stores";
     import { arraysEqual } from "../../util/array-eq";
     import { changeParam } from "./changeParams";
-    import { eventTypesToStr } from "../../../routes/records/[season=season]/[tab=records_tab]/+page";
     import { regionToString } from "../../util/regions";
     import { dateToStr } from "../../util/format/pretty-print-date";
     import StatsTable from "../stats/StatsTable.svelte";
+    import {
+        ALLIANCE_STAT,
+        EVENT_STAT,
+        MATCH_DESCRIPTION_STAT,
+        STAT_SET_MATCHES_2019,
+        TEAM_1,
+        TEAM_2,
+        TEAM_3,
+        THIS_AUTO_PLACEMENT_STAT,
+        THIS_AUTO_POINTS_STAT,
+        THIS_CAPPING_STAT,
+        THIS_DC_POINTS_STAT,
+        THIS_DC_SKYSCRAPER_STAT,
+        THIS_ENDGAME_POINTS_STAT,
+        THIS_TOTAL_POINTS_NP_STAT,
+        type FullScores2019Shared,
+    } from "../../util/stats/2019/StatsSharedMatches2019";
 
-    export let eventTypes: EventTypes;
     export let region: Region;
     export let data: StatData<Data>[];
     export let currPage: number;
@@ -139,8 +128,8 @@
     export let startDate: Date | null;
     export let endDate: Date | null;
 
-    let statSet: StatSet<unknown, unknown> = getStatSet2021Matches();
-    $: statSet = getStatSet2021Matches();
+    let statSet: StatSet<unknown, unknown> = getStatSet2019Matches();
+    $: statSet = getStatSet2019Matches();
 
     try {
         let startFilter = simpleJsonToFilter(JSON.parse($page.url.searchParams.get("filter") ?? ""), statSet);
@@ -159,8 +148,8 @@
     let selectedTeamName: string | null = null;
 
     $: isDefaultSort =
-        $currentSort.type == DEFAULT_SORT_MATCH_2021.type &&
-        $currentSort.stat.identifierName == DEFAULT_SORT_MATCH_2021.stat.identifierName;
+        $currentSort.type == DEFAULT_SORT_MATCH_2019.type &&
+        $currentSort.stat.identifierName == DEFAULT_SORT_MATCH_2019.stat.identifierName;
     $: isDefaultShownStats = arraysEqual(
         DEFAULT_SHOWN_STATS.map((s) => s.identifierName),
         $shownStats.map((s) => s.identifierName)
@@ -170,14 +159,13 @@
             sort: isDefaultSort ? null : $currentSort.stat.identifierName,
             ["sort-dir"]: isDefaultSort || $currentSort.type == SortType.HIGH_LOW ? null : "reverse",
             filter: isEmpty($currentFilters) ? null : JSON.stringify(filterToSimpleJson($currentFilters)),
-            ["event-types"]: eventTypes == EventTypes.TradAndRemote ? null : eventTypesToStr(eventTypes),
             ["shown-stats"]: isDefaultShownStats ? null : JSON.stringify($shownStats.map((s) => s.identifierName)),
             region: region == Region.All ? null : regionToString(region),
             page: currPage == 1 ? null : "" + currPage,
             start: dateToStr(startDate),
             end: dateToStr(endDate),
         });
-    $: if ($page.params.tab == "matches") match2021SearchParams = $page.url.searchParams.toString();
+    $: if ($page.params.tab == "matches") match2019SearchParams = $page.url.searchParams.toString();
 
     export function change() {
         currPage = 1;
@@ -194,10 +182,10 @@
     {shownStats}
     bind:selectedTeam
     bind:selectedTeamName
-    defaultSort={DEFAULT_SORT_MATCH_2021}
+    defaultSort={DEFAULT_SORT_MATCH_2019}
     bind:currentSort={$currentSort}
     bind:currentFilters={$currentFilters}
-    fileName={"Match Season Records 2021"}
+    fileName={"Match Season Records 2019"}
     pagination
     bind:page={currPage}
     {totalCount}

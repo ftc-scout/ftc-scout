@@ -12,9 +12,11 @@
     import Card from "../../../../lib/components/Card.svelte";
     import Dropdown from "../../../../lib/components/Dropdown.svelte";
     import TeamSeasonRecords2021, {
+        resetTeam2021SearchParams,
         team2021SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2021.svelte";
     import TeamSeasonRecords2019, {
+        resetTeam2019SearchParams,
         team2019SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2019.svelte";
     import SkeletonRow from "../../../../lib/components/skeleton/SkeletonRow.svelte";
@@ -25,6 +27,7 @@
         EventTypes,
         Region,
         type MatchScoresAlliance,
+        type MatchSeasonRecords2019Query,
         type MatchSeasonRecords2021Query,
         type TeamSeasonRecords2019Query,
         type TeamSeasonRecords2021Query,
@@ -39,7 +42,14 @@
     import type { FullTep2021Shared } from "../../../../lib/util/stats/2021/StatsSharedTeams2021";
     import MatchSeasonRecords2021, {
         match2021SearchParams,
+        resetMatch2021SearchParams,
     } from "../../../../lib/components/season-records/MatchSeasonRecords2021.svelte";
+    import FaButton from "../../../../lib/components/FaButton.svelte";
+    import { faTrash } from "@fortawesome/free-solid-svg-icons";
+    import MatchSeasonRecords2019, {
+        match2019SearchParams,
+        resetMatch2019SearchParams,
+    } from "../../../../lib/components/season-records/MatchSeasonRecords2019.svelte";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -60,7 +70,7 @@
                 case 2021:
                     return match2021SearchParams;
                 case 2019:
-                    return null;
+                    return match2019SearchParams;
             }
         } else {
             return null;
@@ -80,7 +90,8 @@
     let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query> | null> | undefined;
     let matches2021: Readable<ApolloQueryResult<MatchSeasonRecords2021Query> | null> | undefined;
     let teams2019: Readable<ApolloQueryResult<TeamSeasonRecords2019Query> | null> | undefined;
-    $: ({ teams2021, matches2021, teams2019 } = data);
+    let matches2019: Readable<ApolloQueryResult<MatchSeasonRecords2019Query> | null> | undefined;
+    $: ({ teams2021, matches2021, teams2019, matches2019 } = data);
 
     $: dataTeams2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let dataTeams2021Teps: StatData<FullTep2021Shared>[] | undefined;
@@ -106,6 +117,14 @@
         data: t.tep,
     })) as any;
 
+    $: dataMatches2019 = !$matches2019 ? undefined : $matches2019.data.matchRecords2019;
+    let dataMatches2019Scores: StatData<MatchScoresAlliance>[] | undefined;
+    $: dataMatches2019Scores = dataMatches2019?.scores?.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.score,
+    })) as any;
+
     let eventTypesStr: "Traditional" | "Remote" | "Traditional and Remote" = eventTypesToStr(
         eventTypesFromStr($page.url.searchParams.get("event-types") ?? "") ?? EventTypes.TradAndRemote
     );
@@ -121,6 +140,24 @@
 
     let selectedPage: string = $page.params.tab;
     $: gotoSubPage(season, selectedPage);
+
+    let childrenChange: () => void = () => {};
+
+    let dateKey = 0;
+    function reset() {
+        if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
+            resetTeam2021SearchParams();
+            resetTeam2019SearchParams();
+            resetMatch2021SearchParams();
+            resetMatch2019SearchParams();
+
+            eventTypesStr = "Traditional and Remote";
+            regionStr = "All";
+            startDate = null;
+            endDate = null;
+            dateKey++;
+        }
+    }
 </script>
 
 <Head
@@ -142,49 +179,41 @@
                 <Dropdown
                     items={["Traditional and Remote", "Traditional", "Remote"]}
                     bind:value={eventTypesStr}
+                    on:change={childrenChange}
                     style="width: calc(100% - 15ch)"
                 />
             </div>
         {/if}
         <div>
             <span>Regions:</span>
-            <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" />
+            <RegionsDropdown bind:value={regionStr} style="width: calc(100% - 15ch)" on:change={childrenChange} />
         </div>
         <div>
             <span>From:</span>
-            <DateRange style="width: calc(100% - 15ch)" {season} bind:startDate bind:endDate />
+            {#key dateKey}
+                <DateRange
+                    style="width: calc(100% - 15ch)"
+                    {season}
+                    bind:startDate
+                    bind:endDate
+                    on:change={childrenChange}
+                />
+            {/key}
         </div>
+        {#if $page.url.search != ""}
+            <FaButton icon={faTrash} buttonStyle="font-size: var(--medium-font-size); width: 100%" on:click={reset}
+                >Reset All</FaButton
+            >
+        {/if}
     </Card>
 
     <TabbedCard
         names={[
-            [MATCHES_ICON, "Matches"],
             [TEAMS_ICON, "Teams"],
+            [MATCHES_ICON, "Matches"],
         ]}
         bind:selectedName={selectedPage}
     >
-        <TabContent name="Matches">
-            {#if dataMatches2021 && dataMatches2021Scores}
-                {@const totalCount = dataMatches2021.count}
-                <!-- TODO add this to query -->
-                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
-                {@const page = dataMatches2021.offset / pageSize + 1}
-
-                <MatchSeasonRecords2021
-                    {eventTypes}
-                    data={dataMatches2021Scores}
-                    currPage={page}
-                    {totalCount}
-                    {pageSize}
-                    {region}
-                    {startDate}
-                    {endDate}
-                />
-            {:else}
-                <SkeletonRow rows={50} card={false} header={false} />
-            {/if}
-        </TabContent>
-
         <TabContent name="Teams">
             {#if dataTeams2021 && dataTeams2021Teps}
                 {@const totalCount = dataTeams2021.count}
@@ -201,6 +230,7 @@
                     {region}
                     {startDate}
                     {endDate}
+                    bind:change={childrenChange}
                 />
             {:else if data2019 && data2019Teams}
                 {@const totalCount = data2019.count}
@@ -216,6 +246,46 @@
                     {region}
                     {startDate}
                     {endDate}
+                    bind:change={childrenChange}
+                />
+            {:else}
+                <SkeletonRow rows={50} card={false} header={false} />
+            {/if}
+        </TabContent>
+
+        <TabContent name="Matches">
+            {#if dataMatches2021 && dataMatches2021Scores}
+                {@const totalCount = dataMatches2021.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataMatches2021.offset / pageSize + 1}
+
+                <MatchSeasonRecords2021
+                    {eventTypes}
+                    data={dataMatches2021Scores}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                    bind:change={childrenChange}
+                />
+            {:else if dataMatches2019 && dataMatches2019Scores}
+                {@const totalCount = dataMatches2019.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataMatches2019.offset / pageSize + 1}
+
+                <MatchSeasonRecords2019
+                    data={dataMatches2019Scores}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                    bind:change={childrenChange}
                 />
             {:else}
                 <SkeletonRow rows={50} card={false} header={false} />
