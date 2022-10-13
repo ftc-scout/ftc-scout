@@ -10,6 +10,7 @@ import { DisplayWhen, makeStatFn, makeStatMaybe, type Stat } from "../Stat";
 import { StatColor } from "../stat-color";
 import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
+import { TOTAL_NP_STAT } from "./StatsTeams2019";
 
 export type FullScores2019Shared = MatchScores2019Alliance;
 
@@ -480,8 +481,11 @@ const SCORES = STAT_SET_MATCHES_2019.find((s) => s.name == "Scores")!.set as Sta
 >;
 const THIS = SCORES.groups.find((g) => g.shortName == "THIS")!;
 
-export const THIS_TOTAL_POINTS_STAT = THIS.get(TOTAL_POINTS_STAT);
+export const THIS_TOTAL_POINTS_NP_STAT = THIS.get(TOTAL_POINTS_NP_STAT);
 export const THIS_AUTO_POINTS_STAT = THIS.get(AUTO_POINTS_STAT);
 export const THIS_DC_POINTS_STAT = THIS.get(DC_POINTS_STAT);
 export const THIS_ENDGAME_POINTS_STAT = THIS.get(ENDGAME_POINTS_STAT);
 export const THIS_END_CAPPED_STAT = THIS.get(ENDGAME_CAPPING_STAT);
+export const THIS_AUTO_PLACEMENT_STAT = THIS.get(AUTO_PLACEMENT_STAT);
+export const THIS_DC_SKYSCRAPER_STAT = THIS.get(DC_SKYSCRAPER_BONUS_STAT);
+export const THIS_CAPPING_STAT = THIS.get(ENDGAME_CAPPING_STAT);

@@ -1,6 +1,6 @@
 <script lang="ts" context="module">
     import { get, writable, type Writable } from "svelte/store";
-    import { EventTypes, Region } from "../../graphql/generated/graphql-operations";
+    import { Region } from "../../graphql/generated/graphql-operations";
     import { emptyFilter, filterToSimpleJson, isEmpty, simpleJsonToFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
     import { findInStatSet, type StatSet } from "../../util/stats/StatSet";
@@ -10,10 +10,13 @@
     type Data = FullScores2019Shared;
 
     let DEFAULT_SHOWN_STATS: Stat<Data>[] = [
-        THIS_TOTAL_POINTS_STAT,
+        THIS_TOTAL_POINTS_NP_STAT,
         THIS_AUTO_POINTS_STAT,
         THIS_DC_POINTS_STAT,
         THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_PLACEMENT_STAT,
+        THIS_DC_SKYSCRAPER_STAT,
+        THIS_CAPPING_STAT,
         TEAM_1,
         TEAM_2,
         TEAM_3,
@@ -23,10 +26,13 @@
     ];
 
     let shownStats: Writable<Stat<Data>[]> = writable([
-        THIS_TOTAL_POINTS_STAT,
+        THIS_TOTAL_POINTS_NP_STAT,
         THIS_AUTO_POINTS_STAT,
         THIS_DC_POINTS_STAT,
         THIS_ENDGAME_POINTS_STAT,
+        THIS_AUTO_PLACEMENT_STAT,
+        THIS_DC_SKYSCRAPER_STAT,
+        THIS_CAPPING_STAT,
         TEAM_1,
         TEAM_2,
         TEAM_3,
@@ -34,7 +40,10 @@
         ALLIANCE_STAT as any,
         EVENT_STAT as any,
     ]);
-    export const DEFAULT_SORT_MATCH_2019: ChosenSort<Data> = { stat: THIS_TOTAL_POINTS_STAT, type: SortType.HIGH_LOW };
+    export const DEFAULT_SORT_MATCH_2019: ChosenSort<Data> = {
+        stat: THIS_TOTAL_POINTS_NP_STAT,
+        type: SortType.HIGH_LOW,
+    };
 
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 
@@ -65,10 +74,13 @@
 
     export function resetMatch2019SearchParams() {
         shownStats.set([
-            THIS_TOTAL_POINTS_STAT,
+            THIS_TOTAL_POINTS_NP_STAT,
             THIS_AUTO_POINTS_STAT,
             THIS_DC_POINTS_STAT,
             THIS_ENDGAME_POINTS_STAT,
+            THIS_AUTO_PLACEMENT_STAT,
+            THIS_DC_SKYSCRAPER_STAT,
+            THIS_CAPPING_STAT,
             TEAM_1,
             TEAM_2,
             TEAM_3,
@@ -98,10 +110,13 @@
         TEAM_1,
         TEAM_2,
         TEAM_3,
+        THIS_AUTO_PLACEMENT_STAT,
         THIS_AUTO_POINTS_STAT,
+        THIS_CAPPING_STAT,
         THIS_DC_POINTS_STAT,
+        THIS_DC_SKYSCRAPER_STAT,
         THIS_ENDGAME_POINTS_STAT,
-        THIS_TOTAL_POINTS_STAT,
+        THIS_TOTAL_POINTS_NP_STAT,
         type FullScores2019Shared,
     } from "../../util/stats/2019/StatsSharedMatches2019";
 

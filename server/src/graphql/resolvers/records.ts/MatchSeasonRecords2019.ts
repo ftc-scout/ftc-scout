@@ -194,14 +194,14 @@ export class MatchSeasonRecords2019Resolver {
             .map((o) => o.toRawSql(""))
             .filter((o) => o != null)
             .join(", ");
-        if (orderByRaw.length == 0) orderByRaw = 's."totalPoints" DESC';
+        if (orderByRaw.length == 0) orderByRaw = 's."totalPointsNp" DESC';
 
         let orderByRaw2 = order
             .slice(0, 1)
             .map((o) => o.toRawSql("2"))
             .filter((o) => o != null)
             .join(", ");
-        if (orderByRaw2.length == 0) orderByRaw2 = 's2."totalPoints" DESC';
+        if (orderByRaw2.length == 0) orderByRaw2 = 's2."totalPointsNp" DESC';
 
         let preFilterQuery = DATA_SOURCE.getRepository(MatchScores2019)
             .createQueryBuilder("s2")
@@ -331,7 +331,7 @@ export class MatchSeasonRecords2019Resolver {
 
         if (order.length == 0) {
             // In case they didn't provide an order
-            query = query.orderBy('s."totalPoints"', "DESC");
+            query = query.orderBy('s."totalPointsNp"', "DESC");
         }
 
         for (let o of order) {
