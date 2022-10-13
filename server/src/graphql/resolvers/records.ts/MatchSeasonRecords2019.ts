@@ -1,6 +1,5 @@
 import { Arg, Field, InputType, Int, Query, registerEnumType, Resolver } from "type-graphql";
 import { DATA_SOURCE } from "../../../db/data-source";
-import { EventTypes } from "./EventTypes";
 import { getRegionCodes, Region } from "../../../db/entities/types/Region";
 import { TepCondition, TepField, TepOrdering, TepValue } from "./TepObjects";
 import { Brackets } from "typeorm";
