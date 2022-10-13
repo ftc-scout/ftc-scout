@@ -91,7 +91,7 @@
             <Contributor
                 name="Daniel James"
                 role="Programmer"
-                imgSrc="/img/daniel.png"
+                imgSrc="/img/daniel.jpeg"
                 alt="Daniel James' avatar: a pixel art drawing of a green and tan egg with black lines showing the egg breaking."
                 href="https://github.com/Dragon-Hatcher"
             />
