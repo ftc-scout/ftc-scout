@@ -20,6 +20,9 @@ import { MatchScores2019 } from "../entities/MatchScores2019";
 import { MatchScores2019FtcApi } from "../../ftc-api/types/match-scores/MatchScores2019";
 import { calculateEventStatistics2019 } from "../../logic/calculate-event-statistics2019";
 import { TeamEventParticipation2019 } from "../entities/team-event-participation/TeamEventParticipation2019";
+import { MatchScores2020 } from "../entities/MatchScores2020";
+import { MatchScores2020TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2020Trad";
+import { MatchScores2020RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2020Remote";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -70,6 +73,10 @@ export async function loadAllMatches(season: Season) {
             await em.save(dbMatches, { chunk: 500 });
             await em.save(
                 dbMatches.flatMap((m) => m.scores2019 ?? []),
+                { chunk: 500 }
+            );
+            await em.save(
+                dbMatches.flatMap((m) => m.scores2020 ?? []),
                 { chunk: 500 }
             );
             await em.save(
@@ -149,6 +156,22 @@ function createDbEntities(
                             eventCode,
                             dbMatch.id,
                             thisMatchScores as MatchScores2021RemoteFtcApi
+                        ),
+                    ];
+                } else if (season == Season.ULTIMATE_GOAL && !remote) {
+                    dbMatch.scores2020 = MatchScores2020.fromTradApi(
+                        season,
+                        eventCode,
+                        dbMatch.id,
+                        thisMatchScores as MatchScores2020TradFtcApi
+                    );
+                } else if (season == Season.ULTIMATE_GOAL && !remote) {
+                    dbMatch.scores2020 = [
+                        MatchScores2020.fromApiRemote(
+                            season,
+                            eventCode,
+                            dbMatch.id,
+                            thisMatchScores as MatchScores2020RemoteFtcApi
                         ),
                     ];
                 } else if (season == Season.SKYSTONE) {
