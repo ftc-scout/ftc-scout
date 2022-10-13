@@ -22,9 +22,9 @@ export interface AllianceScores2020TradFtcApi {
     driverControlledGoalMid: number;
     driverControlledGoalHigh: number;
     ringsOnWobble1: number;
-    ringsOnWObble2: number;
-    wobbleEndPosititions1: "NONE" | "DROP_ZONE" | "START_LINE";
-    wobbleEndPosititions2: "NONE" | "DROP_ZONE" | "START_LINE";
+    ringsOnWobble2: number;
+    wobbleEndPositions1: "NONE" | "DROP_ZONE" | "START_LINE";
+    wobbleEndPositions2: "NONE" | "DROP_ZONE" | "START_LINE";
     endgamePowerShots: number;
     minorPenalties: number;
     majorPenalties: number;

@@ -3,11 +3,9 @@ import { MatchScores2020TradFtcApi } from "../../ftc-api/types/match-scores/Matc
 import { Season } from "../../ftc-api/types/Season";
 import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Match } from "./Match";
-import { Alliance, allianceFromString } from "./types/Alliance";
-import { AutoNavigation2020, autoNavigation2020FromApi } from "./types/2020/AutoNavigation2020";
+import { Alliance } from "./types/Alliance";
 import { WobbleEndPositions, wobbleEndPositionsFromApi } from "./types/2020/WobbleEndPositions";
 
-//Jonah do what is in the other matchscores ones nexttheyre
 @Entity()
 export class MatchScores2020 extends BaseEntity {
     @PrimaryColumn("smallint")
@@ -36,14 +34,14 @@ export class MatchScores2020 extends BaseEntity {
     @Column()
     autoWobble!: boolean;
 
+    @Column("bool", { nullable: true })
+    autoWobble2!: boolean | null;
+
     @Column()
-    autoWobble2!: boolean;
+    autoNavigated!: boolean;
 
-    @Column("enum", { enum: AutoNavigation2020 })
-    autoNavigation!: AutoNavigation2020;
-
-    @Column("enum", { enum: AutoNavigation2020, nullable: true })
-    autoNavigation2!: AutoNavigation2020 | null;
+    @Column("bool", { nullable: true })
+    autoNavigated2!: boolean | null;
 
     @Column("int8")
     autoPowershots!: number;
@@ -76,9 +74,6 @@ export class MatchScores2020 extends BaseEntity {
     endgameRingsOnWobble!: number;
 
     @Column("int8")
-    endgameRingsOnWobble2!: number;
-
-    @Column("int8")
     endgamePowershots!: number;
 
     @Column("int8")
@@ -97,28 +92,16 @@ export class MatchScores2020 extends BaseEntity {
     autoWobblePoints!: number;
 
     @Column("int8")
-    driverControlledAllianceHubPoints!: number;
-
-    @Column("int8", { nullable: true })
-    driverControlledSharedHubPoints!: number | null;
+    autoPowershotPoints!: number;
 
     @Column("int8")
-    driverControlledStoragePoints!: number;
+    endgameWobblePoints!: number;
 
     @Column("int8")
-    endgameDeliveryPoints!: number;
+    endgamePowershotPoints!: number;
 
     @Column("int8")
-    allianceBalancedPoints!: number;
-
-    @Column("int8", { nullable: true })
-    sharedUnbalancedPoints!: number | null;
-
-    @Column("int8")
-    endgameParkingPoints!: number;
-
-    @Column("int8")
-    cappingPoints!: number;
+    endgameWobbleRingPoints!: number;
 
     @Column("smallint")
     autoPoints!: number;
@@ -138,90 +121,66 @@ export class MatchScores2020 extends BaseEntity {
     @Column("smallint")
     totalPointsNp!: number;
 
-    static calcAutoNavigationPoints(nav: AutoNavigation2021): number {
-        return [0, 3, 6, 5, 10][nav];
-    }
-
-    static calcAutoBonusPoints(bonus: boolean, barcode: BarcodeElement2021): number {
-        return bonus ? (barcode == BarcodeElement2021.DUCK ? 10 : 20) : 0;
-    }
-
-    static calcParkPoints(park: EndgamePark2021): number {
-        return [0, 3, 6][park];
+    static calcEndgameWobblePoints(pos: WobbleEndPositions | null): number {
+        return pos == null
+            ? 0
+            : {
+                  [WobbleEndPositions.NONE]: 0,
+                  [WobbleEndPositions.START_LINE]: 5,
+                  [WobbleEndPositions.DROP_ZONE]: 20,
+              }[pos];
     }
 
     addGeneratedProps() {
-        this.autoCarouselPoints = this.autoCarousel ? 10 : 0;
-        this.autoNavigationPoints =
-            [0, 3, 6, 5, 10][this.autoNavigation] +
-            (this.autoNavigation2 != null ? [0, 3, 6, 5, 10][this.autoNavigation2] : 0);
-        this.autoFreightPoints =
-            this.autoStorageFreight * 2 + (this.autoFreight1 + this.autoFreight2 + this.autoFreight3) * 6;
-        this.autoBonusPoints =
-            (this.autoBonus ? (this.barcodeElement == BarcodeElement2021.DUCK ? 10 : 20) : 0) +
-            (this.autoBonus2 ? (this.barcodeElement2 == BarcodeElement2021.DUCK ? 10 : 20) : 0);
-        this.driverControlledAllianceHubPoints =
-            this.driverControlledFreight1 * 2 + this.driverControlledFreight2 * 4 + this.driverControlledFreight3 * 6;
-        this.driverControlledSharedHubPoints = this.sharedFreight == null ? null : this.sharedFreight * 4;
-        this.driverControlledStoragePoints = this.driverControlledStorageFreight * 1;
-        this.endgameDeliveryPoints = this.endgameDucksDelivered * 6;
-        this.allianceBalancedPoints = this.allianceBalanced ? 10 : 0;
-        this.sharedUnbalancedPoints = this.sharedUnbalanced == null ? null : this.sharedUnbalanced ? 20 : 0;
-        this.endgameParkingPoints =
-            [0, 3, 6][this.endgamePark] + (this.endgamePark2 != null ? [0, 3, 6][this.endgamePark2] : 0);
-        this.cappingPoints = this.capped * 15;
+        this.autoNavigationPoints = (this.autoNavigated ? 5 : 0) + (this.autoNavigated2 ? 5 : 0);
+        this.autoGoalPoints = this.autoGoalLow * 3 + this.autoGoalMid * 6 + this.autoGoalHigh * 12;
+        this.autoWobblePoints = (this.autoWobble ? 15 : 0) + (this.autoWobble2 ? 15 : 0);
+        this.autoPowershotPoints = this.autoPowershots * 15;
+        this.endgamePowershotPoints = this.endgamePowershots * 15;
+        this.endgameWobblePoints =
+            MatchScores2020.calcEndgameWobblePoints(this.wobbleEndPositions) +
+            MatchScores2020.calcEndgameWobblePoints(this.wobbleEndPositions2);
+        this.endgameWobbleRingPoints = this.endgameRingsOnWobble * 5;
+
         this.autoPoints =
-            this.autoCarouselPoints + this.autoNavigationPoints + this.autoFreightPoints + this.autoBonusPoints;
+            this.autoNavigationPoints + this.autoGoalPoints + this.autoWobblePoints + this.autoPowershotPoints;
         this.driverControlledPoints =
-            this.driverControlledAllianceHubPoints +
-            this.driverControlledStoragePoints +
-            (this.driverControlledSharedHubPoints ?? 0);
-        this.endgamePoints =
-            this.endgameDeliveryPoints +
-            this.allianceBalancedPoints +
-            (this.sharedUnbalancedPoints ?? 0) +
-            this.endgameParkingPoints +
-            this.cappingPoints;
+            this.driverControlledLow * 2 + this.driverControlledMid * 4 + this.driverControlledHigh * 6;
+        this.endgamePoints = this.endgamePowershotPoints + this.endgameWobblePoints + this.endgameWobbleRingPoints;
         this.penaltyPoints = this.majorPenalties * -30 + this.minorPenalties * -10;
-        this.totalPoints = Math.max(
-            this.autoPoints + this.driverControlledPoints + this.endgamePoints + this.penaltyPoints,
-            0
-        );
-        this.totalPointsNp = this.autoPoints + this.driverControlledPoints + this.endgamePoints;
     }
 
     static fromApiRemote(
         season: Season,
         eventCode: string,
         matchId: number,
-        ms: MatchScores2021RemoteFtcApi
-    ): MatchScores2021 {
+        ms: MatchScores2020RemoteFtcApi
+    ): MatchScores2020 {
         let s = ms.scores;
-        let dbms = MatchScores2021.create({
+        let dbms = MatchScores2020.create({
             season,
             eventCode,
             matchId,
             alliance: Alliance.SOLO,
             randomization: ms.randomization,
-            barcodeElement: barcodeElementFromApi(s.barcodeElement),
-            autoCarousel: s.carousel,
-            autoNavigation: autoNavigation2021FromApi(s.autoNavigated),
-            autoBonus: s.autoBonus,
-            autoStorageFreight: s.autoStorageFreight,
-            autoFreight1: s.autoFreight1,
-            autoFreight2: s.autoFreight2,
-            autoFreight3: s.autoFreight3,
-            driverControlledStorageFreight: s.driverControlledStorageFreight,
-            driverControlledFreight1: s.driverControlledFreight1,
-            driverControlledFreight2: s.driverControlledFreight2,
-            driverControlledFreight3: s.driverControlledFreight3,
-            endgameDucksDelivered: s.endgameDelivered,
-            allianceBalanced: s.allianceBalanced,
-            endgamePark: endgamePark2021FromApi(s.endgameParked),
-            capped: s.capped,
+            autoWobble: s.autoWobble,
+            autoWobble2: null,
+            autoNavigated: s.autoNavigated == "PAST_LAUNCH_LINE",
+            autoNavigated2: null,
+            autoPowershots: s.autoPowershot,
+            autoGoalLow: s.autoGoalLow,
+            autoGoalMid: s.autoGoalMid,
+            autoGoalHigh: s.autoGoalHigh,
+            driverControlledLow: s.driverControlledGoalLow,
+            driverControlledMid: s.driverControlledGoalMid,
+            driverControlledHigh: s.driverControlledGoalHigh,
+            wobbleEndPositions: wobbleEndPositionsFromApi(s.wobbleEndPosititions),
+            wobbleEndPositions2: null,
+            endgameRingsOnWobble: s.ringsOnWobble,
+            endgamePowershots: s.endgamePowerShots,
             minorPenalties: s.minorPenalties,
             majorPenalties: s.majorPenalties,
-        } as DeepPartial<MatchScores2021>);
+        } as DeepPartial<MatchScores2020>);
         dbms.addGeneratedProps();
         return dbms;
     }
@@ -230,40 +189,33 @@ export class MatchScores2020 extends BaseEntity {
         season: Season,
         eventCode: string,
         matchId: number,
-        ms: MatchScores2021TradFtcApi
-    ): MatchScores2021[] {
+        ms: MatchScores2020TradFtcApi
+    ): MatchScores2020[] {
         return ms.alliances.map((a) => {
-            let dbms = MatchScores2021.create({
+            let dbms = MatchScores2020.create({
                 season,
                 eventCode,
                 matchId,
-                alliance: allianceFromString(a.alliance),
+                alliance: Alliance.SOLO,
                 randomization: ms.randomization,
-                barcodeElement: barcodeElementFromApi(a.barcodeElement1),
-                barcodeElement2: barcodeElementFromApi(a.barcodeElement2),
-                autoCarousel: a.carousel,
-                autoNavigation: autoNavigation2021FromApi(a.autoNavigated1),
-                autoNavigation2: autoNavigation2021FromApi(a.autoNavigated2),
-                autoBonus: a.autoBonus1,
-                autoBonus2: a.autoBonus2,
-                autoStorageFreight: a.autoStorageFreight,
-                autoFreight1: a.autoFreight1,
-                autoFreight2: a.autoFreight2,
-                autoFreight3: a.autoFreight3,
-                driverControlledStorageFreight: a.driverControlledStorageFreight,
-                driverControlledFreight1: a.driverControlledFreight1,
-                driverControlledFreight2: a.driverControlledFreight2,
-                driverControlledFreight3: a.driverControlledFreight3,
-                sharedFreight: a.sharedFreight,
-                endgameDucksDelivered: a.endgameDelivered,
-                allianceBalanced: a.allianceBalanced,
-                sharedUnbalanced: a.sharedUnbalanced,
-                endgamePark: endgamePark2021FromApi(a.endgameParked1),
-                endgamePark2: endgamePark2021FromApi(a.endgameParked2),
-                capped: a.capped,
+                autoWobble: a.autoWobble1,
+                autoWobble2: a.autoWobble2,
+                autoNavigated: a.autoNavigated1 == "PAST_LAUNCH_LINE",
+                autoNavigated2: a.autoNavigated2 == "PAST_LAUNCH_LINE",
+                autoPowershots: a.autoPowershot,
+                autoGoalLow: a.autoGoalLow,
+                autoGoalMid: a.autoGoalMid,
+                autoGoalHigh: a.autoGoalHigh,
+                driverControlledLow: a.driverControlledGoalLow,
+                driverControlledMid: a.driverControlledGoalMid,
+                driverControlledHigh: a.driverControlledGoalHigh,
+                wobbleEndPositions: wobbleEndPositionsFromApi(a.wobbleEndPositions1),
+                wobbleEndPositions2: wobbleEndPositionsFromApi(a.wobbleEndPositions2),
+                endgameRingsOnWobble: a.ringsOnWobble1 + a.ringsOnWobble2,
+                endgamePowershots: a.endgamePowerShots,
                 minorPenalties: a.minorPenalties,
                 majorPenalties: a.majorPenalties,
-            } as DeepPartial<MatchScores2021>);
+            } as DeepPartial<MatchScores2020>);
             dbms.addGeneratedProps();
             return dbms;
         });
