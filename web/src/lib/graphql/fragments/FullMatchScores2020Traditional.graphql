@@ -1,0 +1,11 @@
+fragment FullMatchScores2020Traditional on MatchScores2020Traditional {
+    season
+    eventCode
+    matchId
+    red {
+        ...FullMatchScores2020TraditionalAlliance
+    }
+    blue {
+        ...FullMatchScores2020TraditionalAlliance
+    }
+}

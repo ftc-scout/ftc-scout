@@ -14,7 +14,14 @@ import { TeamEventStatGroup2020, TeamEventStats2020Remote, TeamEventStats2020Tra
 
 export const TeamEventStatsUnion = createUnionType({
     name: "TeamEventStats",
-    types: () => [TeamEventStats2021Traditional, TeamEventStats2021Remote, TeamEventStats2019] as const,
+    types: () =>
+        [
+            TeamEventStats2021Traditional,
+            TeamEventStats2021Remote,
+            TeamEventStats2020Traditional,
+            TeamEventStats2020Remote,
+            TeamEventStats2019,
+        ] as const,
 });
 
 @ObjectType()
@@ -126,6 +133,7 @@ export class TeamEventParticipation {
         } else {
             throw "Can't create tep for season " + _tep.eventSeason;
         }
+        console.log(this.stats);
     }
 
     @Field(() => Int, { name: "season" })

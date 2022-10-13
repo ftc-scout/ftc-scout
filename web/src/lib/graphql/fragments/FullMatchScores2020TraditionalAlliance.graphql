@@ -1,0 +1,35 @@
+fragment FullMatchScores2020TraditionalAlliance on MatchScores2020TraditionalAlliance {
+    season
+    eventCode
+    matchId
+    autoWobble1
+    autoWobble2
+    autoNavigated1
+    autoNavigated2
+    autoPowershots
+    autoGoalLow
+    autoGoalMid
+    autoGoalHigh
+    driverControlledLow
+    driverControlledMid
+    driverControlledHigh
+    wobbleEndPositions1
+    wobbleEndPositions2
+    endgameRingsOnWobble
+    endgamePowershots
+    minorPenalties
+    majorPenalties
+    autoNavigationPoints
+    autoGoalPoints
+    autoWobblePoints
+    autoPowershotPoints
+    endgameWobblePoints
+    endgamePowershotPoints
+    endgameWobbleRingPoints
+    autoPoints
+    driverControlledPoints
+    endgamePoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}

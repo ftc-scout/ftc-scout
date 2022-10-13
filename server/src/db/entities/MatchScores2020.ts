@@ -145,7 +145,10 @@ export class MatchScores2020 extends BaseEntity {
             this.driverControlledLow * 2 + this.driverControlledMid * 4 + this.driverControlledHigh * 6;
         this.endgamePoints = this.endgamePowershotPoints + this.endgameWobblePoints + this.endgameWobbleRingPoints;
         this.penaltyPoints = this.majorPenalties * -30 + this.minorPenalties * -10;
-        this.totalPoints = this.autoPoints + this.driverControlledPoints + this.endgamePoints + this.penaltyPoints;
+        this.totalPoints = Math.max(
+            0,
+            this.autoPoints + this.driverControlledPoints + this.endgamePoints + this.penaltyPoints
+        );
         this.totalPointsNp = this.autoPoints + this.driverControlledPoints + this.endgamePoints;
     }
 

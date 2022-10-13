@@ -1,7 +1,5 @@
 <script lang="ts">
-    import type { MatchScores2021Remote } from "../../../graphql/generated/graphql-operations";
-
-    export let score: MatchScores2021Remote;
+    export let score: { totalPoints: number };
     export let teamNumber: number;
 </script>
 

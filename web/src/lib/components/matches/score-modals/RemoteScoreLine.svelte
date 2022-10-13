@@ -1,12 +1,13 @@
 <script lang="ts">
-    import type { MatchScores2021Remote } from "../../../graphql/generated/graphql-operations";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
     import { remote2021Expansions } from "./expansions";
 
-    type PropFn = (_: MatchScores2021Remote) => number;
+    type T = $$Generic;
 
-    export let score: MatchScores2021Remote;
+    type PropFn = (_: T) => number;
+
+    export let score: T;
     export let name: string;
     export let heading = false;
     export let getProp: PropFn;
@@ -27,7 +28,7 @@
 >
     <td class="name" style="position: relative;">
         {#if subProps.length}
-            <ExpandButton bind:open={showSub} style="position:absolute; left: 0" />
+            <ExpandButton bind:open={showSub} style="position:absolute; left: var(--gap)" />
         {/if}
 
         {name}

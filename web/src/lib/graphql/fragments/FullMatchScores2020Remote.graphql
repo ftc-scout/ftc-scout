@@ -1,0 +1,34 @@
+fragment FullMatchScores2020Remote on MatchScores2020Remote {
+    season
+    eventCode
+    matchId
+    autoWobble1
+    autoWobble2
+    autoNavigated
+    autoPowershots
+    autoGoalLow
+    autoGoalMid
+    autoGoalHigh
+    driverControlledLow
+    driverControlledMid
+    driverControlledHigh
+    wobbleEndPositions1
+    wobbleEndPositions2
+    endgameRingsOnWobble
+    endgamePowershots
+    minorPenalties
+    majorPenalties
+    autoNavigationPoints
+    autoGoalPoints
+    autoWobblePoints
+    autoPowershotPoints
+    endgameWobblePoints
+    endgamePowershotPoints
+    endgameWobbleRingPoints
+    autoPoints
+    driverControlledPoints
+    endgamePoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}
