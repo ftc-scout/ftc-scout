@@ -3,7 +3,7 @@ import { MatchScores2020TradFtcApi } from "../../ftc-api/types/match-scores/Matc
 import { Season } from "../../ftc-api/types/Season";
 import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Match } from "./Match";
-import { Alliance } from "./types/Alliance";
+import { Alliance, allianceFromString } from "./types/Alliance";
 import { WobbleEndPositions, wobbleEndPositionsFromApi } from "./types/2020/WobbleEndPositions";
 
 @Entity()
@@ -27,9 +27,6 @@ export class MatchScores2020 extends BaseEntity {
         { name: "matchId", referencedColumnName: "id" },
     ])
     match!: Match;
-
-    @Column("int8")
-    randomization!: number;
 
     @Column()
     autoWobble!: boolean;
@@ -148,6 +145,8 @@ export class MatchScores2020 extends BaseEntity {
             this.driverControlledLow * 2 + this.driverControlledMid * 4 + this.driverControlledHigh * 6;
         this.endgamePoints = this.endgamePowershotPoints + this.endgameWobblePoints + this.endgameWobbleRingPoints;
         this.penaltyPoints = this.majorPenalties * -30 + this.minorPenalties * -10;
+        this.totalPoints = this.autoPoints + this.driverControlledPoints + this.endgamePoints + this.penaltyPoints;
+        this.totalPointsNp = this.autoPoints + this.driverControlledPoints + this.endgamePoints;
     }
 
     static fromApiRemote(
@@ -163,21 +162,23 @@ export class MatchScores2020 extends BaseEntity {
             matchId,
             alliance: Alliance.SOLO,
             randomization: ms.randomization,
-            autoWobble: s.autoWobble,
+            autoWobble: s.wobbleDelivered1,
             autoWobble2: null,
-            autoNavigated: s.autoNavigated == "PAST_LAUNCH_LINE",
+            autoNavigated: s.navigated1,
             autoNavigated2: null,
-            autoPowershots: s.autoPowershot,
-            autoGoalLow: s.autoGoalLow,
-            autoGoalMid: s.autoGoalMid,
-            autoGoalHigh: s.autoGoalHigh,
-            driverControlledLow: s.driverControlledGoalLow,
-            driverControlledMid: s.driverControlledGoalMid,
-            driverControlledHigh: s.driverControlledGoalHigh,
-            wobbleEndPositions: wobbleEndPositionsFromApi(s.wobbleEndPosititions),
+            autoPowershots:
+                (s.autoPowerShotCenter ? 1 : 0) + (s.autoPowerShotLeft ? 1 : 0) + (s.autoPowerShotRight ? 1 : 0),
+            autoGoalLow: s.autoTowerLow,
+            autoGoalMid: s.autoTowerMid,
+            autoGoalHigh: s.autoTowerHigh,
+            driverControlledLow: s.dcTowerLow,
+            driverControlledMid: s.dcTowerMid,
+            driverControlledHigh: s.dcTowerHigh,
+            wobbleEndPositions: s.wobbleEnd1,
             wobbleEndPositions2: null,
-            endgameRingsOnWobble: s.ringsOnWobble,
-            endgamePowershots: s.endgamePowerShots,
+            endgameRingsOnWobble: s.wobbleRings1 + s.wobbleRings2,
+            endgamePowershots:
+                (s.endPowerShotCenter ? 1 : 0) + (s.endPowerShotLeft ? 1 : 0) + (s.endPowerShotRight ? 1 : 0),
             minorPenalties: s.minorPenalties,
             majorPenalties: s.majorPenalties,
         } as DeepPartial<MatchScores2020>);
@@ -196,23 +197,25 @@ export class MatchScores2020 extends BaseEntity {
                 season,
                 eventCode,
                 matchId,
-                alliance: Alliance.SOLO,
+                alliance: allianceFromString(a.alliance),
                 randomization: ms.randomization,
-                autoWobble: a.autoWobble1,
-                autoWobble2: a.autoWobble2,
-                autoNavigated: a.autoNavigated1 == "PAST_LAUNCH_LINE",
-                autoNavigated2: a.autoNavigated2 == "PAST_LAUNCH_LINE",
-                autoPowershots: a.autoPowershot,
-                autoGoalLow: a.autoGoalLow,
-                autoGoalMid: a.autoGoalMid,
-                autoGoalHigh: a.autoGoalHigh,
-                driverControlledLow: a.driverControlledGoalLow,
-                driverControlledMid: a.driverControlledGoalMid,
-                driverControlledHigh: a.driverControlledGoalHigh,
-                wobbleEndPositions: wobbleEndPositionsFromApi(a.wobbleEndPositions1),
-                wobbleEndPositions2: wobbleEndPositionsFromApi(a.wobbleEndPositions2),
-                endgameRingsOnWobble: a.ringsOnWobble1 + a.ringsOnWobble2,
-                endgamePowershots: a.endgamePowerShots,
+                autoWobble: a.wobbleDelivered1,
+                autoWobble2: a.wobbleDelivered2,
+                autoNavigated: a.navigated1,
+                autoNavigated2: a.navigated2,
+                autoPowershots:
+                    (a.autoPowerShotCenter ? 1 : 0) + (a.autoPowerShotLeft ? 1 : 0) + (a.autoPowerShotRight ? 1 : 0),
+                autoGoalLow: a.autoTowerLow,
+                autoGoalMid: a.autoTowerMid,
+                autoGoalHigh: a.autoTowerHigh,
+                driverControlledLow: a.dcTowerLow,
+                driverControlledMid: a.dcTowerMid,
+                driverControlledHigh: a.dcTowerHigh,
+                wobbleEndPositions: a.wobbleEnd1,
+                wobbleEndPositions2: a.wobbleEnd2,
+                endgameRingsOnWobble: a.wobbleRings1 + a.wobbleRings2,
+                endgamePowershots:
+                    (a.endPowerShotCenter ? 1 : 0) + (a.endPowerShotLeft ? 1 : 0) + (a.endPowerShotRight ? 1 : 0),
                 minorPenalties: a.minorPenalties,
                 majorPenalties: a.majorPenalties,
             } as DeepPartial<MatchScores2020>);

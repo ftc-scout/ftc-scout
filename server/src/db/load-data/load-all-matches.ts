@@ -23,6 +23,8 @@ import { TeamEventParticipation2019 } from "../entities/team-event-participation
 import { MatchScores2020 } from "../entities/MatchScores2020";
 import { MatchScores2020TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2020Trad";
 import { MatchScores2020RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2020Remote";
+import { calculateEventStatistics2020 } from "../../logic/calculate-event-statistics2020";
+import { TeamEventParticipation2020 } from "../entities/team-event-participation/TeamEventParticipation2020";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -32,9 +34,6 @@ function addDays(date: Date, days: number): Date {
 
 export async function loadAllMatches(season: Season) {
     console.log(`Loading all matches from season ${season}.`);
-
-    if (season != Season.FREIGHT_FRENZY && season != Season.SKYSTONE)
-        throw `Cannot load match scores for season ${season}`;
 
     let dateStartQuery = new Date();
     let dateLastReq = await FtcApiMetadata.getLastMatchesReq(season);
@@ -65,8 +64,13 @@ export async function loadAllMatches(season: Season) {
 
             console.log("Calculating.");
 
-            let { dbMatches, dbTeamMatchParticipations, dbTeamEventParticipations2021, dbTeamEventParticipations2019 } =
-                createDbEntities(season, chunkEvents);
+            let {
+                dbMatches,
+                dbTeamMatchParticipations,
+                dbTeamEventParticipations2021,
+                dbTeamEventParticipations2020,
+                dbTeamEventParticipations2019,
+            } = createDbEntities(season, chunkEvents);
 
             console.log("Inserting into db.");
 
@@ -75,6 +79,7 @@ export async function loadAllMatches(season: Season) {
                 dbMatches.flatMap((m) => m.scores2019 ?? []),
                 { chunk: 500 }
             );
+            // console.log(dbMatches.flatMap((m) => m.scores2020 ?? []))
             await em.save(
                 dbMatches.flatMap((m) => m.scores2020 ?? []),
                 { chunk: 500 }
@@ -85,6 +90,7 @@ export async function loadAllMatches(season: Season) {
             );
             await em.save(dbTeamMatchParticipations, { chunk: 500 });
             await em.save(dbTeamEventParticipations2021, { chunk: 100 }); // These are really big so lower chunk size
+            await em.save(dbTeamEventParticipations2020, { chunk: 100 });
             await em.save(dbTeamEventParticipations2019, { chunk: 100 });
 
             console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
@@ -114,11 +120,13 @@ function createDbEntities(
     dbMatches: Match[];
     dbTeamMatchParticipations: TeamMatchParticipation[];
     dbTeamEventParticipations2021: TeamEventParticipation2021[];
+    dbTeamEventParticipations2020: TeamEventParticipation2020[];
     dbTeamEventParticipations2019: TeamEventParticipation2019[];
 } {
     let dbMatchesAll: Match[] = [];
     let dbTeamMatchParticipationsAll: TeamMatchParticipation[] = [];
     let dbTeamEventParticipations2021All: TeamEventParticipation2021[] = [];
+    let dbTeamEventParticipations2020All: TeamEventParticipation2020[] = [];
     let dbTeamEventParticipations2019All: TeamEventParticipation2019[] = [];
 
     for (let { eventCode, remote, matches, matchScores, teams } of apiEvents) {
@@ -165,7 +173,7 @@ function createDbEntities(
                         dbMatch.id,
                         thisMatchScores as MatchScores2020TradFtcApi
                     );
-                } else if (season == Season.ULTIMATE_GOAL && !remote) {
+                } else if (season == Season.ULTIMATE_GOAL && remote) {
                     dbMatch.scores2020 = [
                         MatchScores2020.fromApiRemote(
                             season,
@@ -211,6 +219,10 @@ function createDbEntities(
             dbTeamEventParticipations2021All.push(
                 ...calculateEventStatistics2021(season, eventCode, teams, dbMatches, remote)
             );
+        } else if (season == Season.ULTIMATE_GOAL) {
+            dbTeamEventParticipations2020All.push(
+                ...calculateEventStatistics2020(season, eventCode, teams, dbMatches, remote)
+            );
         } else if (season == Season.SKYSTONE) {
             dbTeamEventParticipations2019All.push(...calculateEventStatistics2019(season, eventCode, teams, dbMatches));
         } else {
@@ -225,6 +237,7 @@ function createDbEntities(
         dbMatches: dbMatchesAll,
         dbTeamMatchParticipations: dbTeamMatchParticipationsAll,
         dbTeamEventParticipations2021: dbTeamEventParticipations2021All,
+        dbTeamEventParticipations2020: dbTeamEventParticipations2020All,
         dbTeamEventParticipations2019: dbTeamEventParticipations2019All,
     };
 }

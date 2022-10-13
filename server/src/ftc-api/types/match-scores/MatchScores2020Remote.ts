@@ -1,5 +1,3 @@
-import { AutoNavigation2020FtcApi } from "./MatchScores2020Trad";
-
 export interface MatchScores2020RemoteFtcApi {
     matchLevel: "OTHER" | "QUALIFICATION" | "SEMIFINAL" | "FINAL" | "PLAYOFF";
     matchNumber: number;
@@ -9,34 +7,39 @@ export interface MatchScores2020RemoteFtcApi {
 }
 
 export interface Scores2020RemoteFtcApi {
-    alliance: "Blue" | "Red";
-    autoWobble: boolean;
-    autoNavigated: AutoNavigation2020FtcApi;
-    autoGoalLow: number;
-    autoGoalMid: number;
-    autoGoalHigh: number;
-    autoPowershot: number;
-    driverControlledGoalLow: number;
-    driverControlledGoalMid: number;
-    driverControlledGoalHigh: number;
-    ringsOnWobble: number;
-    wobbleEndPosititions: "DROP_ZONE" | "START_LINE";
-    endgamePowerShots: number;
-    minorPenalties: number;
-    majorPenalties: number;
-    autoNavigationPoints: number;
-    autoGoalLowPoints: number;
-    autoGoalMidPoints: number;
-    autoGoalHighPoints: number;
-    autoWobblePoints: number;
-    driverControlledGoalLowPoints: number;
-    driverControlledGoalMidPoints: number;
-    driverControlledGoalHighPoints: number;
-    ringsOnWobblePoints: number;
-    totalGoalPoints: number;
+    adjust: number;
+    dcPoints: number;
     autoPoints: number;
-    driverControlledPoints: number;
-    endgamePoints: number;
+    dcTowerLow: number;
+    dcTowerMid: number;
+    dcTowerHigh: number;
+    navigated1: boolean;
+    navigated2: boolean;
+    wobbleDelivered1: boolean;
+    wobbleDelivered2: boolean;
+    autoTowerLow: number;
+    autoTowerMid: number;
+    autoTowerHigh: number;
+    autoTowerPoints: number;
+    autoPowerShotLeft: boolean;
+    autoPowerShotCenter: boolean;
+    autoPowerShotRight: boolean;
+    autoPowerShotPoints: number;
+    wobbleRings1: number;
+    wobbleRings2: number;
+    wobbleEnd1: number;
+    wobbleEnd2: number;
+    wobbleEndPoints: number;
+    wobbleRingPoints: number;
+    autoWobblePoints: number;
+    endPowerShotLeft: boolean;
+    endPowerShotCenter: boolean;
+    endPowerShotRight: boolean;
+    endPowerShotPoints: number;
     penaltyPoints: number;
+    majorPenalties: number;
+    minorPenalties: number;
+    navigationPoints: number;
+    endgamePoints: number;
     totalPoints: number;
 }
