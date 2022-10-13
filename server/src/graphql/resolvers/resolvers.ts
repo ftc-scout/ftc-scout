@@ -8,6 +8,7 @@ import { MatchSeasonRecords2021Resolver } from "./records.ts/MatchSeasonRecords2
 import { TeamSeasonRecords2019Resolver } from "./records.ts/TeamSeasonRecords2019";
 import { TeamSeasonRecords2021Resolver } from "./records.ts/TeamSeasonRecords2021";
 import { Scores2019Resolver } from "./scores/Scores2019Resolver";
+import { Scores2020RemoteResolver, Scores2020TradResolver } from "./scores/Scores2020Resolver";
 import { Scores2021RemoteResolver, Scores2021TradResolver } from "./scores/Scores2021Resolver";
 import { SearchResolver } from "./SearchResolver";
 import { TeamEventParticipationResolver } from "./TeamEventParticipationResolver";
@@ -27,5 +28,7 @@ export const resolvers: NonEmptyArray<Function> = [
     HomePageResolver,
     Scores2021TradResolver,
     Scores2021RemoteResolver,
+    Scores2020TradResolver,
+    Scores2020RemoteResolver,
     Scores2019Resolver,
 ];
