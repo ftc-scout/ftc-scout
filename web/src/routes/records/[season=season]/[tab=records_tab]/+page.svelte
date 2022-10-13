@@ -200,10 +200,11 @@
                 />
             {/key}
         </div>
-        {#if $page.url.search != ""}
-            <FaButton icon={faTrash} buttonStyle="font-size: var(--medium-font-size); width: 100%" on:click={reset}
-                >Reset All</FaButton
-            >
+
+        {#if $page.url.search != "" && !/\?page=\d+/.test($page.url.search)}
+            <FaButton icon={faTrash} buttonStyle="font-size: var(--medium-font-size); width: 100%" on:click={reset}>
+                Reset All
+            </FaButton>
         {/if}
     </Card>
 
