@@ -27,6 +27,7 @@
         EventTypes,
         Region,
         type MatchScoresAlliance,
+        type MatchSeasonRecords2019Query,
         type MatchSeasonRecords2021Query,
         type TeamSeasonRecords2019Query,
         type TeamSeasonRecords2021Query,
@@ -45,6 +46,10 @@
     } from "../../../../lib/components/season-records/MatchSeasonRecords2021.svelte";
     import FaButton from "../../../../lib/components/FaButton.svelte";
     import { faTrash } from "@fortawesome/free-solid-svg-icons";
+    import MatchSeasonRecords2019, {
+        match2019SearchParams,
+        resetMatch2019SearchParams,
+    } from "../../../../lib/components/season-records/MatchSeasonRecords2019.svelte";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -65,7 +70,7 @@
                 case 2021:
                     return match2021SearchParams;
                 case 2019:
-                    return null;
+                    return match2019SearchParams;
             }
         } else {
             return null;
@@ -85,7 +90,8 @@
     let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query> | null> | undefined;
     let matches2021: Readable<ApolloQueryResult<MatchSeasonRecords2021Query> | null> | undefined;
     let teams2019: Readable<ApolloQueryResult<TeamSeasonRecords2019Query> | null> | undefined;
-    $: ({ teams2021, matches2021, teams2019 } = data);
+    let matches2019: Readable<ApolloQueryResult<MatchSeasonRecords2019Query> | null> | undefined;
+    $: ({ teams2021, matches2021, teams2019, matches2019 } = data);
 
     $: dataTeams2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let dataTeams2021Teps: StatData<FullTep2021Shared>[] | undefined;
@@ -109,6 +115,14 @@
         rank: t.rank,
         preFilterRank: t.preFilterRank,
         data: t.tep,
+    })) as any;
+
+    $: dataMatches2019 = !$matches2019 ? undefined : $matches2019.data.matchRecords2019;
+    let dataMatches2019Scores: StatData<MatchScoresAlliance>[] | undefined;
+    $: dataMatches2019Scores = dataMatches2019?.scores?.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.score,
     })) as any;
 
     let eventTypesStr: "Traditional" | "Remote" | "Traditional and Remote" = eventTypesToStr(
@@ -135,6 +149,7 @@
             resetTeam2021SearchParams();
             resetTeam2019SearchParams();
             resetMatch2021SearchParams();
+            resetMatch2019SearchParams();
 
             eventTypesStr = "Traditional and Remote";
             regionStr = "All";
@@ -248,6 +263,22 @@
                 <MatchSeasonRecords2021
                     {eventTypes}
                     data={dataMatches2021Scores}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                    bind:change={childrenChange}
+                />
+            {:else if dataMatches2019 && dataMatches2019Scores}
+                {@const totalCount = dataMatches2019.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataMatches2019.offset / pageSize + 1}
+
+                <MatchSeasonRecords2019
+                    data={dataMatches2019Scores}
                     currPage={page}
                     {totalCount}
                     {pageSize}

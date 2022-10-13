@@ -1,19 +1,17 @@
-query MatchSeasonRecords2021(
+query MatchSeasonRecords2019(
     $skip: Int!
     $take: Int!
-    $filter: Match2021Filter
-    $order: [Match2021Ordering!]!
-    $eventTypes: EventTypes!
+    $filter: Match2019Filter
+    $order: [Match2019Ordering!]!
     $region: Region!
     $start: DateTime
     $end: DateTime
 ) {
-    matchRecords2021(
+    matchRecords2019(
         skip: $skip
         take: $take
         filter: $filter
         order: $order
-        eventTypes: $eventTypes
         region: $region
         start: $start
         end: $end
@@ -21,7 +19,7 @@ query MatchSeasonRecords2021(
         scores {
             score {
                 __typename
-                ... on MatchScores2021TraditionalAlliance {
+                ... on MatchScores2019Alliance {
                     alliance
                     event {
                         ...RecordsEvent
@@ -43,7 +41,7 @@ query MatchSeasonRecords2021(
                             name
                         }
                     }
-                    ...FullMatchScores2021TraditionalAlliance
+                    ...FullMatchScores2019Alliance
                     opponentsScore {
                         teams {
                             season
@@ -56,30 +54,8 @@ query MatchSeasonRecords2021(
                                 name
                             }
                         }
-                        ...FullMatchScores2021TraditionalAlliance
+                        ...FullMatchScores2019Alliance
                     }
-                }
-                ... on MatchScores2021Remote {
-                    event {
-                        ...RecordsEvent
-                    }
-                    match {
-                        season
-                        eventCode
-                        id
-                        matchDescription
-                    }
-                    team {
-                        season
-                        eventCode
-                        matchId
-                        teamNumber
-                        team {
-                            number
-                            name
-                        }
-                    }
-                    ...FullMatchScores2021Remote
                 }
             }
             rank

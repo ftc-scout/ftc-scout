@@ -12,6 +12,7 @@ enum Match2019FieldName {
     AUTO_NAVIGATION_POINTS,
     AUTO_REPOSITIONING_POINTS,
     AUTO_DELIVERY_POINTS,
+    AUTO_PLACEMENT_POINTS,
     DC_DELIVERY_POINTS,
     DC_PLACEMENT_POINTS,
     DC_SKYSCRAPER_BONUS_POINTS,
@@ -54,6 +55,7 @@ function getFieldNameGroup(fn: Match2019FieldName, postfix: string, group: Match
         [Match2019FieldName.AUTO_NAVIGATION_POINTS]: `${g}."autoNavigationPoints"`,
         [Match2019FieldName.AUTO_REPOSITIONING_POINTS]: `${g}."autoRepositioningPoints"`,
         [Match2019FieldName.AUTO_DELIVERY_POINTS]: `${g}."autoDeliveryPoints"`,
+        [Match2019FieldName.AUTO_PLACEMENT_POINTS]: `(${g}."autoStonesPlaced" * 4)`,
         [Match2019FieldName.DC_DELIVERY_POINTS]: `${g}."dcDeliveryPoints"`,
         [Match2019FieldName.DC_PLACEMENT_POINTS]: `${g}."dcPlacementPoints"`,
         [Match2019FieldName.DC_SKYSCRAPER_BONUS_POINTS]: `${g}."dcSkyscraperBonusPoints"`,
@@ -64,7 +66,7 @@ function getFieldNameGroup(fn: Match2019FieldName, postfix: string, group: Match
         [Match2019FieldName.MAJOR_PENALTY_POINTS]: `(${g}."majorPenalties" * -30)`,
         [Match2019FieldName.MINOR_PENALTY_POINTS]: `(${g}."minorPenalties" * -10)`,
         [Match2019FieldName.AUTO_POINTS]: `${g}."autoPoints"`,
-        [Match2019FieldName.DRIVER_CONTROLLED_POINTS]: `${g}."driverControlledPoints"`,
+        [Match2019FieldName.DRIVER_CONTROLLED_POINTS]: `${g}."dcPoints"`,
         [Match2019FieldName.ENDGAME_POINTS]: `${g}."endgamePoints"`,
         [Match2019FieldName.PENALTY_POINTS]: `${g}."penaltyPoints"`,
         [Match2019FieldName.TOTAL_POINTS]: `${g}."totalPoints"`,
@@ -160,7 +162,6 @@ abstract class Match2019Filter {
 export class MatchSeasonRecords2019Resolver {
     @Query(() => MatchRecords)
     async matchRecords2019(
-        @Arg("eventTypes", () => EventTypes) eventTypes: EventTypes,
         @Arg("region", () => Region) region: Region,
         @Arg("start", () => Date, { nullable: true }) start: Date | null,
         @Arg("end", () => Date, { nullable: true }) end: Date | null,
@@ -266,12 +267,6 @@ export class MatchSeasonRecords2019Resolver {
         if (start) preFilterQuery = preFilterQuery.andWhere("e2.end >= :start", { start });
         if (end) preFilterQuery = preFilterQuery.andWhere("e2.end <= :end", { end });
 
-        if (eventTypes == EventTypes.REMOTE) {
-            preFilterQuery = preFilterQuery.andWhere("e2.remote");
-        } else if (eventTypes == EventTypes.TRAD) {
-            preFilterQuery = preFilterQuery.andWhere("NOT e2.remote");
-        }
-
         let query = DATA_SOURCE.getRepository(MatchScores2019)
             .createQueryBuilder("s")
             .leftJoin("event", "e", 'e.season = 2019 AND e.code = s."eventCode"')
@@ -338,12 +333,6 @@ export class MatchSeasonRecords2019Resolver {
         if (order.length == 0) {
             // In case they didn't provide an order
             query = query.orderBy('s."totalPoints"', "DESC");
-        }
-
-        if (eventTypes == EventTypes.REMOTE) {
-            query = query.andWhere("e.remote");
-        } else if (eventTypes == EventTypes.TRAD) {
-            query = query.andWhere("NOT e.remote");
         }
 
         for (let o of order) {
