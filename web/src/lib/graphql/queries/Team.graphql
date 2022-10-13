@@ -38,6 +38,29 @@ query Team($number: Int!, $season: Int!) {
                         totalPoints
                     }
                 }
+                ... on TeamEventStats2020Traditional {
+                    rank
+                    wins
+                    losses
+                    ties
+                    rp
+                    opr {
+                        totalPoints
+                    }
+                    average {
+                        totalPoints
+                    }
+                }
+                ... on TeamEventStats2020Remote {
+                    rank
+                    rp
+                    opr {
+                        totalPoints
+                    }
+                    average {
+                        totalPoints
+                    }
+                }
                 ... on TeamEventStats2019 {
                     rank
                     wins

@@ -6,7 +6,7 @@ export const IS_DEV = !IS_PROD;
 export const SERVER_ORIGIN = PUBLIC_SERVER_ORIGIN;
 
 export const CURRENT_SEASON = 2021;
-export const ALL_SEASONS = [2019 as const, 2021 as const];
-export type Season = 2021 | 2019;
+export const ALL_SEASONS = [2019 as const, 2020 as const, 2021 as const];
+export type Season = 2021 | 2020 | 2019;
 
 export const EMAIL = "contact@ftcscout.org";

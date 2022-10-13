@@ -2,7 +2,7 @@ import { Field, Int, ObjectType } from "type-graphql";
 import { BaseEntity, Column, DeepPartial, Entity, PrimaryColumn } from "typeorm";
 import { AwardFtcApi } from "../../ftc-api/types/Award";
 import { Season } from "../../ftc-api/types/Season";
-import { Award2021, awardCode2021FromFtcApi, AwardTypes2021 } from "./types/2021/Award2021";
+import { Award2021, awardCode2021FromFtcApi, AwardTypes } from "./types/2021/Award2021";
 
 @ObjectType()
 @Entity()
@@ -27,8 +27,8 @@ export class Award extends BaseEntity {
     @Column("varchar", { nullable: true })
     personName!: string | null;
 
-    @Field(() => AwardTypes2021)
-    type(): AwardTypes2021 {
+    @Field(() => AwardTypes)
+    type(): AwardTypes {
         return this.awardCode - (this.awardCode % 100);
     }
 

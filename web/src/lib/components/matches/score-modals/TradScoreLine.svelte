@@ -36,7 +36,7 @@
 >
     <td class="name" style="position: relative;">
         {#if subProps.length}
-            <ExpandButton bind:open={showSub} style="position:absolute; left: 0" />
+            <ExpandButton bind:open={showSub} style="position:absolute; left: var(--gap)" />
         {/if}
 
         {name}

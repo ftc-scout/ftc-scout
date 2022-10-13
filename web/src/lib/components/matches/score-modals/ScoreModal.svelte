@@ -2,8 +2,10 @@
     import Modal from "$lib/components/Modal.svelte";
     import type { EventPageMatchFragment } from "../../../graphql/generated/graphql-operations";
     import ScoreTrad2021 from "./ScoreTrad2021.svelte";
+    import ScoreTrad2020 from "./ScoreTrad2020.svelte";
     import Fa from "svelte-fa";
     import ScoreRemote2021 from "./ScoreRemote2021.svelte";
+    import ScoreRemote2020 from "./ScoreRemote2020.svelte";
     import { CLOSE_ICON } from "../../../icons";
     import Scores2019 from "./Scores2019.svelte";
 
@@ -28,6 +30,10 @@
             <ScoreTrad2021 score={matchScores.scores} />
         {:else if matchScores.scores?.__typename == "MatchScores2021Remote"}
             <ScoreRemote2021 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />
+        {:else if matchScores.scores?.__typename == "MatchScores2020Traditional"}
+            <ScoreTrad2020 score={matchScores.scores} />
+        {:else if matchScores.scores?.__typename == "MatchScores2020Remote"}
+            <ScoreRemote2020 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />
         {:else if matchScores.scores?.__typename == "MatchScores2019"}
             <Scores2019 score={matchScores.scores} />
         {/if}

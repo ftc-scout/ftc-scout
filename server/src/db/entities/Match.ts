@@ -15,6 +15,7 @@ import { MatchFtcApi } from "../../ftc-api/types/Match";
 import { Season } from "../../ftc-api/types/Season";
 import { Event } from "./Event";
 import { MatchScores2019 } from "./MatchScores2019";
+import { MatchScores2020 } from "./MatchScores2020";
 import { MatchScores2021 } from "./MatchScores2021";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { Alliance } from "./types/Alliance";
@@ -94,18 +95,10 @@ export class Match extends BaseEntity {
         }
     }
 
-    // @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
-    //     cascade: true,
-    //     eager: true,
-    // })
-    // @TypeormLoader()
     scores2021!: MatchScores2021[];
 
-    // @OneToMany(() => MatchScores2021, (ms2021) => ms2021.match, {
-    //     cascade: true,
-    //     eager: true,
-    // })
-    // @TypeormLoader()
+    scores2020!: MatchScores2020[];
+
     scores2019!: MatchScores2019[];
 
     @Field()

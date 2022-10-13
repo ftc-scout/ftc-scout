@@ -9,15 +9,24 @@ import {
 import { TeamEventParticipation2021 } from "../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { TeamEventParticipation2019 } from "../../db/entities/team-event-participation/TeamEventParticipation2019";
 import { TeamEventStats2019 } from "./TepStats2019";
+import { TeamEventParticipation2020 } from "../../db/entities/team-event-participation/TeamEventParticipation2020";
+import { TeamEventStatGroup2020, TeamEventStats2020Remote, TeamEventStats2020Traditional } from "./TepStats2020";
 
 export const TeamEventStatsUnion = createUnionType({
     name: "TeamEventStats",
-    types: () => [TeamEventStats2021Traditional, TeamEventStats2021Remote, TeamEventStats2019] as const,
+    types: () =>
+        [
+            TeamEventStats2021Traditional,
+            TeamEventStats2021Remote,
+            TeamEventStats2020Traditional,
+            TeamEventStats2020Remote,
+            TeamEventStats2019,
+        ] as const,
 });
 
 @ObjectType()
 export class TeamEventParticipation {
-    constructor(_tep: TeamEventParticipation2021 | TeamEventParticipation2019) {
+    constructor(_tep: TeamEventParticipation2021 | TeamEventParticipation2020 | TeamEventParticipation2019) {
         this.season = _tep.eventSeason;
         this.eventCode = _tep.eventCode;
         this.teamNumber = _tep.teamNumber;
@@ -60,6 +69,44 @@ export class TeamEventParticipation {
                     opr: new TeamEventStatGroup2021Traditional(tep.opr),
                 } as TeamEventStats2021Traditional);
             }
+        } else if (_tep.eventSeason == 2020) {
+            let tep = _tep as TeamEventParticipation2020;
+
+            if (!tep.hasStats) {
+                this.stats = null;
+            } else if (tep.isRemote) {
+                this.stats = new TeamEventStats2020Remote({
+                    rank: tep.rank,
+                    rp: tep.rp,
+                    tb1: tep.tb1,
+                    tb2: tep.tb2,
+                    qualMatchesPlayed: tep.qualMatchesPlayed,
+                    total: new TeamEventStatGroup2020(tep.tot),
+                    average: new TeamEventStatGroup2020(tep.avg),
+                    min: new TeamEventStatGroup2020(tep.min),
+                    max: new TeamEventStatGroup2020(tep.max),
+                    standardDev: new TeamEventStatGroup2020(tep.dev),
+                    opr: new TeamEventStatGroup2020(tep.opr),
+                } as TeamEventStats2020Remote);
+            } else {
+                this.stats = new TeamEventStats2020Traditional({
+                    rank: tep.rank,
+                    rp: tep.rp,
+                    tb1: tep.tb1,
+                    tb2: tep.tb2,
+                    wins: tep.wins,
+                    losses: tep.losses,
+                    ties: tep.ties,
+                    dqs: tep.dq,
+                    qualMatchesPlayed: tep.qualMatchesPlayed,
+                    total: new TeamEventStatGroup2020(tep.tot),
+                    average: new TeamEventStatGroup2020(tep.avg),
+                    min: new TeamEventStatGroup2020(tep.min),
+                    max: new TeamEventStatGroup2020(tep.max),
+                    standardDev: new TeamEventStatGroup2020(tep.dev),
+                    opr: new TeamEventStatGroup2020(tep.opr),
+                } as TeamEventStats2020Traditional);
+            }
         } else if (_tep.eventSeason == 2019) {
             let tep = _tep as TeamEventParticipation2019;
 
@@ -98,5 +145,11 @@ export class TeamEventParticipation {
     teamNumber: number;
 
     @Field(() => TeamEventStatsUnion, { nullable: true })
-    stats: TeamEventStats2021Remote | TeamEventStats2021Traditional | TeamEventStats2019 | null;
+    stats:
+        | TeamEventStats2021Remote
+        | TeamEventStats2021Traditional
+        | TeamEventStats2020Remote
+        | TeamEventStats2020Traditional
+        | TeamEventStats2019
+        | null;
 }
