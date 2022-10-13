@@ -133,7 +133,6 @@ export class TeamEventParticipation {
         } else {
             throw "Can't create tep for season " + _tep.eventSeason;
         }
-        console.log(this.stats);
     }
 
     @Field(() => Int, { name: "season" })

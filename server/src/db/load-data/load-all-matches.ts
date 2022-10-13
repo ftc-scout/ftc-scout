@@ -79,7 +79,6 @@ export async function loadAllMatches(season: Season) {
                 dbMatches.flatMap((m) => m.scores2019 ?? []),
                 { chunk: 500 }
             );
-            // console.log(dbMatches.flatMap((m) => m.scores2020 ?? []))
             await em.save(
                 dbMatches.flatMap((m) => m.scores2020 ?? []),
                 { chunk: 500 }
