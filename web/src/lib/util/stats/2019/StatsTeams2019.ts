@@ -524,7 +524,7 @@ const AVG = SCORES.groups.find((g) => g.shortName == "AVG")!;
 const MAX = SCORES.groups.find((g) => g.shortName == "MAX")!;
 const OPR = SCORES.groups.find((g) => g.shortName == "OPR")!;
 
-export const AVERAGE_STAT = AVG.get(TOTAL_STAT);
+export const NP_AVERAGE_STAT = AVG.get(TOTAL_NP_STAT);
 export const MAX_STAT = MAX.get(TOTAL_STAT);
 export const OPR_STAT = OPR.get(TOTAL_STAT);
 export const NP_OPR_STAT = OPR.get(TOTAL_NP_STAT);

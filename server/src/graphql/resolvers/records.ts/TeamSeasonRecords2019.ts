@@ -190,14 +190,14 @@ export class TeamSeasonRecords2019Resolver {
             .map((o) => o.toRawSql(""))
             .filter((o) => o != null)
             .join(", ");
-        if (orderByRaw.length == 0) orderByRaw = 'tep."oprTotalpoints" DESC';
+        if (orderByRaw.length == 0) orderByRaw = 'tep."oprTotalpointsnp" DESC';
 
         let orderByRaw2 = orderIn
             .slice(0, 1)
             .map((o) => o.toRawSql("2"))
             .filter((o) => o != null)
             .join(", ");
-        if (orderByRaw2.length == 0) orderByRaw2 = 'tep2."oprTotalpoints" DESC';
+        if (orderByRaw2.length == 0) orderByRaw2 = 'tep2."oprTotalpointsnp" DESC';
 
         let preFilterQuery = DATA_SOURCE.getRepository(TeamEventParticipation2019)
             .createQueryBuilder("tep2")
@@ -237,7 +237,7 @@ export class TeamSeasonRecords2019Resolver {
 
         if (orderIn.length == 0) {
             // In case they didn't provide an order
-            query = query.orderBy('tep."oprTotalpoints"', "DESC", "NULLS LAST");
+            query = query.orderBy('tep."oprTotalpointsnp"', "DESC", "NULLS LAST");
         }
 
         for (let i = 0; i < orderIn.length && i < 5; i++) {

@@ -3,12 +3,11 @@
 
     let DEFAULT_SHOWN_STATS: Stat<Data>[] = [
         TEAM_STAT,
-        OPR_STAT,
         NP_OPR_STAT,
         AUTO_OPR_STAT,
         TELEOP_OPR_STAT,
         ENDGAME_OPR_STAT,
-        AVERAGE_STAT,
+        NP_AVERAGE_STAT,
         EVENT_RANK_STAT,
         EVENT_STAT_2019 as any,
         RECORD_STAT,
@@ -16,17 +15,16 @@
 
     let shownStats: Writable<Stat<Data>[]> = writable([
         TEAM_STAT,
-        OPR_STAT,
         NP_OPR_STAT,
         AUTO_OPR_STAT,
         TELEOP_OPR_STAT,
         ENDGAME_OPR_STAT,
-        AVERAGE_STAT,
+        NP_AVERAGE_STAT,
         EVENT_RANK_STAT,
         EVENT_STAT_2019 as any,
         RECORD_STAT,
     ]);
-    export const DEFAULT_SORT_TEAM_2019: ChosenSort<Data> = { stat: OPR_STAT, type: SortType.HIGH_LOW };
+    export const DEFAULT_SORT_TEAM_2019: ChosenSort<Data> = { stat: NP_OPR_STAT, type: SortType.HIGH_LOW };
 
     let currentFilters: Writable<Filter<Data>> = writable(emptyFilter());
 
@@ -58,12 +56,11 @@
     export function resetTeam2019SearchParams() {
         shownStats.set([
             TEAM_STAT,
-            OPR_STAT,
             NP_OPR_STAT,
             AUTO_OPR_STAT,
             TELEOP_OPR_STAT,
             ENDGAME_OPR_STAT,
-            AVERAGE_STAT,
+            NP_AVERAGE_STAT,
             EVENT_RANK_STAT,
             EVENT_STAT_2019 as any,
             RECORD_STAT,
@@ -91,11 +88,10 @@
     import { dateToStr } from "$lib/util/format/pretty-print-date";
     import {
         AUTO_OPR_STAT,
-        AVERAGE_STAT,
+        NP_AVERAGE_STAT,
         ENDGAME_OPR_STAT,
         EVENT_RANK_STAT,
         NP_OPR_STAT,
-        OPR_STAT,
         RECORD_STAT,
         STAT_SET_TEAMS_2019,
         TEAM_STAT,
