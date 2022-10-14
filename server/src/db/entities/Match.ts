@@ -112,6 +112,8 @@ export class Match extends BaseEntity {
     redTotalPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
+        } else if (this.scores2020) {
+            return this.scores2020.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
         } else if (this.scores2019) {
             return this.scores2019.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
         } else {
@@ -122,6 +124,8 @@ export class Match extends BaseEntity {
     blueTotalPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
+        } else if (this.scores2020) {
+            return this.scores2020.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
         } else if (this.scores2019) {
             return this.scores2019.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
         } else {
@@ -132,6 +136,8 @@ export class Match extends BaseEntity {
     redTotalNpPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
+        } else if (this.scores2020) {
+            return this.scores2020.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
         } else if (this.scores2019) {
             return this.scores2019.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
         } else {
@@ -142,6 +148,8 @@ export class Match extends BaseEntity {
     blueTotalNpPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;
+        } else if (this.scores2020) {
+            return this.scores2020.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;
         } else if (this.scores2019) {
             return this.scores2019.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;
         } else {
@@ -152,6 +160,8 @@ export class Match extends BaseEntity {
     soloPoints(): number | null {
         if (this.scores2021) {
             return this.scores2021[0].totalPoints;
+        } else if (this.scores2020) {
+            return this.scores2020[0].totalPoints;
         } else {
             return null;
         }
