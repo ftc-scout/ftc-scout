@@ -11,8 +11,9 @@
 
 {#if link}
     <a href="https://www.google.com/maps/search/?api=1&query={venue_}{city}, {stateOrProvince}, {country}">
-        {venue_}{city}, {stateOrProvince}, {country}
+        {venue_.trim()}
+        {city.trim()}, {stateOrProvince.trim()}, {country.trim()}
     </a>
 {:else}
-    {venue_}{city}, {stateOrProvince}, {country}
+    {venue_.trim()} {city.trim()}, {stateOrProvince.trim()}, {country.trim()}
 {/if}
