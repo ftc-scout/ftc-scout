@@ -122,6 +122,21 @@
             {/if}
         </div>
     </Card>
+
+    <Card border={false}>
+        <a href="/blog" class="latest-article">
+            <h2>The Latest Article from <em>The Scouting Report</em>: The Search for the Worst Surrogacy</h2>
+
+            <p style="margin-bottom: var(--gap)">
+                When the number of teams at an FTC doesn’t allow every team to play exactly five matches and at the same
+                time have all matches be full the match scheduler will make some teams play an extra sixth match as a
+                surrogate. These matches occur near the middle of the tournament (both in the match schedule and for the
+                teams involved).
+            </p>
+
+            <em>Read More.</em>
+        </a>
+    </Card>
 </WidthProvider>
 
 <style>
@@ -282,5 +297,22 @@
 
         font-weight: bold;
         color: inherit;
+    }
+
+    .latest-article {
+        display: block;
+
+        background-color: var(--foreground-color);
+        box-shadow: -2px 2px 10px 3px #e0e0e0;
+        border-radius: 8px;
+
+        padding: var(--large-padding);
+
+        text-decoration: none;
+        color: inherit;
+    }
+
+    .latest-article:hover {
+        filter: brightness(0.9);
     }
 </style>
