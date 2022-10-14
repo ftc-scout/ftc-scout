@@ -10,7 +10,7 @@
         RP_STAT,
         TBP_STAT,
         PLAYED_STAT,
-        AVERAGE_STAT,
+        NP_AVERAGE_STAT,
         OPR_STAT,
         MAX_STAT,
     ]);
@@ -23,7 +23,7 @@
     import { emptyFilter, type Filter } from "../../util/stats/filter";
     import type { Stat } from "../../util/stats/Stat";
     import {
-        AVERAGE_STAT,
+        NP_AVERAGE_STAT,
         EVENT_RANK_STAT,
         MAX_STAT,
         OPR_STAT,
