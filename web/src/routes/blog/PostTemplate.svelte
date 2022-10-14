@@ -15,6 +15,15 @@
     }
 
     .info {
+        font-size: 16px;
+    }
+
+    @media (max-width: 800px) {
+        .info {
+            font-size: 14px;
+        }
+    }
+    .info {
         color: var(--secondary-text-color);
     }
 </style>
