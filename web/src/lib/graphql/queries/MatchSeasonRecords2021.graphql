@@ -32,30 +32,8 @@ query MatchSeasonRecords2021(
                         id
                         matchDescription
                     }
-                    teams {
-                        season
-                        eventCode
-                        matchId
-                        teamNumber
-                        station
-                        team {
-                            number
-                            name
-                        }
-                    }
                     ...FullMatchScores2021TraditionalAlliance
                     opponentsScore {
-                        teams {
-                            season
-                            eventCode
-                            matchId
-                            teamNumber
-                            station
-                            team {
-                                number
-                                name
-                            }
-                        }
                         ...FullMatchScores2021TraditionalAlliance
                     }
                 }
@@ -68,16 +46,6 @@ query MatchSeasonRecords2021(
                         eventCode
                         id
                         matchDescription
-                    }
-                    team {
-                        season
-                        eventCode
-                        matchId
-                        teamNumber
-                        team {
-                            number
-                            name
-                        }
                     }
                     ...FullMatchScores2021Remote
                 }

@@ -1,4 +1,15 @@
 fragment FullMatchScores2021Remote on MatchScores2021Remote {
+    team {
+        season
+        eventCode
+        matchId
+        teamNumber
+        station
+        team {
+            number
+            name
+        }
+    }
     season
     eventCode
     matchId

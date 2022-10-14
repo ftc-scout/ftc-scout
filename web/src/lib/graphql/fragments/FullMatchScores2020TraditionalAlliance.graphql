@@ -1,4 +1,16 @@
 fragment FullMatchScores2020TraditionalAlliance on MatchScores2020TraditionalAlliance {
+    teams {
+        season
+        eventCode
+        matchId
+        teamNumber
+        station
+        team {
+            number
+            name
+        }
+    }
+
     season
     eventCode
     matchId

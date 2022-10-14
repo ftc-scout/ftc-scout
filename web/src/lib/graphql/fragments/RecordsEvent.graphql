@@ -3,8 +3,6 @@ fragment RecordsEvent on Event {
     code
     name
     remote
-    fieldCount
-    type
     regionCode
     leagueCode
     start

@@ -31,6 +31,7 @@
     import ErrorPage from "../../../../../lib/components/ErrorPage.svelte";
     import Head from "../../../../../lib/components/nav/Head.svelte";
     import Location from "../../../../../lib/components/Location.svelte";
+    import EventMatchInsights from "../../../../../lib/components/event-match-insights/EventMatchInsights.svelte";
 
     export let data: PageData;
     let event: Readable<ApolloQueryResult<EventPageQuery> | null>;
@@ -76,6 +77,9 @@
     }[];
     $: stats = (eventData?.teams?.filter((t) => t.stats) as any) ?? [];
     $: hasStats = !!stats.length;
+
+    $: matches = eventData?.matches?.filter((m) => m.hasBeenPlayed) ?? [];
+    $: hasMatches = !!matches.length;
 </script>
 
 <Head
@@ -129,6 +133,7 @@
         names={[
             [MATCHES_ICON, "Matches"],
             [RANKINGS_ICON, hasStats ? "Rankings" : null],
+            [MATCHES_ICON, hasMatches ? "Insights" : null],
             [AWARDS_ICON, eventData.awards.length ? "Awards" : null],
             [TEAMS_ICON, "Teams"],
         ]}
@@ -141,6 +146,12 @@
         {#if hasStats}
             <TabContent name="Rankings">
                 <EventStats {stats} bind:selectedTeam eventName={eventData.name} />
+            </TabContent>
+        {/if}
+
+        {#if hasMatches}
+            <TabContent name="Insights">
+                <EventMatchInsights {matches} event={eventData} bind:selectedTeam />
             </TabContent>
         {/if}
 

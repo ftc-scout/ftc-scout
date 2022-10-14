@@ -30,30 +30,8 @@ query MatchSeasonRecords2019(
                         id
                         matchDescription
                     }
-                    teams {
-                        season
-                        eventCode
-                        matchId
-                        teamNumber
-                        station
-                        team {
-                            number
-                            name
-                        }
-                    }
                     ...FullMatchScores2019Alliance
                     opponentsScore {
-                        teams {
-                            season
-                            eventCode
-                            matchId
-                            teamNumber
-                            station
-                            team {
-                                number
-                                name
-                            }
-                        }
                         ...FullMatchScores2019Alliance
                     }
                 }

@@ -33,6 +33,7 @@ export const EVENTS_ICON = faCalendarAlt;
 export const DATA_FROM_FIRST_ICON = faCircleCheck;
 export const SPONSOR_ICON = faHeart;
 export const MATCHES_ICON = faBolt;
+export const MATCH_INSIGHTS_ICON = faBinoculars;
 export const HOME_ICON = faHome;
 export const ABOUT_ICON = faInfoCircle;
 export const PRIVACY_ICON = faGavel;

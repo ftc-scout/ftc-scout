@@ -1,4 +1,15 @@
 fragment FullMatchScores2019Alliance on MatchScores2019Alliance {
+    teams {
+        season
+        eventCode
+        matchId
+        teamNumber
+        station
+        team {
+            number
+            name
+        }
+    }
     season
     eventCode
     matchId
