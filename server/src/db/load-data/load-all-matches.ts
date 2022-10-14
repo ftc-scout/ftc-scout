@@ -138,8 +138,16 @@ function createDbEntities(
                 season == Season.ULTIMATE_GOAL &&
                 eventCode == "USNYEXS1" &&
                 match.teams.some((t) => t.teamNumber == 14903 || t.teamNumber == 17222)
-            )
+            ) {
                 continue;
+            }
+            if (
+                season == Season.ULTIMATE_GOAL &&
+                eventCode == "USNJCWS1" &&
+                match.teams.some((t) => t.teamNumber == 9889)
+            ) {
+                continue;
+            }
 
             let thisMatchScores = findMatchScoresForMatchNum(
                 remote

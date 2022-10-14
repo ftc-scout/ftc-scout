@@ -28,6 +28,7 @@
         Region,
         type MatchScoresAlliance,
         type MatchSeasonRecords2019Query,
+        type MatchSeasonRecords2020Query,
         type MatchSeasonRecords2021Query,
         type TeamSeasonRecords2019Query,
         type TeamSeasonRecords2020Query,
@@ -56,6 +57,10 @@
         team2020SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2020.svelte";
     import type { FullTep2020Shared } from "../../../../lib/util/stats/2020/StatsSharedTeams2020";
+    import MatchSeasonRecords2020, {
+        match2020SearchParams,
+        resetMatch2020SearchParams,
+    } from "../../../../lib/components/season-records/MatchSeasonRecords2020.svelte";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -78,7 +83,7 @@
                 case 2021:
                     return match2021SearchParams;
                 case 2020:
-                    return "";
+                    return match2020SearchParams;
                 case 2019:
                     return match2019SearchParams;
             }
@@ -100,9 +105,10 @@
     let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query> | null> | undefined;
     let matches2021: Readable<ApolloQueryResult<MatchSeasonRecords2021Query> | null> | undefined;
     let teams2020: Readable<ApolloQueryResult<TeamSeasonRecords2020Query> | null> | undefined;
+    let matches2020: Readable<ApolloQueryResult<MatchSeasonRecords2020Query> | null> | undefined;
     let teams2019: Readable<ApolloQueryResult<TeamSeasonRecords2019Query> | null> | undefined;
     let matches2019: Readable<ApolloQueryResult<MatchSeasonRecords2019Query> | null> | undefined;
-    $: ({ teams2021, matches2021, teams2020, teams2019, matches2019 } = data);
+    $: ({ teams2021, matches2021, teams2020, matches2020, teams2019, matches2019 } = data);
 
     $: dataTeams2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let dataTeams2021Teps: StatData<FullTep2021Shared>[] | undefined;
@@ -126,6 +132,14 @@
         rank: t.rank,
         preFilterRank: t.preFilterRank,
         data: t.tep,
+    })) as any;
+
+    $: dataMatches2020 = !$matches2020 ? undefined : $matches2020.data.matchRecords2020;
+    let dataMatches2020Scores: StatData<MatchScoresAlliance>[] | undefined;
+    $: dataMatches2020Scores = dataMatches2020?.scores?.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.score,
     })) as any;
 
     $: data2019 = !$teams2019 ? undefined : $teams2019.data.teamRecords2019;
@@ -169,6 +183,7 @@
             resetTeam2020SearchParams();
             resetTeam2019SearchParams();
             resetMatch2021SearchParams();
+            resetMatch2020SearchParams();
             resetMatch2019SearchParams();
 
             eventTypesStr = "Traditional and Remote";
@@ -301,6 +316,23 @@
                 <MatchSeasonRecords2021
                     {eventTypes}
                     data={dataMatches2021Scores}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                    bind:change={childrenChange}
+                />
+            {:else if dataMatches2020 && dataMatches2020Scores}
+                {@const totalCount = dataMatches2020.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataMatches2020.offset / pageSize + 1}
+
+                <MatchSeasonRecords2020
+                    {eventTypes}
+                    data={dataMatches2020Scores}
                     currPage={page}
                     {totalCount}
                     {pageSize}

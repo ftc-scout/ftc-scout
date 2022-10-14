@@ -1,6 +1,8 @@
 import type {
     Match2019Field,
     Match2019FieldName,
+    Match2020Field,
+    Match2020FieldName,
     Match2021Field,
     Match2021FieldName,
     MatchGroup,
@@ -29,12 +31,13 @@ export enum DisplayWhen {
     REMOTE,
 }
 
-export type AnyField = Tep2021Field | Tep2020Field | Tep2019Field | Match2021Field | Match2019Field;
+export type AnyField = Tep2021Field | Tep2020Field | Tep2019Field | Match2021Field | Match2020Field | Match2019Field;
 export type AnyFieldName =
     | Tep2021FieldName
     | Tep2020FieldName
     | Tep2019FieldName
     | Match2021FieldName
+    | Match2020FieldName
     | Match2019FieldName;
 export type AnyGroup = Tep2021Group | Tep2020Group | Tep2019Group | MatchGroup;
 
