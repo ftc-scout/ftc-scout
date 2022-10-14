@@ -125,7 +125,7 @@
 
     <Card border={false}>
         <a href="/blog" class="latest-article">
-            <h2>The Latest Article from <em>The Scouting Report</em>: The Search for the Worst Surrogacy</h2>
+            <h2>The Latest Article from <em>The Scouting Report:</em> The Search for the Worst Surrogacy</h2>
 
             <p style="margin-bottom: var(--gap)">
                 When the number of teams at an FTC doesn’t allow every team to play exactly five matches and at the same
