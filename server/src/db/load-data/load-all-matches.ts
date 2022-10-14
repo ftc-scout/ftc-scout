@@ -133,6 +133,14 @@ function createDbEntities(
         let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
 
         for (let match of matches) {
+            // Ignore some incorrect matches
+            if (
+                season == Season.ULTIMATE_GOAL &&
+                eventCode == "USNYEXS1" &&
+                match.teams.some((t) => t.teamNumber == 14903 || t.teamNumber == 17222)
+            )
+                continue;
+
             let thisMatchScores = findMatchScoresForMatchNum(
                 remote
                     ? Match.encodeMatchIdRemote(match.matchNumber, match.teams[0].teamNumber)

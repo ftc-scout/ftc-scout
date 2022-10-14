@@ -30,6 +30,7 @@
         type MatchSeasonRecords2019Query,
         type MatchSeasonRecords2021Query,
         type TeamSeasonRecords2019Query,
+        type TeamSeasonRecords2020Query,
         type TeamSeasonRecords2021Query,
     } from "../../../../lib/graphql/generated/graphql-operations";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
@@ -50,6 +51,11 @@
         match2019SearchParams,
         resetMatch2019SearchParams,
     } from "../../../../lib/components/season-records/MatchSeasonRecords2019.svelte";
+    import TeamSeasonRecords2020, {
+        resetTeam2020SearchParams,
+        team2020SearchParams,
+    } from "../../../../lib/components/season-records/TeamSeasonRecords2020.svelte";
+    import type { FullTep2020Shared } from "../../../../lib/util/stats/2020/StatsSharedTeams2020";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -62,6 +68,8 @@
             switch (season) {
                 case 2021:
                     return team2021SearchParams;
+                case 2020:
+                    return team2020SearchParams;
                 case 2019:
                     return team2019SearchParams;
             }
@@ -69,6 +77,8 @@
             switch (season) {
                 case 2021:
                     return match2021SearchParams;
+                case 2020:
+                    return "";
                 case 2019:
                     return match2019SearchParams;
             }
@@ -89,9 +99,10 @@
     export let data: PageData;
     let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query> | null> | undefined;
     let matches2021: Readable<ApolloQueryResult<MatchSeasonRecords2021Query> | null> | undefined;
+    let teams2020: Readable<ApolloQueryResult<TeamSeasonRecords2020Query> | null> | undefined;
     let teams2019: Readable<ApolloQueryResult<TeamSeasonRecords2019Query> | null> | undefined;
     let matches2019: Readable<ApolloQueryResult<MatchSeasonRecords2019Query> | null> | undefined;
-    $: ({ teams2021, matches2021, teams2019, matches2019 } = data);
+    $: ({ teams2021, matches2021, teams2020, teams2019, matches2019 } = data);
 
     $: dataTeams2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let dataTeams2021Teps: StatData<FullTep2021Shared>[] | undefined;
@@ -107,6 +118,14 @@
         rank: t.rank,
         preFilterRank: t.preFilterRank,
         data: t.score,
+    })) as any;
+
+    $: dataTeams2020 = !$teams2020 ? undefined : $teams2020.data.teamRecords2020;
+    let dataTeams2020Teps: StatData<FullTep2020Shared>[] | undefined;
+    $: dataTeams2020Teps = dataTeams2020?.teps?.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.tep,
     })) as any;
 
     $: data2019 = !$teams2019 ? undefined : $teams2019.data.teamRecords2019;
@@ -136,7 +155,7 @@
     let startDate: Date | null = readDateFromUrl($page.url.searchParams.get("start"));
     let endDate: Date | null = readDateFromUrl($page.url.searchParams.get("end"));
 
-    let season = +$page.params.season as 2019 | 2021;
+    let season = +$page.params.season as Season;
 
     let selectedPage: string = $page.params.tab;
     $: gotoSubPage(season, selectedPage);
@@ -147,6 +166,7 @@
     function reset() {
         if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
             resetTeam2021SearchParams();
+            resetTeam2020SearchParams();
             resetTeam2019SearchParams();
             resetMatch2021SearchParams();
             resetMatch2019SearchParams();
@@ -225,6 +245,23 @@
                 <TeamSeasonRecords2021
                     {eventTypes}
                     data={dataTeams2021Teps}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                    bind:change={childrenChange}
+                />
+            {:else if dataTeams2020 && dataTeams2020Teps}
+                {@const totalCount = dataTeams2020.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataTeams2020.offset / pageSize + 1}
+
+                <TeamSeasonRecords2020
+                    {eventTypes}
+                    data={dataTeams2020Teps}
                     currPage={page}
                     {totalCount}
                     {pageSize}

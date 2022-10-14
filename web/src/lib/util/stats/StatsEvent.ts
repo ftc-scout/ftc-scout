@@ -2,6 +2,7 @@ import type { StatSet } from "./StatSet";
 import {
     Match2021FieldName,
     Tep2019FieldName,
+    Tep2020FieldName,
     Tep2021FieldName,
     type RecordsEventFragment,
 } from "../../graphql/generated/graphql-operations";
@@ -36,6 +37,33 @@ export let STAT_SET_EVENT_2021: StatSet<T, never> = [
         type: "standalone",
         set: {
             standalone: [EVENT_STAT_2021],
+        },
+    },
+];
+
+export const EVENT_STAT_2020: Stat<T> = {
+    color: StatColor.WHITE,
+    displayType: StatDisplayType.EVENT,
+    listName: "Event",
+    columnName: "Event",
+    identifierName: "Event",
+    displayWhen: DisplayWhen.ALWAYS,
+    read: (s) => ({
+        name: s.data.event.name,
+        start: s.data.event.start,
+        end: s.data.event.end,
+        code: s.data.event.code,
+        season: s.data.event.season,
+    }),
+    apiField: { fieldName: Tep2020FieldName.EventName },
+};
+
+export let STAT_SET_EVENT_2020: StatSet<T, never> = [
+    {
+        name: "Event",
+        type: "standalone",
+        set: {
+            standalone: [EVENT_STAT_2020],
         },
     },
 ];
