@@ -1,19 +1,20 @@
-# fly.toml file generated for ftc-scout-web on 2022-08-28T16:12:41-07:00
+# fly.toml file generated for ftc-scout-web on 2022-10-14T15:32:37-07:00
 
 app = "ftc-scout-web"
 kill_signal = "SIGINT"
 kill_timeout = 5
 processes = []
 
-[build]
-
 [env]
   PORT = "8080"
-  PUBLIC_SERVER_ORIGIN="https://ftc-scout-server.fly.dev/graphql"
+  PUBLIC_SERVER_ORIGIN = "https://ftc-scout-server.fly.dev/graphql"
 
 [experimental]
   allowed_public_ports = []
   auto_rollback = true
+  cmd = []
+  entrypoint = []
+  exec = []
 
 [[services]]
   http_checks = []
@@ -22,8 +23,8 @@ processes = []
   protocol = "tcp"
   script_checks = []
   [services.concurrency]
-    hard_limit = 25
-    soft_limit = 20
+    hard_limit = 50
+    soft_limit = 40
     type = "connections"
 
   [[services.ports]]
