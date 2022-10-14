@@ -315,4 +315,22 @@
     .latest-article:hover {
         filter: brightness(0.9);
     }
+
+    .latest-article p {
+        position: relative;
+        line-height: 1.15em;
+        height: 3.45em;
+        overflow: hidden;
+    }
+
+    .latest-article p:after {
+        content: "";
+        text-align: right;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        width: 70%;
+        height: 1.15em;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
+    }
 </style>

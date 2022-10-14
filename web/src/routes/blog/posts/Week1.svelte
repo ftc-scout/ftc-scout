@@ -280,8 +280,10 @@
     </p>
 
     <p class="suggestions">
-        If you have any suggestions for topics you would like us to cover email us at <a href="mailto:{EMAIL}"
-            >{EMAIL}</a
+        If you have any suggestions for topics you would like us to cover email us at <a
+            href="mailto:suggestions@ftcscout.org"
+        >
+            suggestions@ftcscout.org</a
         >.
     </p>
 </PostTemplate>
