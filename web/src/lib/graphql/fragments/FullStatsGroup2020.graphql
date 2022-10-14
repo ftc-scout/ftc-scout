@@ -1,0 +1,24 @@
+fragment FullStatsGroup2020 on TeamEventStatGroup2020 {
+    autoNavigationPoints
+    autoNavigationPointsIndividual
+    autoGoalPoints
+    autoGoalPointsLow
+    autoGoalPointsMid
+    autoGoalPointsHigh
+    autoWobblePoints
+    autoPowershotPoints
+    endgamePowershotPoints
+    endgameWobblePoints
+    endgameWobbleRingPoints
+    majorPenaltyPoints
+    minorPenaltyPoints
+    autoPoints
+    driverControlledPoints
+    driverControlledPointsLow
+    driverControlledPointsMid
+    driverControlledPointsHigh
+    endgamePoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}

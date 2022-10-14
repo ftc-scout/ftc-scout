@@ -120,6 +120,7 @@ const EMPTY_TEP_STATS = {
     autoGoalPointsHigh: 0,
     autoWobblePoints: 0,
     autoPowershotPoints: 0,
+    endgamePowershotPoints: 0,
     endgameWobblePoints: 0,
     endgameWobbleRingPoints: 0,
     majorPenaltyPoints: 0,
@@ -207,6 +208,7 @@ function calculateStatsTraditional(
         autoGoalPointsHigh: [] as number[],
         autoWobblePoints: [] as number[],
         autoPowershotPoints: [] as number[],
+        endgamePowershotPoints: [] as number[],
         endgameWobblePoints: [] as number[],
         endgameWobbleRingPoints: [] as number[],
         majorPenaltyPoints: [] as number[],
@@ -233,6 +235,7 @@ function calculateStatsTraditional(
         allDataPoints.autoGoalPointsHigh.push(ts.autoGoalHigh * 12);
         allDataPoints.autoWobblePoints.push(ts.autoWobblePoints);
         allDataPoints.autoPowershotPoints.push(ts.autoPowershotPoints);
+        allDataPoints.endgamePowershotPoints.push(ts.endgamePowershotPoints);
         allDataPoints.endgameWobblePoints.push(ts.endgameWobblePoints);
         allDataPoints.endgameWobbleRingPoints.push(ts.endgameWobbleRingPoints);
         allDataPoints.majorPenaltyPoints.push(ts.majorPenalties * -30);
@@ -257,6 +260,7 @@ function calculateStatsTraditional(
         autoGoalPointsHigh: aggregationFunction(allDataPoints.autoGoalPointsHigh),
         autoWobblePoints: aggregationFunction(allDataPoints.autoWobblePoints),
         autoPowershotPoints: aggregationFunction(allDataPoints.autoPowershotPoints),
+        endgamePowershotPoints: aggregationFunction(allDataPoints.endgamePowershotPoints),
         endgameWobblePoints: aggregationFunction(allDataPoints.endgameWobblePoints),
         endgameWobbleRingPoints: aggregationFunction(allDataPoints.endgameWobbleRingPoints),
         majorPenaltyPoints: aggregationFunction(allDataPoints.majorPenaltyPoints),
@@ -287,6 +291,7 @@ function calculateStatsRemote(
         autoGoalPointsHigh: [] as number[],
         autoWobblePoints: [] as number[],
         autoPowershotPoints: [] as number[],
+        endgamePowershotPoints: [] as number[],
         endgameWobblePoints: [] as number[],
         endgameWobbleRingPoints: [] as number[],
         majorPenaltyPoints: [] as number[],
@@ -313,6 +318,7 @@ function calculateStatsRemote(
         allDataPoints.autoGoalPointsHigh.push(ts.autoGoalHigh * 12);
         allDataPoints.autoWobblePoints.push(ts.autoWobblePoints);
         allDataPoints.autoPowershotPoints.push(ts.autoPowershotPoints);
+        allDataPoints.endgamePowershotPoints.push(ts.endgamePowershotPoints);
         allDataPoints.endgameWobblePoints.push(ts.endgameWobblePoints);
         allDataPoints.endgameWobbleRingPoints.push(ts.endgameWobbleRingPoints);
         allDataPoints.majorPenaltyPoints.push(ts.majorPenalties * -30);
@@ -337,6 +343,7 @@ function calculateStatsRemote(
         autoGoalPointsHigh: aggregationFunction(allDataPoints.autoGoalPointsHigh),
         autoWobblePoints: aggregationFunction(allDataPoints.autoWobblePoints),
         autoPowershotPoints: aggregationFunction(allDataPoints.autoPowershotPoints),
+        endgamePowershotPoints: aggregationFunction(allDataPoints.endgamePowershotPoints),
         endgameWobblePoints: aggregationFunction(allDataPoints.endgameWobblePoints),
         endgameWobbleRingPoints: aggregationFunction(allDataPoints.endgameWobbleRingPoints),
         majorPenaltyPoints: aggregationFunction(allDataPoints.majorPenaltyPoints),
@@ -369,6 +376,7 @@ function calculateAllOprs(
         autoGoalPointsHigh: [] as OprData[],
         autoWobblePoints: [] as OprData[],
         autoPowershotPoints: [] as OprData[],
+        endgamePowershotPoints: [] as OprData[],
         endgameWobblePoints: [] as OprData[],
         endgameWobbleRingPoints: [] as OprData[],
         majorPenaltyPoints: [] as OprData[],
@@ -414,6 +422,7 @@ function calculateAllOprs(
     assignOprStat(allDataPoints, ret, "autoGoalPointsHigh");
     assignOprStat(allDataPoints, ret, "autoWobblePoints");
     assignOprStat(allDataPoints, ret, "autoPowershotPoints");
+    assignOprStat(allDataPoints, ret, "endgamePowershotPoints");
     assignOprStat(allDataPoints, ret, "endgameWobblePoints");
     assignOprStat(allDataPoints, ret, "endgameWobbleRingPoints");
     assignOprStat(allDataPoints, ret, "driverControlledPointsLow");
@@ -449,6 +458,7 @@ function loadOprDataPoints(data: Record<string, OprData[]>, scores: MatchScores2
     data.autoGoalPointsHigh.push({ team1, team2, result: scores.autoGoalHigh * 12 });
     data.autoWobblePoints.push({ team1, team2, result: scores.autoWobblePoints });
     data.autoPowershotPoints.push({ team1, team2, result: scores.autoPowershotPoints });
+    data.endgamePowershotPoints.push({ team1, team2, result: scores.endgamePowershotPoints });
     data.endgameWobblePoints.push({ team1, team2, result: scores.endgameWobblePoints });
     data.endgameWobbleRingPoints.push({ team1, team2, result: scores.endgameWobbleRingPoints });
     data.driverControlledPointsLow.push({ team1, team2, result: scores.driverControlledLow * 2 });

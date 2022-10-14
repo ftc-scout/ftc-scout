@@ -23,6 +23,9 @@ export class TepStats2020 {
     @Column("float")
     autoPowershotPoints!: number;
 
+    @Column("float", { default: 0 })
+    endgamePowershotPoints!: number;
+
     @Column("float")
     endgameWobblePoints!: number;
 

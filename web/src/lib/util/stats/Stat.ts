@@ -7,6 +7,9 @@ import type {
     Tep2019Field,
     Tep2019FieldName,
     Tep2019Group,
+    Tep2020Field,
+    Tep2020FieldName,
+    Tep2020Group,
     Tep2021Field,
     Tep2021FieldName,
     Tep2021Group,
@@ -26,6 +29,15 @@ export enum DisplayWhen {
     REMOTE,
 }
 
+export type AnyField = Tep2021Field | Tep2020Field | Tep2019Field | Match2021Field | Match2019Field;
+export type AnyFieldName =
+    | Tep2021FieldName
+    | Tep2020FieldName
+    | Tep2019FieldName
+    | Match2021FieldName
+    | Match2019FieldName;
+export type AnyGroup = Tep2021Group | Tep2020Group | Tep2019Group | MatchGroup;
+
 export interface Stat<T> {
     displayType: StatDisplayType;
     color: StatColor;
@@ -42,7 +54,7 @@ export interface Stat<T> {
         | { wins: number; losses: number; ties: number }
         | string
         | null;
-    apiField: Tep2021Field | Tep2019Field | Match2021Field | Match2019Field;
+    apiField: AnyField;
 }
 
 export const RANK_STAT: Stat<any> = {
@@ -100,8 +112,8 @@ export function makeStat<T>(
     columnName: string,
     identifierName: string,
     displayWhen: DisplayWhen,
-    apiFieldName: Tep2021FieldName | Tep2019FieldName | Match2021FieldName | Match2019FieldName,
-    apiGroupName: Tep2021Group | Tep2019Group | null = null,
+    apiFieldName: AnyFieldName,
+    apiGroupName: AnyGroup | null = null,
     color: StatColor = StatColor.PURPLE,
     displayType: StatDisplayType = StatDisplayType.INTEGER
 ): Stat<T> {
@@ -116,7 +128,7 @@ export function makeStat<T>(
         apiField: {
             fieldName: apiFieldName,
             group: apiGroupName,
-        } as Tep2021Field | Tep2019Field | Match2021Field | Match2019Field,
+        } as AnyField,
     };
 }
 
@@ -126,8 +138,8 @@ export function makeStatMaybe<T, S>(
     columnName: string,
     identifierName: string,
     displayWhen: DisplayWhen,
-    apiFieldName: Tep2021FieldName | Tep2019FieldName | Match2021FieldName | Match2019FieldName,
-    apiGroupName: Tep2021Group | Tep2019Group | MatchGroup | null = null,
+    apiFieldName: AnyFieldName,
+    apiGroupName: AnyGroup | null = null,
     color: StatColor = StatColor.PURPLE,
     displayType: StatDisplayType = StatDisplayType.INTEGER
 ): Stat<T> {
@@ -142,7 +154,7 @@ export function makeStatMaybe<T, S>(
         apiField: {
             fieldName: apiFieldName,
             group: apiGroupName,
-        } as Tep2021Field | Tep2019Field | Match2021Field | Match2019Field,
+        } as AnyField,
     };
 }
 
@@ -152,8 +164,8 @@ export function makeStatFn<T>(
     columnName: string,
     identifierName: string,
     displayWhen: DisplayWhen,
-    apiFieldName: Tep2021FieldName | Tep2019FieldName | Match2021FieldName | Match2019FieldName,
-    apiGroupName: Tep2021Group | Tep2019Group | MatchGroup | null = null,
+    apiFieldName: AnyFieldName,
+    apiGroupName: AnyGroup | null = null,
     color: StatColor = StatColor.PURPLE,
     displayType: StatDisplayType = StatDisplayType.INTEGER
 ): Stat<T> {
@@ -168,7 +180,7 @@ export function makeStatFn<T>(
         apiField: {
             fieldName: apiFieldName,
             group: apiGroupName,
-        } as Tep2021Field | Tep2019Field | Match2021Field | Match2019Field,
+        } as AnyField,
     };
 }
 

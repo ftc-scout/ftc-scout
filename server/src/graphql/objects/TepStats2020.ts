@@ -23,6 +23,8 @@ export class TeamEventStatGroup2020 {
     @Field(() => Float)
     autoPowershotPoints!: number;
     @Field(() => Float)
+    endgamePowershotPoints!: number;
+    @Field(() => Float)
     endgameWobblePoints!: number;
     @Field(() => Float)
     endgameWobbleRingPoints!: number;
