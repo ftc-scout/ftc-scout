@@ -15,8 +15,8 @@
 
     export let style: string = "";
 
-    $: minDate = season == 2021 ? "2021-09-17" : "2019-10-12";
-    $: maxDate = season == 2021 ? "2022-09-23" : "2020-03-08";
+    $: minDate = season == 2021 ? "2021-09-17" : season == 2020 ? "2020-10-18" : "2019-10-12";
+    $: maxDate = season == 2021 ? "2022-09-23" : season == 2020 ? "2021-09-11" : "2020-03-08";
 </script>
 
 <span {style}>
