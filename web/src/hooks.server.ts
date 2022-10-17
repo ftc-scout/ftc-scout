@@ -66,6 +66,8 @@ export const handle: Handle = async ({ event, resolve }) => {
         response = await resolve(event);
     }
 
+    console.log(event.url.href);
+
     if (IS_PROD) {
         response.headers.set("X-Frame-Options", "SAMEORIGIN");
         response.headers.set("X-XSS-Protection", "1; mode=block");
