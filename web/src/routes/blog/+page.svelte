@@ -2,6 +2,7 @@
     import Card from "$lib/components/Card.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
     import Week1 from "./posts/Week1.svelte";
+    import Week2 from "./posts/Week2.svelte";
     import Head from "$lib/components/nav/Head.svelte";
 </script>
 
@@ -11,6 +12,9 @@
 />
 
 <WidthProvider width="1000px">
+    <Card>
+        <Week2 />
+    </Card>
     <Card>
         <Week1 />
     </Card>
