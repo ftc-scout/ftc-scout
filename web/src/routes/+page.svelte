@@ -128,10 +128,15 @@
             <h2>The Latest Article from <em>The Scouting Report:</em> The Search for the Worst Surrogacy</h2>
 
             <p style="margin-bottom: var(--gap)">
-                When the number of teams at an FTC doesn’t allow every team to play exactly five matches and at the same
-                time have all matches be full the match scheduler will make some teams play an extra sixth match as a
-                surrogate. These matches occur near the middle of the tournament (both in the match schedule and for the
-                teams involved).
+                I can remember checking <a href="http://ftcstats.org">ftcstats.org</a> nearly every day to see if
+                someone topped our
+                <a
+                    href="https://ftcscout.org/records/2021/teams?region=California+-+Los+Angeles&event-types=Traditional&end=2021-12-24"
+                >
+                    1st place OPR Los Angeles
+                </a>
+                record (which held until the end of January). This is because we, as humans, tend to value extremes more
+                than regular ones. That's why this scouting report is dedicated to our unsung heroes: the average.
             </p>
 
             <em>Read More.</em>
