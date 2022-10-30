@@ -5,6 +5,7 @@
     import MatchStats2020Trad from "./MatchStats2020Trad.svelte";
     import MatchStats2021Remote from "./MatchStats2021Remote.svelte";
     import MatchStats2021Trad from "./MatchStats2021Trad.svelte";
+    import MatchStats2022 from "./MatchStats2022.svelte";
 
     export let matches: EventPageMatchFragment[];
     export let event: RecordsEventFragment;
@@ -29,9 +30,13 @@
     }
 
     $: scores = matches.flatMap(process);
+
+    console.log(scores);
 </script>
 
-{#if event.season == 2021 && event.remote}
+{#if event.season == 2022}
+    <MatchStats2022 data={scores} eventName={event.name} bind:selectedTeam />
+{:else if event.season == 2021 && event.remote}
     <MatchStats2021Remote data={scores} eventName={event.name} bind:selectedTeam />
 {:else if event.season == 2021 && !event.remote}
     <MatchStats2021Trad data={scores} eventName={event.name} bind:selectedTeam />

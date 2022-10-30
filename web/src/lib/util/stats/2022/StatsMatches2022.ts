@@ -1,9 +1,8 @@
 import {
     Alliance,
-    Match2019FieldName,
     MatchGroup,
     Station,
-    type MatchScores2019Alliance,
+    type MatchScores2022Alliance,
     type RecordsEventFragment,
 } from "../../../graphql/generated/graphql-operations";
 import { DisplayWhen, makeStatFn, makeStatMaybe, type Stat } from "../Stat";
@@ -11,178 +10,224 @@ import { StatColor } from "../stat-color";
 import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
 
-export type FullScores2019Shared = MatchScores2019Alliance;
+const Match2022FieldName = {};
 
-const TOTAL_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+export type FullScores2022Shared = MatchScores2022Alliance;
+
+const TOTAL_POINTS_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
     "totalPoints",
     "Total Points",
     "Total",
     "Total Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.TotalPoints,
+    Match2022FieldName.TotalPoints,
     null
 );
 
-const TOTAL_POINTS_NP_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+const TOTAL_POINTS_NP_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
     "totalPointsNp",
     "Total Points No Penalties",
     "Total NP",
     "Total Points No Penalties",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.TotalPointsNp,
+    Match2022FieldName.TotalPointsNp,
     null
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const AUTO_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+const AUTO_POINTS_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
     "autoPoints",
     "Auto Points",
     "Auto",
     "Auto Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.AutoPoints
+    Match2022FieldName.AutoPoints
 );
 
-const AUTO_NAV_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+const AUTO_NAV_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
     "autoNavigationPoints",
     "Auto Navigation Points",
     "Auto Nav",
     "Auto Navigation Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.AutoNavigationPoints
+    Match2022FieldName.AutoNavigationPoints
 );
 
-const AUTO_REPOSITIONING_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "autoRepositioningPoints",
-    "Auto Repositioning Points",
-    "Repositioning",
-    "Auto Repositioning Points",
+const AUTO_CONE_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
+    "autoConePoints",
+    "Auto Cone Points",
+    "Auto Cone",
+    "Auto Cone Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.AutoRepositioningPoints
+    Match2022FieldName.AutoConePoints
 );
 
-const AUTO_DELIVERY_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "autoDeliveryPoints",
-    "Auto Delivery Points",
-    "Auto Delivery",
-    "Auto Delivery Points",
+export const AUTO_CONE_TERMINAL_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.autoTerminalCones,
+    "Terminal",
+    "Auto Terminal",
+    "Auto Terminal Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.AutoDeliveryPoints
+    Match2022FieldName.AutoTerminalPoints
 );
-
-export const AUTO_PLACEMENT_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "autoPlacementPoints",
-    "Auto Placement Points",
-    "Auto Placement",
-    "Auto Placement Points",
+export const AUTO_CONE_GROUND_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.autoGroundCones * 2,
+    "Ground",
+    "Auto Ground",
+    "Auto Ground Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.AutoPlacementPoints
+    Match2022FieldName.AutoGroundPoints
+);
+export const AUTO_CONE_LOW_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.autoLowCones * 3,
+    "Low",
+    "Auto Low",
+    "Auto Low Points",
+    DisplayWhen.ALWAYS,
+    Match2022FieldName.AutoLowPoints
+);
+export const AUTO_CONE_MEDIUM_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.autoMediumCones * 4,
+    "Medium",
+    "Auto Medium",
+    "Auto Medium Points",
+    DisplayWhen.ALWAYS,
+    Match2022FieldName.AutoMediumPoints
+);
+export const AUTO_CONE_HIGH_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.autoHighCones * 5,
+    "High",
+    "Auto High",
+    "Auto High Points",
+    DisplayWhen.ALWAYS,
+    Match2022FieldName.AutoHighPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-const DC_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+const DC_POINTS_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
     "dcPoints",
     "Driver Controlled Points",
     "Teleop",
     "Driver Controlled Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.DriverControlledPoints
+    Match2022FieldName.DriverControlledPoints
 );
 
-const DC_DELIVERY_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "dcDeliveryPoints",
-    "Delivery Points",
-    "Delivery",
-    "Driver Controlled Delivery Points",
+export const DC_CONE_TERMINAL_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.dcTerminalCones,
+    "Terminal",
+    "DC Terminal",
+    "Driver Controlled Terminal Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.DcDeliveryPoints
+    Match2022FieldName.DcTerminalPoints
 );
-
-const DC_PLACEMENT_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "dcPlacementPoints",
-    "Placement Points",
-    "Placement",
-    "Driver Controlled Placement Points",
+export const DC_CONE_GROUND_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.dcGroundCones * 2,
+    "Ground",
+    "DC Ground",
+    "Driver Controlled Ground Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.DcPlacementPoints
+    Match2022FieldName.DcGroundPoints
 );
-
-const DC_SKYSCRAPER_BONUS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "dcSkyscraperBonusPoints",
-    "Skyscraper Points",
-    "Skyscapper",
-    "Driver Controlled Skyscapper Bonus Points",
+export const DC_CONE_LOW_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.dcLowCones * 3,
+    "Low",
+    "DC Low",
+    "Driver Controlled Low Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.DcSkyscraperBonusPoints
+    Match2022FieldName.DcLowPoints
+);
+export const DC_CONE_MEDIUM_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.dcMediumCones * 4,
+    "Medium",
+    "DC Medium",
+    "Driver Controlled Medium Points",
+    DisplayWhen.ALWAYS,
+    Match2022FieldName.DcMediumPoints
+);
+export const DC_CONE_HIGH_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.dcHighCones * 5,
+    "High",
+    "DC High",
+    "Driver Controlled High Points",
+    DisplayWhen.ALWAYS,
+    Match2022FieldName.DcHighPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const ENDGAME_POINTS_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+export const ENDGAME_POINTS_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
     "endgamePoints",
     "Endgame Points",
     "Endgame",
     "Endgame Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.EndgamePoints
+    Match2022FieldName.EndgamePoints
 );
 
-export const ENDGAME_CAPPING_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "cappingPoints",
-    "Capping Points",
-    "Capping",
-    "Endgame Capping Points",
+export const EG_NAV_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
+    "endgameNavigationPoints",
+    "Endgame Navigation Points",
+    "Endgame Nav",
+    "Endgame Navigation Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.CappingPoints
+    Match2022FieldName.EndgameNavigationPoints
 );
 
-export const ENDGAME_PARKING_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "parkingPoints",
-    "Parking Points",
-    "Endgame Park",
-    "Endgame Parking Points",
+export const OWNERSHIP_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
+    "ownershipPoints",
+    "Ownership Points",
+    "Ownership",
+    "Ownership Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.EndgameParkingPoints
+    Match2022FieldName.OwnershipPoints
 );
-
-export const ENDGAME_FOUNDATION_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
-    "foundationMovedPoints",
-    "Foundation Moved Points",
-    "Foundation Moves",
-    "Endgame Foundation Moved Points",
+export const CONE_OWNERSHIP_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.coneOwnedJunctions * 3,
+    "Regular",
+    "Regular Ownership",
+    "Regular Ownership Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.FoundationMovedPoints
+    Match2022FieldName.ConeOwnershipPoints
+);
+export const BEACON_OWNERSHIP_STAT: Stat<FullScores2022Shared> = makeStatFn(
+    (a) => a.data.beaconOwnedJunctions * 10,
+    "Beacon",
+    "Beacon Ownership",
+    "Beacon Ownership Points",
+    DisplayWhen.ALWAYS,
+    Match2022FieldName.BeaconOwnershipPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
 
-export const PENALTIES_STAT: Stat<FullScores2019Shared> = makeStatMaybe(
+export const PENALTIES_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
     "penaltyPoints",
     "Penalty Points",
     "Penalties",
     "Penalty Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.PenaltyPoints
+    Match2022FieldName.PenaltyPoints
 );
 
-export const PENALTIES_MAJOR_STAT: Stat<FullScores2019Shared> = makeStatFn(
+export const PENALTIES_MAJOR_STAT: Stat<FullScores2022Shared> = makeStatFn(
     (s) => (s.data ? s.data.majorPenalties * -30 : null),
     "Major Penalty Points",
     "Majors",
     "Major Penalty Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.MajorPenaltyPoints
+    Match2022FieldName.MajorPenaltyPoints
 );
 
-export const PENALTIES_MINOR_STAT: Stat<FullScores2019Shared> = makeStatFn(
+export const PENALTIES_MINOR_STAT: Stat<FullScores2022Shared> = makeStatFn(
     (s) => (s.data ? s.data.minorPenalties * -10 : null),
     "Minor Penalty Points",
     "Minors",
     "Minor Penalty Points",
     DisplayWhen.ALWAYS,
-    Match2019FieldName.MinorPenaltyPoints
+    Match2022FieldName.MinorPenaltyPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -232,7 +277,7 @@ export const TEAM_1: Stat<TeamsT | null> = {
     identifierName: "Team 1",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => extractTeam(s.data, 1),
-    apiField: { fieldName: Match2019FieldName.Team1Number },
+    apiField: { fieldName: Match2022FieldName.Team1Number },
 };
 
 export const TEAM_2: Stat<TeamsT | null> = {
@@ -243,7 +288,7 @@ export const TEAM_2: Stat<TeamsT | null> = {
     identifierName: "Team 2",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => extractTeam(s.data, 2),
-    apiField: { fieldName: Match2019FieldName.Team2Number },
+    apiField: { fieldName: Match2022FieldName.Team2Number },
 };
 
 export const TEAM_3: Stat<TeamsT | null> = {
@@ -254,7 +299,7 @@ export const TEAM_3: Stat<TeamsT | null> = {
     identifierName: "Team 3",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => extractTeam(s.data, 3),
-    apiField: { fieldName: Match2019FieldName.Team3Number },
+    apiField: { fieldName: Match2022FieldName.Team3Number },
 };
 
 export const EVENT_STAT: Stat<{ event: RecordsEventFragment }> = {
@@ -271,7 +316,7 @@ export const EVENT_STAT: Stat<{ event: RecordsEventFragment }> = {
         code: s.data.event.code,
         season: s.data.event.season,
     }),
-    apiField: { fieldName: Match2019FieldName.EventName },
+    apiField: { fieldName: Match2022FieldName.EventName },
 };
 
 export const MATCH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } }> = {
@@ -282,7 +327,7 @@ export const MATCH_DESCRIPTION_STAT: Stat<{ match: { matchDescription: string } 
     identifierName: "Match Number",
     displayWhen: DisplayWhen.ALWAYS,
     read: (s) => s.data.match.matchDescription,
-    apiField: { fieldName: Match2019FieldName.MatchNumber },
+    apiField: { fieldName: Match2022FieldName.MatchNumber },
 };
 
 function capitalizeFirstLetter(str: string) {
@@ -297,10 +342,10 @@ export const ALLIANCE_STAT: Stat<{ alliance?: Alliance }> = {
     identifierName: "Alliance",
     displayWhen: DisplayWhen.TRAD,
     read: (s) => ("alliance" in s.data ? capitalizeFirstLetter(s.data.alliance) : "Solo"),
-    apiField: { fieldName: Match2019FieldName.Alliance },
+    apiField: { fieldName: Match2022FieldName.Alliance },
 };
 
-export let STAT_SET_MATCHES_2019: StatSet<FullScores2019Shared, FullScores2019Shared> = [
+export let STAT_SET_MATCHES_2022: StatSet<FullScores2022Shared, FullScores2022Shared> = [
     {
         name: "Scores",
         type: "group",
@@ -348,20 +393,33 @@ export let STAT_SET_MATCHES_2019: StatSet<FullScores2019Shared, FullScores2019Sh
                     stat: AUTO_POINTS_STAT,
                     nestedStats: [
                         {
-                            stat: AUTO_DELIVERY_STAT,
-                            nestedStats: [],
-                        },
-                        {
-                            stat: AUTO_PLACEMENT_STAT,
-                            nestedStats: [],
-                        },
-                        {
-                            stat: AUTO_REPOSITIONING_STAT,
-                            nestedStats: [],
-                        },
-                        {
                             stat: AUTO_NAV_STAT,
                             nestedStats: [],
+                        },
+                        {
+                            stat: AUTO_CONE_STAT,
+                            nestedStats: [
+                                {
+                                    stat: AUTO_CONE_TERMINAL_STAT,
+                                    nestedStats: [],
+                                },
+                                {
+                                    stat: AUTO_CONE_GROUND_STAT,
+                                    nestedStats: [],
+                                },
+                                {
+                                    stat: AUTO_CONE_LOW_STAT,
+                                    nestedStats: [],
+                                },
+                                {
+                                    stat: AUTO_CONE_MEDIUM_STAT,
+                                    nestedStats: [],
+                                },
+                                {
+                                    stat: AUTO_CONE_HIGH_STAT,
+                                    nestedStats: [],
+                                },
+                            ],
                         },
                     ],
                 },
@@ -369,15 +427,23 @@ export let STAT_SET_MATCHES_2019: StatSet<FullScores2019Shared, FullScores2019Sh
                     stat: DC_POINTS_STAT,
                     nestedStats: [
                         {
-                            stat: DC_DELIVERY_STAT,
+                            stat: DC_CONE_TERMINAL_STAT,
                             nestedStats: [],
                         },
                         {
-                            stat: DC_PLACEMENT_STAT,
+                            stat: DC_CONE_GROUND_STAT,
                             nestedStats: [],
                         },
                         {
-                            stat: DC_SKYSCRAPER_BONUS_STAT,
+                            stat: DC_CONE_LOW_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_CONE_MEDIUM_STAT,
+                            nestedStats: [],
+                        },
+                        {
+                            stat: DC_CONE_HIGH_STAT,
                             nestedStats: [],
                         },
                     ],
@@ -386,16 +452,21 @@ export let STAT_SET_MATCHES_2019: StatSet<FullScores2019Shared, FullScores2019Sh
                     stat: ENDGAME_POINTS_STAT,
                     nestedStats: [
                         {
-                            stat: ENDGAME_CAPPING_STAT,
+                            stat: EG_NAV_STAT,
                             nestedStats: [],
                         },
                         {
-                            stat: ENDGAME_FOUNDATION_STAT,
-                            nestedStats: [],
-                        },
-                        {
-                            stat: ENDGAME_PARKING_STAT,
-                            nestedStats: [],
+                            stat: OWNERSHIP_STAT,
+                            nestedStats: [
+                                {
+                                    stat: CONE_OWNERSHIP_STAT,
+                                    nestedStats: [],
+                                },
+                                {
+                                    stat: BEACON_OWNERSHIP_STAT,
+                                    nestedStats: [],
+                                },
+                            ],
                         },
                     ],
                 },
@@ -474,9 +545,9 @@ export let STAT_SET_MATCHES_2019: StatSet<FullScores2019Shared, FullScores2019Sh
     },
 ];
 
-const SCORES = STAT_SET_MATCHES_2019.find((s) => s.name == "Scores")!.set as StatSetGroup<
-    FullScores2019Shared,
-    FullScores2019Shared
+const SCORES = STAT_SET_MATCHES_2022.find((s) => s.name == "Scores")!.set as StatSetGroup<
+    FullScores2022Shared,
+    FullScores2022Shared
 >;
 const THIS = SCORES.groups.find((g) => g.shortName == "THIS")!;
 
@@ -484,7 +555,3 @@ export const THIS_TOTAL_POINTS_NP_STAT = THIS.get(TOTAL_POINTS_NP_STAT);
 export const THIS_AUTO_POINTS_STAT = THIS.get(AUTO_POINTS_STAT);
 export const THIS_DC_POINTS_STAT = THIS.get(DC_POINTS_STAT);
 export const THIS_ENDGAME_POINTS_STAT = THIS.get(ENDGAME_POINTS_STAT);
-export const THIS_END_CAPPED_STAT = THIS.get(ENDGAME_CAPPING_STAT);
-export const THIS_AUTO_PLACEMENT_STAT = THIS.get(AUTO_PLACEMENT_STAT);
-export const THIS_DC_SKYSCRAPER_STAT = THIS.get(DC_SKYSCRAPER_BONUS_STAT);
-export const THIS_CAPPING_STAT = THIS.get(ENDGAME_CAPPING_STAT);
