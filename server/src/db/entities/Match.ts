@@ -17,6 +17,7 @@ import { Event } from "./Event";
 import { MatchScores2019 } from "./MatchScores2019";
 import { MatchScores2020 } from "./MatchScores2020";
 import { MatchScores2021 } from "./MatchScores2021";
+import { MatchScores2022 } from "./MatchScores2022";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
 import { Alliance } from "./types/Alliance";
 import { TournamentLevel, tournamentLevelFromApi } from "./types/TournamentLevel";
@@ -95,6 +96,8 @@ export class Match extends BaseEntity {
         }
     }
 
+    scores2022!: MatchScores2022[];
+
     scores2021!: MatchScores2021[];
 
     scores2020!: MatchScores2020[];
@@ -110,7 +113,9 @@ export class Match extends BaseEntity {
     updatedAt!: Date;
 
     redTotalPoints(): number | null {
-        if (this.scores2021) {
+        if (this.scores2022) {
+            return this.scores2022.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
+        } else if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
         } else if (this.scores2020) {
             return this.scores2020.filter((s) => s.alliance == Alliance.RED)[0].totalPoints;
@@ -122,7 +127,9 @@ export class Match extends BaseEntity {
     }
 
     blueTotalPoints(): number | null {
-        if (this.scores2021) {
+        if (this.scores2022) {
+            return this.scores2022.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
+        } else if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
         } else if (this.scores2020) {
             return this.scores2020.filter((s) => s.alliance == Alliance.BLUE)[0].totalPoints;
@@ -134,7 +141,9 @@ export class Match extends BaseEntity {
     }
 
     redTotalNpPoints(): number | null {
-        if (this.scores2021) {
+        if (this.scores2022) {
+            return this.scores2022.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
+        } else if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
         } else if (this.scores2020) {
             return this.scores2020.filter((s) => s.alliance == Alliance.RED)[0].totalPointsNp;
@@ -146,7 +155,9 @@ export class Match extends BaseEntity {
     }
 
     blueTotalNpPoints(): number | null {
-        if (this.scores2021) {
+        if (this.scores2022) {
+            return this.scores2022.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;
+        } else if (this.scores2021) {
             return this.scores2021.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;
         } else if (this.scores2020) {
             return this.scores2020.filter((s) => s.alliance == Alliance.BLUE)[0].totalPointsNp;

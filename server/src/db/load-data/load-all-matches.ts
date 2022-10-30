@@ -25,6 +25,10 @@ import { MatchScores2020TradFtcApi } from "../../ftc-api/types/match-scores/Matc
 import { MatchScores2020RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2020Remote";
 import { calculateEventStatistics2020 } from "../../logic/calculate-event-statistics2020";
 import { TeamEventParticipation2020 } from "../entities/team-event-participation/TeamEventParticipation2020";
+import { MatchScores2022 } from "../entities/MatchScores2022";
+import { MatchScores2022TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2022Trad";
+import { calculateEventStatistics2022 } from "../../logic/calculate-event-statistics2022";
+import { TeamEventParticipation2022 } from "../entities/team-event-participation/TeamEventParticipation2022";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -67,6 +71,7 @@ export async function loadAllMatches(season: Season) {
             let {
                 dbMatches,
                 dbTeamMatchParticipations,
+                dbTeamEventParticipations2022,
                 dbTeamEventParticipations2021,
                 dbTeamEventParticipations2020,
                 dbTeamEventParticipations2019,
@@ -88,7 +93,8 @@ export async function loadAllMatches(season: Season) {
                 { chunk: 500 }
             );
             await em.save(dbTeamMatchParticipations, { chunk: 500 });
-            await em.save(dbTeamEventParticipations2021, { chunk: 100 }); // These are really big so lower chunk size
+            await em.save(dbTeamEventParticipations2022, { chunk: 100 }); // These are really big so lower chunk size
+            await em.save(dbTeamEventParticipations2021, { chunk: 100 });
             await em.save(dbTeamEventParticipations2020, { chunk: 100 });
             await em.save(dbTeamEventParticipations2019, { chunk: 100 });
 
@@ -118,12 +124,14 @@ function createDbEntities(
 ): {
     dbMatches: Match[];
     dbTeamMatchParticipations: TeamMatchParticipation[];
+    dbTeamEventParticipations2022: TeamEventParticipation2022[];
     dbTeamEventParticipations2021: TeamEventParticipation2021[];
     dbTeamEventParticipations2020: TeamEventParticipation2020[];
     dbTeamEventParticipations2019: TeamEventParticipation2019[];
 } {
     let dbMatchesAll: Match[] = [];
     let dbTeamMatchParticipationsAll: TeamMatchParticipation[] = [];
+    let dbTeamEventParticipations2022All: TeamEventParticipation2022[] = [];
     let dbTeamEventParticipations2021All: TeamEventParticipation2021[] = [];
     let dbTeamEventParticipations2020All: TeamEventParticipation2020[] = [];
     let dbTeamEventParticipations2019All: TeamEventParticipation2019[] = [];
@@ -165,7 +173,14 @@ function createDbEntities(
             let dbMatch: Match | null = Match.fromApi(season, eventCode, match, remote, hasBeenPlayed);
 
             if (thisMatchScores) {
-                if (season == Season.FREIGHT_FRENZY && !remote) {
+                if (season == Season.POWER_PLAY) {
+                    dbMatch.scores2022 = MatchScores2022.fromTradApi(
+                        season,
+                        eventCode,
+                        dbMatch.id,
+                        thisMatchScores as MatchScores2022TradFtcApi
+                    );
+                } else if (season == Season.FREIGHT_FRENZY && !remote) {
                     dbMatch.scores2021 = MatchScores2021.fromTradApi(
                         season,
                         eventCode,
@@ -230,7 +245,9 @@ function createDbEntities(
             }
         }
 
-        if (season == Season.FREIGHT_FRENZY) {
+        if (season == Season.POWER_PLAY) {
+            dbTeamEventParticipations2022All.push(...calculateEventStatistics2022(season, eventCode, teams, dbMatches));
+        } else if (season == Season.FREIGHT_FRENZY) {
             dbTeamEventParticipations2021All.push(
                 ...calculateEventStatistics2021(season, eventCode, teams, dbMatches, remote)
             );
@@ -251,6 +268,7 @@ function createDbEntities(
     return {
         dbMatches: dbMatchesAll,
         dbTeamMatchParticipations: dbTeamMatchParticipationsAll,
+        dbTeamEventParticipations2022: dbTeamEventParticipations2022All,
         dbTeamEventParticipations2021: dbTeamEventParticipations2021All,
         dbTeamEventParticipations2020: dbTeamEventParticipations2020All,
         dbTeamEventParticipations2019: dbTeamEventParticipations2019All,

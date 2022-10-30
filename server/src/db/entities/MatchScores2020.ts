@@ -5,6 +5,7 @@ import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, Primary
 import { Match } from "./Match";
 import { Alliance, allianceFromString } from "./types/Alliance";
 import { WobbleEndPositions } from "./types/2020/WobbleEndPositions";
+import assert from "assert";
 
 @Entity()
 export class MatchScores2020 extends BaseEntity {
@@ -186,6 +187,7 @@ export class MatchScores2020 extends BaseEntity {
             majorPenalties: s.majorPenalties,
         } as DeepPartial<MatchScores2020>);
         dbms.addGeneratedProps();
+        assert(dbms.totalPoints == s.totalPoints);
         return dbms;
     }
 
@@ -223,6 +225,7 @@ export class MatchScores2020 extends BaseEntity {
                 majorPenalties: a.majorPenalties,
             } as DeepPartial<MatchScores2020>);
             dbms.addGeneratedProps();
+            assert(dbms.totalPoints == a.totalPoints);
             return dbms;
         });
     }

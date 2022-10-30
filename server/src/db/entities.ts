@@ -12,6 +12,8 @@ import { MatchScores2019 } from "./entities/MatchScores2019";
 import { ApiReq } from "./entities/ApiReq";
 import { TeamEventParticipation2020 } from "./entities/team-event-participation/TeamEventParticipation2020";
 import { MatchScores2020 } from "./entities/MatchScores2020";
+import { MatchScores2022 } from "./entities/MatchScores2022";
+import { TeamEventParticipation2022 } from "./entities/team-event-participation/TeamEventParticipation2022";
 
 export const entities: MixedList<string | Function | EntitySchema<any>> = [
     Team,
@@ -19,9 +21,11 @@ export const entities: MixedList<string | Function | EntitySchema<any>> = [
     Event,
     Match,
     TeamMatchParticipation,
+    TeamEventParticipation2022,
     TeamEventParticipation2021,
     TeamEventParticipation2020,
     TeamEventParticipation2019,
+    MatchScores2022,
     MatchScores2021,
     MatchScores2020,
     MatchScores2019,
