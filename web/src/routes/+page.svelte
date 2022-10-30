@@ -125,20 +125,19 @@
 
     <Card border={false}>
         <a href="/blog" class="latest-article">
-            <h2>The Latest Article from <em>The Scouting Report:</em> The Search for the Worst Surrogacy</h2>
+            <h2>The Latest Article from <em>The Scouting Report:</em> Making Up Statistics</h2>
 
-            <p style="margin-bottom: var(--gap)">
-                I can remember checking <a href="http://ftcstats.org">ftcstats.org</a> nearly every day to see if
-                someone topped our
-                <a
-                    href="https://ftcscout.org/records/2021/teams?region=California+-+Los+Angeles&event-types=Traditional&end=2021-12-24"
+            <!-- <p style="margin-bottom: var(--gap)"> -->
+            <p>
+                A wise man once said “OPR is the den of foolish robotics teams." I say we build a city of fools.
+                <br />
+                <br />
+                There’s a lot of truth in these words as OPR,
+                <a href="https://blog.thebluealliance.com/2017/10/05/the-math-behind-opr-an-introduction">
+                    Offensive Power Ranking</a
                 >
-                    1st place OPR Los Angeles
-                </a>
-                record (which held until the end of January). This is because we, as humans, tend to value extremes more
-                than regular ones. That's why this scouting report is dedicated to our unsung heroes: the average.
+                is kind of a statistic we, FIRST, made up. It doesn’t completely measure how good a team is on its own.
             </p>
-
             <em>Read More.</em>
         </a>
     </Card>
