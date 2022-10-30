@@ -21,9 +21,9 @@
         >
         is kind of a statistic we, FIRST, made up. It doesn’t completely measure how good a team is on its own. Especially
         in years with remote events, OPR becomes less and less of the force it once was. The biggest flaw with OPR are the
-        inconsistent teams. For example, take Team A that scores poorly on all but does exceptionally well in one of their
-        qualifier matches, and Team B that does average on all of their matches. The boost in OPR from that match that team
-        B will receive will be theoretically higher than Team A’s, even though Team A may have contributed more in that match.
+        inconsistent teams. For example, take Team A that scores poorly in all their matches except one where they do exceptionally
+        well, and Team B that does average in all of their matches. The boost in OPR from that match that team B receives
+        will be higher than Team A’s, even though Team A may have contributed more in that match.
     </p>
 
     <p>
@@ -49,7 +49,7 @@
         >,
         <a href="https://ftcscout.org/teams/11344">Team 11344 - Merrit Oilers</a>
         had an LD of over 100%, 106% to be exact. When I saw this I thought my query must’ve been wrong or something, but
-        upon checking their event you can actually see that their average was <em>lower</em> than their OPR. SOmething else
+        upon checking their event you can actually see that their average was <em>lower</em> than their OPR. Something else
         of note is that AlphaGo ranks 7 on this list, which I guess makes sense.
     </p>
 
@@ -58,7 +58,7 @@
         anywhere. Like Regional Domination, or Total Event Domination, or even Auto Freight Point Domination.
     </p>
     <p>
-        We apologize for the delayed report this week, college applications exist and we appreciate your patience, I
+        We apologize for the delayed report this week, college applications exist and we appreciate your patience. I
         look forward to seeing you all next week with our first <em>Power Play</em> Scouting report.
     </p>
     <p class="suggestions">

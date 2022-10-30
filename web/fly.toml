@@ -1,4 +1,4 @@
-# fly.toml file generated for ftc-scout-web on 2022-10-14T15:32:37-07:00
+# fly.toml file generated for ftc-scout-web on 2022-10-27T21:40:54-07:00
 
 app = "ftc-scout-web"
 kill_signal = "SIGINT"
