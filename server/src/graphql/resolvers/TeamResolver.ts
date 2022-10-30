@@ -11,6 +11,7 @@ import { DATA_SOURCE } from "../../db/data-source";
 import fuzzysort from "fuzzysort";
 import { getRegionCodes, Region } from "../../db/entities/types/Region";
 import { TeamEventParticipation2020 } from "../../db/entities/team-event-participation/TeamEventParticipation2020";
+import { TeamEventParticipation2022 } from "../../db/entities/team-event-participation/TeamEventParticipation2022";
 
 @Resolver(Team)
 export class TeamResolver {
@@ -26,10 +27,16 @@ export class TeamResolver {
 
     @FieldResolver(() => [TeamEventParticipation])
     @Loader<{ eventSeason: number; teamNumber: number }, TeamEventParticipation[]>(async (ids, _) => {
+        let ids2022 = ids.filter((id) => id.eventSeason == 2022);
         let ids2021 = ids.filter((id) => id.eventSeason == 2021);
         let ids2020 = ids.filter((id) => id.eventSeason == 2020);
         let ids2019 = ids.filter((id) => id.eventSeason == 2019);
 
+        let teps2022P = ids2022.length
+            ? TeamEventParticipation2022.find({
+                  where: ids2022 as { eventSeason: number; teamNumber: number }[],
+              })
+            : [];
         let teps2021P = ids2021.length
             ? TeamEventParticipation2021.find({
                   where: ids2021 as { eventSeason: number; teamNumber: number }[],
@@ -46,8 +53,8 @@ export class TeamResolver {
               })
             : [];
 
-        let [teps2021, teps2020, teps2019] = await Promise.all([teps2021P, teps2020P, teps2019P]);
-        let teps = [...teps2021, ...teps2020, ...teps2019];
+        let [teps2022, teps2021, teps2020, teps2019] = await Promise.all([teps2022P, teps2021P, teps2020P, teps2019P]);
+        let teps = [...teps2022, ...teps2021, ...teps2020, ...teps2019];
 
         let groups: TeamEventParticipation[][] = ids.map((_) => []);
 
@@ -128,16 +135,22 @@ export class TeamResolver {
             query.andWhere(
                 `
                 (exists(SELECT *
+                    FROM team_event_participation2022 tep2022
+                    JOIN event e on tep2022."eventSeason" = e.season and
+                    tep2022."eventCode" = e.code
+                    WHERE tep2022."teamNumber" = t.number
+                    AND e."regionCode" in (:...regionCodes))
+                    OR exists (SELECT *
                     FROM team_event_participation2021 tep2021
                     JOIN event e on tep2021."eventSeason" = e.season and
                     tep2021."eventCode" = e.code
                     WHERE tep2021."teamNumber" = t.number
                     AND e."regionCode" in (:...regionCodes))
                     OR exists (SELECT *
-                    FROM team_event_participation2019 tep2019
-                    JOIN event e on tep2019."eventSeason" = e.season and
-                    tep2019."eventCode" = e.code
-                    WHERE tep2019."teamNumber" = t.number
+                    FROM team_event_participation2020 tep2020
+                    JOIN event e on tep2020."eventSeason" = e.season and
+                    tep2020."eventCode" = e.code
+                    WHERE tep2020."teamNumber" = t.number
                     AND e."regionCode" in (:...regionCodes))
                     OR exists (SELECT *
                     FROM team_event_participation2019 tep2019

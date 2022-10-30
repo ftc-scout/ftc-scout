@@ -92,6 +92,10 @@ export async function loadAllMatches(season: Season) {
                 dbMatches.flatMap((m) => m.scores2021 ?? []),
                 { chunk: 500 }
             );
+            await em.save(
+                dbMatches.flatMap((m) => m.scores2022 ?? []),
+                { chunk: 500 }
+            );
             await em.save(dbTeamMatchParticipations, { chunk: 500 });
             await em.save(dbTeamEventParticipations2022, { chunk: 100 }); // These are really big so lower chunk size
             await em.save(dbTeamEventParticipations2021, { chunk: 100 });

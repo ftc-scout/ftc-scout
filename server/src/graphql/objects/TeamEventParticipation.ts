@@ -11,11 +11,14 @@ import { TeamEventParticipation2019 } from "../../db/entities/team-event-partici
 import { TeamEventStats2019 } from "./TepStats2019";
 import { TeamEventParticipation2020 } from "../../db/entities/team-event-participation/TeamEventParticipation2020";
 import { TeamEventStatGroup2020, TeamEventStats2020Remote, TeamEventStats2020Traditional } from "./TepStats2020";
+import { TeamEventParticipation2022 } from "../../db/entities/team-event-participation/TeamEventParticipation2022";
+import { TeamEventStats2022 } from "./TepStats2022";
 
 export const TeamEventStatsUnion = createUnionType({
     name: "TeamEventStats",
     types: () =>
         [
+            TeamEventStats2022,
             TeamEventStats2021Traditional,
             TeamEventStats2021Remote,
             TeamEventStats2020Traditional,
@@ -26,12 +29,42 @@ export const TeamEventStatsUnion = createUnionType({
 
 @ObjectType()
 export class TeamEventParticipation {
-    constructor(_tep: TeamEventParticipation2021 | TeamEventParticipation2020 | TeamEventParticipation2019) {
+    constructor(
+        _tep:
+            | TeamEventParticipation2022
+            | TeamEventParticipation2021
+            | TeamEventParticipation2020
+            | TeamEventParticipation2019
+    ) {
         this.season = _tep.eventSeason;
         this.eventCode = _tep.eventCode;
         this.teamNumber = _tep.teamNumber;
 
-        if (_tep.eventSeason == 2021) {
+        if (_tep.eventSeason == 2022) {
+            let tep = _tep as TeamEventParticipation2022;
+
+            if (!tep.hasStats) {
+                this.stats = null;
+            } else {
+                this.stats = new TeamEventStats2022({
+                    rank: tep.rank,
+                    rp: tep.rp,
+                    tb1: tep.tb1,
+                    tb2: tep.tb2,
+                    wins: tep.wins,
+                    losses: tep.losses,
+                    ties: tep.ties,
+                    dqs: tep.dq,
+                    qualMatchesPlayed: tep.qualMatchesPlayed,
+                    total: tep.tot,
+                    average: tep.avg,
+                    min: tep.min,
+                    max: tep.max,
+                    standardDev: tep.dev,
+                    opr: tep.opr,
+                });
+            }
+        } else if (_tep.eventSeason == 2021) {
             let tep = _tep as TeamEventParticipation2021;
 
             if (!tep.hasStats) {
@@ -146,6 +179,7 @@ export class TeamEventParticipation {
 
     @Field(() => TeamEventStatsUnion, { nullable: true })
     stats:
+        | TeamEventStats2022
         | TeamEventStats2021Remote
         | TeamEventStats2021Traditional
         | TeamEventStats2020Remote

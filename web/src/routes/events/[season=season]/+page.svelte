@@ -92,7 +92,7 @@
             region: region == Region.All ? null : regionToString(region),
             start: dateToStr(startDate),
             end: dateToStr(endDate),
-            matches: onlyMatches ? null : "false",
+            matches: !onlyMatches ? null : "true",
             search: !searchText ? null : searchText,
         },
         true

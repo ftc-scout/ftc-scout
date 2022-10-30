@@ -47,8 +47,8 @@ export function calculateEventStatistics2022(
         } as TeamEventParticipation2022);
 
         tep.rp = !tep.hasStats ? null : (tep.wins! * 2 + tep.ties!) / tep.qualMatchesPlayed!;
-        tep.tb1 = !tep.hasStats ? null : tep.tot.autoPoints;
-        tep.tb2 = !tep.hasStats ? null : tep.tot.endgamePoints;
+        tep.tb1 = !tep.hasStats ? null : tep.avg.autoPoints;
+        tep.tb2 = !tep.hasStats ? null : tep.avg.endgamePoints;
 
         participations[team] = tep;
     });

@@ -1,5 +1,6 @@
 <script lang="ts">
     import type { FullStatsFragment } from "../../graphql/generated/graphql-operations";
+    import EventStats2022 from "./EventStats2022.svelte";
     import EventStats2021Trad from "./EventStats2021Trad.svelte";
     import EventStats2021Remote from "./EventStats2021Remote.svelte";
     import EventStats2020Trad from "./EventStats2020Trad.svelte";
@@ -18,6 +19,7 @@
     export let eventName: string;
 
     let type:
+        | "TeamEventStats2022"
         | "TeamEventStats2021Traditional"
         | "TeamEventStats2021Remote"
         | "TeamEventStats2020Traditional"
@@ -31,7 +33,9 @@
     }
 </script>
 
-{#if type == "TeamEventStats2021Traditional"}
+{#if type == "TeamEventStats2022"}
+    <EventStats2022 data={force(stats)} bind:selectedTeam {eventName} />
+{:else if type == "TeamEventStats2021Traditional"}
     <EventStats2021Trad data={force(stats)} bind:selectedTeam {eventName} />
 {:else if type == "TeamEventStats2021Remote"}
     <EventStats2021Remote data={force(stats)} bind:selectedTeam {eventName} />

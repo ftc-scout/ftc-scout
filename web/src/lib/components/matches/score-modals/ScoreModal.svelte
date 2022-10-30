@@ -8,6 +8,7 @@
     import ScoreRemote2020 from "./ScoreRemote2020.svelte";
     import { CLOSE_ICON } from "../../../icons";
     import Scores2019 from "./Scores2019.svelte";
+    import Scores2022 from "./Scores2022.svelte";
 
     export let matchScores: EventPageMatchFragment | null = null;
     export let shown = false;
@@ -26,7 +27,9 @@
             </button>
         </b>
 
-        {#if matchScores.scores?.__typename == "MatchScores2021Traditional"}
+        {#if matchScores.scores?.__typename == "MatchScores2022"}
+            <Scores2022 score={matchScores.scores} />
+        {:else if matchScores.scores?.__typename == "MatchScores2021Traditional"}
             <ScoreTrad2021 score={matchScores.scores} />
         {:else if matchScores.scores?.__typename == "MatchScores2021Remote"}
             <ScoreRemote2021 score={matchScores.scores} teamNumber={matchScores.teams[0].teamNumber} />

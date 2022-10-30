@@ -17,8 +17,8 @@
     $: matchesCount = $data?.data?.matchesPlayedCount;
     $: events = $data?.data?.todaysEvents;
 
-    $: bestTradMatch = $data?.data?.topTradMatch2021;
-    $: bestRemoteTep = $data?.data?.topRemoteTep2021;
+    $: bestTradMatch = $data?.data?.topTradMatch;
+    $: bestRemoteTep = $data?.data?.topRemoteTep;
 </script>
 
 <Head

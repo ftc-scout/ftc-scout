@@ -3,7 +3,6 @@ import { Season } from "../../ftc-api/types/Season";
 import { BaseEntity, Column, DeepPartial, Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
 import { Match } from "./Match";
 import { Alliance, allianceFromString } from "./types/Alliance";
-import assert from "assert";
 
 @Entity()
 export class MatchScores2019 extends BaseEntity {
@@ -200,7 +199,6 @@ export class MatchScores2019 extends BaseEntity {
                 penaltyPoints: a.penaltyPoints, // this is penalties committed bu the other alliance
             } as DeepPartial<MatchScores2019>);
             dbms.addGeneratedProps();
-            assert(dbms.totalPoints == a.totalPoints);
             return dbms;
         });
     }

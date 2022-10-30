@@ -6,8 +6,10 @@ import { TeamEventParticipation2019 } from "../../db/entities/team-event-partici
 import { TeamEventParticipation2021 } from "../../db/entities/team-event-participation/TeamEventParticipation2021";
 import { Match } from "../../db/entities/Match";
 import { Event } from "../../db/entities/Event";
-import { MatchScores2021 } from "../../db/entities/MatchScores2021";
 import { TeamEventParticipation } from "../objects/TeamEventParticipation";
+import { TeamEventParticipation2020 } from "../../db/entities/team-event-participation/TeamEventParticipation2020";
+import { TeamEventParticipation2022 } from "../../db/entities/team-event-participation/TeamEventParticipation2022";
+import { MatchScores2022 } from "../../db/entities/MatchScores2022";
 
 @Resolver()
 export class HomePageResolver {
@@ -21,10 +23,13 @@ export class HomePageResolver {
                     tep = TeamEventParticipation2019;
                     break;
                 case 2020:
-                    // TODO
-                    return 0;
+                    tep = TeamEventParticipation2020;
+                    break;
                 case 2021:
                     tep = TeamEventParticipation2021;
+                    break;
+                case 2022:
+                    tep = TeamEventParticipation2022;
                     break;
             }
             let res = (await DATA_SOURCE.getRepository(tep!)
@@ -49,11 +54,11 @@ export class HomePageResolver {
     }
 
     @Query(() => Match, { nullable: true })
-    async topTradMatch2021(): Promise<Match | null> {
+    async topTradMatch(): Promise<Match | null> {
         return DATA_SOURCE.getRepository(Match)
             .createQueryBuilder("m")
             .leftJoin(
-                MatchScores2021,
+                MatchScores2022,
                 "s",
                 's.season = m."eventSeason" AND s."eventCode" = m."eventCode" AND s."matchId" = m.id'
             )
@@ -67,8 +72,8 @@ export class HomePageResolver {
     }
 
     @Query(() => TeamEventParticipation, { nullable: true })
-    async topRemoteTep2021(): Promise<TeamEventParticipation | null> {
-        let res = await DATA_SOURCE.getRepository(TeamEventParticipation2021)
+    async topRemoteTep(): Promise<TeamEventParticipation | null> {
+        let res = await DATA_SOURCE.getRepository(TeamEventParticipation2022)
             .createQueryBuilder("tep")
             .leftJoin(Event, "e", 'e.season = tep."eventSeason" AND e.code = tep."eventCode"')
             .orderBy('tep."totTotalpoints"', "DESC")

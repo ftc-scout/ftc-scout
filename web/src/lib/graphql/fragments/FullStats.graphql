@@ -1,4 +1,33 @@
 fragment FullStats on TeamEventStats {
+    ... on TeamEventStats2022 {
+        rank
+        rp2022: rp
+        tb12022: tb1
+        tb22022: tb2
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        total {
+            ...FullStatsGroup2022
+        }
+        average {
+            ...FullStatsGroup2022
+        }
+        opr {
+            ...FullStatsGroup2022
+        }
+        min {
+            ...FullStatsGroup2022
+        }
+        max {
+            ...FullStatsGroup2022
+        }
+        standardDev {
+            ...FullStatsGroup2022
+        }
+    }
     ... on TeamEventStats2021Traditional {
         rank
         rp

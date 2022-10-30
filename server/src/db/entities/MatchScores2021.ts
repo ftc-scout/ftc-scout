@@ -7,7 +7,6 @@ import { AutoNavigation2021, autoNavigation2021FromApi } from "./types/2021/Auto
 import { EndgamePark2021, endgamePark2021FromApi } from "./types/2021/EndgamePark2021";
 import { MatchScores2021RemoteFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Remote";
 import { MatchScores2021TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2021Trad";
-import assert from "assert";
 
 @Entity()
 export class MatchScores2021 extends BaseEntity {
@@ -245,7 +244,6 @@ export class MatchScores2021 extends BaseEntity {
             majorPenalties: s.majorPenalties,
         } as DeepPartial<MatchScores2021>);
         dbms.addGeneratedProps();
-        assert(dbms.totalPoints == s.totalPoints);
         return dbms;
     }
 
@@ -288,7 +286,6 @@ export class MatchScores2021 extends BaseEntity {
                 majorPenalties: a.majorPenalties,
             } as DeepPartial<MatchScores2021>);
             dbms.addGeneratedProps();
-            assert(dbms.totalPoints == a.totalPoints);
             return dbms;
         });
     }

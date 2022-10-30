@@ -4,8 +4,10 @@ import { MatchScores2020RemoteGraphql } from "./MatchScores2020RemoteGraphql";
 import { MatchScores2020TradAllianceGraphql, MatchScores2020TradGraphql } from "./MatchScores2020TradGraphql";
 import { MatchScores2021RemoteGraphql } from "./MatchScores2021RemoteGraphql";
 import { MatchScores2021TradAllianceGraphql, MatchScores2021TradGraphql } from "./MatchScores2021TradGraphql";
+import { MatchScores2022AllianceGraphql, MatchScores2022Graphql } from "./MatchScores2022Graphql";
 
 export type MatchScoresGraphql =
+    | MatchScores2022Graphql
     | MatchScores2021TradGraphql
     | MatchScores2021RemoteGraphql
     | MatchScores2020TradGraphql
@@ -16,12 +18,14 @@ export type MatchScoresAllianceGraphql =
     | MatchScores2020TradAllianceGraphql
     | MatchScores2020RemoteGraphql
     | MatchScores2021TradAllianceGraphql
-    | MatchScores2021RemoteGraphql;
+    | MatchScores2021RemoteGraphql
+    | MatchScores2022AllianceGraphql;
 
 export const MatchScoresUnion = createUnionType({
     name: "MatchScores", // the name of the GraphQL union
     types: () =>
         [
+            MatchScores2022Graphql,
             MatchScores2021TradGraphql,
             MatchScores2021RemoteGraphql,
             MatchScores2020TradGraphql,
@@ -39,5 +43,6 @@ export const MatchScoresAllianceUnion = createUnionType({
             MatchScores2020RemoteGraphql,
             MatchScores2021TradAllianceGraphql,
             MatchScores2021RemoteGraphql,
+            MatchScores2022AllianceGraphql,
         ] as const, // function that returns tuple of object types classes
 });

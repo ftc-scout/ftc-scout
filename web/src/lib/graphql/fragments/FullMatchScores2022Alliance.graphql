@@ -1,0 +1,36 @@
+fragment FullMatchScores2022Alliance on MatchScores2022Alliance {
+    season
+    eventCode
+    matchId
+    alliance
+    autoNavigation12022: autoNavigation1
+    autoNavigation22022: autoNavigation2
+    autoTerminalCones
+    autoGroundCones
+    autoLowCones
+    autoMediumCones
+    autoHighCones
+    dcTerminalCones
+    dcGroundCones
+    dcLowCones
+    dcMediumCones
+    dcHighCones
+    endgameNavigated1
+    endgameNavigated2
+    coneOwnedJunctions
+    beaconOwnedJunctions
+    circuit
+    minorPenalties
+    majorPenalties
+    autoNavigationPoints
+    autoConePoints
+    endgameNavigationPoints
+    ownershipPoints
+    circuitPoints
+    autoPoints
+    dcPoints
+    endgamePoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}

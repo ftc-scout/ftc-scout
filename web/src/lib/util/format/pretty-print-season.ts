@@ -2,6 +2,8 @@ import type { Season } from "../../constants";
 
 export function prettyPrintSeason(season: Season): string {
     switch (season) {
+        case 2022:
+            return "Power Play";
         case 2021:
             return "Freight Frenzy";
         case 2020:

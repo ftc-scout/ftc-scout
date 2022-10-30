@@ -24,6 +24,7 @@ export function getMyClient(fetch: NonNullable<HttpOptions["fetch"]>): ApolloCli
     const cache = new InMemoryCache({
         possibleTypes: {
             MatchScores: [
+                "MatchScores2022",
                 "MatchScores2021Remote",
                 "MatchScores2021Traditional",
                 "MatchScores2020Remote",
@@ -36,8 +37,10 @@ export function getMyClient(fetch: NonNullable<HttpOptions["fetch"]>): ApolloCli
                 "MatchScores2020Remote",
                 "MatchScores2021TraditionalAlliance",
                 "MatchScores2021Remote",
+                "MatchScores2022Alliance",
             ],
             TeamEventStats: [
+                "TeamEventStats2022",
                 "TeamEventStats2021Traditional",
                 "TeamEventStats2021Remote",
                 "TeamEventStats2020Traditional",

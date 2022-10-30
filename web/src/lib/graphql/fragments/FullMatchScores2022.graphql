@@ -1,0 +1,11 @@
+fragment FullMatchScores2022 on MatchScores2022 {
+    season
+    eventCode
+    matchId
+    red {
+        ...FullMatchScores2022Alliance
+    }
+    blue {
+        ...FullMatchScores2022Alliance
+    }
+}

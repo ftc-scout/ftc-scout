@@ -170,8 +170,8 @@ export class MatchScores2022 extends BaseEntity {
                 coneOwnedJunctions: a.ownedJunctions - a.beacons,
                 beaconOwnedJunctions: a.beacons,
                 circuit: a.circuit,
-                minorPenalties: a.majorPenalties,
-                majorPenalties: a.minorPenalties,
+                majorPenalties: a.majorPenalties,
+                minorPenalties: a.minorPenalties,
                 penaltyPoints: other.penaltyPointsCommitted,
             } as DeepPartial<MatchScores2022>);
             dbms.addGeneratedProps();

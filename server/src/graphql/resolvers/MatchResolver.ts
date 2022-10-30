@@ -13,6 +13,8 @@ import { MatchScores2019 } from "../../db/entities/MatchScores2019";
 import { MatchScores2020 } from "../../db/entities/MatchScores2020";
 import { MatchScores2020RemoteGraphql } from "../objects/MatchScores2020RemoteGraphql";
 import { MatchScores2020TradGraphql } from "../objects/MatchScores2020TradGraphql";
+import { MatchScores2022 } from "../../db/entities/MatchScores2022";
+import { MatchScores2022Graphql } from "../objects/MatchScores2022Graphql";
 
 @Resolver(Match)
 export class MatchResolver {
@@ -20,12 +22,22 @@ export class MatchResolver {
     @FieldResolver(() => MatchScoresUnion, { nullable: true })
     @Loader<
         { season: Season; eventCode: string; matchId: number },
-        (MatchScores2021 | MatchScores2020 | MatchScores2019)[]
+        (MatchScores2022 | MatchScores2021 | MatchScores2020 | MatchScores2019)[]
     >(async (ids, _) => {
+        let ids2022 = ids.filter((id) => id.season == 2022);
         let ids2021 = ids.filter((id) => id.season == 2021);
         let ids2020 = ids.filter((id) => id.season == 2020);
         let ids2019 = ids.filter((id) => id.season == 2019);
 
+        let scores2022P = ids2022.length
+            ? await MatchScores2022.find({
+                  where: ids2022 as {
+                      season: Season;
+                      eventCode: string;
+                      matchId: number;
+                  }[],
+              })
+            : [];
         let scores2021P = ids2021.length
             ? await MatchScores2021.find({
                   where: ids2021 as {
@@ -54,10 +66,15 @@ export class MatchResolver {
               })
             : [];
 
-        let [scores2021, scores2020, scores2019] = await Promise.all([scores2021P, scores2020P, scores2019P]);
-        let scores = [...scores2021, ...scores2020, ...scores2019];
+        let [scores2022, scores2021, scores2020, scores2019] = await Promise.all([
+            scores2022P,
+            scores2021P,
+            scores2020P,
+            scores2019P,
+        ]);
+        let scores = [...scores2022, ...scores2021, ...scores2020, ...scores2019];
 
-        let groups: (MatchScores2021 | MatchScores2020 | MatchScores2019)[][] = ids.map((_) => []);
+        let groups: (MatchScores2022 | MatchScores2021 | MatchScores2020 | MatchScores2019)[][] = ids.map((_) => []);
 
         for (let s of scores) {
             for (let i = 0; i < ids.length; i++) {
@@ -75,7 +92,7 @@ export class MatchResolver {
         return async (
             dl: DataLoader<
                 { season: Season; eventCode: string; matchId: number },
-                (MatchScores2021 | MatchScores2020 | MatchScores2019)[]
+                (MatchScores2022 | MatchScores2021 | MatchScores2020 | MatchScores2019)[]
             >
         ) => {
             let scores = await dl.load({
@@ -85,7 +102,22 @@ export class MatchResolver {
             });
 
             if (scores && scores.length != 0) {
-                if (_match.eventSeason == Season.FREIGHT_FRENZY) {
+                if (_match.eventSeason == Season.POWER_PLAY) {
+                    switch (scores[0].alliance) {
+                        case Alliance.RED:
+                            return new MatchScores2022Graphql(
+                                scores[0] as MatchScores2022,
+                                scores[1] as MatchScores2022
+                            );
+                        case Alliance.BLUE:
+                            return new MatchScores2022Graphql(
+                                scores[1] as MatchScores2022,
+                                scores[0] as MatchScores2022
+                            );
+                        case Alliance.SOLO:
+                            throw "Impossible solo alliance in 2022";
+                    }
+                } else if (_match.eventSeason == Season.FREIGHT_FRENZY) {
                     switch (scores[0].alliance) {
                         case Alliance.SOLO:
                             return new MatchScores2021RemoteGraphql(scores[0] as MatchScores2021);

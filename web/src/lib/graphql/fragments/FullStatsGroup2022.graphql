@@ -1,0 +1,27 @@
+fragment FullStatsGroup2022 on TeamEventStatGroup2022 {
+    autoNavigationPoints
+    autoNavigationPointsIndividual
+    autoConePoints
+    autoTerminalPoints
+    autoGroundPoints
+    autoLowPoints
+    autoMediumPoints
+    autoHighPoints
+    dcTerminalPoints
+    dcGroundPoints
+    dcLowPoints
+    dcMediumPoints
+    dcHighPoints
+    endgameNavigationPoints
+    endgameNavigationPointsIndividual
+    ownershipPoints
+    coneOwnershipPoints
+    beaconOwnershipPoints
+    circuitPoints
+    autoPoints
+    dcPoints
+    endgamePoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}

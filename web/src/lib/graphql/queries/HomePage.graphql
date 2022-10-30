@@ -1,7 +1,7 @@
 query HomePage($date: DateTime) {
-    activeTeamsCount(season: 2021)
-    matchesPlayedCount(season: 2021)
-    topTradMatch2021 {
+    activeTeamsCount(season: 2022)
+    matchesPlayedCount(season: 2022)
+    topTradMatch {
         ...EventPageMatch
         event {
             season
@@ -12,7 +12,7 @@ query HomePage($date: DateTime) {
             hasStarted
         }
     }
-    topRemoteTep2021 {
+    topRemoteTep {
         season
         eventCode
         teamNumber
@@ -41,7 +41,7 @@ query HomePage($date: DateTime) {
         start: $date
         region: ALL
         eventTypes: TRAD_AND_REMOTE
-        season: 2021
+        season: 2022
     ) {
         season
         code
