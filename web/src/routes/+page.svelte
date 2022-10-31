@@ -128,16 +128,11 @@
             <h2>The Latest Article from <em>The Scouting Report:</em> Making Up Statistics</h2>
 
             <!-- <p style="margin-bottom: var(--gap)"> -->
-            <p>
-                A wise man once said “OPR is the den of foolish robotics teams." I say we build a city of fools.
-                <br />
-                <br />
-                There’s a lot of truth in these words as OPR,
-                <a href="https://blog.thebluealliance.com/2017/10/05/the-math-behind-opr-an-introduction">
-                    Offensive Power Ranking</a
-                >
-                is kind of a statistic we, FIRST, made up. It doesn’t completely measure how good a team is on its own.
-            </p>
+            A wise man once said “OPR is the den of foolish robotics teams." I say we build a city of fools.
+            <br />
+            <br />
+            There’s a lot of truth in these words as OPR, Offensive Power Rating, is kind of a statistic we, FIRST, made
+            up. It doesn’t completely measure how good a team is on its own.
             <em>Read More.</em>
         </a>
     </Card>
