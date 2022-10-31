@@ -72,8 +72,8 @@
     <TradScoreLine {score} name="Circuit Points" getProp={(a) => a.circuitPoints} />
 
     <TradScoreLine {score} heading name="Penalties" getProp={(a) => a.penaltyPoints} />
-    <TradScoreLine {score} name="Major Penalty Points" getProp={(a) => a.majorPenalties * -20} />
-    <TradScoreLine {score} name="Minor Penalty Points" getProp={(a) => a.minorPenalties * -5} />
+    <TradScoreLine {score} name="Major Penalty Points" getProp={(a) => a.majorPenalties * -30} />
+    <TradScoreLine {score} name="Minor Penalty Points" getProp={(a) => a.minorPenalties * -10} />
 </table>
 
 <style>
