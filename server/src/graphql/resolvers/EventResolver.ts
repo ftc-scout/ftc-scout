@@ -65,6 +65,8 @@ export class EventResolver {
         if (start) query = query.andWhere("e.start >= :start", { start });
         if (end) query = query.andWhere("e.end <= :end", { end });
 
+        console.log("From " + start + " to " + end);
+
         if (onlyWithMatches) {
             query.andWhere(
                 'EXISTS (SELECT * FROM match WHERE "hasBeenPlayed" AND "eventSeason" = :season AND "eventCode" = e.code)'
