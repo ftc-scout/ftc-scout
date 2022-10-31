@@ -67,7 +67,7 @@ export class EventResolver {
 
         if (onlyWithMatches) {
             query.andWhere(
-                'EXISTS (SELECT * FROM match WHERE "hasBeenPlayed" AND season = :season AND "eventCode" = e.code)'
+                'EXISTS (SELECT * FROM match WHERE "hasBeenPlayed" AND "eventSeason" = :season AND "eventCode" = e.code)'
             );
         }
 

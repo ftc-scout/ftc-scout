@@ -142,7 +142,7 @@
             <span>Season:</span>
             <SeasonDropdown bind:season style="width: calc(100% - 15ch)" />
         </div>
-        {#if season != 2019}
+        {#if season != 2019 && season != 2022}
             <div class="options">
                 <span>Event Types:</span>
                 <Dropdown
