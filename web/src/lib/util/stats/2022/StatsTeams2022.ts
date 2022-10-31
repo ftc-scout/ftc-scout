@@ -1,11 +1,12 @@
-import { type FullStatsGroup2022Fragment } from "../../../graphql/generated/graphql-operations";
+import {
+    Tep2022FieldName,
+    Tep2022Group,
+    type FullStatsGroup2022Fragment,
+} from "../../../graphql/generated/graphql-operations";
 import { DisplayWhen, makeStat, type Stat } from "../Stat";
 import { StatColor } from "../stat-color";
 import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
-
-const Tep2022FieldName = {};
-const Tep2022Group = {};
 
 export type FullTep2022 = {
     team: {
@@ -357,6 +358,15 @@ export const BEACON_OWNERSHIP_STAT: Stat<Group> = makeStat(
     Tep2022FieldName.BeaconOwnershipPoints
 );
 
+export const CIRCUIT_STAT: Stat<Group> = makeStat(
+    "circuitPoints",
+    "Circuit",
+    "Circuit",
+    "Circuit Points",
+    DisplayWhen.ALWAYS,
+    Tep2022FieldName.BeaconOwnershipPoints
+);
+
 export let STAT_SET_TEAMS_2022: StatSet<FullTep2022, Group> = [
     {
         name: "Team's Event Performance",
@@ -579,6 +589,10 @@ export let STAT_SET_TEAMS_2022: StatSet<FullTep2022, Group> = [
                                     nestedStats: [],
                                 },
                             ],
+                        },
+                        {
+                            stat: CIRCUIT_STAT,
+                            nestedStats: [],
                         },
                     ],
                 },

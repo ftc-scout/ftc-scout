@@ -30,9 +30,11 @@
         type MatchSeasonRecords2019Query,
         type MatchSeasonRecords2020Query,
         type MatchSeasonRecords2021Query,
+        type MatchSeasonRecords2022Query,
         type TeamSeasonRecords2019Query,
         type TeamSeasonRecords2020Query,
         type TeamSeasonRecords2021Query,
+        type TeamSeasonRecords2022Query,
     } from "../../../../lib/graphql/generated/graphql-operations";
     import { TEAMS_ICON, MATCHES_ICON } from "../../../../lib/icons";
     import { prettyPrintSeason } from "../../../../lib/util/format/pretty-print-season";
@@ -61,6 +63,13 @@
         match2020SearchParams,
         resetMatch2020SearchParams,
     } from "../../../../lib/components/season-records/MatchSeasonRecords2020.svelte";
+    import TeamSeasonRecords2022, {
+        team2022SearchParams,
+    } from "../../../../lib/components/season-records/TeamSeasonRecords2022.svelte";
+    import type { FullTep2022 } from "../../../../lib/util/stats/2022/StatsTeams2022";
+    import MatchSeasonRecords2022, {
+        match2022SearchParams,
+    } from "../../../../lib/components/season-records/MatchSeasonRecords2022.svelte";
 
     afterNavigate(({ to }) => {
         if (to.pathname.startsWith("/records")) {
@@ -71,6 +80,8 @@
     function getSearchParams(name: string, season: Season): string | null {
         if (name.toLocaleLowerCase() == "teams") {
             switch (season) {
+                case 2022:
+                    return team2022SearchParams;
                 case 2021:
                     return team2021SearchParams;
                 case 2020:
@@ -80,6 +91,8 @@
             }
         } else if (name.toLocaleLowerCase() == "matches") {
             switch (season) {
+                case 2022:
+                    return match2022SearchParams;
                 case 2021:
                     return match2021SearchParams;
                 case 2020:
@@ -102,13 +115,31 @@
     }
 
     export let data: PageData;
+    let teams2022: Readable<ApolloQueryResult<TeamSeasonRecords2022Query> | null> | undefined;
+    let matches2022: Readable<ApolloQueryResult<MatchSeasonRecords2022Query> | null> | undefined;
     let teams2021: Readable<ApolloQueryResult<TeamSeasonRecords2021Query> | null> | undefined;
     let matches2021: Readable<ApolloQueryResult<MatchSeasonRecords2021Query> | null> | undefined;
     let teams2020: Readable<ApolloQueryResult<TeamSeasonRecords2020Query> | null> | undefined;
     let matches2020: Readable<ApolloQueryResult<MatchSeasonRecords2020Query> | null> | undefined;
     let teams2019: Readable<ApolloQueryResult<TeamSeasonRecords2019Query> | null> | undefined;
     let matches2019: Readable<ApolloQueryResult<MatchSeasonRecords2019Query> | null> | undefined;
-    $: ({ teams2021, matches2021, teams2020, matches2020, teams2019, matches2019 } = data);
+    $: ({ teams2022, matches2022, teams2021, matches2021, teams2020, matches2020, teams2019, matches2019 } = data);
+
+    $: dataTeams2022 = !$teams2022 ? undefined : $teams2022.data.teamRecords2022;
+    let dataTeams2022Teps: StatData<FullTep2022>[] | undefined;
+    $: dataTeams2022Teps = dataTeams2022?.teps?.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.tep,
+    })) as any;
+
+    $: dataMatches2022 = !$matches2022 ? undefined : $matches2022.data.matchRecords2022;
+    let dataMatches2022Scores: StatData<MatchScoresAlliance>[] | undefined;
+    $: dataMatches2022Scores = dataMatches2022?.scores?.map((t) => ({
+        rank: t.rank,
+        preFilterRank: t.preFilterRank,
+        data: t.score,
+    })) as any;
 
     $: dataTeams2021 = !$teams2021 ? undefined : $teams2021.data.teamRecords2021;
     let dataTeams2021Teps: StatData<FullTep2021Shared>[] | undefined;
@@ -208,7 +239,7 @@
             <span>Season:</span>
             <SeasonDropdown bind:season style="width: calc(100% - 15ch)" />
         </div>
-        {#if season != 2019}
+        {#if season != 2019 && season != 2022}
             <div>
                 <span>Event Types:</span>
                 <Dropdown
@@ -251,7 +282,24 @@
         bind:selectedName={selectedPage}
     >
         <TabContent name="Teams">
-            {#if dataTeams2021 && dataTeams2021Teps}
+            {#if dataTeams2022 && dataTeams2022Teps}
+                {@const totalCount = dataTeams2022.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataTeams2022.offset / pageSize + 1}
+
+                <TeamSeasonRecords2022
+                    {eventTypes}
+                    data={dataTeams2022Teps}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                    bind:change={childrenChange}
+                />
+            {:else if dataTeams2021 && dataTeams2021Teps}
                 {@const totalCount = dataTeams2021.count}
                 <!-- TODO add this to query -->
                 {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
@@ -307,7 +355,24 @@
         </TabContent>
 
         <TabContent name="Matches">
-            {#if dataMatches2021 && dataMatches2021Scores}
+            {#if dataMatches2022 && dataMatches2022Scores}
+                {@const totalCount = dataMatches2022.count}
+                <!-- TODO add this to query -->
+                {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}
+                {@const page = dataMatches2022.offset / pageSize + 1}
+
+                <MatchSeasonRecords2022
+                    {eventTypes}
+                    data={dataMatches2022Scores}
+                    currPage={page}
+                    {totalCount}
+                    {pageSize}
+                    {region}
+                    {startDate}
+                    {endDate}
+                    bind:change={childrenChange}
+                />
+            {:else if dataMatches2021 && dataMatches2021Scores}
                 {@const totalCount = dataMatches2021.count}
                 <!-- TODO add this to query -->
                 {@const pageSize = Math.min(+($page.url.searchParams.get("take") ?? "50"), 50)}

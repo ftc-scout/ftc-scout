@@ -1,5 +1,6 @@
 import {
     Alliance,
+    Match2022FieldName,
     MatchGroup,
     Station,
     type MatchScores2022Alliance,
@@ -9,8 +10,6 @@ import { DisplayWhen, makeStatFn, makeStatMaybe, type Stat } from "../Stat";
 import { StatColor } from "../stat-color";
 import { StatDisplayType } from "../stat-display-type";
 import { groupGetter, type StatSet, type StatSetGroup } from "../StatSet";
-
-const Match2022FieldName = {};
 
 export type FullScores2022Shared = MatchScores2022Alliance;
 
@@ -199,6 +198,15 @@ export const BEACON_OWNERSHIP_STAT: Stat<FullScores2022Shared> = makeStatFn(
     "Beacon Ownership Points",
     DisplayWhen.ALWAYS,
     Match2022FieldName.BeaconOwnershipPoints
+);
+
+export const CIRCUIT_STAT: Stat<FullScores2022Shared> = makeStatMaybe(
+    "circuitPoints",
+    "Circuit Points",
+    "Circuit",
+    "Circuit Points",
+    DisplayWhen.ALWAYS,
+    Match2022FieldName.CircuitPoints
 );
 
 // ------------------------------------------------------------------------------------------------------------------------
@@ -468,6 +476,10 @@ export let STAT_SET_MATCHES_2022: StatSet<FullScores2022Shared, FullScores2022Sh
                                 },
                             ],
                         },
+                        {
+                            stat: CIRCUIT_STAT,
+                            nestedStats: [],
+                        },
                     ],
                 },
                 {
@@ -555,3 +567,5 @@ export const THIS_TOTAL_POINTS_NP_STAT = THIS.get(TOTAL_POINTS_NP_STAT);
 export const THIS_AUTO_POINTS_STAT = THIS.get(AUTO_POINTS_STAT);
 export const THIS_DC_POINTS_STAT = THIS.get(DC_POINTS_STAT);
 export const THIS_ENDGAME_POINTS_STAT = THIS.get(ENDGAME_POINTS_STAT);
+export const THIS_AUTO_CONE_POINTS = THIS.get(AUTO_CONE_STAT);
+export const THIS_CIRCUIT_POINTS = THIS.get(CIRCUIT_STAT);

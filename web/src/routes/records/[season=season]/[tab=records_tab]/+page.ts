@@ -1,4 +1,12 @@
 import {
+    DEFAULT_SORT_TEAM_2022,
+    getStatSet2022Teams,
+} from "$lib/components/season-records/TeamSeasonRecords2022.svelte";
+import {
+    DEFAULT_SORT_MATCH_2022,
+    getStatSet2022Matches,
+} from "$lib/components/season-records/MatchSeasonRecords2022.svelte";
+import {
     DEFAULT_SORT_TEAM_2021,
     getStatSet2021Teams,
 } from "$lib/components/season-records/TeamSeasonRecords2021.svelte";
@@ -29,11 +37,13 @@ import {
     MatchSeasonRecords2019Document,
     MatchSeasonRecords2020Document,
     MatchSeasonRecords2021Document,
+    MatchSeasonRecords2022Document,
     Order,
     Region,
     TeamSeasonRecords2019Document,
     TeamSeasonRecords2020Document,
     TeamSeasonRecords2021Document,
+    TeamSeasonRecords2022Document,
     type Match2019Field,
     type Match2019Filter,
     type Match2019Ordering,
@@ -43,6 +53,9 @@ import {
     type Match2021Field,
     type Match2021Filter,
     type Match2021Ordering,
+    type Match2022Field,
+    type Match2022Filter,
+    type Match2022Ordering,
     type Tep2019Field,
     type Tep2019Filter,
     type Tep2019Ordering,
@@ -52,6 +65,9 @@ import {
     type Tep2021Field,
     type Tep2021Filter,
     type Tep2021Ordering,
+    type Tep2022Field,
+    type Tep2022Filter,
+    type Tep2022Ordering,
 } from "$lib/graphql/generated/graphql-operations";
 import { getData } from "$lib/graphql/query-load";
 import { dateFromStr } from "$lib/util/format/pretty-print-date";
@@ -100,7 +116,97 @@ export const load: PageLoad = async ({ fetch, params, url }) => {
     let take = +(url.searchParams.get("take") ?? "50");
     let page = +(url.searchParams.get("page") ?? "1");
 
-    if (params.season == "2021") {
+    if (params.season == "2022") {
+        if (params.tab == "teams") {
+            let statSet = getStatSet2022Teams();
+
+            let order: Tep2022Ordering[] = [
+                {
+                    field: DEFAULT_SORT_TEAM_2022.stat.apiField as Tep2022Field,
+                    order: DEFAULT_SORT_TEAM_2022.type == SortType.HIGH_LOW ? Order.Desc : Order.Asc,
+                },
+            ];
+            let sortStatIdenName = url.searchParams.get("sort") ?? null;
+            if (sortStatIdenName) {
+                let sortStat = findInStatSet(statSet, sortStatIdenName);
+                if (sortStat) {
+                    let field = sortStat.apiField;
+                    let direction = url.searchParams.get("sort-dir") == "reverse" ? Order.Asc : Order.Desc;
+                    order = [{ field: field as Tep2022Field, order: direction }, ...order];
+                }
+            }
+
+            let filter = emptyFilter();
+            let filterParam = url.searchParams.get("filter") ?? null;
+            if (filterParam != null) {
+                try {
+                    let parsed = JSON.parse(filterParam);
+                    let urlFilter = simpleJsonToFilter(parsed, statSet);
+                    if (urlFilter) filter = urlFilter;
+                } catch {}
+            }
+            let apiFilter = filterToApiFilter(filter);
+
+            let recordsData = await getData(getMyClient(fetch), TeamSeasonRecords2022Document, {
+                skip: Math.max((page - 1) * take, 0),
+                take,
+                filter: apiFilter as Tep2022Filter,
+                order,
+                region,
+                start,
+                end,
+            });
+
+            return {
+                teams2022: recordsData,
+            };
+        } else if (params.tab == "matches") {
+            let statSet = getStatSet2022Matches();
+
+            let order: Match2022Ordering[] = [
+                {
+                    field: DEFAULT_SORT_MATCH_2022.stat.apiField as Match2022Field,
+                    order: DEFAULT_SORT_MATCH_2022.type == SortType.HIGH_LOW ? Order.Desc : Order.Asc,
+                },
+            ];
+            let sortStatIdenName = url.searchParams.get("sort") ?? null;
+            if (sortStatIdenName) {
+                let sortStat = findInStatSet(statSet, sortStatIdenName);
+                if (sortStat) {
+                    let field = sortStat.apiField;
+                    let direction = url.searchParams.get("sort-dir") == "reverse" ? Order.Asc : Order.Desc;
+                    order = [{ field: field as Match2022Field, order: direction }, ...order];
+                }
+            }
+
+            let filter = emptyFilter();
+            let filterParam = url.searchParams.get("filter") ?? null;
+            if (filterParam != null) {
+                try {
+                    let parsed = JSON.parse(filterParam);
+                    let urlFilter = simpleJsonToFilter(parsed, statSet);
+                    if (urlFilter) filter = urlFilter;
+                } catch {}
+            }
+            let apiFilter = filterToApiFilter(filter);
+
+            let recordsData = await getData(getMyClient(fetch), MatchSeasonRecords2022Document, {
+                skip: Math.max((page - 1) * take, 0),
+                take,
+                filter: apiFilter as Match2022Filter,
+                order,
+                region,
+                start,
+                end,
+            });
+
+            return {
+                matches2022: recordsData,
+            };
+        } else {
+            throw "impossible";
+        }
+    } else if (params.season == "2021") {
         let eventTypes = eventTypesFromStr(url.searchParams.get("event-types") ?? "") ?? EventTypes.TradAndRemote;
 
         if (params.tab == "teams") {

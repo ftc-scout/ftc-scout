@@ -35,7 +35,7 @@ export class MatchScores2022AllianceGraphql {
         this.autoConePoints = dbScore.autoConePoints;
         this.endgameNavigationPoints = dbScore.endgameNavigationPoints;
         this.ownershipPoints = dbScore.ownershipPoints;
-        this.circuitPoints = dbScore.ownershipPoints;
+        this.circuitPoints = dbScore.circuitPoints;
         this.autoPoints = dbScore.autoPoints;
         this.dcPoints = dbScore.dcPoints;
         this.endgamePoints = dbScore.endgamePoints;

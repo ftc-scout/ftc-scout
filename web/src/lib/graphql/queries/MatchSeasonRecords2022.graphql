@@ -1,0 +1,45 @@
+query MatchSeasonRecords2022(
+    $skip: Int!
+    $take: Int!
+    $filter: Match2022Filter
+    $order: [Match2022Ordering!]!
+    $region: Region!
+    $start: DateTime
+    $end: DateTime
+) {
+    matchRecords2022(
+        skip: $skip
+        take: $take
+        filter: $filter
+        order: $order
+        region: $region
+        start: $start
+        end: $end
+    ) {
+        scores {
+            score {
+                __typename
+                ... on MatchScores2022Alliance {
+                    alliance
+                    event {
+                        ...RecordsEvent
+                    }
+                    match {
+                        season
+                        eventCode
+                        id
+                        matchDescription
+                    }
+                    ...FullMatchScores2022Alliance
+                    opponentsScore {
+                        ...FullMatchScores2022Alliance
+                    }
+                }
+            }
+            rank
+            preFilterRank
+        }
+        offset
+        count
+    }
+}

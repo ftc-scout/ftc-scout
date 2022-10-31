@@ -5,6 +5,8 @@ import type {
     Match2020FieldName,
     Match2021Field,
     Match2021FieldName,
+    Match2022Field,
+    Match2022FieldName,
     MatchGroup,
     Tep2019Field,
     Tep2019FieldName,
@@ -15,6 +17,9 @@ import type {
     Tep2021Field,
     Tep2021FieldName,
     Tep2021Group,
+    Tep2022Field,
+    Tep2022FieldName,
+    Tep2022Group,
 } from "$lib/graphql/generated/graphql-operations";
 import { StatColor } from "./stat-color";
 import { StatDisplayType } from "./stat-display-type";
@@ -31,15 +36,25 @@ export enum DisplayWhen {
     REMOTE,
 }
 
-export type AnyField = Tep2021Field | Tep2020Field | Tep2019Field | Match2021Field | Match2020Field | Match2019Field;
+export type AnyField =
+    | Tep2022Field
+    | Tep2021Field
+    | Tep2020Field
+    | Tep2019Field
+    | Match2022Field
+    | Match2021Field
+    | Match2020Field
+    | Match2019Field;
 export type AnyFieldName =
+    | Tep2022FieldName
     | Tep2021FieldName
     | Tep2020FieldName
     | Tep2019FieldName
+    | Match2022FieldName
     | Match2021FieldName
     | Match2020FieldName
     | Match2019FieldName;
-export type AnyGroup = Tep2021Group | Tep2020Group | Tep2019Group | MatchGroup;
+export type AnyGroup = Tep2022Group | Tep2021Group | Tep2020Group | Tep2019Group | MatchGroup;
 
 export interface Stat<T> {
     displayType: StatDisplayType;
