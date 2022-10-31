@@ -87,7 +87,7 @@
     </Card>
 
     <Card>
-        <h2>Best Results</h2>
+        <h2>Best Results (No Penalties)</h2>
 
         <div class="best">
             {#if bestTradMatch}

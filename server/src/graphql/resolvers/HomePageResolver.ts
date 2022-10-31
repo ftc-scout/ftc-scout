@@ -63,7 +63,7 @@ export class HomePageResolver {
                 's.season = m."eventSeason" AND s."eventCode" = m."eventCode" AND s."matchId" = m.id'
             )
             .leftJoin(Event, "e", 'e.season = m."eventSeason" AND e.code = m."eventCode"')
-            .orderBy('s."totalPoints"', "DESC")
+            .orderBy('s."totalPointsNp"', "DESC")
             .where("m.hasBeenPlayed")
             .andWhere("NOT e.remote")
             .andWhere('m."eventSeason" = :season', { season: CURRENT_SEASON })
