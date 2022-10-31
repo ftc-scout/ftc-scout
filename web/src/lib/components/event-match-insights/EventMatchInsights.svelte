@@ -30,8 +30,6 @@
     }
 
     $: scores = matches.flatMap(process);
-
-    console.log(scores);
 </script>
 
 {#if event.season == 2022}

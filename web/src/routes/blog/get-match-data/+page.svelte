@@ -13,7 +13,6 @@
             code,
         },
     });
-    $: console.log($q);
 </script>
 
 <form>

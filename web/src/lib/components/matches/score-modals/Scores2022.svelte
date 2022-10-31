@@ -13,8 +13,6 @@
             [AutoNavigation2022.TeamSignal]: 20,
         }[nav]!;
     }
-
-    console.log(score);
 </script>
 
 <table colspan="3">
