@@ -56,7 +56,7 @@
     $: maxOprEvent = maxOpr != null ? sortedEvents.find((e) => e.stats?.opr?.totalPoints == maxOpr)?.eventCode : null;
 
     function getRp(tep: any): number | null {
-        return tep?.stats?.rp ?? tep?.stats?.rp2019 ?? null;
+        return tep?.stats?.rp ?? tep?.stats?.rp2019 ?? tep?.stats?.rp2022 ?? null;
     }
 
     function gotoSubPage(season: Season) {
@@ -151,7 +151,7 @@
                 </InfoIconRow>
             {/if}
 
-            {#if teamEvent.stats?.__typename == "TeamEventStats2021Traditional"}
+            {#if teamEvent?.stats && "wins" in teamEvent?.stats}
                 <InfoIconRow icon={null}>
                     W-L-T: <b>
                         {teamEvent.stats.wins}-{teamEvent.stats.losses}-{teamEvent.stats.ties}
