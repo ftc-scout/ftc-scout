@@ -1,4 +1,4 @@
-import { CURRENT_SEASON, MINS_PER_DAY, MINS_PER_HOUR, MINUTE_MS, PAST_SEASONS, SECOND_MS } from "../constants";
+import { CURRENT_SEASON, MINS_PER_DAY, MINS_PER_HOUR, MINUTE_MS, PAST_SEASONS } from "../constants";
 import { FtcApiMetadata } from "../db/entities/FtcApiMetadata";
 import { loadAllAwards } from "../db/load-data/load-all-awards";
 import { loadAllEvents as loadAllEventsIntoDatabase } from "../db/load-data/load-all-events";

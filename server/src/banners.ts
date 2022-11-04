@@ -6,7 +6,6 @@ import { readFile } from "fs/promises";
 import { DATA_SOURCE } from "./db/data-source";
 import { Event } from "./db/entities/Event";
 import { DateTime } from "luxon";
-import { MatchScores2021 } from "./db/entities/MatchScores2021";
 import { TeamEventParticipation2022 } from "./db/entities/team-event-participation/TeamEventParticipation2022";
 import { MatchScores2022 } from "./db/entities/MatchScores2022";
 
