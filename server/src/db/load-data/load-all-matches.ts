@@ -359,7 +359,9 @@ async function getEventCodesToLoadMatchesFrom(
                     updatedAt: Between(new Date(dateStartQuery.getTime() - 15 * MINUTE_MS), dateStartQuery),
                 },
             })
-        ).map((m) => m.event);
+        )
+            .map((m) => m.event)
+            .filter((e) => !!e);
         let duplicateCodes = events.map((e) => e.code);
         let uniqueCodes = [...new Set(duplicateCodes)];
         return uniqueCodes.map((code) => ({
