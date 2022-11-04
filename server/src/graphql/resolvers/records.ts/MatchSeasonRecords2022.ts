@@ -357,7 +357,70 @@ export class MatchSeasonRecords2022Resolver {
             query = query.andWhere(filter.toBrackets());
         }
 
-        let [{ entities, raw }, count] = await Promise.all([await query.getRawAndEntities(), await query.getCount()]);
+        let countQuery = DATA_SOURCE.getRepository(MatchScores2022)
+            .createQueryBuilder("s")
+            .leftJoin("event", "e", 'e.season = 2022 AND e.code = s."eventCode"')
+            .leftJoin("match", "m", 'm."eventSeason" = 2022 AND m."eventCode" = s."eventCode" AND m.id = s."matchId"')
+            .leftJoin(
+                "match_scores2022",
+                "os",
+                'os."eventCode" = s."eventCode" AND os."matchId" = s."matchId" AND os.alliance <> s.alliance'
+            )
+            .addSelect("e.remote")
+            .where('m."hasBeenPlayed"')
+            .andWhere("e.season = 2022")
+            .limit(limit)
+            .offset(skip);
+
+        if (filterHasTeam) {
+            countQuery = countQuery
+                .leftJoin(
+                    "team_match_participation",
+                    "st1",
+                    `s.season = st1.season AND s."eventCode" = st1."eventCode" AND s."matchId" = st1."matchId" AND st1.station = (CASE WHEN s.alliance = '0' THEN '0' ELSE '3' END)::team_match_participation_station_enum`
+                )
+                .leftJoin(
+                    "team_match_participation",
+                    "st2",
+                    `s.season = st2.season AND s."eventCode" = st2."eventCode" AND s."matchId" = st2."matchId" AND st2.station = (CASE WHEN s.alliance = '0' THEN '1' ELSE '4' END)::team_match_participation_station_enum`
+                )
+                .leftJoin(
+                    "team_match_participation",
+                    "st3",
+                    `s.season = st3.season AND s."eventCode" = st3."eventCode" AND s."matchId" = st3."matchId" AND st3.station = (CASE WHEN s.alliance = '0' THEN '2' ELSE '5' END)::team_match_participation_station_enum`
+                )
+                .leftJoin(
+                    "team_match_participation",
+                    "ost1",
+                    `s.season = ost1.season AND s."eventCode" = ost1."eventCode" AND s."matchId" = ost1."matchId" AND ost1.station = (CASE WHEN s.alliance = '0' THEN '3' ELSE '0' END)::team_match_participation_station_enum`
+                )
+                .leftJoin(
+                    "team_match_participation",
+                    "ost2",
+                    `s.season = ost2.season AND s."eventCode" = ost2."eventCode" AND s."matchId" = ost2."matchId" AND ost2.station = (CASE WHEN s.alliance = '0' THEN '4' ELSE '1' END)::team_match_participation_station_enum`
+                )
+                .leftJoin(
+                    "team_match_participation",
+                    "ost3",
+                    `s.season = ost3.season AND s."eventCode" = ost3."eventCode" AND s."matchId" = ost3."matchId" AND ost3.station = (CASE WHEN s.alliance = '0' THEN '5' ELSE '2' END)::team_match_participation_station_enum`
+                );
+        }
+
+        if (region != Region.ALL) {
+            countQuery = countQuery.andWhere('e."regionCode" IN (:...regionCodes)', { regionCodes });
+        }
+
+        if (start) countQuery = countQuery.andWhere("e.end >= :start", { start });
+        if (end) countQuery = countQuery.andWhere("e.end <= :end", { end });
+
+        if (filter != null) {
+            countQuery = countQuery.andWhere(filter.toBrackets());
+        }
+
+        // console.log("start query");
+        // console.log(query.getSql());
+        let [{ entities, raw }, count] = await Promise.all([query.getRawAndEntities(), countQuery.getCount()]);
+        // console.log("end query");
 
         let scores: MatchRecordRow[] = entities.map((e) => {
             let rawRow = raw.find(
