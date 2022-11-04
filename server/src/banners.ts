@@ -3,11 +3,12 @@ import { resolve } from "path";
 import { Team } from "./db/entities/Team";
 import { Response } from "express";
 import { readFile } from "fs/promises";
-import { TeamEventParticipation2021 } from "./db/entities/team-event-participation/TeamEventParticipation2021";
 import { DATA_SOURCE } from "./db/data-source";
 import { Event } from "./db/entities/Event";
 import { DateTime } from "luxon";
 import { MatchScores2021 } from "./db/entities/MatchScores2021";
+import { TeamEventParticipation2022 } from "./db/entities/team-event-participation/TeamEventParticipation2022";
+import { MatchScores2022 } from "./db/entities/MatchScores2022";
 
 export async function teamBanner(teamNumber: number, res: Response) {
     let teamData = await Team.findOneBy({ number: teamNumber });
@@ -17,7 +18,7 @@ export async function teamBanner(teamNumber: number, res: Response) {
     } else {
         let maxOpr =
             (
-                await DATA_SOURCE.getRepository(TeamEventParticipation2021)
+                await DATA_SOURCE.getRepository(TeamEventParticipation2022)
                     .createQueryBuilder("tep")
                     .leftJoin("event", "e", 'e.code = tep."eventCode"', { teamNumber })
                     .where('tep."teamNumber" = :teamNumber')
@@ -71,7 +72,7 @@ export async function eventBanner(season: number, code: string, res: Response) {
     } else {
         let topScore =
             (
-                await DATA_SOURCE.getRepository(MatchScores2021)
+                await DATA_SOURCE.getRepository(MatchScores2022)
                     .createQueryBuilder("s")
                     .where('s."eventCode" = :code', { code })
                     .orderBy('s."totalPoints"', "DESC")
@@ -81,7 +82,7 @@ export async function eventBanner(season: number, code: string, res: Response) {
 
         let winningTeam =
             (
-                await DATA_SOURCE.getRepository(TeamEventParticipation2021)
+                await DATA_SOURCE.getRepository(TeamEventParticipation2022)
                     .createQueryBuilder("tep")
                     .where('tep."eventCode" = :code', { code })
                     .andWhere("tep.rp IS NOT NULL")
