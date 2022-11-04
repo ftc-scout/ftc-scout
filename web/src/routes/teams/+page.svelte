@@ -39,8 +39,12 @@
         },
     });
     let currentlyLoading = true;
+    let all = false;
     let currentData: Team[] | null = null;
     $: if ($teams?.data?.teamsSearch) {
+        if (currentData && currentData.length == $teams?.data?.teamsSearch?.length) {
+            all = true;
+        }
         currentData = $teams?.data?.teamsSearch ?? null;
         currentlyLoading = false;
     }
@@ -125,7 +129,7 @@
                 {/if}
             </ul>
         {/if}
-        {#if $teams.loading}
+        {#if $teams.loading && !all}
             <SkeletonRow rows={50} card={false} header={false} />
         {/if}
     </Card>

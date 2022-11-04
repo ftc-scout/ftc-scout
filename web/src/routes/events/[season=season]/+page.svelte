@@ -80,8 +80,12 @@
         },
     });
     let currentlyLoading = true;
+    let all = false;
     let currentData: any[] | null = null;
     $: if ($events?.data?.eventsSearch) {
+        if (currentData && currentData.length == $events?.data?.eventsSearch?.length) {
+            all = true;
+        }
         currentData = $events?.data?.eventsSearch ?? null;
         currentlyLoading = false;
     }
@@ -206,7 +210,7 @@
                 {/if}
             </ul>
         {/if}
-        {#if $events.loading}
+        {#if $events.loading && !all}
             <SkeletonRow rows={50} card={false} header={false} />
         {/if}
     </Card>
