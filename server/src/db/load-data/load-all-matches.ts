@@ -29,6 +29,7 @@ import { MatchScores2022 } from "../entities/MatchScores2022";
 import { MatchScores2022TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2022Trad";
 import { calculateEventStatistics2022 } from "../../logic/calculate-event-statistics2022";
 import { TeamEventParticipation2022 } from "../entities/team-event-participation/TeamEventParticipation2022";
+import { MINS_PER_HOUR, MINUTE_MS } from "../../constants";
 
 function addDays(date: Date, days: number): Date {
     var result = new Date(date);
@@ -36,15 +37,15 @@ function addDays(date: Date, days: number): Date {
     return result;
 }
 
-export async function loadAllMatches(season: Season) {
-    console.log(`Loading all matches from season ${season}.`);
+export async function loadAllMatches(season: Season, cycleCount: number = 0) {
+    console.log(`Loading matches from season ${season}.`);
 
     let dateStartQuery = new Date();
     let dateLastReq = await FtcApiMetadata.getLastMatchesReq(season);
 
     console.log("Getting event codes.");
 
-    let eventCodes = await getEventCodesToLoadMatchesFrom(season, dateStartQuery, dateLastReq);
+    let eventCodes = await getEventCodesToLoadMatchesFrom(season, dateStartQuery, dateLastReq, cycleCount);
 
     console.log("Loading matches from api.");
 
@@ -300,30 +301,70 @@ function findMatchScoresForMatchNum(matchId: number, matchScores: MatchScoresFtc
 async function getEventCodesToLoadMatchesFrom(
     season: Season,
     dateStartQuery: Date,
-    dateLastReq: Date | null
+    dateLastReq: Date | null,
+    cycleCount: number
 ): Promise<{ code: string; remote: boolean }[]> {
-    let events = !dateLastReq
-        ? await Event.findBy({ season }) // Get all events because we haven't made a request yet.
-        : await Event.find({
-              select: {
-                  code: true,
-                  remote: true,
-              },
-              where: [
-                  // Get events that were ongoing anytime between the last query and now
-                  {
-                      season,
-                      start: LessThanOrEqual(dateStartQuery),
-                      end: MoreThanOrEqual(addDays(dateLastReq, -1)), // with a little extra leeway.
-                      published: true,
-                  },
-                  // Or that were updated since the last request.
-                  {
-                      season,
-                      updatedAt: Between(dateLastReq, dateStartQuery),
-                      published: true,
-                  },
-              ],
-          });
-    return events;
+    if (!dateLastReq) {
+        // Get all events because we haven't made a request yet.
+        return Event.findBy({ season });
+    }
+
+    if (cycleCount % MINS_PER_HOUR == 0) {
+        return Event.find({
+            select: {
+                code: true,
+                remote: true,
+            },
+            where: [
+                // Get events that were ongoing anytime between the last query and now
+                {
+                    season,
+                    start: LessThanOrEqual(dateStartQuery),
+                    end: MoreThanOrEqual(addDays(dateLastReq, -1)), // with a little extra leeway.
+                    published: true,
+                },
+                // Or that were updated since the last request.
+                {
+                    season,
+                    updatedAt: Between(dateLastReq, dateStartQuery),
+                    published: true,
+                },
+            ],
+        });
+    } else if (cycleCount % 5 == 0) {
+        // Get events that are scheduled for right now now
+        return Event.find({
+            select: {
+                code: true,
+                remote: true,
+            },
+            where: {
+                season,
+                start: LessThanOrEqual(dateStartQuery),
+                end: MoreThanOrEqual(dateStartQuery),
+            },
+        });
+    } else {
+        // Get events with matches updated in the last 15 mins
+        let events = (
+            await Match.find({
+                select: {
+                    event: {
+                        code: true,
+                        remote: true,
+                    },
+                },
+                where: {
+                    eventSeason: season,
+                    updatedAt: Between(new Date(dateStartQuery.getTime() - 15 * MINUTE_MS), dateStartQuery),
+                },
+            })
+        ).map((m) => m.event);
+        let duplicateCodes = events.map((e) => e.code);
+        let uniqueCodes = [...new Set(duplicateCodes)];
+        return uniqueCodes.map((code) => ({
+            code,
+            remote: events.find((e) => e.code == code)!.remote,
+        }));
+    }
 }

@@ -1,4 +1,4 @@
-import { CURRENT_SEASON, DAY_MS, PAST_SEASONS } from "../constants";
+import { CURRENT_SEASON, MINS_PER_DAY, MINS_PER_HOUR, MINUTE_MS, PAST_SEASONS, SECOND_MS } from "../constants";
 import { FtcApiMetadata } from "../db/entities/FtcApiMetadata";
 import { loadAllAwards } from "../db/load-data/load-all-awards";
 import { loadAllEvents as loadAllEventsIntoDatabase } from "../db/load-data/load-all-events";
@@ -37,19 +37,27 @@ export async function setupApiWatchers() {
     // Continually watch for updates for the current season.
     setupApiWatcher([
         {
-            reqFunction: () => loadAllTeamsIntoDatabase(CURRENT_SEASON),
+            reqFunction: async (cycleCount) => {
+                if (cycleCount % MINS_PER_DAY == 0) await loadAllTeamsIntoDatabase(CURRENT_SEASON);
+            },
             getTimeOfLastReq: () => FtcApiMetadata.getLastTeamsReq(CURRENT_SEASON),
         },
         {
-            reqFunction: () => loadAllEventsIntoDatabase(CURRENT_SEASON),
+            reqFunction: async (cycleCount) => {
+                if (cycleCount % MINS_PER_DAY == 0) await loadAllEventsIntoDatabase(CURRENT_SEASON);
+            },
             getTimeOfLastReq: () => FtcApiMetadata.getLastEventsReq(CURRENT_SEASON),
         },
         {
-            reqFunction: () => loadAllMatches(CURRENT_SEASON),
+            reqFunction: async (cycleCount) => {
+                await loadAllMatches(CURRENT_SEASON, cycleCount);
+            },
             getTimeOfLastReq: () => FtcApiMetadata.getLastMatchesReq(CURRENT_SEASON),
         },
         {
-            reqFunction: () => loadAllAwards(CURRENT_SEASON),
+            reqFunction: async (cycleCount) => {
+                if (cycleCount % MINS_PER_HOUR == 0) await loadAllAwards(CURRENT_SEASON);
+            },
             getTimeOfLastReq: () => FtcApiMetadata.getLastAwardsReq(CURRENT_SEASON),
         },
     ]);
@@ -59,42 +67,22 @@ function ensureSeasonHasMetadataTable(season: Season) {
     FtcApiMetadata.save({ season });
 }
 
+let cycleCount = 0;
+
 async function setupApiWatcher(
     funcsToRun: {
-        reqFunction: () => Promise<void>;
+        reqFunction: (cycle: number) => Promise<void>;
         getTimeOfLastReq: () => Promise<Date | null>;
     }[]
 ) {
-    let lastMidnight = getLastMidnight();
-    for (let func of funcsToRun) {
-        if (((await func.getTimeOfLastReq()) ?? 0) < lastMidnight) {
-            await func.reqFunction();
-        }
-    }
-
-    let nextMidnight = getNextMidnight();
-    let currentTime = new Date();
-
     let runAll = async () => {
+        console.log("run all");
         for (let func of funcsToRun) {
-            await func.reqFunction();
+            await func.reqFunction(cycleCount);
         }
+        cycleCount++;
+        setTimeout(runAll, MINUTE_MS);
     };
 
-    setTimeout(async () => {
-        await runAll();
-        setInterval(runAll, DAY_MS);
-    }, nextMidnight.getTime() - currentTime.getTime());
-}
-
-function getLastMidnight(): Date {
-    let d = new Date();
-    d.setHours(0, 0, 0, 0);
-    return d;
-}
-
-function getNextMidnight(): Date {
-    let d = new Date();
-    d.setHours(24, 0, 0, 0);
-    return d;
+    await runAll();
 }

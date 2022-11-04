@@ -6,6 +6,9 @@ export const HOUR_MS = MINUTE_MS * 60;
 export const DAY_MS = HOUR_MS * 24;
 export const YEAR_MS = DAY_MS * 365;
 
+export const MINS_PER_HOUR = 60;
+export const MINS_PER_DAY = 24 * MINS_PER_HOUR;
+
 export const IS_PROD = process.env.NODE_ENV === "production";
 export const IS_DEV = !IS_PROD;
 
