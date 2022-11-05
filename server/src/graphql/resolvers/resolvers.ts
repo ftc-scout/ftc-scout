@@ -1,4 +1,5 @@
 import { NonEmptyArray } from "type-graphql";
+import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { AwardResolver } from "./AwardResolver";
 import { EventResolver } from "./EventResolver";
 import { HomePageResolver } from "./HomePageResolver";
@@ -41,4 +42,5 @@ export const resolvers: NonEmptyArray<Function> = [
     Scores2020TradResolver,
     Scores2020RemoteResolver,
     Scores2019Resolver,
+    TeamMatchParticipation,
 ];

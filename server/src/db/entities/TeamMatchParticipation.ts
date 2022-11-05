@@ -26,14 +26,14 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("int")
     teamNumber!: number;
 
-    @Field(() => Match)
-    @ManyToOne(() => Match, (match) => match.teams)
-    @JoinColumn([
-        { name: "season", referencedColumnName: "eventSeason" },
-        { name: "eventCode", referencedColumnName: "eventCode" },
-        { name: "matchId", referencedColumnName: "id" },
-    ])
-    @TypeormLoader()
+    // @Field(() => Match)
+    // @ManyToOne(() => Match, (match) => match.teams)
+    // @JoinColumn([
+    //     { name: "season", referencedColumnName: "eventSeason" },
+    //     { name: "eventCode", referencedColumnName: "eventCode" },
+    //     { name: "matchId", referencedColumnName: "id" },
+    // ])
+    // @TypeormLoader()
     match!: Match;
 
     @Field(() => Team)
