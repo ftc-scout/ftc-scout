@@ -1,5 +1,4 @@
 import { NonEmptyArray } from "type-graphql";
-import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { AwardResolver } from "./AwardResolver";
 import { EventResolver } from "./EventResolver";
 import { HomePageResolver } from "./HomePageResolver";
@@ -18,6 +17,7 @@ import { Scores2021RemoteResolver, Scores2021TradResolver } from "./scores/Score
 import { Scores2022Resolver } from "./scores/Scores2022Resolver";
 import { SearchResolver } from "./SearchResolver";
 import { TeamEventParticipationResolver } from "./TeamEventParticipationResolver";
+import { TeamMatchParticipationResolver } from "./TeamMatchParticipation";
 import { TeamResolver } from "./TeamResolver";
 
 export const resolvers: NonEmptyArray<Function> = [
@@ -42,5 +42,5 @@ export const resolvers: NonEmptyArray<Function> = [
     Scores2020TradResolver,
     Scores2020RemoteResolver,
     Scores2019Resolver,
-    TeamMatchParticipation,
+    TeamMatchParticipationResolver,
 ];
