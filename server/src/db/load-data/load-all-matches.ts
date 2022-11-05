@@ -49,7 +49,7 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
 
     console.log("Loading matches from api.");
 
-    if (eventCodes.length <= 100) {
+    if (eventCodes.length <= 50) {
         // lets do this 25 at a time so we don't get rate limited or run out of memory.
         console.log("Fetching from api.");
 
