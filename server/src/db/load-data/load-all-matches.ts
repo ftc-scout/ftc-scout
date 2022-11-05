@@ -396,7 +396,7 @@ async function getEventCodesToLoadMatchesFrom(
     } else if (cycleCount % 5 == 0) {
         console.log("1 type");
         // Get events that are scheduled for right now now
-        return Event.find({
+        let events = await Event.find({
             select: {
                 code: true,
                 remote: true,
@@ -407,6 +407,12 @@ async function getEventCodesToLoadMatchesFrom(
                 end: MoreThanOrEqual(dateStartQuery),
             },
         });
+        let duplicateCodes = events.map((e) => e.code);
+        let uniqueCodes = [...new Set(duplicateCodes)];
+        return uniqueCodes.map((code) => ({
+            code,
+            remote: events.find((e) => e.code == code)!.remote,
+        }));
     } else {
         console.log("2 type");
         // Get events with matches updated in the last 15 mins
