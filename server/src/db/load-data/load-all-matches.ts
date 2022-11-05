@@ -310,6 +310,7 @@ async function getEventCodesToLoadMatchesFrom(
     }
 
     if (cycleCount % MINS_PER_HOUR == 0) {
+        console.log("0 type");
         return Event.find({
             select: {
                 code: true,
@@ -319,19 +320,18 @@ async function getEventCodesToLoadMatchesFrom(
                 // Get events that were ongoing anytime between the last query and now
                 {
                     season,
-                    start: LessThanOrEqual(dateStartQuery),
+                    start: LessThanOrEqual(addDays(dateStartQuery, 1)),
                     end: MoreThanOrEqual(addDays(dateLastReq, -1)), // with a little extra leeway.
-                    published: true,
                 },
                 // Or that were updated since the last request.
                 {
                     season,
                     updatedAt: Between(dateLastReq, dateStartQuery),
-                    published: true,
                 },
             ],
         });
     } else if (cycleCount % 5 == 0) {
+        console.log("1 type");
         // Get events that are scheduled for right now now
         return Event.find({
             select: {
@@ -345,6 +345,7 @@ async function getEventCodesToLoadMatchesFrom(
             },
         });
     } else {
+        console.log("2 type");
         // Get events with matches updated in the last 15 mins
         let events = (
             await Match.find({
