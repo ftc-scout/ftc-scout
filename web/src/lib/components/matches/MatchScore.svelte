@@ -3,6 +3,7 @@
     import { prettyPrintTimeString } from "../../util/format/pretty-print-time";
 
     export let match: EventPageMatchFragment;
+    export let timeZone: string;
     $: scores = match.scores;
     $: red = (scores as any)?.red?.totalPoints;
     $: blue = (scores as any)?.blue?.totalPoints;
@@ -35,7 +36,7 @@
             </div>
         {:else}
             <div style="text-align: center; width: 100%">
-                {prettyPrintTimeString(match.scheduledStartTime)}
+                {prettyPrintTimeString(match.scheduledStartTime, timeZone)}
             </div>
         {/if}
     </div>

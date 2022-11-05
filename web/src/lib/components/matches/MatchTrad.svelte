@@ -9,6 +9,7 @@
     import PlaceholderMatchTeam from "./PlaceholderMatchTeam.svelte";
 
     export let match: EventPageMatchFragment;
+    export let timeZone: string;
     export let selectedTeam: number | null = null;
     export let zebraStripe: boolean;
     export let frozen = false;
@@ -53,7 +54,7 @@
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
-    <MatchScore {match} description={match.matchDescription} on:click={show} />
+    <MatchScore {match} description={match.matchDescription} on:click={show} {timeZone} />
 
     {#each sortedTeams as team}
         {#if team == "red" || team == "blue"}
