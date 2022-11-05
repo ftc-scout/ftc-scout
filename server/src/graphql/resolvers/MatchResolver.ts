@@ -15,6 +15,7 @@ import { MatchScores2020RemoteGraphql } from "../objects/MatchScores2020RemoteGr
 import { MatchScores2020TradGraphql } from "../objects/MatchScores2020TradGraphql";
 import { MatchScores2022 } from "../../db/entities/MatchScores2022";
 import { MatchScores2022Graphql } from "../objects/MatchScores2022Graphql";
+import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 
 @Resolver(Match)
 export class MatchResolver {
@@ -168,6 +169,32 @@ export class MatchResolver {
             } else {
                 return null;
             }
+        };
+    }
+
+    @FieldResolver(() => [TeamMatchParticipation])
+    @Loader<{ season: number; eventCode: string; matchId: number }, TeamMatchParticipation[]>(async (ids, _) => {
+        let tmps = await TeamMatchParticipation.find({
+            where: ids as { season: number; eventCode: string; matchId: number }[],
+        });
+
+        let groups: TeamMatchParticipation[][] = ids.map((_) => []);
+
+        for (let tmp of tmps) {
+            for (let i = 0; i < ids.length; i++) {
+                let id = ids[i];
+                if (id.season == tmp.season && id.eventCode == tmp.eventCode && id.matchId == tmp.matchId) {
+                    groups[i].push(tmp);
+                }
+            }
+        }
+        return groups;
+    })
+    teams(@Root() match: Match) {
+        return async (
+            dl: DataLoader<{ season: Season; eventCode: string; matchId: number }, TeamMatchParticipation[]>
+        ) => {
+            return dl.load({ season: match.eventSeason, eventCode: match.eventCode, matchId: match.id });
         };
     }
 }

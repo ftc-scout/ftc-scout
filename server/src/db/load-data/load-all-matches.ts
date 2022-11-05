@@ -49,37 +49,34 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
 
     console.log("Loading matches from api.");
 
-    await DATA_SOURCE.transaction(async (em) => {
+    if (eventCodes.length <= 100) {
         // lets do this 25 at a time so we don't get rate limited or run out of memory.
-        const chunkSize = 25;
-        for (let i = 0; i < eventCodes.length; i += chunkSize) {
-            console.log(`Starting chunk starting at ${i}.`);
-            console.log("Fetching from api.");
+        console.log("Fetching from api.");
 
-            const chunk = eventCodes.slice(i, i + chunkSize);
-            let chunkEvents = await Promise.all(
-                chunk.map(async (ec) => ({
-                    eventCode: ec.code,
-                    remote: ec.remote,
-                    matches: await getMatches(season, ec.code),
-                    matchScores: await getMatchScores(season, ec.code),
-                    teams: await getTeamsAtEvent(season, ec.code),
-                }))
-            );
+        let chunkEvents = await Promise.all(
+            eventCodes.map(async (ec) => ({
+                eventCode: ec.code,
+                remote: ec.remote,
+                matches: await getMatches(season, ec.code),
+                matchScores: await getMatchScores(season, ec.code),
+                teams: await getTeamsAtEvent(season, ec.code),
+            }))
+        );
 
-            console.log("Calculating.");
+        console.log("Calculating.");
 
-            let {
-                dbMatches,
-                dbTeamMatchParticipations,
-                dbTeamEventParticipations2022,
-                dbTeamEventParticipations2021,
-                dbTeamEventParticipations2020,
-                dbTeamEventParticipations2019,
-            } = createDbEntities(season, chunkEvents);
+        let {
+            dbMatches,
+            dbTeamMatchParticipations,
+            dbTeamEventParticipations2022,
+            dbTeamEventParticipations2021,
+            dbTeamEventParticipations2020,
+            dbTeamEventParticipations2019,
+        } = createDbEntities(season, chunkEvents);
 
-            console.log("Inserting into db.");
+        console.log("Inserting into db.");
 
+        await DATA_SOURCE.transaction(async (em) => {
             await em.save(dbMatches, { chunk: 500 });
             await em.save(
                 dbMatches.flatMap((m) => m.scores2019 ?? []),
@@ -103,18 +100,84 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
             await em.save(dbTeamEventParticipations2020, { chunk: 100 });
             await em.save(dbTeamEventParticipations2019, { chunk: 100 });
 
-            console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
-        }
-
-        await em.save(
-            FtcApiMetadata.create({
-                season,
-                lastMatchesReq: dateStartQuery,
-            })
-        );
+            await em.save(
+                FtcApiMetadata.create({
+                    season,
+                    lastMatchesReq: dateStartQuery,
+                })
+            );
+        });
 
         console.log("Done inserting matches.");
-    });
+    } else {
+        await DATA_SOURCE.transaction(async (em) => {
+            // lets do this 25 at a time so we don't get rate limited or run out of memory.
+            const chunkSize = 25;
+            for (let i = 0; i < eventCodes.length; i += chunkSize) {
+                console.log(`Starting chunk starting at ${i}.`);
+                console.log("Fetching from api.");
+
+                const chunk = eventCodes.slice(i, i + chunkSize);
+                let chunkEvents = await Promise.all(
+                    chunk.map(async (ec) => ({
+                        eventCode: ec.code,
+                        remote: ec.remote,
+                        matches: await getMatches(season, ec.code),
+                        matchScores: await getMatchScores(season, ec.code),
+                        teams: await getTeamsAtEvent(season, ec.code),
+                    }))
+                );
+
+                console.log("Calculating.");
+
+                let {
+                    dbMatches,
+                    dbTeamMatchParticipations,
+                    dbTeamEventParticipations2022,
+                    dbTeamEventParticipations2021,
+                    dbTeamEventParticipations2020,
+                    dbTeamEventParticipations2019,
+                } = createDbEntities(season, chunkEvents);
+
+                console.log("Inserting into db.");
+
+                await em.save(dbMatches, { chunk: 500 });
+                await em.save(
+                    dbMatches.flatMap((m) => m.scores2019 ?? []),
+                    { chunk: 500 }
+                );
+                await em.save(
+                    dbMatches.flatMap((m) => m.scores2020 ?? []),
+                    { chunk: 500 }
+                );
+                await em.save(
+                    dbMatches.flatMap((m) => m.scores2021 ?? []),
+                    { chunk: 500 }
+                );
+                await em.save(
+                    dbMatches.flatMap((m) => m.scores2022 ?? []),
+                    { chunk: 500 }
+                );
+
+                await em.save(dbTeamMatchParticipations, { chunk: 500 });
+                await em.save(dbTeamEventParticipations2022, { chunk: 100 }); // These are really big so lower chunk size
+                await em.save(dbTeamEventParticipations2021, { chunk: 100 });
+                await em.save(dbTeamEventParticipations2020, { chunk: 100 });
+                await em.save(dbTeamEventParticipations2019, { chunk: 100 });
+
+                console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
+            }
+
+            await em.save(
+                FtcApiMetadata.create({
+                    season,
+                    lastMatchesReq: dateStartQuery,
+                })
+            );
+
+            console.log("Done inserting matches.");
+        });
+    }
 }
 
 function createDbEntities(

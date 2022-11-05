@@ -7,7 +7,6 @@ import {
     DeepPartial,
     Entity,
     ManyToOne,
-    OneToMany,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
@@ -54,9 +53,9 @@ export class Match extends BaseEntity {
     @Column()
     hasBeenPlayed!: boolean;
 
-    @Field(() => [TeamMatchParticipation])
-    @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.match)
-    @TypeormLoader()
+    // @Field(() => [TeamMatchParticipation])
+    // @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.match)
+    // @TypeormLoader()
     teams!: TeamMatchParticipation[];
 
     @Field()
