@@ -11,7 +11,8 @@ export async function getMatchScores(season: Season, eventCode: string): Promise
     try {
         return [...(!!qual ? qual["MatchScores"] : []), ...(!!playoff ? playoff["MatchScores"] : [])];
     } catch {
-        console.log(qual, season, eventCode);
+        console.error("!!! Couldn't get match scores !!!");
+        console.error(qual, season, eventCode);
         return [];
     }
 }

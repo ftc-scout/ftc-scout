@@ -8,5 +8,11 @@ export async function getMatches(season: Season, eventCode: string): Promise<Mat
         makeRequest(`${season}/schedule/${eventCode}/playoff/hybrid`, undefined, null),
     ]);
 
-    return [...(qual ? qual["schedule"] : []), ...(playoff ? playoff["schedule"] : [])];
+    try {
+        return [...(qual ? qual["schedule"] : []), ...(playoff ? playoff["schedule"] : [])];
+    } catch {
+        console.error("!!! Couldn't get matches !!!");
+        console.error(qual, season, eventCode);
+        return [];
+    }
 }

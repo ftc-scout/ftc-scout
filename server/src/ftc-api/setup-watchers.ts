@@ -78,7 +78,12 @@ async function setupApiWatcher(
     let runAll = async () => {
         console.log("run all");
         for (let func of funcsToRun) {
-            await func.reqFunction(cycleCount);
+            try {
+                await func.reqFunction(cycleCount);
+            } catch (e) {
+                console.error("!!! ERROR LOADING DATA !!!");
+                console.error(e);
+            }
         }
         cycleCount++;
         setTimeout(runAll, MINUTE_MS);
