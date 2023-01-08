@@ -68,7 +68,7 @@ export const EVENT_RANK_STAT: Stat<FullTep2022> = {
 
 export const TBP_STAT: Stat<FullTep2022> = {
     color: StatColor.LIGHT_BLUE,
-    displayType: StatDisplayType.INTEGER,
+    displayType: StatDisplayType.DECIMAL,
     listName: "Tie Breaker Points (TBP)",
     columnName: "TBP",
     identifierName: "Tie Breaker Points (TBP)",
@@ -79,7 +79,7 @@ export const TBP_STAT: Stat<FullTep2022> = {
 
 export const TBP2_STAT: Stat<FullTep2022> = {
     color: StatColor.BLUE,
-    displayType: StatDisplayType.INTEGER,
+    displayType: StatDisplayType.DECIMAL,
     listName: "Tie Breaker Points 2 (TBP2)",
     columnName: "TBP2",
     identifierName: "Tie Breaker Points 2 (TBP2)",
