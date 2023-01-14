@@ -1,4 +1,4 @@
-import { Between, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
+import { LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { getMatches } from "../../ftc-api/get-matches";
 import { Season } from "../../ftc-api/types/Season";
 import { DATA_SOURCE } from "../data-source";
@@ -29,13 +29,7 @@ import { MatchScores2022 } from "../entities/MatchScores2022";
 import { MatchScores2022TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2022Trad";
 import { calculateEventStatistics2022 } from "../../logic/calculate-event-statistics2022";
 import { TeamEventParticipation2022 } from "../entities/team-event-participation/TeamEventParticipation2022";
-import { MINS_PER_HOUR, MINUTE_MS } from "../../constants";
-
-function addDays(date: Date, days: number): Date {
-    var result = new Date(date);
-    result.setDate(result.getDate() + days);
-    return result;
-}
+import { MINS_PER_HOUR } from "../../constants";
 
 export async function loadAllMatches(season: Season, cycleCount: number = 0) {
     console.log(`Loading matches from season ${season}.`);
