@@ -44,7 +44,7 @@ async function getOneTeamsPage(
     eventCode: string | null = null
 ): Promise<{ pageTeams: TeamFtcApi[]; nextPage: number | null }> {
     let args = eventCode ? { page, eventCode } : { page };
-    let resp = await makeRequest(`${season}/teams`, args, since);
+    let resp = await makeRequest(`${season}/teams`, args, null);
     if (resp) {
         let teams: TeamFtcApi[] = resp["teams"];
         let maxPage = resp["pageTotal"];
