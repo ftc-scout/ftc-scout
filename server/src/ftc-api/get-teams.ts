@@ -44,6 +44,7 @@ async function getOneTeamsPage(
     eventCode: string | null = null
 ): Promise<{ pageTeams: TeamFtcApi[]; nextPage: number | null }> {
     let args = eventCode ? { page, eventCode } : { page };
+    console.log(`Getting teams since ${since}`);
     let resp = await makeRequest(`${season}/teams`, args, null);
     if (resp) {
         let teams: TeamFtcApi[] = resp["teams"];
