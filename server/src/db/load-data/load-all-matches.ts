@@ -372,28 +372,19 @@ async function getEventCodesToLoadMatchesFrom(
         return Event.findBy({ season });
     }
 
-    if (cycleCount % MINS_PER_HOUR == 0) {
+    if (cycleCount % (MINS_PER_HOUR * 12) == 0) {
         console.log("0 type");
         return Event.find({
             select: {
                 code: true,
                 remote: true,
             },
-            where: [
-                // Get events that were ongoing anytime between the last query and now
-                {
-                    season,
-                    start: LessThanOrEqual(addDays(dateStartQuery, 1)),
-                    end: MoreThanOrEqual(addDays(dateLastReq, -1)), // with a little extra leeway.
-                },
-                // Or that were updated since the last request.
-                {
-                    season,
-                    updatedAt: Between(dateLastReq, dateStartQuery),
-                },
-            ],
+            where: {
+                // Update all events for this season.
+                season
+            },
         });
-    } else if (cycleCount % 5 == 0) {
+    } else {
         console.log("1 type");
         // Get events that are scheduled for right now now
         let events = await Event.find({
@@ -407,31 +398,6 @@ async function getEventCodesToLoadMatchesFrom(
                 end: MoreThanOrEqual(dateStartQuery),
             },
         });
-        let duplicateCodes = events.map((e) => e.code);
-        let uniqueCodes = [...new Set(duplicateCodes)];
-        return uniqueCodes.map((code) => ({
-            code,
-            remote: events.find((e) => e.code == code)!.remote,
-        }));
-    } else {
-        console.log("2 type");
-        // Get events with matches updated in the last 15 mins
-        let events = (
-            await Match.find({
-                select: {
-                    event: {
-                        code: true,
-                        remote: true,
-                    },
-                },
-                where: {
-                    eventSeason: season,
-                    updatedAt: Between(new Date(dateStartQuery.getTime() - 15 * MINUTE_MS), dateStartQuery),
-                },
-            })
-        )
-            .map((m) => m.event)
-            .filter((e) => !!e);
         let duplicateCodes = events.map((e) => e.code);
         let uniqueCodes = [...new Set(duplicateCodes)];
         return uniqueCodes.map((code) => ({
