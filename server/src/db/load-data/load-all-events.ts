@@ -26,34 +26,37 @@ export async function loadAllEvents(season: Season) {
 
     console.log("Adding all events to database.");
 
-    let dbEvents: Event[] = apiEvents.map((apiEvent) => {
-        return Event.create({
-            eventId: apiEvent.eventId,
-            season,
-            code: apiEvent.code,
-            divisionCode: apiEvent?.divisionCode === "" ? null : apiEvent.divisionCode,
-            name: getEventName(apiEvent.name!, apiEvent.code!),
-            remote: apiEvent.remote,
-            hybrid: apiEvent.hybrid,
-            fieldCount: apiEvent.fieldCount,
-            published: apiEvent.published,
-            type: +apiEvent.type!,
-            regionCode: apiEvent.regionCode,
-            leagueCode: apiEvent.leagueCode,
-            districtCode: apiEvent.districtCode === "" ? null : apiEvent.districtCode,
-            venue: apiEvent.venue?.trim(),
-            address: apiEvent.address?.trim(),
-            country: apiEvent.country,
-            stateOrProvince: apiEvent.stateprov,
-            city: apiEvent.city,
-            website: apiEvent.website === "" ? null : apiEvent.website?.trim(),
-            liveStreamURL: apiEvent.liveStreamUrl === "" ? null : apiEvent.liveStreamUrl?.trim(),
-            webcasts: apiEvent.webcasts ?? [],
-            timezone: apiEvent.timezone,
-            start: new Date(apiEvent.dateStart),
-            end: new Date(apiEvent.dateEnd),
-        } as DeepPartial<Event>);
-    });
+    let dbEvents: Event[] = apiEvents
+        .map((apiEvent) => {
+            return Event.create({
+                eventId: apiEvent.eventId,
+                season,
+                code: apiEvent.code,
+                divisionCode: apiEvent?.divisionCode === "" ? null : apiEvent.divisionCode,
+                name: getEventName(apiEvent.name!, apiEvent.code!),
+                remote: apiEvent.remote,
+                hybrid: apiEvent.hybrid,
+                fieldCount: apiEvent.fieldCount,
+                published: apiEvent.published,
+                type: +apiEvent.type!,
+                regionCode: apiEvent.regionCode,
+                leagueCode: apiEvent.leagueCode,
+                districtCode: apiEvent.districtCode === "" ? null : apiEvent.districtCode,
+                venue: apiEvent.venue?.trim(),
+                address: apiEvent.address?.trim(),
+                country: apiEvent.country,
+                stateOrProvince: apiEvent.stateprov,
+                city: apiEvent.city,
+                website: apiEvent.website === "" ? null : apiEvent.website?.trim(),
+                liveStreamURL: apiEvent.liveStreamUrl === "" ? null : apiEvent.liveStreamUrl?.trim(),
+                webcasts: apiEvent.webcasts ?? [],
+                timezone: apiEvent.timezone,
+                start: new Date(apiEvent.dateStart),
+                end: new Date(apiEvent.dateEnd),
+            } as DeepPartial<Event>);
+            // No remote events for power play.
+        })
+        .filter((e) => e.season != Season.POWER_PLAY || !e.remote);
 
     await DATA_SOURCE.transaction(async (em) => {
         await em.save(dbEvents);
