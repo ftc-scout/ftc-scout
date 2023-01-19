@@ -1,4 +1,4 @@
-import { LessThanOrEqual, MoreThanOrEqual } from "typeorm";
+import { Brackets, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
 import { getMatches } from "../../ftc-api/get-matches";
 import { Season } from "../../ftc-api/types/Season";
 import { DATA_SOURCE } from "../data-source";
@@ -44,7 +44,6 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
     console.log("Loading matches from api.");
 
     if (eventCodes.length <= 50) {
-        // lets do this 25 at a time so we don't get rate limited or run out of memory.
         console.log("Fetching from api.");
 
         let chunkEvents = await Promise.all(
@@ -368,16 +367,27 @@ async function getEventCodesToLoadMatchesFrom(
 
     if (cycleCount % (MINS_PER_HOUR * 12) == 0) {
         console.log("0 type");
-        return Event.find({
-            select: {
-                code: true,
-                remote: true,
-            },
-            where: {
-                // Update all events for this season.
-                season
-            },
-        });
+        // Gets events with no matches or missing matches.
+        return DATA_SOURCE.getRepository(Event)
+            .createQueryBuilder("e")
+            .where("season = :season", { season })
+            .andWhere("start < now()")
+            .andWhere("start > 'now'::timestamp - '1 month'::interval")
+            .andWhere(
+                new Brackets((qb) => {
+                    qb.where('NOT exists(SELECT FROM match WHERE season = :season AND "eventCode" = code)')
+                        .orWhere(`exists(SELECT
+                        FROM match m
+                        WHERE season = :season
+                          AND "eventCode" = code
+                          AND NOT exists(SELECT
+                                         FROM match_scores${season} s
+                                         WHERE s.season = m."eventSeason"
+                                           AND s."eventCode" = m."eventCode"
+                                           AND s."matchId" = m.id))`);
+                })
+            )
+            .getMany();
     } else {
         console.log("1 type");
         // Get events that are scheduled for right now now

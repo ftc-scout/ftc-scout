@@ -10,8 +10,7 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
     console.log(`Fetching all teams for season ${season}.`);
 
     let dateStartQuery = new Date();
-    let since = await FtcApiMetadata.getLastTeamsReq(season);
-    let apiTeams = await getAllTeams(season, since);
+    let apiTeams = await getAllTeams(season);
 
     console.log("Fetched all teams.");
 

@@ -19,8 +19,7 @@ export async function loadAllEvents(season: Season) {
     console.log(`Fetching all events for season ${season}.`);
 
     let dateStartQuery = new Date();
-    let since = await FtcApiMetadata.getLastEventsReq(season);
-    let apiEvents = await getAllEvents(season, since);
+    let apiEvents = await getAllEvents(season);
 
     console.log("Fetched all Events.");
 
