@@ -43,97 +43,34 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
 
     console.log("Loading matches from api.");
 
-    if (eventCodes.length <= 50) {
-        console.log("Fetching from api.");
+    // lets do this 25 at a time so we don't get rate limited or run out of memory.
+    for (let i = 0; i < eventCodes.length; i += 1) {
+        try {
+            console.log(`Starting chunk starting at ${i}.`);
+            console.log("Fetching from api.");
 
-        let chunkEvents = await Promise.all(
-            eventCodes.map(async (ec) => ({
+            let ec = eventCodes[i];
+            let event = {
                 eventCode: ec.code,
                 remote: ec.remote,
                 matches: await getMatches(season, ec.code),
                 matchScores: await getMatchScores(season, ec.code),
                 teams: await getTeamsAtEvent(season, ec.code),
-            }))
-        );
+            };
+            console.log("Calculating.");
 
-        console.log("Calculating.");
+            let {
+                dbMatches,
+                dbTeamMatchParticipations,
+                dbTeamEventParticipations2022,
+                dbTeamEventParticipations2021,
+                dbTeamEventParticipations2020,
+                dbTeamEventParticipations2019,
+            } = createDbEntities(season, event);
 
-        let {
-            dbMatches,
-            dbTeamMatchParticipations,
-            dbTeamEventParticipations2022,
-            dbTeamEventParticipations2021,
-            dbTeamEventParticipations2020,
-            dbTeamEventParticipations2019,
-        } = createDbEntities(season, chunkEvents);
+            console.log("Inserting into db.");
 
-        console.log("Inserting into db.");
-
-        await DATA_SOURCE.transaction(async (em) => {
-            await em.save(dbMatches, { chunk: 500 });
-            await em.save(
-                dbMatches.flatMap((m) => m.scores2019 ?? []),
-                { chunk: 500 }
-            );
-            await em.save(
-                dbMatches.flatMap((m) => m.scores2020 ?? []),
-                { chunk: 500 }
-            );
-            await em.save(
-                dbMatches.flatMap((m) => m.scores2021 ?? []),
-                { chunk: 500 }
-            );
-            await em.save(
-                dbMatches.flatMap((m) => m.scores2022 ?? []),
-                { chunk: 500 }
-            );
-            await em.save(dbTeamMatchParticipations, { chunk: 500 });
-            await em.save(dbTeamEventParticipations2022, { chunk: 100 }); // These are really big so lower chunk size
-            await em.save(dbTeamEventParticipations2021, { chunk: 100 });
-            await em.save(dbTeamEventParticipations2020, { chunk: 100 });
-            await em.save(dbTeamEventParticipations2019, { chunk: 100 });
-
-            await em.save(
-                FtcApiMetadata.create({
-                    season,
-                    lastMatchesReq: dateStartQuery,
-                })
-            );
-        });
-
-        console.log("Done inserting matches.");
-    } else {
-        await DATA_SOURCE.transaction(async (em) => {
-            // lets do this 25 at a time so we don't get rate limited or run out of memory.
-            const chunkSize = 25;
-            for (let i = 0; i < eventCodes.length; i += chunkSize) {
-                console.log(`Starting chunk starting at ${i}.`);
-                console.log("Fetching from api.");
-
-                const chunk = eventCodes.slice(i, i + chunkSize);
-                let chunkEvents = await Promise.all(
-                    chunk.map(async (ec) => ({
-                        eventCode: ec.code,
-                        remote: ec.remote,
-                        matches: await getMatches(season, ec.code),
-                        matchScores: await getMatchScores(season, ec.code),
-                        teams: await getTeamsAtEvent(season, ec.code),
-                    }))
-                );
-
-                console.log("Calculating.");
-
-                let {
-                    dbMatches,
-                    dbTeamMatchParticipations,
-                    dbTeamEventParticipations2022,
-                    dbTeamEventParticipations2021,
-                    dbTeamEventParticipations2020,
-                    dbTeamEventParticipations2019,
-                } = createDbEntities(season, chunkEvents);
-
-                console.log("Inserting into db.");
-
+            await DATA_SOURCE.transaction(async (em) => {
                 await em.save(dbMatches, { chunk: 500 });
                 await em.save(
                     dbMatches.flatMap((m) => m.scores2019 ?? []),
@@ -157,31 +94,31 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
                 await em.save(dbTeamEventParticipations2021, { chunk: 100 });
                 await em.save(dbTeamEventParticipations2020, { chunk: 100 });
                 await em.save(dbTeamEventParticipations2019, { chunk: 100 });
+            });
 
-                console.log(`Loaded ${i + chunkSize}/${eventCodes.length}`);
-            }
-
-            await em.save(
-                FtcApiMetadata.create({
-                    season,
-                    lastMatchesReq: dateStartQuery,
-                })
-            );
-
-            console.log("Done inserting matches.");
-        });
+            console.log(`Loaded ${i}/${eventCodes.length}`);
+        } catch (e) {
+            console.log(`Loaded ${i}/${eventCodes.length} !!! ERROR !!!`);
+        }
     }
+
+    await FtcApiMetadata.save({
+        season,
+        lastMatchesReq: dateStartQuery,
+    });
+
+    console.log("Done inserting matches.");
 }
 
 function createDbEntities(
     season: Season,
-    apiEvents: {
+    apiEvent: {
         eventCode: string;
         remote: boolean;
         matches: MatchFtcApi[];
         matchScores: MatchScoresFtcApi[];
         teams: number[];
-    }[]
+    }
 ): {
     dbMatches: Match[];
     dbTeamMatchParticipations: TeamMatchParticipation[];
@@ -197,134 +134,133 @@ function createDbEntities(
     let dbTeamEventParticipations2020All: TeamEventParticipation2020[] = [];
     let dbTeamEventParticipations2019All: TeamEventParticipation2019[] = [];
 
-    for (let { eventCode, remote, matches, matchScores, teams } of apiEvents) {
-        let dbMatches: Match[] = [];
-        let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
+    let { eventCode, remote, matches, matchScores, teams } = apiEvent;
+    let dbMatches: Match[] = [];
+    let dbTeamMatchParticipations: TeamMatchParticipation[] = [];
 
-        for (let match of matches) {
-            // Ignore some incorrect matches
-            if (
-                season == Season.ULTIMATE_GOAL &&
-                eventCode == "USNYEXS1" &&
-                match.teams.some((t) => t.teamNumber == 14903 || t.teamNumber == 17222)
-            ) {
-                continue;
-            }
-            if (
-                season == Season.ULTIMATE_GOAL &&
-                eventCode == "USNJCWS1" &&
-                match.teams.some((t) => t.teamNumber == 9889)
-            ) {
-                continue;
-            }
+    for (let match of matches) {
+        // Ignore some incorrect matches
+        if (
+            season == Season.ULTIMATE_GOAL &&
+            eventCode == "USNYEXS1" &&
+            match.teams.some((t) => t.teamNumber == 14903 || t.teamNumber == 17222)
+        ) {
+            continue;
+        }
+        if (
+            season == Season.ULTIMATE_GOAL &&
+            eventCode == "USNJCWS1" &&
+            match.teams.some((t) => t.teamNumber == 9889)
+        ) {
+            continue;
+        }
 
-            let thisMatchScores = findMatchScoresForMatchNum(
-                remote
-                    ? Match.encodeMatchIdRemote(match.matchNumber, match.teams[0].teamNumber)
-                    : Match.encodeMatchIdTraditional(
-                          match.matchNumber,
-                          tournamentLevelFromApi(match.tournamentLevel),
-                          match.series
-                      ),
-                matchScores
-            );
+        let thisMatchScores = findMatchScoresForMatchNum(
+            remote
+                ? Match.encodeMatchIdRemote(match.matchNumber, match.teams[0].teamNumber)
+                : Match.encodeMatchIdTraditional(
+                      match.matchNumber,
+                      tournamentLevelFromApi(match.tournamentLevel),
+                      match.series
+                  ),
+            matchScores
+        );
 
-            let hasBeenPlayed = !!match.postResultTime || !!thisMatchScores;
+        let hasBeenPlayed = !!match.postResultTime || !!thisMatchScores;
 
-            let dbMatch: Match | null = Match.fromApi(season, eventCode, match, remote, hasBeenPlayed);
+        let dbMatch: Match | null = Match.fromApi(season, eventCode, match, remote, hasBeenPlayed);
 
-            if (thisMatchScores) {
-                if (season == Season.POWER_PLAY) {
-                    dbMatch.scores2022 = MatchScores2022.fromTradApi(
+        if (thisMatchScores) {
+            if (season == Season.POWER_PLAY) {
+                dbMatch.scores2022 = MatchScores2022.fromTradApi(
+                    season,
+                    eventCode,
+                    dbMatch.id,
+                    thisMatchScores as MatchScores2022TradFtcApi
+                );
+            } else if (season == Season.FREIGHT_FRENZY && !remote) {
+                dbMatch.scores2021 = MatchScores2021.fromTradApi(
+                    season,
+                    eventCode,
+                    dbMatch.id,
+                    thisMatchScores as MatchScores2021TradFtcApi
+                );
+            } else if (season == Season.FREIGHT_FRENZY && remote) {
+                dbMatch.scores2021 = [
+                    MatchScores2021.fromApiRemote(
                         season,
                         eventCode,
                         dbMatch.id,
-                        thisMatchScores as MatchScores2022TradFtcApi
-                    );
-                } else if (season == Season.FREIGHT_FRENZY && !remote) {
-                    dbMatch.scores2021 = MatchScores2021.fromTradApi(
+                        thisMatchScores as MatchScores2021RemoteFtcApi
+                    ),
+                ];
+            } else if (season == Season.ULTIMATE_GOAL && !remote) {
+                dbMatch.scores2020 = MatchScores2020.fromTradApi(
+                    season,
+                    eventCode,
+                    dbMatch.id,
+                    thisMatchScores as MatchScores2020TradFtcApi
+                );
+            } else if (season == Season.ULTIMATE_GOAL && remote) {
+                dbMatch.scores2020 = [
+                    MatchScores2020.fromApiRemote(
                         season,
                         eventCode,
                         dbMatch.id,
-                        thisMatchScores as MatchScores2021TradFtcApi
-                    );
-                } else if (season == Season.FREIGHT_FRENZY && remote) {
-                    dbMatch.scores2021 = [
-                        MatchScores2021.fromApiRemote(
-                            season,
-                            eventCode,
-                            dbMatch.id,
-                            thisMatchScores as MatchScores2021RemoteFtcApi
-                        ),
-                    ];
-                } else if (season == Season.ULTIMATE_GOAL && !remote) {
-                    dbMatch.scores2020 = MatchScores2020.fromTradApi(
-                        season,
-                        eventCode,
-                        dbMatch.id,
-                        thisMatchScores as MatchScores2020TradFtcApi
-                    );
-                } else if (season == Season.ULTIMATE_GOAL && remote) {
-                    dbMatch.scores2020 = [
-                        MatchScores2020.fromApiRemote(
-                            season,
-                            eventCode,
-                            dbMatch.id,
-                            thisMatchScores as MatchScores2020RemoteFtcApi
-                        ),
-                    ];
-                } else if (season == Season.SKYSTONE) {
-                    dbMatch.scores2019 = MatchScores2019.fromApi(
-                        season,
-                        eventCode,
-                        dbMatch.id,
-                        thisMatchScores as MatchScores2019FtcApi
-                    );
-                } else {
-                    throw `Cannot load match scores for season ${season}`;
-                }
-            }
-
-            dbMatch.teams = [];
-
-            for (let team of match.teams) {
-                if (!team.teamNumber) continue;
-
-                let dbTeamMatchParticipation = TeamMatchParticipation.fromApi(season, eventCode, dbMatch.id, team);
-
-                if (remote && dbTeamMatchParticipation.noShow) {
-                    dbMatch = null;
-                    break;
-                }
-
-                dbTeamMatchParticipations.push(dbTeamMatchParticipation);
-                dbMatch.teams.push(dbTeamMatchParticipation);
-            }
-
-            if (dbMatch != null) {
-                dbMatches.push(dbMatch);
+                        thisMatchScores as MatchScores2020RemoteFtcApi
+                    ),
+                ];
+            } else if (season == Season.SKYSTONE) {
+                dbMatch.scores2019 = MatchScores2019.fromApi(
+                    season,
+                    eventCode,
+                    dbMatch.id,
+                    thisMatchScores as MatchScores2019FtcApi
+                );
+            } else {
+                throw `Cannot load match scores for season ${season}`;
             }
         }
 
-        if (season == Season.POWER_PLAY) {
-            dbTeamEventParticipations2022All.push(...calculateEventStatistics2022(season, eventCode, teams, dbMatches));
-        } else if (season == Season.FREIGHT_FRENZY) {
-            dbTeamEventParticipations2021All.push(
-                ...calculateEventStatistics2021(season, eventCode, teams, dbMatches, remote)
-            );
-        } else if (season == Season.ULTIMATE_GOAL) {
-            dbTeamEventParticipations2020All.push(
-                ...calculateEventStatistics2020(season, eventCode, teams, dbMatches, remote)
-            );
-        } else if (season == Season.SKYSTONE) {
-            dbTeamEventParticipations2019All.push(...calculateEventStatistics2019(season, eventCode, teams, dbMatches));
-        } else {
-            throw `Cannot load match scores for season ${season}`;
+        dbMatch.teams = [];
+
+        for (let team of match.teams) {
+            if (!team.teamNumber) continue;
+
+            let dbTeamMatchParticipation = TeamMatchParticipation.fromApi(season, eventCode, dbMatch.id, team);
+
+            if (remote && dbTeamMatchParticipation.noShow) {
+                dbMatch = null;
+                break;
+            }
+
+            dbTeamMatchParticipations.push(dbTeamMatchParticipation);
+            dbMatch.teams.push(dbTeamMatchParticipation);
         }
 
-        dbMatchesAll.push(...dbMatches);
-        dbTeamMatchParticipationsAll.push(...dbTeamMatchParticipations);
+        if (dbMatch != null) {
+            dbMatches.push(dbMatch);
+        }
     }
+
+    if (season == Season.POWER_PLAY) {
+        dbTeamEventParticipations2022All.push(...calculateEventStatistics2022(season, eventCode, teams, dbMatches));
+    } else if (season == Season.FREIGHT_FRENZY) {
+        dbTeamEventParticipations2021All.push(
+            ...calculateEventStatistics2021(season, eventCode, teams, dbMatches, remote)
+        );
+    } else if (season == Season.ULTIMATE_GOAL) {
+        dbTeamEventParticipations2020All.push(
+            ...calculateEventStatistics2020(season, eventCode, teams, dbMatches, remote)
+        );
+    } else if (season == Season.SKYSTONE) {
+        dbTeamEventParticipations2019All.push(...calculateEventStatistics2019(season, eventCode, teams, dbMatches));
+    } else {
+        throw `Cannot load match scores for season ${season}`;
+    }
+
+    dbMatchesAll.push(...dbMatches);
+    dbTeamMatchParticipationsAll.push(...dbTeamMatchParticipations);
 
     return {
         dbMatches: dbMatchesAll,
