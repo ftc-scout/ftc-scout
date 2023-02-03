@@ -327,17 +327,12 @@ async function getEventCodesToLoadMatchesFrom(
     } else {
         console.log("1 type");
         // Get events that are scheduled for right now now
-        let events = await Event.find({
-            select: {
-                code: true,
-                remote: true,
-            },
-            where: {
-                season,
-                start: LessThanOrEqual(dateStartQuery),
-                end: MoreThanOrEqual(dateStartQuery),
-            },
-        });
+        let events = await DATA_SOURCE.getRepository(Event)
+            .createQueryBuilder()
+            .where("season = :season", { season })
+            .andWhere("start <= 'now'::timestamp + '1 day'::interval")
+            .andWhere("start >= 'now'::timestamp - '1 day'::interval")
+            .getMany();
         let duplicateCodes = events.map((e) => e.code);
         let uniqueCodes = [...new Set(duplicateCodes)];
         return uniqueCodes.map((code) => ({
