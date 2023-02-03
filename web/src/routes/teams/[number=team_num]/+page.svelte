@@ -49,14 +49,25 @@
 
     $: oprs = sortedEvents
         .filter((e) => !e.event.remote)
-        .map((e) => e.stats?.opr?.totalPoints)
+        .filter((e) => e.stats?.opr != undefined)
+        .map((e) => ("totalPoints" in e.stats?.opr!! ? e.stats?.opr?.totalPoints : e.stats?.opr?.totalPointsNp))
         .filter((x) => (x ?? null) != null)
         .map((x) => x!);
     $: maxOpr = oprs.length == 0 ? null : Math.max(...oprs);
-    $: maxOprEvent = maxOpr != null ? sortedEvents.find((e) => e.stats?.opr?.totalPoints == maxOpr)?.eventCode : null;
+    $: maxOprEvent =
+        maxOpr != null
+            ? sortedEvents.find((e) =>
+                  "totalPoints" in e.stats?.opr!! ? e.stats?.opr?.totalPoints : e.stats?.opr?.totalPointsNp == maxOpr
+              )?.eventCode
+            : null;
 
     function getRp(tep: any): number | null {
         return tep?.stats?.rp ?? tep?.stats?.rp2019 ?? tep?.stats?.rp2022 ?? null;
+    }
+
+    function getOpr(opr: any): number | null {
+        if (opr == undefined || opr == null) return null;
+        return "totalPoints" in opr ? opr.totalPoints : opr.totalPointsNp;
     }
 
     function gotoSubPage(season: Season) {
@@ -161,7 +172,7 @@
 
             {@const rp = getRp(teamEvent)}
             {@const hasRp = typeof rp == "number"}
-            {@const hasOpr = typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
+            {@const hasOpr = typeof getOpr(teamEvent.stats?.opr) == "number" && !event.remote}
             {@const hasAvg = typeof teamEvent.stats?.average?.totalPoints == "number"}
 
             {#if hasRp || hasOpr || hasAvg}
@@ -173,8 +184,8 @@
                             <b>{prettyPrintFloat(rp)}</b> RP{hasOpr || hasAvg ? " · " : ""}
                         {/if}
                     {/if}
-                    {#if typeof teamEvent.stats?.opr?.totalPoints == "number" && !event.remote}
-                        <b>{prettyPrintFloat(teamEvent.stats?.opr?.totalPoints)}</b> OPR{hasAvg ? " · " : ""}
+                    {#if typeof getOpr(teamEvent.stats?.opr) == "number" && !event.remote}
+                        <b>{prettyPrintFloat(getOpr(teamEvent.stats?.opr))}</b> OPR{hasAvg ? " · " : ""}
                     {/if}
                     {#if typeof teamEvent.stats?.average?.totalPoints == "number"}
                         <b>{prettyPrintFloat(teamEvent.stats?.average?.totalPoints)}</b> AVG

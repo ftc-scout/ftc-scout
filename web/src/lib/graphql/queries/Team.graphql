@@ -22,7 +22,7 @@ query Team($number: Int!, $season: Int!) {
                     ties
                     rp2022: rp
                     opr {
-                        totalPoints
+                        totalPointsNp
                     }
                     average {
                         totalPoints
@@ -81,7 +81,7 @@ query Team($number: Int!, $season: Int!) {
                     ties
                     rp2019: rp
                     opr {
-                        totalPoints
+                        totalPointsNp
                     }
                     average {
                         totalPoints
