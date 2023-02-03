@@ -107,8 +107,8 @@
             {/if}
         </div>
 
-        <div class="best">
-            {#if bestRemoteTep}
+        {#if bestRemoteTep}
+            <div class="best">
                 <a href="/events/{bestRemoteTep.event.season}/{bestRemoteTep.event.code}">
                     {bestRemoteTep.event.name}
                 </a>
@@ -119,22 +119,8 @@
                     frozen={true}
                     selectedTeam={null}
                 />
-            {/if}
-        </div>
-    </Card>
-
-    <Card border={false}>
-        <a href="/blog" class="latest-article">
-            <h2>The Latest Article from <em>The Scouting Report:</em> What’s Up With Power Play?</h2>
-
-            <p style="margin-bottom: var(--gap)">
-                We are now 8 weeks into the Power Play season and are starting to get a good number of events, so we
-                thought this would be a good time to take a look at some Power Play stats. So far 45 events have
-                published their results, 694 matches have been played, and 1893 teams have signed up for or already
-                participated in events.
-                <em>Read More.</em>
-            </p></a
-        >
+            </div>
+        {/if}
     </Card>
 </WidthProvider>
 
