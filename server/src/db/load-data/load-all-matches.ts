@@ -1,4 +1,4 @@
-import { Brackets, LessThanOrEqual, MoreThanOrEqual } from "typeorm";
+import { Brackets } from "typeorm";
 import { getMatches } from "../../ftc-api/get-matches";
 import { Season } from "../../ftc-api/types/Season";
 import { DATA_SOURCE } from "../data-source";
@@ -35,11 +35,10 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
     console.log(`Loading matches from season ${season}.`);
 
     let dateStartQuery = new Date();
-    let dateLastReq = await FtcApiMetadata.getLastMatchesReq(season);
 
     console.log("Getting event codes.");
 
-    let eventCodes = await getEventCodesToLoadMatchesFrom(season, dateStartQuery, dateLastReq, cycleCount);
+    let eventCodes = await getEventCodesToLoadMatchesFrom(season, dateStartQuery, cycleCount);
 
     console.log("Loading matches from api.");
 
@@ -292,7 +291,6 @@ function findMatchScoresForMatchNum(matchId: number, matchScores: MatchScoresFtc
 
 async function getEventCodesToLoadMatchesFrom(
     season: Season,
-    dateStartQuery: Date,
     dateLastReq: Date | null,
     cycleCount: number
 ): Promise<{ code: string; remote: boolean }[]> {
