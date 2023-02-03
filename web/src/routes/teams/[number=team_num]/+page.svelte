@@ -49,17 +49,11 @@
 
     $: oprs = sortedEvents
         .filter((e) => !e.event.remote)
-        .filter((e) => e.stats?.opr != undefined)
-        .map((e) => ("totalPoints" in e.stats?.opr!! ? e.stats?.opr?.totalPoints : e.stats?.opr?.totalPointsNp))
+        .map((e) => getOpr(e.stats?.opr))
         .filter((x) => (x ?? null) != null)
         .map((x) => x!);
     $: maxOpr = oprs.length == 0 ? null : Math.max(...oprs);
-    $: maxOprEvent =
-        maxOpr != null
-            ? sortedEvents.find((e) =>
-                  "totalPoints" in e.stats?.opr!! ? e.stats?.opr?.totalPoints : e.stats?.opr?.totalPointsNp == maxOpr
-              )?.eventCode
-            : null;
+    $: maxOprEvent = maxOpr != null ? sortedEvents.find((e) => getOpr(e.stats?.opr))?.eventCode : null;
 
     function getRp(tep: any): number | null {
         return tep?.stats?.rp ?? tep?.stats?.rp2019 ?? tep?.stats?.rp2022 ?? null;
