@@ -58,7 +58,7 @@ export async function loadAllEvents(season: Season) {
         .filter((e) => e.season != Season.POWER_PLAY || !e.remote);
 
     await DATA_SOURCE.transaction(async (em) => {
-        await em.save(dbEvents);
+        await em.save(dbEvents, { chunk: 100 });
         await em.save(
             FtcApiMetadata.create({
                 season,

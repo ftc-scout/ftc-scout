@@ -56,7 +56,7 @@ export async function loadAllTeamsIntoDatabase(season: Season) {
 
     await DATA_SOURCE.transaction(async (em) => {
         if (season == CURRENT_SEASON) {
-            await em.save(dbTeams);
+            await em.save(dbTeams, { chunk: 100 });
         } else {
             // Don't override date from latest season with older seasons.
             await DATA_SOURCE.createQueryBuilder().insert().into(Team).values(dbTeams).orIgnore().execute();
