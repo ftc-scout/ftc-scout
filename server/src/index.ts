@@ -19,9 +19,6 @@ import { resolve } from "path";
 import { ApiReq } from "./db/entities/ApiReq";
 
 async function main() {
-    // TODO - This is really insecure. Look in to fixing this.
-    process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
-
     await DATA_SOURCE.initialize();
 
     const app = express();
