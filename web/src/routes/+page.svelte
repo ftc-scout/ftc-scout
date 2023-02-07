@@ -283,39 +283,4 @@
         font-weight: bold;
         color: inherit;
     }
-
-    .latest-article {
-        display: block;
-
-        background-color: var(--foreground-color);
-        box-shadow: -2px 2px 10px 3px #e0e0e0;
-        border-radius: 8px;
-
-        padding: var(--large-padding);
-
-        text-decoration: none;
-        color: inherit;
-    }
-
-    .latest-article:hover {
-        filter: brightness(0.9);
-    }
-
-    .latest-article p {
-        position: relative;
-        line-height: 1.15em;
-        height: 3.45em;
-        overflow: hidden;
-    }
-
-    .latest-article p:after {
-        content: "";
-        text-align: right;
-        position: absolute;
-        bottom: 0;
-        right: 0;
-        width: 70%;
-        height: 1.15em;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0), rgba(255, 255, 255, 1) 50%);
-    }
 </style>
