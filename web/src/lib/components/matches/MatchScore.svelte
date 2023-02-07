@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { EventPageMatchFragment } from "../../graphql/generated/graphql-operations";
-    import { prettyPrintTimeString } from "../../util/format/pretty-print-time";
+    import { prettyPrintFullTimeString, prettyPrintTimeString } from "../../util/format/pretty-print-time";
     import { createTippy } from "svelte-tippy";
     import "tippy.js/dist/tippy.css";
 
@@ -18,7 +18,7 @@
     $: showTip = !!scores && !!match.actualStartTime;
     $: tip = showTip
         ? {
-              content: prettyPrintTimeString(match.actualStartTime),
+              content: `Played ${prettyPrintFullTimeString(match.actualStartTime)}`,
           }
         : {
               // Hidden tip
