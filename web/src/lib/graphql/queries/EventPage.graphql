@@ -13,7 +13,6 @@ query EventPage($season: Int!, $code: String!) {
         remote
         published
         hasStarted
-        timezone
         awards {
             type
             placement
