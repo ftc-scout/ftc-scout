@@ -1,9 +1,10 @@
 <script lang="ts">
     import type { EventPageMatchFragment } from "../../graphql/generated/graphql-operations";
     import { prettyPrintTimeString } from "../../util/format/pretty-print-time";
+    import { createTippy } from "svelte-tippy";
+    import "tippy.js/dist/tippy.css";
 
     export let match: EventPageMatchFragment;
-    export let timeZone: string;
     $: scores = match.scores;
     $: red = (scores as any)?.red?.totalPoints;
     $: blue = (scores as any)?.blue?.totalPoints;
@@ -12,16 +13,29 @@
     $: winner =
         solo != undefined ? "SOLO" : red != undefined ? (red > blue ? "RED" : blue > red ? "BLUE" : "TIE") : null;
     export let description: string;
+
+    const tippy = createTippy({ placement: "left", delay: [750, 0] });
+    $: showTip = !!scores && !!match.actualStartTime;
+    $: tip = showTip
+        ? {
+              content: prettyPrintTimeString(match.actualStartTime),
+          }
+        : {
+              // Hidden tip
+              content: "",
+              maxWidth: 0,
+              arrow: false,
+          };
 </script>
 
-<td style:width="10.75em" on:click class:has-scores={!!scores}>
+<td style:width="10.75em" on:click class:has-scores={!!scores} use:tippy={tip}>
     <div class="wrapper">
-        {#if scores}
-            <div class:red={winner == "RED"} class:blue={winner == "BLUE"} class:tie={winner == "TIE"}>
-                <strong>{description}</strong>
-            </div>
+        <div class="description" class:red={winner == "RED"} class:blue={winner == "BLUE"} class:tie={winner == "TIE"}>
+            <strong>{description}</strong>
+        </div>
 
-            <div class="score" style:width="6.25em">
+        <div class="score" style:width="6.25em">
+            {#if scores}
                 {#if winner == "SOLO"}
                     <b>{solo}</b>
                 {:else}
@@ -33,12 +47,10 @@
                         {blue}
                     </span>
                 {/if}
-            </div>
-        {:else}
-            <div style="text-align: center; width: 100%">
-                {prettyPrintTimeString(match.scheduledStartTime, timeZone)}
-            </div>
-        {/if}
+            {:else}
+                {prettyPrintTimeString(match.scheduledStartTime)}
+            {/if}
+        </div>
     </div>
 </td>
 
@@ -76,6 +88,10 @@
         justify-content: space-around;
     }
 
+    td:not(.has-scores) .description {
+        color: var(--grayed-out-text-color);
+    }
+
     .wrapper {
         display: flex;
         align-items: center;
@@ -87,11 +103,11 @@
 
         outline: transparent solid 2px;
         transition: outline 0.12s ease 0s;
+
+        padding-left: var(--gap);
     }
 
     td.has-scores {
-        padding-left: var(--gap);
-
         cursor: pointer;
     }
 

@@ -12,7 +12,7 @@
     import { browser } from "$app/env";
 
     export let matches: EventPageMatchFragment[];
-    export let event: { start: string; published: boolean; hasStarted: boolean; code: string; timezone: string };
+    export let event: { start: string; published: boolean; hasStarted: boolean; code: string };
     export let isRemote: boolean;
     export let selectedTeam: number | null = null;
     export let frozen = false;
@@ -103,7 +103,6 @@
                             {frozen}
                             showScoresFn={showScores}
                             eventCode={event.code}
-                            timeZone={event.timezone}
                         />
                     {/if}
                 {/each}
@@ -121,7 +120,6 @@
                             {frozen}
                             showScoresFn={showScores}
                             eventCode={event.code}
-                            timeZone={event.timezone}
                         />
                     {/if}
                 {/each}
@@ -139,7 +137,6 @@
                             {frozen}
                             showScoresFn={showScores}
                             eventCode={event.code}
-                            timeZone={event.timezone}
                         />
                     {/if}
                 {/each}

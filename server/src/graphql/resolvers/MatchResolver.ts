@@ -197,4 +197,36 @@ export class MatchResolver {
             return dl.load({ season: match.eventSeason, eventCode: match.eventCode, matchId: match.id });
         };
     }
+
+    @FieldResolver(() => Date)
+    scheduledStartTime(@Root() match: Match) {
+        return reinterpretInUTC(match.scheduledStartTime);
+    }
+
+    @FieldResolver(() => Date, { nullable: true })
+    actualStartTime(@Root() match: Match) {
+        return match.actualStartTime ? reinterpretInUTC(match.actualStartTime) : null;
+    }
+
+    @FieldResolver(() => Date, { nullable: true })
+    postResultTime(@Root() match: Match) {
+        return match.postResultTime ? reinterpretInUTC(match.postResultTime) : null;
+    }
+}
+
+function reinterpretInUTC(date: Date): Date {
+    // Times in the database are in the event's local time. When Typeorm converts them to dates it
+    // uses the server's local time which is undesirable. Here we figure out what the original time
+    // should have been.
+    return new Date(
+        Date.UTC(
+            date.getFullYear(),
+            date.getMonth(),
+            date.getDay(),
+            date.getHours(),
+            date.getMinutes(),
+            date.getSeconds(),
+            date.getMilliseconds()
+        )
+    );
 }

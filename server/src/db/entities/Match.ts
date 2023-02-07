@@ -58,16 +58,15 @@ export class Match extends BaseEntity {
     // @TypeormLoader()
     teams!: TeamMatchParticipation[];
 
-    @Field()
-    @Column()
+    @Column("timestamp without time zone")
     scheduledStartTime!: Date;
 
     @Field(() => Date, { nullable: true })
-    @Column("timestamptz", { nullable: true })
+    @Column("timestamp without time zone", { nullable: true })
     actualStartTime!: Date | null;
 
     @Field(() => Date, { nullable: true })
-    @Column("timestamptz", { nullable: true })
+    @Column("timestamp without time zone", { nullable: true })
     postResultTime!: Date | null;
 
     @Field(() => Int)
