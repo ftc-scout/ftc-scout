@@ -1,4 +1,4 @@
-query HomePage($date: DateTime) {
+query HomePage {
     activeTeamsCount(season: 2022)
     matchesPlayedCount(season: 2022)
     topTradMatch {
@@ -34,15 +34,7 @@ query HomePage($date: DateTime) {
             hasStarted
         }
     }
-    todaysEvents: eventsSearch(
-        limit: 500
-        onlyWithMatches: false
-        end: $date
-        start: $date
-        region: ALL
-        eventTypes: TRAD_AND_REMOTE
-        season: 2022
-    ) {
+    todaysEvents {
         season
         code
         name

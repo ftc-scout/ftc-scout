@@ -84,4 +84,15 @@ export class HomePageResolver {
 
         return res ? new TeamEventParticipation(res) : null;
     }
+
+    @Query(() => [Event])
+    async todaysEvents(): Promise<Event[]> {
+        return DATA_SOURCE.getRepository(Event)
+            .createQueryBuilder("e")
+            .where("e.start <= (NOW() at time zone timezone)::date")
+            .andWhere("e.end >= (NOW() at time zone timezone)::date")
+            .orderBy("e.start", "ASC")
+            .addOrderBy("e.name", "DESC")
+            .getMany();
+    }
 }
