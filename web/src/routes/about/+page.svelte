@@ -104,7 +104,7 @@
             />
             <Contributor
                 name="Levi Gilbert-Adler"
-                role="Web Admin"
+                role="Programmer"
                 imgSrc="/img/levi.png"
                 alt="A photo of Levi Gilbert-Adler"
                 href="https://github.com/Bobrobot1"
