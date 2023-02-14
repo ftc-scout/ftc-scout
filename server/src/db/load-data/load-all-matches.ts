@@ -328,8 +328,8 @@ async function getEventCodesToLoadMatchesFrom(
         let events = await DATA_SOURCE.getRepository(Event)
             .createQueryBuilder()
             .where("season = :season", { season })
-            .andWhere("start <= 'now'::timestamp + '1 day'::interval")
-            .andWhere("start >= 'now'::timestamp - '2 days'::interval")
+            .andWhere("start <= (NOW() at time zone timezone)::date")
+            .andWhere("e.end >= (NOW() at time zone timezone)::date")
             .getMany();
         let duplicateCodes = events.map((e) => e.code);
         let uniqueCodes = [...new Set(duplicateCodes)];
