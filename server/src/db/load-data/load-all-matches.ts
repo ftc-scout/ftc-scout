@@ -329,7 +329,7 @@ async function getEventCodesToLoadMatchesFrom(
             .createQueryBuilder()
             .where("season = :season", { season })
             .andWhere("start <= (NOW() at time zone timezone)::date")
-            .andWhere("e.end >= (NOW() at time zone timezone)::date")
+            .andWhere("end >= (NOW() at time zone timezone)::date")
             .getMany();
         let duplicateCodes = events.map((e) => e.code);
         let uniqueCodes = [...new Set(duplicateCodes)];
