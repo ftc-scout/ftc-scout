@@ -22,8 +22,8 @@
         grid-template-columns: minmax(0, 3fr) repeat(7, minmax(0, 1fr));
 
         background-color: var(--color-team-neutral);
-        border-top-left-radius: 7.3px;
-        border-top-right-radius: 7.3px;
+        border-top-left-radius: 7px;
+        border-top-right-radius: 7px;
 
         width: 100%;
         max-width: 100%;

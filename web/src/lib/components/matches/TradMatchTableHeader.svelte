@@ -24,7 +24,7 @@
         background-color: var(--color-team-blue);
         color: white;
 
-        border-top-right-radius: 7.3px;
+        border-top-right-radius: 7px;
     }
 
     thead {

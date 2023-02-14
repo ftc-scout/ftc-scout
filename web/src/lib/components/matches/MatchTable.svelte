@@ -179,6 +179,10 @@
         border-radius: 8px;
     }
 
+    table :global(tr:last-child) :global(td:last-child) {
+        border-bottom-right-radius: 7px;
+    }
+
     tbody {
         display: block;
     }
