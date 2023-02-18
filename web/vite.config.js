@@ -11,7 +11,7 @@ const config = ({ mode }) => ({
         ],
     },
     optimizeDeps: {
-        exclude: ["@apollo/client", "svelte-apollo"],
+        exclude: ["@apollo/client", "svelte-apollo", "svelte-cubed"],
     },
     define: {
         __DEV__: (mode === "development").toString(),

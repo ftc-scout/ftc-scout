@@ -4,6 +4,7 @@
     import Card from "../lib/components/Card.svelte";
     import Location from "../lib/components/Location.svelte";
     import MatchTable from "../lib/components/matches/MatchTable.svelte";
+    import ConeVis from "../lib/components/matches/vis/2022/ConeVis.svelte";
     import Head from "../lib/components/nav/Head.svelte";
     import SkeletonRow from "../lib/components/skeleton/SkeletonRow.svelte";
     import { CURRENT_SEASON } from "../lib/constants";
@@ -27,6 +28,10 @@
 />
 
 <WidthProvider width="1000px">
+    <Card border={false}>
+        <ConeVis />
+    </Card>
+
     <Card border={false}>
         <div class="title">
             <h1>FTC<em>Scout</em></h1>
