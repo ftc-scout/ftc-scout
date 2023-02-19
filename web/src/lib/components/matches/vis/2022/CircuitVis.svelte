@@ -1,13 +1,10 @@
 <script context="module" lang="ts">
-    import type { ConeLayout } from "./Cone.svelte";
-    import type { Cone } from "./Cone.svelte";
-
-    function junctionIsOwned(x: number, y: number, coneLayout: ConeLayout, ourColor: Cone): boolean {
+    function junctionIsOwned(x: number, y: number, coneLayout: ConeLayout, ourColor: Color): boolean {
         let cones = coneLayout.junctions[x][y];
-        return cones.length != 0 && cones[cones.length - 1] == ourColor;
+        return cones.length != 0 && cones[cones.length - 1].startsWith(ourColor);
     }
 
-    function computeCircuit(coneLayout: ConeLayout, ourColor: Cone): [number, number][] | null {
+    function computeCircuit(coneLayout: ConeLayout, ourColor: Color): [number, number][] | null {
         let [tNear, tFar] =
             ourColor == "R"
                 ? [coneLayout.redNearTerminal, coneLayout.redFarTerminal]
@@ -20,7 +17,7 @@
             return x >= 0 && x <= 4 && y >= 0 && y <= 4;
         }
 
-        function adjecent(x: number, y: number): [number, number][] {
+        function adjacent(x: number, y: number): [number, number][] {
             return [
                 [1, -1],
                 [1, 0],
@@ -59,7 +56,7 @@
                 return path;
             }
 
-            let nextNodes = adjecent(lastNode[0], lastNode[1]);
+            let nextNodes = adjacent(lastNode[0], lastNode[1]);
             // Remove already visited nodes
             nextNodes = nextNodes.filter((n) => !path.some((p) => n[0] == p[0] && n[1] == p[1]));
             for (let next of nextNodes) {
@@ -76,11 +73,12 @@
     import FieldLine from "./FieldLine.svelte";
     import * as THREE from "three";
     import * as SC from "svelte-cubed";
+    import type { Color, ConeLayout } from "./PowerPlayVis.svelte";
 
     const EPSILON = 0.01;
 
     export let layout: ConeLayout;
-    export let ourColor: Cone;
+    export let ourColor: Color;
 
     $: nearTermPos = ourColor == "R" ? [-0.75, -0.75] : [4.75, -0.75];
     $: farTermPos = ourColor == "R" ? [4.75, 4.75] : [-0.75, 4.75];

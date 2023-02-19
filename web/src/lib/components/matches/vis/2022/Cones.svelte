@@ -1,19 +1,10 @@
 <script context="module" lang="ts">
-    import type { BufferGeometry, InstancedMesh, Material } from "three";
+    import type { BufferGeometry, InstancedMesh } from "three";
     import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
     import { writable, type Writable } from "svelte/store";
 
     let coneGeometry: Writable<BufferGeometry | null> = writable(null);
     let loading = false;
-
-    export type Cone = "R" | "B";
-    export interface ConeLayout {
-        redNearTerminal: number;
-        redFarTerminal: number;
-        blueNearTerminal: number;
-        blueFarTerminal: number;
-        junctions: Cone[][][];
-    }
 
     async function loadCone() {
         if (!loading) {
@@ -31,19 +22,22 @@
     import { onMount } from "svelte";
     import * as SC from "svelte-cubed";
     import * as THREE from "three";
-    import { fieldPoint, poleType } from "./Field.svelte";
+    import { fieldPoint } from "./Field.svelte";
+    import { BLUE_CONE_MAT, junctionType, RED_CONE_MAT, type Color, type ConeLayout } from "./PowerPlayVis.svelte";
 
     onMount(loadCone);
 
-    function calcConePositions(layout: ConeLayout, ourColor: Cone): [number, number, number][] {
+    function calcConePositions(layout: ConeLayout, ourColor: Color): [number, number, number][] {
         const GAP = 1.25;
 
         let cones: [number, number, number][] = [];
         for (let x = 0; x < 5; x++) {
             for (let y = 0; y < 5; y++) {
-                let height = poleType(x, y) == "G" ? 0.4 : 0;
-                for (let cone of layout.junctions[x][y]) {
-                    if (cone == ourColor) cones.push(fieldPoint(x, y, height));
+                let height = junctionType(x, y) == "G" ? 0.4 : 0;
+                for (let scoringElement of layout.junctions[x][y]) {
+                    if (scoringElement.startsWith(ourColor) && scoringElement.includes("Cone")) {
+                        cones.push(fieldPoint(x, y, height));
+                    }
                     height += GAP;
                 }
             }
@@ -77,9 +71,9 @@
         return cones;
     }
 
-    export let material: Material;
     export let layout: ConeLayout;
-    export let ourColor: Cone;
+    export let ourColor: Color;
+    $: material = ourColor == "R" ? RED_CONE_MAT : BLUE_CONE_MAT;
     $: positions = calcConePositions(layout, ourColor);
 
     let mesh: InstancedMesh;

@@ -1,27 +1,4 @@
 <script context="module" lang="ts">
-    const EPSILON = 0.01;
-
-    export type Junction = "G" | "L" | "M" | "H";
-
-    export const JUNCTION_HEIGHTS: Record<Junction, number> = {
-        G: 0.56,
-        L: 13.5,
-        M: 23.5,
-        H: 33.5,
-    };
-
-    export function poleType(x: number, y: number): Junction {
-        return (
-            [
-                ["G", "L", "G", "L", "G"],
-                ["L", "M", "H", "M", "L"],
-                ["G", "H", "G", "H", "G"],
-                ["L", "M", "H", "M", "L"],
-                ["G", "L", "G", "L", "G"],
-            ] as const
-        )[x][y];
-    }
-
     export function fieldPoint2(x: number, y: number): [number, number] {
         return [(x - 2) * 24, (y - 2) * 24];
     }
@@ -37,6 +14,7 @@
     import type { Position } from "svelte-cubed/types/common";
     import FieldLine from "./FieldLine.svelte";
     import type { Material } from "three";
+    import { EPSILON, junctionHeight, junctionType } from "./PowerPlayVis.svelte";
 
     const RED_C = "#FF0000";
     const BLUE_C = "#0000FF";
@@ -77,14 +55,14 @@
 <!-- Junctions -->
 {#each [...Array(5).keys()] as x}
     {#each [...Array(5).keys()] as y}
-        {@const junctionType = poleType(x, y)}
-        {@const junctionHeight = JUNCTION_HEIGHTS[junctionType]}
+        {@const type = junctionType(x, y)}
+        {@const height = junctionHeight(x, y)}
 
-        {#if junctionType == "G"}
+        {#if type == "G"}
             <SC.Mesh
-                geometry={new THREE.CylinderGeometry(4.25 / 2.0, 3.0, junctionHeight, 20)}
+                geometry={new THREE.CylinderGeometry(4.25 / 2.0, 3.0, height, 20)}
                 material={GJ_MAT}
-                position={fieldPoint(x, y, junctionHeight / 2)}
+                position={fieldPoint(x, y, height / 2)}
             />
         {:else}
             <SC.Mesh
@@ -93,9 +71,9 @@
                 position={fieldPoint(x, y, 1.5)}
             />
             <SC.Mesh
-                geometry={new THREE.CylinderGeometry(0.5, 0.5, junctionHeight - 3, 20)}
+                geometry={new THREE.CylinderGeometry(0.5, 0.5, height - 3, 20)}
                 material={POLE_LIST_MAT}
-                position={fieldPoint(x, y, (junctionHeight - 3) / 2 + 3)}
+                position={fieldPoint(x, y, (height - 3) / 2 + 3)}
             />
         {/if}
     {/each}
