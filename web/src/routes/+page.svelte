@@ -28,7 +28,7 @@
 />
 
 <WidthProvider width="1000px">
-    <Card border={false}>
+    <Card>
         <ConeVis />
     </Card>
 

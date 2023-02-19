@@ -6,6 +6,15 @@
     let coneGeometry: Writable<BufferGeometry | null> = writable(null);
     let loading = false;
 
+    export type Cone = "R" | "B";
+    export interface ConeLayout {
+        redNearTerminal: number;
+        redFarTerminal: number;
+        blueNearTerminal: number;
+        blueFarTerminal: number;
+        junctions: Cone[][][];
+    }
+
     async function loadCone() {
         if (!loading) {
             loading = true;
@@ -22,11 +31,56 @@
     import { onMount } from "svelte";
     import * as SC from "svelte-cubed";
     import * as THREE from "three";
+    import { fieldPoint, poleType } from "./Field.svelte";
 
     onMount(loadCone);
 
+    function calcConePositions(layout: ConeLayout, ourColor: Cone): [number, number, number][] {
+        const GAP = 1.25;
+
+        let cones: [number, number, number][] = [];
+        for (let x = 0; x < 5; x++) {
+            for (let y = 0; y < 5; y++) {
+                let height = poleType(x, y) == "G" ? 0.4 : 0;
+                for (let cone of layout.junctions[x][y]) {
+                    if (cone == ourColor) cones.push(fieldPoint(x, y, height));
+                    height += GAP;
+                }
+            }
+        }
+
+        let [tNear, tFar] =
+            ourColor == "R"
+                ? [layout.redNearTerminal, layout.redFarTerminal]
+                : [layout.blueNearTerminal, layout.blueFarTerminal];
+        let [posNear, posFar] =
+            ourColor == "R"
+                ? [
+                      [-0.75, -0.75],
+                      [4.75, 4.75],
+                  ]
+                : [
+                      [4.75, -0.75],
+                      [-0.75, 4.75],
+                  ];
+        let height = 0;
+        for (let i = 0; i < tNear; i++) {
+            cones.push(fieldPoint(posNear[0], posNear[1], height));
+            height += GAP;
+        }
+        height = 0;
+        for (let i = 0; i < tFar; i++) {
+            cones.push(fieldPoint(posFar[0], posFar[1], height));
+            height += GAP;
+        }
+
+        return cones;
+    }
+
     export let material: Material;
-    export let positions: [number, number, number][];
+    export let layout: ConeLayout;
+    export let ourColor: Cone;
+    $: positions = calcConePositions(layout, ourColor);
 
     let mesh: InstancedMesh;
     $: if ($coneGeometry) {
