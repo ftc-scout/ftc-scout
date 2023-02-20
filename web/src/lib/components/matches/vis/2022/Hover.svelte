@@ -17,13 +17,14 @@
     export let teams: TeamMatchParticipation[];
     export let layout: ConeLayout;
 
-    $: onFieldTeams = teams.filter((t) => t.onField);
-    $: redTeams = onFieldTeams.filter(
-        (t) => t.station == Station.Red_1 || t.station == Station.Red_2 || t.station == Station.Red_3
-    );
-    $: blueTeams = onFieldTeams.filter(
-        (t) => t.station == Station.Blue_1 || t.station == Station.Blue_2 || t.station == Station.Blue_3
-    );
+    $: r1 = teams.find((t) => t.station == Station.Red_1);
+    $: r2 = teams.find((t) => t.station == Station.Red_2);
+    $: r3 = teams.find((t) => t.station == Station.Red_3);
+    $: b1 = teams.find((t) => t.station == Station.Blue_1);
+    $: b2 = teams.find((t) => t.station == Station.Blue_2);
+    $: b3 = teams.find((t) => t.station == Station.Blue_3);
+    $: redTeams = [r1, r2, r3].filter((t) => t && t.onField);
+    $: blueTeams = [b1, b2, b3].filter((t) => t && t.onField);
     $: terminalCounts = [
         layout.redNearTerminal,
         layout.blueNearTerminal,
