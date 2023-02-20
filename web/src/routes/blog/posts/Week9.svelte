@@ -1,6 +1,289 @@
 <script>
     import { EMAIL } from "$lib/constants";
     import PostTemplate from "../PostTemplate.svelte";
+    import MatchTable from "$lib/components/matches/MatchTable.svelte";
+    const MATCH_DATA = [
+        {
+            __typename: "Match",
+            season: 2022,
+            eventCode: "USCALAROQ2",
+            id: 30,
+            matchNum: 30,
+            matchDescription: "Q-30",
+            tournamentLevel: "QUALS",
+            scheduledStartTime: "2023-01-31T12:52:00.000Z",
+            actualStartTime: "2023-01-31T13:53:48.583Z",
+            hasBeenPlayed: true,
+            scores: {
+                __typename: "MatchScores2022",
+                season: 2022,
+                eventCode: "USCALAROQ2",
+                matchId: 30,
+                autoCones: {
+                    __typename: "ConeLayout",
+                    redNearTerminal: 0,
+                    redFarTerminal: 0,
+                    blueNearTerminal: 0,
+                    blueFarTerminal: 0,
+                    junctions: [
+                        [[], [], [], [], []],
+                        [[], ["RED_CONE"], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], ["BLUE_CONE"], []],
+                        [[], [], [], [], []],
+                    ],
+                },
+                allCones: {
+                    __typename: "ConeLayout",
+                    redNearTerminal: 2,
+                    redFarTerminal: 0,
+                    blueNearTerminal: 0,
+                    blueFarTerminal: 0,
+                    junctions: [
+                        [[], ["RED_CONE"], [], [], []],
+                        [
+                            ["RED_CONE"],
+                            ["RED_CONE", "RED_CONE"],
+                            ["RED_CONE"],
+                            ["BLUE_CONE", "RED_CONE"],
+                            ["BLUE_CONE", "RED_CONE"],
+                        ],
+                        [
+                            [],
+                            ["RED_CONE", "BLUE_CONE"],
+                            [],
+                            ["BLUE_CONE", "RED_CONE", "BLUE_CONE", "RED_CONE", "BLUE_CONE"],
+                            [],
+                        ],
+                        [
+                            ["BLUE_CONE", "BLUE_CONE", "BLUE_CONE", "BLUE_CONE", "BLUE_CONE"],
+                            [],
+                            ["BLUE_CONE"],
+                            ["BLUE_CONE"],
+                            [],
+                        ],
+                        [[], [], [], ["BLUE_CONE", "BLUE_BEACON_1"], []],
+                    ],
+                },
+                red: {
+                    __typename: "MatchScores2022Alliance",
+                    teams: [
+                        {
+                            __typename: "TeamMatchParticipation",
+                            season: 2022,
+                            eventCode: "USCALAROQ2",
+                            matchId: 30,
+                            teamNumber: 22342,
+                            station: "RED_2",
+                            team: {
+                                __typename: "Team",
+                                number: 22342,
+                                name: "STAMPEDE MACHINES",
+                            },
+                        },
+                        {
+                            __typename: "TeamMatchParticipation",
+                            season: 2022,
+                            eventCode: "USCALAROQ2",
+                            matchId: 30,
+                            teamNumber: 22740,
+                            station: "RED_1",
+                            team: {
+                                __typename: "Team",
+                                number: 22740,
+                                name: "Bot Bot",
+                            },
+                        },
+                    ],
+                    season: 2022,
+                    eventCode: "USCALAROQ2",
+                    matchId: 30,
+                    alliance: "RED",
+                    autoNavigation12022: "TEAM_SIGNAL",
+                    autoNavigation22022: "TEAM_SIGNAL",
+                    autoTerminalCones: 0,
+                    autoGroundCones: 0,
+                    autoLowCones: 0,
+                    autoMediumCones: 1,
+                    autoHighCones: 0,
+                    dcTerminalCones: 2,
+                    dcGroundCones: 0,
+                    dcLowCones: 3,
+                    dcMediumCones: 3,
+                    dcHighCones: 4,
+                    endgameNavigated1: false,
+                    endgameNavigated2: false,
+                    coneOwnedJunctions: 6,
+                    beaconOwnedJunctions: 0,
+                    circuit: false,
+                    minorPenalties: 1,
+                    majorPenalties: 0,
+                    autoNavigationPoints: 40,
+                    autoConePoints: 4,
+                    endgameNavigationPoints: 0,
+                    ownershipPoints: 18,
+                    circuitPoints: 0,
+                    autoPoints: 44,
+                    dcPoints: 43,
+                    endgamePoints: 18,
+                    penaltyPoints: 10,
+                    totalPoints: 115,
+                    totalPointsNp: 105,
+                },
+                blue: {
+                    __typename: "MatchScores2022Alliance",
+                    teams: [
+                        {
+                            __typename: "TeamMatchParticipation",
+                            season: 2022,
+                            eventCode: "USCALAROQ2",
+                            matchId: 30,
+                            teamNumber: 9220,
+                            station: "BLUE_2",
+                            team: {
+                                __typename: "Team",
+                                number: 9220,
+                                name: "Rancho Rebel Robotics",
+                            },
+                        },
+                        {
+                            __typename: "TeamMatchParticipation",
+                            season: 2022,
+                            eventCode: "USCALAROQ2",
+                            matchId: 30,
+                            teamNumber: 16321,
+                            station: "BLUE_1",
+                            team: {
+                                __typename: "Team",
+                                number: 16321,
+                                name: "X Drive",
+                            },
+                        },
+                    ],
+                    season: 2022,
+                    eventCode: "USCALAROQ2",
+                    matchId: 30,
+                    alliance: "BLUE",
+                    autoNavigation12022: "TEAM_SIGNAL",
+                    autoNavigation22022: "NONE",
+                    autoTerminalCones: 0,
+                    autoGroundCones: 0,
+                    autoLowCones: 0,
+                    autoMediumCones: 1,
+                    autoHighCones: 0,
+                    dcTerminalCones: 0,
+                    dcGroundCones: 0,
+                    dcLowCones: 7,
+                    dcMediumCones: 2,
+                    dcHighCones: 5,
+                    endgameNavigated1: false,
+                    endgameNavigated2: true,
+                    coneOwnedJunctions: 5,
+                    beaconOwnedJunctions: 1,
+                    circuit: false,
+                    minorPenalties: 1,
+                    majorPenalties: 0,
+                    autoNavigationPoints: 20,
+                    autoConePoints: 4,
+                    endgameNavigationPoints: 2,
+                    ownershipPoints: 25,
+                    circuitPoints: 0,
+                    autoPoints: 24,
+                    dcPoints: 54,
+                    endgamePoints: 27,
+                    penaltyPoints: 10,
+                    totalPoints: 115,
+                    totalPointsNp: 105,
+                },
+            },
+            teams: [
+                {
+                    __typename: "TeamMatchParticipation",
+                    season: 2022,
+                    eventCode: "USCALAROQ2",
+                    matchId: 30,
+                    teamNumber: 9220,
+                    station: "BLUE_2",
+                    team: {
+                        __typename: "Team",
+                        number: 9220,
+                        name: "Rancho Rebel Robotics",
+                    },
+                    surrogate: false,
+                    noShow: false,
+                    dq: false,
+                    onField: true,
+                },
+                {
+                    __typename: "TeamMatchParticipation",
+                    season: 2022,
+                    eventCode: "USCALAROQ2",
+                    matchId: 30,
+                    teamNumber: 16321,
+                    station: "BLUE_1",
+                    team: {
+                        __typename: "Team",
+                        number: 16321,
+                        name: "X Drive",
+                    },
+                    surrogate: false,
+                    noShow: false,
+                    dq: false,
+                    onField: true,
+                },
+                {
+                    __typename: "TeamMatchParticipation",
+                    season: 2022,
+                    eventCode: "USCALAROQ2",
+                    matchId: 30,
+                    teamNumber: 22342,
+                    station: "RED_2",
+                    team: {
+                        __typename: "Team",
+                        number: 22342,
+                        name: "STAMPEDE MACHINES",
+                    },
+                    surrogate: false,
+                    noShow: false,
+                    dq: false,
+                    onField: true,
+                },
+                {
+                    __typename: "TeamMatchParticipation",
+                    season: 2022,
+                    eventCode: "USCALAROQ2",
+                    matchId: 30,
+                    teamNumber: 22740,
+                    station: "RED_1",
+                    team: {
+                        __typename: "Team",
+                        number: 22740,
+                        name: "Bot Bot",
+                    },
+                    surrogate: false,
+                    noShow: false,
+                    dq: false,
+                    onField: true,
+                },
+            ],
+        },
+    ];
+    const EVENT_DATA = {
+        __typename: "Event",
+        season: 2022,
+        code: "USCALAROQ2",
+        name: "CA-SoCal ILT 2 - Romoland Sunday",
+        start: "2023-02-05",
+        end: "2023-02-05",
+        venue: "Heritage High School",
+        city: "Romoland",
+        stateOrProvince: "CA",
+        country: "USA",
+        website: "https://socalftc.org/",
+        remote: false,
+        published: true,
+        hasStarted: true,
+    };
 </script>
 
 <PostTemplate>
@@ -22,10 +305,19 @@
             >my team
         </a>(completely shameless plug), had our <a href="/events/2022/USCALAROQ2/matches"> tournament qualifier</a>.
         The top 7 teams in advancement order in this event move on to SoCal Regionals. We were WA2. Here’s the thing,
-        after a few “personal” picks, the captains began picking teams off of rank. If we were one rank higher or lower
-        we would not have been picked by the Winning Alliance (who probably would’ve won anyways, Samotech is
+        after a few picks that weren't based off of OPR, the captains began picking teams off of rank. If we were one
+        rank higher or lower we would not have been picked by the Winning Alliance (who probably would’ve won anyways,
+        Samotech is
         <i>very</i> good.)
     </p>
+    <MatchTable
+        matches={MATCH_DATA}
+        event={EVENT_DATA}
+        teamPage={false}
+        isRemote={false}
+        frozen={true}
+        selectedTeam={null}
+    />
     <p>This is an uninteresting story so far.</p>
     <p>In this event, we had a draw. If we had not had that draw, we would not have been on the winning alliance.</p>
     <p>To curtail this long-winded introduction: this Scouting Report will be about draws.</p>
