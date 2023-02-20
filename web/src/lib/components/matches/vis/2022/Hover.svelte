@@ -203,7 +203,7 @@
         height: 0px;
     }
 
-    /* :global(.tippy-box[data-theme="junction-info"]) {
-        background: orange;
-    } */
+    :global(.tippy-box[data-theme~="light"]) {
+        font-size: var(--font-size);
+    }
 </style>
