@@ -3,8 +3,9 @@ import { Season } from "../../ftc-api/types/Season";
 import { Match } from "./Match";
 import { Alliance, allianceFromString } from "./types/Alliance";
 import { AutoNavigation2022, autoNavigation2022FromApi } from "./types/2022/AutoNavigation2022";
-import { MatchScores2022TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2022Trad";
+import { ApiConeType, MatchScores2022TradFtcApi } from "../../ftc-api/types/match-scores/MatchScores2022Trad";
 import { assert } from "console";
+import { ConeType, coneTypeFromApi } from "./types/2022/ConeType";
 
 @Entity()
 export class MatchScores2022 extends BaseEntity {
@@ -45,6 +46,17 @@ export class MatchScores2022 extends BaseEntity {
     @Column("int8")
     autoHighCones!: number;
 
+    @Column("json", {
+        default: [
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+        ],
+    })
+    autoConeLayout!: ConeType[][][];
+
     @Column("int8")
     dcTerminalCones!: number;
     @Column("int8")
@@ -55,6 +67,21 @@ export class MatchScores2022 extends BaseEntity {
     dcMediumCones!: number;
     @Column("int8")
     dcHighCones!: number;
+
+    @Column("int8", { default: 0 })
+    dcNearTerminalCones!: number;
+    @Column("int8", { default: 0 })
+    dcFarTerminalCones!: number;
+    @Column("json", {
+        default: [
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+            [[], [], [], [], []],
+        ],
+    })
+    dcConeLayout!: ConeType[][][];
 
     @Column()
     endgameNavigated1!: boolean;
@@ -146,6 +173,26 @@ export class MatchScores2022 extends BaseEntity {
         matchId: number,
         ms: MatchScores2022TradFtcApi
     ): MatchScores2022[] {
+        function getConeLayout(api: ApiConeType[][][], myAlliance: Alliance): ConeType[][][] {
+            let res: ConeType[][][] = [
+                [[], [], [], [], []],
+                [[], [], [], [], []],
+                [[], [], [], [], []],
+                [[], [], [], [], []],
+                [[], [], [], [], []],
+            ];
+            for (let x = 0; x < 5; x++) {
+                for (let y = 0; y < 5; y++) {
+                    if (api.length > x && api[x].length > y) {
+                        for (let c of api[x][y]) {
+                            res[x][y].push(coneTypeFromApi(c, myAlliance));
+                        }
+                    }
+                }
+            }
+            return res;
+        }
+
         return ms.alliances.map((a) => {
             let other = ms.alliances.find((o) => o != a)!;
             let dbms = MatchScores2022.create({
@@ -160,11 +207,15 @@ export class MatchScores2022 extends BaseEntity {
                 autoLowCones: a.autoJunctionCones[1],
                 autoMediumCones: a.autoJunctionCones[2],
                 autoHighCones: a.autoJunctionCones[3],
+                autoConeLayout: getConeLayout(a.autoJunctions, allianceFromString(a.alliance)),
                 dcTerminalCones: a.dcTerminalNear + a.dcTerminalFar,
                 dcGroundCones: a.dcJunctionCones[0],
                 dcLowCones: a.dcJunctionCones[1],
                 dcMediumCones: a.dcJunctionCones[2],
                 dcHighCones: a.dcJunctionCones[3],
+                dcNearTerminalCones: a.dcTerminalNear,
+                dcFarTerminalCones: a.dcTerminalFar,
+                dcConeLayout: getConeLayout(a.dcJunctions, allianceFromString(a.alliance)),
                 endgameNavigated1: a.egNavigated1,
                 endgameNavigated2: a.egNavigated2,
                 coneOwnedJunctions: a.ownedJunctions - a.beacons,

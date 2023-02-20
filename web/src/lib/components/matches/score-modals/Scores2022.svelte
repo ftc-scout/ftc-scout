@@ -2,8 +2,12 @@
     import TradScoresHeader from "./TradScoresHeader.svelte";
     import { AutoNavigation2022, type MatchScores2022 } from "../../../graphql/generated/graphql-operations";
     import TradScoreLine from "./TradScoreLine.svelte";
+    import FaButton from "../../FaButton.svelte";
+    import { CONE_VIS_ICON } from "../../../icons";
+    import PowerPlayVisModal from "../vis/2022/PowerPlayVisModal.svelte";
 
     export let score: MatchScores2022;
+    export let matchDescription: string;
 
     function autoNavPoints(nav: AutoNavigation2022): number {
         return {
@@ -13,7 +17,11 @@
             [AutoNavigation2022.TeamSignal]: 20,
         }[nav]!;
     }
+
+    let showCones = false;
 </script>
+
+<PowerPlayVisModal bind:shown={showCones} {matchDescription} autoLayout={score.autoCones} allLayout={score.allCones} />
 
 <table colspan="3">
     <TradScoresHeader {score} />
@@ -73,6 +81,16 @@
     <TradScoreLine {score} name="Major Penalty Points" getProp={(a) => a.majorPenalties * -30} />
     <TradScoreLine {score} name="Minor Penalty Points" getProp={(a) => a.minorPenalties * -10} />
 </table>
+
+<div style="display: flex; justify-content: center; margin-top: var(--gap)">
+    <FaButton
+        icon={CONE_VIS_ICON}
+        on:click={() => (showCones = true)}
+        buttonStyle="font-size: var(--medium-font-size);"
+    >
+        <b>View Cone Layout</b>
+    </FaButton>
+</div>
 
 <style>
     table {

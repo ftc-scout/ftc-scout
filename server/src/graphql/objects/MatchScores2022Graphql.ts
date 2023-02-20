@@ -1,6 +1,7 @@
 import { Field, Int, ObjectType } from "type-graphql";
 import { MatchScores2022 } from "../../db/entities/MatchScores2022";
 import { AutoNavigation2022 } from "../../db/entities/types/2022/AutoNavigation2022";
+import { ConeType } from "../../db/entities/types/2022/ConeType";
 import { Alliance } from "../../db/entities/types/Alliance";
 import { Season } from "../../ftc-api/types/Season";
 
@@ -139,6 +140,33 @@ export class MatchScores2022AllianceGraphql {
     totalPointsNp: number;
 }
 
+@ObjectType("ConeLayout")
+export class ConeLayout {
+    constructor(red: MatchScores2022, blue: MatchScores2022, auto: boolean) {
+        this.redNearTerminal = auto ? red.autoTerminalCones : red.dcNearTerminalCones;
+        this.redFarTerminal = auto ? 0 : red.dcFarTerminalCones;
+        this.blueNearTerminal = auto ? blue.autoTerminalCones : blue.dcNearTerminalCones;
+        this.blueFarTerminal = auto ? 0 : blue.dcFarTerminalCones;
+
+        this.junctions = auto ? red.autoConeLayout : red.dcConeLayout;
+    }
+
+    @Field(() => Int)
+    redNearTerminal: number;
+
+    @Field(() => Int)
+    redFarTerminal: number;
+
+    @Field(() => Int)
+    blueNearTerminal: number;
+
+    @Field(() => Int)
+    blueFarTerminal: number;
+
+    @Field(() => [[[ConeType]]])
+    junctions: ConeType[][][];
+}
+
 @ObjectType("MatchScores2022")
 export class MatchScores2022Graphql {
     constructor(red: MatchScores2022, blue: MatchScores2022) {
@@ -148,6 +176,9 @@ export class MatchScores2022Graphql {
 
         this.red = new MatchScores2022AllianceGraphql(red);
         this.blue = new MatchScores2022AllianceGraphql(blue);
+
+        this.autoCones = new ConeLayout(red, blue, true);
+        this.allCones = new ConeLayout(red, blue, false);
     }
 
     @Field(() => Int)
@@ -158,6 +189,12 @@ export class MatchScores2022Graphql {
 
     @Field(() => Int)
     matchId: number;
+
+    @Field(() => ConeLayout)
+    autoCones: ConeLayout;
+
+    @Field(() => ConeLayout)
+    allCones: ConeLayout;
 
     @Field(() => MatchScores2022AllianceGraphql)
     red: MatchScores2022AllianceGraphql;
