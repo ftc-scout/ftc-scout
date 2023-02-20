@@ -45,3 +45,4 @@ export const REGIONS_ICON = faGlobeAmericas;
 export const SEASON_RECORDS_ICON = faTrophy;
 export const OPR_ICON = faBolt;
 export const BLOG_ICON = faBinoculars;
+export const CONE_VIS_ICON = faBinoculars;

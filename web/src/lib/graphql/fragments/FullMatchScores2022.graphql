@@ -2,6 +2,21 @@ fragment FullMatchScores2022 on MatchScores2022 {
     season
     eventCode
     matchId
+    autoCones {
+        redNearTerminal
+        redFarTerminal
+        blueNearTerminal
+        blueFarTerminal
+        junctions
+    }
+    allCones {
+        redNearTerminal
+        redFarTerminal
+        blueNearTerminal
+        blueFarTerminal
+        junctions
+    }
+
     red {
         ...FullMatchScores2022Alliance
     }

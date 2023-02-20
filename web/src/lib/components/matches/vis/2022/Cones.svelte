@@ -23,7 +23,8 @@
     import * as SC from "svelte-cubed";
     import * as THREE from "three";
     import { fieldPoint } from "./Field.svelte";
-    import { BLUE_CONE_MAT, junctionType, RED_CONE_MAT, type Color, type ConeLayout } from "./PowerPlayVis.svelte";
+    import { BLUE_CONE_MAT, junctionType, RED_CONE_MAT, type Color } from "./PowerPlayVisModal.svelte";
+    import type { ConeLayout } from "../../../../graphql/generated/graphql-operations";
 
     onMount(loadCone);
 
@@ -35,7 +36,7 @@
             for (let y = 0; y < 5; y++) {
                 let height = junctionType(x, y) == "G" ? 0.4 : 0;
                 for (let scoringElement of layout.junctions[x][y]) {
-                    if (scoringElement.startsWith(ourColor) && scoringElement.includes("Cone")) {
+                    if (scoringElement.startsWith(ourColor) && scoringElement.includes("CONE")) {
                         cones.push(fieldPoint(x, y, height));
                     }
                     height += GAP;
@@ -91,6 +92,5 @@
 </script>
 
 {#if $coneGeometry}
-    <!-- scale={[39.4, 39.4, 39.4]} -->
     <SC.Primitive object={mesh} scale={[39.4, 39.4, 39.4]} position={[0, 2.5, 0]} />
 {/if}

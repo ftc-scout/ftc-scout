@@ -28,7 +28,7 @@
         </b>
 
         {#if matchScores.scores?.__typename == "MatchScores2022"}
-            <Scores2022 score={matchScores.scores} />
+            <Scores2022 score={matchScores.scores} matchDescription={matchScores.matchDescription} />
         {:else if matchScores.scores?.__typename == "MatchScores2021Traditional"}
             <ScoreTrad2021 score={matchScores.scores} />
         {:else if matchScores.scores?.__typename == "MatchScores2021Remote"}

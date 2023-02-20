@@ -18,8 +18,9 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import * as SC from "svelte-cubed";
-    import { BLUE_CONE_MAT, junctionHeight, RED_CONE_MAT, type Color, type ConeLayout } from "./PowerPlayVis.svelte";
+    import { BLUE_CONE_MAT, junctionHeight, RED_CONE_MAT, type Color } from "./PowerPlayVisModal.svelte";
     import { fieldPoint } from "./Field.svelte";
+    import type { ConeLayout } from "../../../../graphql/generated/graphql-operations";
 
     onMount(loadBeacon);
 
@@ -28,7 +29,7 @@
         for (let x = 0; x < 5; x++) {
             for (let y = 0; y < 5; y++) {
                 for (let scoringElement of layout.junctions[x][y]) {
-                    if (scoringElement.includes("Beacon")) {
+                    if (scoringElement.includes("BEACON")) {
                         positions.push([x, y, scoringElement[0]] as [number, number, Color]);
                     }
                 }

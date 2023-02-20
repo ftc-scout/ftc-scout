@@ -6,7 +6,13 @@ export interface MatchScores2022TradFtcApi {
     alliances: AllianceScores2022TradFtcApi[];
 }
 
-type ConeType = "MY_CONE" | "OTHER_CONE" | "MY_R1_BEACON" | "MY_R2_BEACON" | "OTHER_R1_BEACON" | "OTHER_R2_BEACON";
+export type ApiConeType =
+    | "MY_CONE"
+    | "OTHER_CONE"
+    | "MY_R1_BEACON"
+    | "MY_R2_BEACON"
+    | "OTHER_R1_BEACON"
+    | "OTHER_R2_BEACON";
 
 export interface AllianceScores2022TradFtcApi {
     alliance: "Blue" | "Red";
@@ -17,8 +23,8 @@ export interface AllianceScores2022TradFtcApi {
     robot1Auto: "NONE" | "SIGNAL_ZONE" | "SUBSTATION_TERMINAL";
     robot2Auto: "NONE" | "SIGNAL_ZONE" | "SUBSTATION_TERMINAL";
     autoTerminal: number;
-    autoJunctions: ConeType[][][];
-    dcJunctions: ConeType[][][];
+    autoJunctions: ApiConeType[][][];
+    dcJunctions: ApiConeType[][][];
     dcTerminalNear: number;
     dcTerminalFar: number;
     dcTerminalOther: number;

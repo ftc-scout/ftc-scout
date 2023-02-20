@@ -1,7 +1,7 @@
 <script lang="ts">
     import * as THREE from "three";
     import * as SC from "svelte-cubed";
-    import { EPSILON } from "./PowerPlayVis.svelte";
+    import { EPSILON } from "./PowerPlayVisModal.svelte";
 
     export let start: [number, number];
     export let end: [number, number];

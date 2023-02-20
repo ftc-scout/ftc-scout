@@ -14,7 +14,7 @@
     import type { Position } from "svelte-cubed/types/common";
     import FieldLine from "./FieldLine.svelte";
     import type { Material } from "three";
-    import { EPSILON, junctionHeight, junctionType } from "./PowerPlayVis.svelte";
+    import { EPSILON, junctionHeight, junctionType } from "./PowerPlayVisModal.svelte";
 
     const RED_C = "#FF0000";
     const BLUE_C = "#0000FF";

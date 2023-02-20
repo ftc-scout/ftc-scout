@@ -73,7 +73,8 @@
     import FieldLine from "./FieldLine.svelte";
     import * as THREE from "three";
     import * as SC from "svelte-cubed";
-    import type { Color, ConeLayout } from "./PowerPlayVis.svelte";
+    import type { Color } from "./PowerPlayVisModal.svelte";
+    import type { ConeLayout } from "../../../../graphql/generated/graphql-operations";
 
     const EPSILON = 0.01;
 
@@ -82,10 +83,8 @@
 
     $: nearTermPos = ourColor == "R" ? [-0.75, -0.75] : [4.75, -0.75];
     $: farTermPos = ourColor == "R" ? [4.75, 4.75] : [-0.75, 4.75];
-    let [tNear, tFar] =
-        ourColor == "R"
-            ? [layout.redNearTerminal, layout.redFarTerminal]
-            : [layout.blueNearTerminal, layout.blueFarTerminal];
+    $: tNear = ourColor == "R" ? layout.redNearTerminal : layout.blueNearTerminal;
+    $: tFar = ourColor == "R" ? layout.redFarTerminal : layout.blueFarTerminal;
 
     $: path = computeCircuit(layout, ourColor);
     $: terminalPath = path ? [nearTermPos, ...path, farTermPos] : null;
