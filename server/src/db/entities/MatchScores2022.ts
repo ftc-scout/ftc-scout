@@ -185,7 +185,7 @@ export class MatchScores2022 extends BaseEntity {
                 for (let y = 0; y < 5; y++) {
                     if (api.length > x && api[x].length > y) {
                         for (let c of api[x][y]) {
-                            res[x][y].push(coneTypeFromApi(c, myAlliance));
+                            res[4 - y][4 - x].push(coneTypeFromApi(c, myAlliance));
                         }
                     }
                 }
