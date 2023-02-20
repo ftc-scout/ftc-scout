@@ -1,6 +1,6 @@
 <script lang="ts">
     import Modal from "$lib/components/Modal.svelte";
-    import type { EventPageMatchFragment } from "../../../graphql/generated/graphql-operations";
+    import type { EventPageMatchFragment, TeamMatchParticipation } from "../../../graphql/generated/graphql-operations";
     import ScoreTrad2021 from "./ScoreTrad2021.svelte";
     import ScoreTrad2020 from "./ScoreTrad2020.svelte";
     import Fa from "svelte-fa";
@@ -28,7 +28,11 @@
         </b>
 
         {#if matchScores.scores?.__typename == "MatchScores2022"}
-            <Scores2022 score={matchScores.scores} matchDescription={matchScores.matchDescription} />
+            <Scores2022
+                score={matchScores.scores}
+                matchDescription={matchScores.matchDescription}
+                teams={matchScores.teams}
+            />
         {:else if matchScores.scores?.__typename == "MatchScores2021Traditional"}
             <ScoreTrad2021 score={matchScores.scores} />
         {:else if matchScores.scores?.__typename == "MatchScores2021Remote"}

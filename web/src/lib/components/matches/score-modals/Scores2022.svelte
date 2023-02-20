@@ -1,12 +1,17 @@
 <script lang="ts">
     import TradScoresHeader from "./TradScoresHeader.svelte";
-    import { AutoNavigation2022, type MatchScores2022 } from "../../../graphql/generated/graphql-operations";
+    import {
+        AutoNavigation2022,
+        type MatchScores2022,
+        type TeamMatchParticipation,
+    } from "../../../graphql/generated/graphql-operations";
     import TradScoreLine from "./TradScoreLine.svelte";
     import FaButton from "../../FaButton.svelte";
     import { CONE_VIS_ICON } from "../../../icons";
     import PowerPlayVisModal from "../vis/2022/PowerPlayVisModal.svelte";
 
     export let score: MatchScores2022;
+    export let teams: TeamMatchParticipation[];
     export let matchDescription: string;
 
     function autoNavPoints(nav: AutoNavigation2022): number {
@@ -21,7 +26,13 @@
     let showCones = false;
 </script>
 
-<PowerPlayVisModal bind:shown={showCones} {matchDescription} autoLayout={score.autoCones} allLayout={score.allCones} />
+<PowerPlayVisModal
+    bind:shown={showCones}
+    {matchDescription}
+    autoLayout={score.autoCones}
+    allLayout={score.allCones}
+    {teams}
+/>
 
 <table colspan="3">
     <TradScoresHeader {score} />

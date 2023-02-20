@@ -41,14 +41,15 @@
     import Modal from "../../../Modal.svelte";
     import Fa from "svelte-fa";
     import { CLOSE_ICON } from "../../../../icons";
-    import type { ConeLayout } from "../../../../graphql/generated/graphql-operations";
+    import type { ConeLayout, TeamMatchParticipation } from "../../../../graphql/generated/graphql-operations";
+    import { TroisProvider } from "svelte-trois";
+    import Hover from "./Hover.svelte";
 
     export let shown = false;
     export let matchDescription: string;
+    export let teams: TeamMatchParticipation[];
     export let autoLayout: ConeLayout;
     export let allLayout: ConeLayout;
-
-    let autoRotateTimeout: NodeJS.Timeout | null = null;
 
     let cones: "All Cones" | "Auto Cones" = "All Cones";
 
@@ -80,22 +81,26 @@
 
     <div>
         <SC.Canvas antialias background={new THREE.Color("#ffffff")} localClippingEnabled={true}>
-            <Field />
+            <TroisProvider>
+                <Field />
 
-            <Cones {layout} ourColor={"R"} />
-            <Cones {layout} ourColor={"B"} />
-            <Beacons {layout} />
+                <Cones {layout} ourColor={"R"} />
+                <Cones {layout} ourColor={"B"} />
+                <Beacons {layout} />
 
-            <CircuitVis {layout} ourColor={"R"} />
-            <CircuitVis {layout} ourColor={"B"} />
+                <CircuitVis {layout} ourColor={"R"} />
+                <CircuitVis {layout} ourColor={"B"} />
 
-            <!-- Camera -->
-            <SC.PerspectiveCamera position={[-24 * 7, 90, -24]} />
-            <SC.OrbitControls maxPolarAngle={Math.PI * 0.49} enablePan={false} />
+                <Hover {layout} {teams} />
 
-            <!-- Lighting -->
-            <SC.AmbientLight intensity={0.6} />
-            <SC.DirectionalLight intensity={0.64} position={[-24, 24, 24]} />
+                <!-- Camera -->
+                <SC.PerspectiveCamera position={[-24 * 7, 90, -24]} />
+                <SC.OrbitControls maxPolarAngle={Math.PI * 0.49} enablePan={false} />
+
+                <!-- Lighting -->
+                <SC.AmbientLight intensity={0.6} />
+                <SC.DirectionalLight intensity={0.64} position={[-24, 24, 24]} />
+            </TroisProvider>
         </SC.Canvas>
     </div>
 </Modal>
