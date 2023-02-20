@@ -98,7 +98,6 @@ export async function loadAllMatches(season: Season, cycleCount: number = 0) {
             console.log(`Loaded ${i}/${eventCodes.length}`);
         } catch (e) {
             console.log(`Loaded ${i}/${eventCodes.length} !!! ERROR !!!`);
-            console.log(e);
         }
     }
 
