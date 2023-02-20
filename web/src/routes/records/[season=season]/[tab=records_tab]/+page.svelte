@@ -64,11 +64,13 @@
         resetMatch2020SearchParams,
     } from "../../../../lib/components/season-records/MatchSeasonRecords2020.svelte";
     import TeamSeasonRecords2022, {
+        resetTeam2022SearchParams,
         team2022SearchParams,
     } from "../../../../lib/components/season-records/TeamSeasonRecords2022.svelte";
     import type { FullTep2022 } from "../../../../lib/util/stats/2022/StatsTeams2022";
     import MatchSeasonRecords2022, {
         match2022SearchParams,
+        resetMatch2022SearchParams,
     } from "../../../../lib/components/season-records/MatchSeasonRecords2022.svelte";
 
     afterNavigate(({ to }) => {
@@ -210,9 +212,11 @@
     let dateKey = 0;
     function reset() {
         if (browser && $page.routeId == "records/[season=season]/[tab=records_tab]") {
+            resetTeam2022SearchParams();
             resetTeam2021SearchParams();
             resetTeam2020SearchParams();
             resetTeam2019SearchParams();
+            resetMatch2022SearchParams();
             resetMatch2021SearchParams();
             resetMatch2020SearchParams();
             resetMatch2019SearchParams();
