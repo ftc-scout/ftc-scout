@@ -14,6 +14,8 @@
         type TeamMatchParticipation,
     } from "../../../../graphql/generated/graphql-operations";
 
+    let isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
     export let teams: TeamMatchParticipation[];
     export let layout: ConeLayout;
 
@@ -104,13 +106,18 @@
         }[junctionType(x, y)];
         let letter = "ZYXWV"[y];
 
+        let redBeaconText = isSafari ? "❤️" : `<span style="color: transparent; text-shadow: 0 0 0 #F44336;">👑</span>`;
+        let blueBeaconText = isSafari
+            ? "💙"
+            : `<span style="color: transparent; text-shadow: 0 0 0 #1976D2;">👑</span>`;
+
         const CHARS = {
             [ConeType.RedCone]: "🔴",
             [ConeType.BlueCone]: "🔵",
-            [ConeType.RedBeacon_1]: `<span style="color: transparent; text-shadow: 0 0 0 #F44336;">👑</span>`,
-            [ConeType.RedBeacon_2]: `<span style="color: transparent; text-shadow: 0 0 0 #F44336;">👑</span>`,
-            [ConeType.BlueBeacon_1]: `<span style="color: transparent; text-shadow: 0 0 0 #1976D2;">👑</span>`,
-            [ConeType.BlueBeacon_2]: `<span style="color: transparent; text-shadow: 0 0 0 #1976D2;">👑</span>`,
+            [ConeType.RedBeacon_1]: redBeaconText,
+            [ConeType.RedBeacon_2]: redBeaconText,
+            [ConeType.BlueBeacon_1]: blueBeaconText,
+            [ConeType.BlueBeacon_2]: blueBeaconText,
         };
 
         const truncate = (input: string) => (input.length > 20 ? `${input.substring(0, 20)}…` : input);
