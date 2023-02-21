@@ -107,10 +107,10 @@
         const CHARS = {
             [ConeType.RedCone]: "🔴",
             [ConeType.BlueCone]: "🔵",
-            [ConeType.RedBeacon_1]: "❤️",
-            [ConeType.RedBeacon_2]: "❤️",
-            [ConeType.BlueBeacon_1]: "💙",
-            [ConeType.BlueBeacon_2]: "💙",
+            [ConeType.RedBeacon_1]: `<span style="color: transparent; text-shadow: 0 0 0 #F44336;">👑</span>`,
+            [ConeType.RedBeacon_2]: `<span style="color: transparent; text-shadow: 0 0 0 #F44336;">👑</span>`,
+            [ConeType.BlueBeacon_1]: `<span style="color: transparent; text-shadow: 0 0 0 #1976D2;">👑</span>`,
+            [ConeType.BlueBeacon_2]: `<span style="color: transparent; text-shadow: 0 0 0 #1976D2;">👑</span>`,
         };
 
         const truncate = (input: string) => (input.length > 20 ? `${input.substring(0, 20)}…` : input);
