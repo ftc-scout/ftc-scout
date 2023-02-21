@@ -52,7 +52,7 @@
             material={color == "R" ? RED_CONE_MAT : BLUE_CONE_MAT}
             rotation={[-Math.PI / 2, 0, spin]}
             scale={[0.15, 0.15, 0.15]}
-            position={fieldPoint(x, y, junctionHeight(x, y) - 2.5)}
+            position={fieldPoint(x, y, Math.max(junctionHeight(x, y) - 2.5, 0.56))}
         />
     {/each}
 {/if}
