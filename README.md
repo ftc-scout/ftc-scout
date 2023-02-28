@@ -1,6 +1,6 @@
 # About FTCScout
 
-FTCScout is a new website that allows you to view teams, events, matches, and statistics for FTC in the vain of the [The Orange Alliance](https://theorangealliance.org/).
+FTCScout is a new website that allows you to view teams, events, matches, and statistics for FTC in the vein of the [The Orange Alliance](https://theorangealliance.org/).
 
 FTCScout is the passion project of a group of programmers at team [16321 X Drive](ftcscout.org/teams/16321). It was heavily inspired by the amazing websites [The Orange Alliance](https://theorangealliance.org/), [FTCScores](https://ftcscores.com/), [FTC Stats](http://www.ftcstats.org/), and [FTC Events](https://ftc-events.firstinspires.org/).
 

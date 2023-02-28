@@ -13,7 +13,7 @@
 
         <p>
             FTC<i>Scout</i> is a website that allows you to view teams, events, matches, and statistics for FTC in the
-            vain of <a href="https://theorangealliance.org/">The Orange Alliance</a>.
+            vein of <a href="https://theorangealliance.org/">The Orange Alliance</a>.
         </p>
 
         <p>
