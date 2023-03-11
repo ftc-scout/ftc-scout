@@ -573,10 +573,11 @@
     </p>
 
     <p>
-        The question that I was most interested in is what is the longest circuit scored this season. I’ll cut to the
-        chase. It’s <a href="/events/2022/USIAMALT/matches?scores=USIAMALT-23">this match</a> where the blue alliance
-        scored a circuit spanning nine junctions and terminals. Interestingly the red alliance also scored a circuit in
-        this match. A rare double circuit, an event that has only occurred
+        The question that I was most interested in is what is the longest circuit scored this season. The answer is <a
+            href="/events/2022/USIAMALT/matches?scores=USIAMALT-23">this match</a
+        >
+        where the blue alliance scored a circuit spanning nine junctions and terminals. Interestingly the red alliance also
+        scored a circuit in this match. A rare double circuit, an event that has only occurred
         <a
             href={`/records/2022/matches?filter=%7B"all"%3A%5B%7B"lhs"%3A"Circuit+Points"%2C"op"%3A"%3D"%2C"rhs"%3A20%7D%2C%7B"lhs"%3A"Circuit+Points+Opponent"%2C"op"%3A"%3D"%2C"rhs"%3A20%7D%5D%7D`}
             >79 times</a
