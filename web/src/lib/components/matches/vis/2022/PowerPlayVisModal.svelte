@@ -32,18 +32,12 @@
 </script>
 
 <script lang="ts">
+    import PowerPlayVis from "./PowerPlayVis.svelte";
     import * as THREE from "three";
-    import * as SC from "svelte-cubed";
-    import Cones from "./Cones.svelte";
-    import Field from "./Field.svelte";
-    import CircuitVis from "./CircuitVis.svelte";
-    import Beacons from "./Beacons.svelte";
     import Modal from "../../../Modal.svelte";
     import Fa from "svelte-fa";
     import { CLOSE_ICON } from "../../../../icons";
     import type { ConeLayout, TeamMatchParticipation } from "../../../../graphql/generated/graphql-operations";
-    import { TroisProvider } from "svelte-trois";
-    import Hover from "./Hover.svelte";
 
     export let shown = false;
     export let matchDescription: string;
@@ -79,42 +73,10 @@
         </span>
     </form>
 
-    <div>
-        <SC.Canvas antialias background={new THREE.Color("#ffffff")} localClippingEnabled={true}>
-            <TroisProvider>
-                <Field />
-
-                <Cones {layout} ourColor={"R"} />
-                <Cones {layout} ourColor={"B"} />
-                <Beacons {layout} />
-
-                <CircuitVis {layout} ourColor={"R"} />
-                <CircuitVis {layout} ourColor={"B"} />
-
-                <Hover {layout} {teams} />
-
-                <!-- Camera -->
-                <SC.PerspectiveCamera position={[-24 * 7, 90, -24]} />
-                <SC.OrbitControls maxPolarAngle={Math.PI * 0.49} enablePan={false} />
-
-                <!-- Lighting -->
-                <SC.AmbientLight intensity={0.6} />
-                <SC.DirectionalLight intensity={0.64} position={[-24, 24, 24]} />
-            </TroisProvider>
-        </SC.Canvas>
-    </div>
+    <PowerPlayVis {layout} {teams} />
 </Modal>
 
 <style>
-    div {
-        width: 1200px;
-        max-width: 100%;
-        max-height: calc(100vh - var(--large-gap) * 20);
-        aspect-ratio: 16 / 9;
-        margin: auto;
-        position: relative;
-    }
-
     b {
         display: flex;
         align-items: center;

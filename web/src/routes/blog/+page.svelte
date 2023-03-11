@@ -6,6 +6,7 @@
     import Week3 from "./posts/Week3.svelte";
     import Week4 from "./posts/Week4.svelte";
     import Week9 from "./posts/Week9.svelte";
+    import Week10 from "./posts/Week10.svelte";
     import Head from "$lib/components/nav/Head.svelte";
 </script>
 
@@ -15,6 +16,9 @@
 />
 
 <WidthProvider width="1000px">
+    <Card>
+        <Week10 />
+    </Card>
     <Card>
         <Week9 />
     </Card>
