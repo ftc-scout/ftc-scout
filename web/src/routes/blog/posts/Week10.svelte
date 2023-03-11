@@ -592,7 +592,13 @@
         frozen={true}
         selectedTeam={null}
     />
-    <PowerPlayVis layout={MATCH_DATA[0].scores.allCones} teams={MATCH_DATA[0].teams} />
+    <div class="image-wrap">
+        <img
+            src="/img/longest circuit.png"
+            alt="A 3D visualization of the aforementioned match. Blue has a long winding circuit while red has one that crosses the field diagonally."
+        />
+        <em>To see an interactive version of this visualization click the match score above.</em>
+    </div>
 
     <p>Let’s also do some more interesting circuit facts.</p>
 
@@ -619,7 +625,13 @@
         frozen={true}
         selectedTeam={null}
     />
-    <PowerPlayVis layout={MATCH_DATA2[0].scores.allCones} teams={MATCH_DATA2[0].teams} />
+    <div class="image-wrap">
+        <img
+            src="/img/outscored circuit.png"
+            alt="A 3D visualization of the aforementioned match. Blue has scored a circuit with only six cones while red has scored 20 with 9 on the closest high junction."
+        />
+        <em>To see an interactive version of this visualization click the match score above.</em>
+    </div>
 
     <p>That’s all for now. Thanks for reading!</p>
 
