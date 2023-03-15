@@ -14,6 +14,7 @@
     } from "$lib/icons";
     import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
     import { faGithub } from "@fortawesome/free-brands-svg-icons";
+    import { faDiscord } from "@fortawesome/free-brands-svg-icons";
     import Fa from "svelte-fa";
     import { sidebarOpen } from "./sidebar";
     import SidebarItem from "./SidebarItem.svelte";
@@ -42,7 +43,8 @@
 
 <hr />
 
-<SidebarItem icon={faGithub} href="https://github.com/16321-X-Drive/ftc-scout">Github</SidebarItem>
+<SidebarItem icon={faDiscord} href="https://github.com/16321-X-Drive/ftc-scout">Github</SidebarItem>
+<SidebarItem icon={faGithub} href="https://discord.gg/XTZhD9RnKa">Discord</SidebarItem>
 <SidebarItem icon={faEnvelope} href="mailto:{EMAIL}">Email</SidebarItem>
 
 <style>
