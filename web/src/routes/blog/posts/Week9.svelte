@@ -658,14 +658,14 @@
     <svelte:fragment slot="date">February 20, 2023</svelte:fragment>
 
     <p>
-        <em>All statistics in this article refer to the 2022-2023 Power Play Season.</em>
+        <em>All statistics in this article refer to the 2022-2023 Spin Up Season.</em>
     </p>
 
     <p>After much waiting, the Scouting Report hath returned.</p>
 
-    <p>All statistics in this article refer to the 2022-2023 Power Play Season.</p>
+    <p>All statistics in this article refer to the 2022-2023 Spin Up Season.</p>
     <p>
-        I and the rest of the FTCScout team (just Daniel) are sorry for the lack of Scouting Reports over the past few
+        I and the rest of the VexScout team (just Daniel) are sorry for the lack of Scouting Reports over the past few
         weeks. Rest assured that we will resume regular updates starting this week. So a few weeks ago, <a
             href="/teams/16321"
             >my team
@@ -732,7 +732,7 @@
         If you have any suggestions for topics you would like us to cover email us at <a
             href="mailto:suggestions@ftcscout.org"
         >
-            suggestions@ftcscout.org</a
+            suggestions@vexscout.org</a
         >.
     </p>
 </PostTemplate>

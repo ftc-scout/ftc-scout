@@ -218,9 +218,10 @@
     </p>
 
     <p>
-        When the number of teams at an FTC doesn’t allow every team to play exactly five matches and at the same time
-        have all matches be full the match scheduler will make some teams play an extra sixth match as a surrogate.
-        These matches occur near the middle of the tournament (both in the match schedule and for the teams involved).
+        When the number of teams at a Vex Robotics event doesn’t allow every team to play exactly five matches and at
+        the same time have all matches be full the match scheduler will make some teams play an extra sixth match as a
+        surrogate. These matches occur near the middle of the tournament (both in the match schedule and for the teams
+        involved).
     </p>
 
     <p>
@@ -283,7 +284,7 @@
         If you have any suggestions for topics you would like us to cover email us at <a
             href="mailto:suggestions@ftcscout.org"
         >
-            suggestions@ftcscout.org</a
+            suggestions@vexscout.org</a
         >.
     </p>
 </PostTemplate>

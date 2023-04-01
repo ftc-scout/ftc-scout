@@ -59,13 +59,13 @@
     </p>
     <p>
         We apologize for the delayed report this week, college applications exist and we appreciate your patience. I
-        look forward to seeing you all next week with our first <em>Power Play</em> Scouting report.
+        look forward to seeing you all next week with our first <em>Spin Up</em> Scouting report.
     </p>
     <p class="suggestions">
         If you have any suggestions for topics you would like us to cover email us at <a
             href="mailto:suggestions@ftcscout.org"
         >
-            suggestions@ftcscout.org</a
+            suggestions@vexscout.org</a
         >.
     </p>
 </PostTemplate>

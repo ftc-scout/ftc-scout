@@ -241,14 +241,14 @@
 </script>
 
 <PostTemplate>
-    <svelte:fragment slot="title">What’s Up With Power Play?</svelte:fragment>
+    <svelte:fragment slot="title">What’s Up With Spin Up?</svelte:fragment>
     <svelte:fragment slot="author">Daniel James</svelte:fragment>
     <svelte:fragment slot="date">November 4, 2022</svelte:fragment>
 
     <p>
-        We are now 8 weeks into the Power Play season and are starting to get a good number of events, so we thought
-        this would be a good time to take a look at some Power Play stats. So far 45 events have published their
-        results, 694 matches have been played, and 1893 teams have signed up for or already participated in events.
+        We are now 8 weeks into the Spin Up season and are starting to get a good number of events, so we thought this
+        would be a good time to take a look at some Spin Up stats. So far 45 events have published their results, 694
+        matches have been played, and 1893 teams have signed up for or already participated in events.
     </p>
 
     <p>
@@ -292,12 +292,12 @@
         causation but these are very interesting statistics.
     </p>
 
-    <p>That’s all for now. We will keep you updated with more stats throughout the Power Play season.</p>
+    <p>That’s all for now. We will keep you updated with more stats throughout the Spin Up season.</p>
     <p class="suggestions">
         If you have any suggestions for topics you would like us to cover email us at <a
             href="mailto:suggestions@ftcscout.org"
         >
-            suggestions@ftcscout.org</a
+            suggestions@vexscout.org</a
         >.
     </p>
 </PostTemplate>

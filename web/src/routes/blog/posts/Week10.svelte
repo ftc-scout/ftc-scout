@@ -568,8 +568,8 @@
     <svelte:fragment slot="date">March 10, 2023</svelte:fragment>
 
     <p>
-        FTCScout recently started tracking the exact positions of all cones scored in every Power Play match which means
-        I now have extra data to analyze for Scouting Reports!
+        VexScout recently started tracking the exact positions of all cones scored in every Spin Up match which means I
+        now have extra data to analyze for Scouting Reports!
     </p>
 
     <p>
@@ -639,7 +639,7 @@
         If you have any suggestions for topics you would like us to cover email us at <a
             href="mailto:suggestions@ftcscout.org"
         >
-            suggestions@ftcscout.org</a
+            suggestions@vexscout.org</a
         >.
     </p>
 </PostTemplate>

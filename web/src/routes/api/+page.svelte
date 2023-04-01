@@ -5,27 +5,27 @@
 </script>
 
 <Head
-    title="Api | FTCScout"
-    description="The developer api for FTCScout providing access to all our statistics and data."
+    title="Api | VexScout"
+    description="The developer api for VexScout providing access to all our statistics and data."
 />
 
 <WidthProvider width="1600px">
     <Card>
-        <h1>FTC<em>Scout</em> Api</h1>
+        <h1>Vex<em>Scout</em> Api</h1>
 
-        <p>The FTC<em>Scout</em> Api provides access to all of the FTC<em>Scout</em>'s data and statistics.</p>
+        <p>The Vex<em>Scout</em> Api provides access to all of the Vex<em>Scout</em>'s data and statistics.</p>
         <p>
-            The FTC<em>Scout</em> Api uses <a href="https://graphql.org/">GraphQL</a> allowing you to access as much or as
+            The Vex<em>Scout</em> Api uses <a href="https://graphql.org/">GraphQL</a> allowing you to access as much or as
             little data as you need in the shape that is most convenient to you.
         </p>
         <p>
-            The FTC<em>Scout</em> Api can be queried at
-            <a href="https://api.ftcscout.org/graphql">api.ftcscout.org/graphql</a>
+            The Vex<em>Scout</em> Api can be queried at
+            <a href="https://api.ftcscout.org/graphql">api.Vexscout.org/graphql</a>
             or you can try the playground at the same address
-            <span class="maybe-hide"> or right here on FTC<em>Scout</em></span>.
+            <span class="maybe-hide"> or right here on Vex<em>Scout</em></span>.
         </p>
 
-        <iframe class="maybe-hide" src="https://api.ftcscout.org/graphql" title="FTCScout Api Playground" />
+        <iframe class="maybe-hide" src="https://api.ftcscout.org/graphql" title="VexScout Api Playground" />
     </Card>
 </WidthProvider>
 

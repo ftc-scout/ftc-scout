@@ -3,12 +3,12 @@ import type { Season } from "../../constants";
 export function prettyPrintSeason(season: Season): string {
     switch (season) {
         case 2022:
-            return "Power Play";
+            return "Spin Up";
         case 2021:
-            return "Freight Frenzy";
+            return "Tipping Point";
         case 2020:
-            return "Ultimate Goal";
+            return "Change-Up";
         case 2019:
-            return "Skystone";
+            return "Tower Takeover";
     }
 }

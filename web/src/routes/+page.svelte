@@ -22,15 +22,15 @@
 </script>
 
 <Head
-    title="FTCScout"
-    description="FTCScout is a new way to track and scout FIRST Tech Challenge providing advanced statistics and data on all aspects of FTC."
+    title="VexScout"
+    description="VexScout is a new way to track and scout Vex Robotics Challenge providing advanced statistics and data on all aspects of Vex."
 />
 
 <WidthProvider width="1000px">
     <Card border={false}>
         <div class="title">
-            <h1>FTC<em>Scout</em></h1>
-            <p>A new way to track and scout <em>FIRST</em> Tech Challenge</p>
+            <h1>Vex<em>Scout</em></h1>
+            <p>A new way to track and scout Vex Robotics Challenge</p>
         </div>
     </Card>
 

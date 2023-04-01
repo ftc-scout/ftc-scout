@@ -1,4 +1,4 @@
-<a href="/">FTC<em>Scout</em></a>
+<a href="/">Vex<em>Scout</em></a>
 
 <style>
     a {

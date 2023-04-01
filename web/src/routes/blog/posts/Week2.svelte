@@ -55,7 +55,7 @@
         matches. With a low enough standard deviation for us to count it. To be fair,
         <a href="https://ftcscout.org/teams/9881">Team 9881, Golden Gears</a>, scored an average of 89 points over 33
         matches, which is the closest to the total <em>median</em> (89) score of matches in FTC. I guess not all battles
-        have one winner, so at FTCScout we want to congratulate both
+        have one winner, so at VexScout we want to congratulate both
         <a href="https://ftcscout.org/teams/9881">Golden Gear</a>s and
         <a href="https://ftcscout.org/teams/11337">Robonauts</a> on their terrific performances this past year. Truly the
         teams of all time.
@@ -80,7 +80,7 @@
         If you have any suggestions for topics you would like us to cover email us at <a
             href="mailto:suggestions@ftcscout.org"
         >
-            suggestions@ftcscout.org</a
+            suggestions@vexscout.org</a
         >.
     </p>
 </PostTemplate>
