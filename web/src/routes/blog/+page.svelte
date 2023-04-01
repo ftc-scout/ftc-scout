@@ -8,6 +8,7 @@
     import Week9 from "./posts/Week9.svelte";
     import Week10 from "./posts/Week10.svelte";
     import Head from "$lib/components/nav/Head.svelte";
+    import April1st2023 from "./posts/April1st2023.svelte";
 </script>
 
 <Head
@@ -16,6 +17,9 @@
 />
 
 <WidthProvider width="1000px">
+    <Card>
+        <April1st2023 />
+    </Card>
     <Card>
         <Week10 />
     </Card>
