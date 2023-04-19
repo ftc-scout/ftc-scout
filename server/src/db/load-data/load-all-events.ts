@@ -8,7 +8,10 @@ import { DeepPartial } from "typeorm";
 const EVENT_RENAMING: Record<string, string> = {
     FTCCMP1: "FIRST World Championship - Finals Division",
     FTCCMP1FRNK: "FIRST World Championship - Franklin Division",
+    FTCCMP1FRAN: "FIRST World Championship - Franklin Division",
     FTCCMP1JEMI: "FIRST World Championship - Jemison Division",
+    FTCCMP1EDIS: "FIRST World Championship - Edison Division",
+    FTCCMP1OCHO: "FIRST World Championship - Ochoa Division",
 };
 
 function getEventName(name: string, code: string): string {
