@@ -42,16 +42,21 @@ export class Award extends BaseEntity {
             return null;
         }
 
-        let awardCode = awardCode2021FromFtcApi(api);
-        if (awardCode) {
-            return Award.create({
-                season,
-                eventCode: api.eventCode,
-                awardCode,
-                teamNumber: api.teamNumber,
-                personName: api.person?.trim(),
-            } as DeepPartial<Award>);
-        } else {
+        try {
+            let awardCode = awardCode2021FromFtcApi(api);
+            if (awardCode) {
+                return Award.create({
+                    season,
+                    eventCode: api.eventCode,
+                    awardCode,
+                    teamNumber: api.teamNumber,
+                    personName: api.person?.trim(),
+                } as DeepPartial<Award>);
+            } else {
+                return null;
+            }
+        } catch (e) {
+            // TODO. Fix divisional awards
             return null;
         }
     }
