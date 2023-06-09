@@ -1,0 +1,11 @@
+{
+    "name": "@ftc-scout/common",
+    "version": "0.0.1",
+    "private": true,
+    "main": "dist/index.js",
+    "scripts": {
+        "watch": "tsc -w",
+        "build": "tsc",
+        "check": "tsc --noEmit"
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "extends": "./.svelte-kit/tsconfig.json",
+    "compilerOptions": {
+        /* Modules */
+        "resolveJsonModule": true,
+        "moduleResolution": "node",
+
+        /* Compilation */
+        "incremental": true,
+        "composite": true,
+
+        /* JavaScript Support */
+        "allowJs": false,
+
+        /* Type Checking */
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "useUnknownInCatchVariables": true,
+        "alwaysStrict": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "exactOptionalPropertyTypes": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+
+        /* Completeness */
+        "skipLibCheck": true
+    },
+    "references": [{ "path": "../common" }]
+    // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
+    //
+    // If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
+    // from the referenced tsconfig.json - TypeScript does not merge them in
+}

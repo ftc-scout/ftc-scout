@@ -1,0 +1,19 @@
+{
+    "name": "@ftc-scout/server",
+    "version": "0.0.1",
+    "private": true,
+    "main": "dist/index.js",
+    "scripts": {
+        "watch": "tsc -w",
+        "build": "tsc",
+        "start": "node dist/index.js",
+        "dev": "nodemon dist/index.js -w dist -w ../common/dist",
+        "check": "tsc --noEmit"
+    },
+    "dependencies": {
+        "@ftc-scout/common": "^0.0.1"
+    },
+    "devDependencies": {
+        "nodemon": "^2.0.22"
+    }
+}

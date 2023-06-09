@@ -1,0 +1,35 @@
+{
+    "scripts": {
+        "prepare": "husky install",
+        "pretty": "prettier --write .",
+        "common:watch": "npm run watch -w packages/common",
+        "common:build": "npm run build -w packages/common",
+        "common:check": "npm run check -w packages/common",
+        "server:watch": "npm run watch -w packages/server",
+        "server:build": "npm run build -w packages/server",
+        "server:dev": "npm run dev -w packages/server",
+        "server:start": "npm run start -w packages/server",
+        "server:check": "npm run check -w packages/server",
+        "web:dev": "npm run dev -w packages/web",
+        "web:build": "npm run build -w packages/web",
+        "web:preview": "npm run preview -w packages/web",
+        "web:check": "npm run check -w packages/web",
+        "web:check:watch": "npm run check:watch -w packages/web",
+        "check": "npm run common:check && npm run server:check && npm run web:check"
+    },
+    "lint-staged": {
+        "*.{ts,js,css,md,json,svelte,graphql}": "prettier --write"
+    },
+    "devDependencies": {
+        "husky": "^8.0.0",
+        "lint-staged": "^13.2.2",
+        "prettier": "^2.8.8",
+        "prettier-plugin-svelte": "^2.10.1",
+        "typescript": "^5.1.3"
+    },
+    "workspaces": [
+        "packages/common",
+        "packages/web",
+        "packages/server"
+    ]
+}

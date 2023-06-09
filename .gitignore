@@ -1,0 +1,10 @@
+/node_modules/
+packages/*/dist/
+**/tsconfig.tsbuildinfo
+
+/.idea/
+.DS_Store
+
+.env
+.env.*
+!.env.example
