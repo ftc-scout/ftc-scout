@@ -1,4 +1,13 @@
-import { add } from "@ftc-scout/common";
+import "dotenv/config";
 
-console.log("Hello from server!");
-console.log(`1 + 2 = ${add(1, 2)}`);
+import { DATA_SOURCE } from "./db/data-source";
+import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
+
+async function main() {
+    await DATA_SOURCE.initialize();
+
+    await fetchPriorSeasons();
+    await watchApi();
+}
+
+main();

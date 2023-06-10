@@ -11,9 +11,13 @@
         "check": "tsc --noEmit"
     },
     "dependencies": {
-        "@ftc-scout/common": "^0.0.1"
+        "@ftc-scout/common": "^0.0.1",
+        "dotenv": "^16.1.4",
+        "pg": "^8.11.0",
+        "typeorm": "^0.3.16"
     },
     "devDependencies": {
+        "@types/node": "^20.2.5",
         "nodemon": "^2.0.22"
     }
 }
