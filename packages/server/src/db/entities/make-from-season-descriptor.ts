@@ -2,8 +2,8 @@ import { ColumnNames, ColumnTypeStr, Columns, SeasonDescriptor } from "@ftc-scou
 import { BaseEntity, ColumnType, EntitySchema } from "typeorm";
 
 type InstanceTypeable = abstract new (...args: any) => any;
-export type SubtypeClass<Sup1 extends InstanceTypeable, Props> = Sup1 &
-    (new () => InstanceType<Sup1> & Props);
+export type SubtypeClass<Super extends InstanceTypeable, Props> = Super &
+    (new () => InstanceType<Super> & Props);
 
 type StrToColumnType<T extends ColumnTypeStr> = T extends "int"
     ? number
