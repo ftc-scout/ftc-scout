@@ -1,3 +1,5 @@
+// HELP: Season Specific
+
 export const Season = {
     Skystone: 2019,
     UltimateGoal: 2020,
@@ -7,6 +9,6 @@ export const Season = {
 
 export type Season = (typeof Season)[keyof typeof Season];
 
-export const PAST_SEASONS = [Season.Skystone, Season.UltimateGoal, Season.FreightFrenzy];
 export const CURRENT_SEASON = Season.PowerPlay;
-export const ALL_SEASONS = [...PAST_SEASONS, CURRENT_SEASON];
+export const PAST_SEASONS = [Season.Skystone, Season.UltimateGoal, Season.FreightFrenzy] as const;
+export const ALL_SEASONS = [...PAST_SEASONS, CURRENT_SEASON] as const;
