@@ -14,7 +14,8 @@
         "@ftc-scout/common": "^0.0.1",
         "dotenv": "^16.1.4",
         "pg": "^8.11.0",
-        "typeorm": "^0.3.16"
+        "typeorm": "^0.3.16",
+        "typeorm-naming-strategies": "^4.1.0"
     },
     "devDependencies": {
         "@types/node": "^20.2.5",
