@@ -1,3 +1,14 @@
 {
-    "words": ["edis", "frnk", "ftccmp", "jemi", "jemison", "ocho", "stateprov", "typeorm"]
+    "words": [
+        "edis",
+        "frnk",
+        "ftccmp",
+        "jemi",
+        "jemison",
+        "ocho",
+        "quals",
+        "stateprov",
+        "timestamptz",
+        "typeorm"
+    ]
 }

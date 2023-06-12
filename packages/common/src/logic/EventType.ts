@@ -16,7 +16,7 @@ export const EventType = {
     PracticeDay: "PracticeDay",
 } as const;
 
-export function eventTypeFromStr(str: string): EventType | null {
+export function eventTypeFromFtcApi(str: string): EventType | null {
     let trimmed = str.replace(/[\s\-/]/g, "");
     return Object.keys(EventType).indexOf(trimmed) != -1 ? (trimmed as EventType) : null;
 }

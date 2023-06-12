@@ -4,11 +4,13 @@ import {
     CreateDateColumn,
     DeepPartial,
     Entity,
+    OneToMany,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { EventType, Season, eventTypeFromStr } from "@ftc-scout/common";
+import { EventType, Season, eventTypeFromFtcApi } from "@ftc-scout/common";
 import { EventFtcApi } from "../../ftc-api/types/Event";
+import { Match } from "./Match";
 
 @Entity()
 export class Event extends BaseEntity {
@@ -17,6 +19,9 @@ export class Event extends BaseEntity {
 
     @PrimaryColumn()
     code!: string;
+
+    @OneToMany(() => Match, (match) => match.event)
+    matches!: Match[];
 
     @Column({ type: "varchar", nullable: true })
     divisionCode!: string | null;
@@ -88,7 +93,7 @@ export class Event extends BaseEntity {
     updatedAt!: Date;
 
     static fromApi(api: EventFtcApi, season: Season): Event {
-        let type = eventTypeFromStr(api.typeName ?? "");
+        let type = eventTypeFromFtcApi(api.typeName ?? "");
         if (
             api.code == null ||
             type == null ||

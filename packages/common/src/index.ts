@@ -2,6 +2,7 @@ export * from "./utils/throttle";
 export * from "./utils/filter";
 export * from "./logic/Season";
 export * from "./logic/EventType";
+export * from "./logic/TournamentLevel";
 export * from "./logic/seasons/SeasonDescriptor";
 // HELP: Season Specific
 export * from "./logic/seasons/descriptors/SkystoneDescriptor";
