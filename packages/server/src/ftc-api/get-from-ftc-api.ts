@@ -27,7 +27,7 @@ export async function getFromFtcApi(path: string, params: Record<string, any> = 
     let paramsString = Object.entries(params)
         .map((x) => `${x[0]}=${x[1]}`)
         .join("&");
-    let url = `http://ftc-api.firstinspires.org/v2.0/${path}?${paramsString}`;
+    let url = `https://ftc-api.firstinspires.org/v2.0/${path}?${paramsString}`;
 
     if (CACHE_REQ) {
         let req = await FtcApiReq.findOneBy({ url });
