@@ -13,16 +13,34 @@ export const SEASON_DESCRIPTORS = {
     [Season.PowerPlay]: PowerPlayDescriptor,
 } as const;
 
-export interface SeasonDescriptor {
+export interface SpecificSeasonDescriptor<TradAllianceScore, RemoteScore> {
     season: Season;
-    columns: Column[];
+    hasRemote: boolean;
+    columns: Column<TradAllianceScore, RemoteScore>[];
 }
+export type SeasonDescriptor = SpecificSeasonDescriptor<any, any>;
 
-export interface Column {
-    name: string;
-    type: ColumnTypeStr;
-}
+type DistributeColumn<TradAllianceScore, RemoteScore, U extends ColumnTypeStr> = U extends any
+    ? {
+          name: string;
+          type: U;
+          fromTradApi: (api: TradAllianceScore) => StrToColumnType<U>;
+          fromRemoteApi?: (api: RemoteScore) => StrToColumnType<U>;
+      }
+    : never;
+export type Column<TradAllianceScore, RemoteScore> = DistributeColumn<
+    TradAllianceScore,
+    RemoteScore,
+    ColumnTypeStr
+>;
 
-export type ColumnTypeStr = "string" | "int" | "bool";
+export type ColumnTypeStr = "string" | "int8" | "int16" | "bool";
 export type Columns<T extends SeasonDescriptor> = T["columns"][number];
 export type ColumnNames<T extends SeasonDescriptor> = Columns<T>["name"];
+export type StrToColumnType<T extends ColumnTypeStr> = T extends "int8" | "int16"
+    ? number
+    : T extends "string"
+    ? string
+    : T extends "bool"
+    ? boolean
+    : never;

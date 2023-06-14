@@ -8,8 +8,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { EventType, Season, eventTypeFromFtcApi } from "@ftc-scout/common";
-import { EventFtcApi } from "../../ftc-api/types/Event";
+import { EventFtcApi, EventType, Season, eventTypeFromFtcApi } from "@ftc-scout/common";
 import { Match } from "./Match";
 
 @Entity()

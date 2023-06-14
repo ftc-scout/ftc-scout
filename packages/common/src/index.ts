@@ -9,3 +9,13 @@ export * from "./logic/seasons/descriptors/SkystoneDescriptor";
 export * from "./logic/seasons/descriptors/UltimateGoalDescriptor";
 export * from "./logic/seasons/descriptors/FreightFrenzyDescriptor";
 export * from "./logic/seasons/descriptors/PowerPlayDescriptor";
+export * from "./ftc-api-types/Event";
+export * from "./ftc-api-types/Match";
+export * from "./ftc-api-types/Team";
+// HELP: Season Specific
+export * from "./ftc-api-types/match-scores/MatchScores2019Trad";
+export * from "./ftc-api-types/match-scores/MatchScores2020Trad";
+export * from "./ftc-api-types/match-scores/MatchScores2020Remote";
+export * from "./ftc-api-types/match-scores/MatchScores2021Trad";
+export * from "./ftc-api-types/match-scores/MatchScores2021Remote";
+export * from "./ftc-api-types/match-scores/MatchScores2022Trad";

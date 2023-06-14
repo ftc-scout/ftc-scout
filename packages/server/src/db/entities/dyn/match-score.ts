@@ -1,6 +1,6 @@
-import { ColumnNames, Columns, Season, SeasonDescriptor } from "@ftc-scout/common";
+import { ColumnNames, Columns, Season, SeasonDescriptor, StrToColumnType } from "@ftc-scout/common";
 import { BaseEntity, EntitySchema } from "typeorm";
-import { StrToColumnType, SubtypeClass, getTypeormType } from "./types";
+import { SubtypeClass, getTypeormType } from "./types";
 
 export type TypeormRecord<T extends SeasonDescriptor> = {
     [K in ColumnNames<T>]: StrToColumnType<Extract<Columns<T>, { name: K }>["type"]>;
@@ -59,7 +59,8 @@ function getMatchScoreColumns<T extends SeasonDescriptor>(
     descriptor.columns.forEach((c) => {
         let name: ColumnNames = c.name;
         let type = getTypeormType(c.type);
-        typeormColumns[name] = { type };
+        let nullable = descriptor.hasRemote && c.fromRemoteApi == undefined;
+        typeormColumns[name] = { type, nullable };
     });
 
     return typeormColumns;

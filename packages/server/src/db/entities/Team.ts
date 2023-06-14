@@ -1,3 +1,4 @@
+import { TeamFtcApi } from "@ftc-scout/common";
 import {
     BaseEntity,
     Column,
@@ -7,7 +8,6 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { TeamFtcApi } from "../../ftc-api/types/Team";
 
 @Entity()
 export class Team extends BaseEntity {
