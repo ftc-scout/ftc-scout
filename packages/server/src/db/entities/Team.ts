@@ -5,14 +5,19 @@ import {
     CreateDateColumn,
     DeepPartial,
     Entity,
+    OneToMany,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
+import { TeamMatchParticipation } from "./TeamMatchParticipation";
 
 @Entity()
 export class Team extends BaseEntity {
     @PrimaryColumn("int")
     number!: number;
+
+    @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.team)
+    matches!: TeamMatchParticipation[];
 
     @Column()
     name!: string;
@@ -20,7 +25,7 @@ export class Team extends BaseEntity {
     @Column()
     schoolName!: string;
 
-    @Column("varchar", { array: true })
+    @Column("json")
     sponsors!: string[];
 
     @Column()

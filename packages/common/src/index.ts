@@ -3,8 +3,10 @@ export * from "./utils/filter";
 export * from "./logic/Season";
 export * from "./logic/EventType";
 export * from "./logic/TournamentLevel";
-export * from "./logic/seasons/SeasonDescriptor";
+export * from "./logic/Alliance";
+export * from "./logic/Station";
 // HELP: Season Specific
+export * from "./logic/seasons/SeasonDescriptor";
 export * from "./logic/seasons/descriptors/SkystoneDescriptor";
 export * from "./logic/seasons/descriptors/UltimateGoalDescriptor";
 export * from "./logic/seasons/descriptors/FreightFrenzyDescriptor";
@@ -13,6 +15,7 @@ export * from "./ftc-api-types/Event";
 export * from "./ftc-api-types/Match";
 export * from "./ftc-api-types/Team";
 // HELP: Season Specific
+export * from "./ftc-api-types/match-scores/MatchScores";
 export * from "./ftc-api-types/match-scores/MatchScores2019Trad";
 export * from "./ftc-api-types/match-scores/MatchScores2020Trad";
 export * from "./ftc-api-types/match-scores/MatchScores2020Remote";

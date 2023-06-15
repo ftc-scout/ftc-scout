@@ -17,3 +17,14 @@ export function tournamentLevelFromFtcApi(
         PLAYOFF: TournamentLevel.Finals,
     }[str];
 }
+
+export function tournamentLevelValue(level: TournamentLevel): number {
+    switch (level) {
+        case TournamentLevel.Quals:
+            return 0;
+        case TournamentLevel.Semis:
+            return 1;
+        default:
+            return 2;
+    }
+}

@@ -13,11 +13,13 @@
     "dependencies": {
         "@ftc-scout/common": "^0.0.1",
         "dotenv": "^16.1.4",
+        "luxon": "^3.3.0",
         "pg": "^8.11.0",
         "typeorm": "^0.3.16",
         "typeorm-naming-strategies": "^4.1.0"
     },
     "devDependencies": {
+        "@types/luxon": "^3.3.0",
         "@types/node": "^20.2.5",
         "nodemon": "^2.0.22"
     }

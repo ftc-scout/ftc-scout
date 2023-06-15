@@ -1,4 +1,14 @@
-import { ColumnNames, Columns, Season, SeasonDescriptor, StrToColumnType } from "@ftc-scout/common";
+import {
+    ColumnNames,
+    Columns,
+    FreightFrenzyDescriptor,
+    PowerPlayDescriptor,
+    Season,
+    SeasonDescriptor,
+    SkystoneDescriptor,
+    StrToColumnType,
+    UltimateGoalDescriptor,
+} from "@ftc-scout/common";
 import { BaseEntity, EntitySchema } from "typeorm";
 import { SubtypeClass, getTypeormType } from "./types";
 
@@ -12,7 +22,7 @@ export type TypeormRecord<T extends SeasonDescriptor> = {
     updatedAt: Date;
 };
 
-export function makeTep<T extends SeasonDescriptor>(
+function makeTep<T extends SeasonDescriptor>(
     descriptor: T
 ): [EntitySchema<TypeormRecord<T>>, SubtypeClass<typeof BaseEntity, TypeormRecord<T>>] {
     class Entity extends BaseEntity {}
@@ -65,3 +75,19 @@ function getTepColumns<T extends SeasonDescriptor>(
 
     return typeormColumns;
 }
+
+// HELP: Season Specific
+
+let [tepSchema2019, tepClass2019] = makeTep(SkystoneDescriptor);
+let [tepSchema2020, tepClass2020] = makeTep(UltimateGoalDescriptor);
+let [tepSchema2021, tepClass2021] = makeTep(FreightFrenzyDescriptor);
+let [tepSchema2022, tepClass2022] = makeTep(PowerPlayDescriptor);
+
+export let tepSchemas = [tepSchema2019, tepSchema2020, tepSchema2021, tepSchema2022];
+
+export let TeamEventParticipation = {
+    [2019]: tepClass2019,
+    [2020]: tepClass2020,
+    [2021]: tepClass2021,
+    [2022]: tepClass2022,
+} as const;

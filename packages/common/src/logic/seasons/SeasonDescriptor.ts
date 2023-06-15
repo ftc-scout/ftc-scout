@@ -6,12 +6,12 @@ import { UltimateGoalDescriptor } from "./descriptors/UltimateGoalDescriptor";
 
 // HELP: Season Specific
 
-export const SEASON_DESCRIPTORS = {
+export const SEASON_DESCRIPTORS: Record<Season, SeasonDescriptor> = {
     [Season.Skystone]: SkystoneDescriptor,
     [Season.UltimateGoal]: UltimateGoalDescriptor,
     [Season.FreightFrenzy]: FreightFrenzyDescriptor,
     [Season.PowerPlay]: PowerPlayDescriptor,
-} as const;
+};
 
 export interface SpecificSeasonDescriptor<TradAllianceScore, RemoteScore> {
     season: Season;

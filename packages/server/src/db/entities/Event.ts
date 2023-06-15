@@ -73,7 +73,7 @@ export class Event extends BaseEntity {
     @Column({ type: "varchar", nullable: true })
     liveStreamURL!: string | null;
 
-    @Column({ type: "varchar", array: true })
+    @Column("json")
     webcasts!: string[];
 
     @Column({ type: "varchar", nullable: true })

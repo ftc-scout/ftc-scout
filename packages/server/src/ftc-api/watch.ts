@@ -2,6 +2,7 @@ import { CURRENT_SEASON, PAST_SEASONS } from "@ftc-scout/common";
 import { DataHasBeenLoaded } from "../db/entities/DataHasBeenLoaded";
 import { loadAllTeams } from "../db/loaders/load-all-teams";
 import { loadAllEvents } from "../db/loaders/load-all-events";
+import { loadAllMatches } from "../db/loaders/load-all-matches";
 
 export async function fetchPriorSeasons() {
     for (let season of PAST_SEASONS) {
@@ -15,6 +16,11 @@ export async function fetchPriorSeasons() {
             await loadAllEvents(season);
         } else {
             console.info(`Events already loaded.`);
+        }
+        if (!(await DataHasBeenLoaded.matchesHaveBeenLoaded(season))) {
+            await loadAllMatches(season);
+        } else {
+            console.info(`Matches already loaded.`);
         }
     }
 }
@@ -41,6 +47,7 @@ export async function watchApi() {
         console.info(`Syncing. (Cycle ${cycleCount})`);
         await runJob(async () => await loadAllTeams(CURRENT_SEASON), MINS_PER_DAY);
         await runJob(async () => await loadAllEvents(CURRENT_SEASON), MINS_PER_HOUR);
+        await runJob(async () => await loadAllMatches(CURRENT_SEASON), 1);
 
         cycleCount += 1;
         setTimeout(run, MS_PER_MIN);
