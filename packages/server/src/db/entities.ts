@@ -8,6 +8,7 @@ import { matchScoreSchemas } from "./entities/dyn/match-score";
 import { Match } from "./entities/Match";
 import { tepSchemas } from "./entities/dyn/team-event-participation";
 import { TeamMatchParticipation } from "./entities/TeamMatchParticipation";
+import { Award } from "./entities/Award";
 
 export const DEV_ENTITIES: MixedList<string | Function | EntitySchema<any>> = [FtcApiReq];
 
@@ -15,6 +16,7 @@ export const ENTITIES: MixedList<string | Function | EntitySchema<any>> = [
     DataHasBeenLoaded,
     Team,
     Event,
+    Award,
     Match,
     TeamMatchParticipation,
     ...matchScoreSchemas,

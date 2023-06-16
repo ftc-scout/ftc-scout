@@ -14,6 +14,7 @@ export * from "./logic/seasons/descriptors/PowerPlayDescriptor";
 export * from "./ftc-api-types/Event";
 export * from "./ftc-api-types/Match";
 export * from "./ftc-api-types/Team";
+export * from "./ftc-api-types/Award";
 // HELP: Season Specific
 export * from "./ftc-api-types/match-scores/MatchScores";
 export * from "./ftc-api-types/match-scores/MatchScores2019Trad";

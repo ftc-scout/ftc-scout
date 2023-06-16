@@ -3,6 +3,7 @@ import { DataHasBeenLoaded } from "../db/entities/DataHasBeenLoaded";
 import { loadAllTeams } from "../db/loaders/load-all-teams";
 import { loadAllEvents } from "../db/loaders/load-all-events";
 import { loadAllMatches } from "../db/loaders/load-all-matches";
+import { loadAllAwards } from "../db/loaders/load-all-awards";
 
 export async function fetchPriorSeasons() {
     for (let season of PAST_SEASONS) {
@@ -21,6 +22,11 @@ export async function fetchPriorSeasons() {
             await loadAllMatches(season);
         } else {
             console.info(`Matches already loaded.`);
+        }
+        if (!(await DataHasBeenLoaded.awardsHaveBeenLoaded(season))) {
+            await loadAllAwards(season);
+        } else {
+            console.info(`Awards already loaded.`);
         }
     }
 }
@@ -48,6 +54,7 @@ export async function watchApi() {
         await runJob(async () => await loadAllTeams(CURRENT_SEASON), MINS_PER_DAY);
         await runJob(async () => await loadAllEvents(CURRENT_SEASON), MINS_PER_HOUR);
         await runJob(async () => await loadAllMatches(CURRENT_SEASON), 1);
+        await runJob(async () => await loadAllAwards(CURRENT_SEASON), 5);
 
         cycleCount += 1;
         setTimeout(run, MS_PER_MIN);
