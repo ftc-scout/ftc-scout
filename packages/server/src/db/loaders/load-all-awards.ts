@@ -4,11 +4,12 @@ import { Event } from "../entities/Event";
 import { DATA_SOURCE } from "../data-source";
 import { getEventAwards } from "../../ftc-api/get-event-awards";
 import { Award } from "../entities/Award";
+import { LoadType } from "../../ftc-api/watch";
 
-export async function loadAllAwards(season: Season) {
+export async function loadAllAwards(season: Season, loadType: LoadType) {
     console.info(`Loading awards for season ${season}.`);
 
-    let events = await eventsToFetch(season);
+    let events = await eventsToFetch(season, loadType);
 
     console.info(`Got ${events.length} events to fetch.`);
 
@@ -48,17 +49,26 @@ function fixJudgesChoice(awards: AwardFtcApi[]) {
     }
 }
 
-async function eventsToFetch(season: Season) {
+async function eventsToFetch(season: Season, loadType: LoadType) {
     let loaded = await DataHasBeenLoaded.awardsHaveBeenLoaded(season);
 
     if (loaded) {
-        return DATA_SOURCE.getRepository(Event)
+        let query = DATA_SOURCE.getRepository(Event)
             .createQueryBuilder()
             .select("code")
-            .where("season = :season", { season })
-            .andWhere("start < now()")
-            .andWhere("start > 'now'::timestamp - '7 days'::interval")
-            .getMany();
+            .where("season = :season", { season });
+
+        if (loadType == LoadType.Full) {
+            query
+                .andWhere("start < now()")
+                .andWhere("start > 'now'::timestamp - '7 days'::interval");
+        } else {
+            query
+                .andWhere("start <= (NOW() at time zone timezone)::date")
+                .andWhere(`"end" >= (NOW() at time zone timezone)::date`);
+        }
+
+        return query.getMany();
     } else {
         return Event.findBy({ season });
     }

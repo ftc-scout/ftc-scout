@@ -8,17 +8,12 @@ import { getMatchScores } from "../../ftc-api/get-match-scores";
 import { getTeams } from "../../ftc-api/get-teams";
 import { MatchScore } from "../entities/dyn/match-score";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
+import { LoadType } from "../../ftc-api/watch";
 
-export const LoadType = {
-    Full: "Full",
-    Partial: "Partial",
-};
-export type LoadType = (typeof LoadType)[keyof typeof LoadType];
-
-export async function loadAllMatches(season: Season) {
+export async function loadAllMatches(season: Season, loadType: LoadType) {
     console.info(`Loading events for season ${season}.`);
 
-    let events = await eventsToFetch(season, LoadType.Full);
+    let events = await eventsToFetch(season, loadType);
 
     console.info(`Got ${events.length} events to fetch.`);
 

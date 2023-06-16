@@ -5,6 +5,12 @@ import { loadAllEvents } from "../db/loaders/load-all-events";
 import { loadAllMatches } from "../db/loaders/load-all-matches";
 import { loadAllAwards } from "../db/loaders/load-all-awards";
 
+export const LoadType = {
+    Full: "Full",
+    Partial: "Partial",
+};
+export type LoadType = (typeof LoadType)[keyof typeof LoadType];
+
 export async function fetchPriorSeasons() {
     for (let season of PAST_SEASONS) {
         console.info(`Checking load of season ${season}.`);
@@ -19,12 +25,12 @@ export async function fetchPriorSeasons() {
             console.info(`Events already loaded.`);
         }
         if (!(await DataHasBeenLoaded.matchesHaveBeenLoaded(season))) {
-            await loadAllMatches(season);
+            await loadAllMatches(season, LoadType.Full);
         } else {
             console.info(`Matches already loaded.`);
         }
         if (!(await DataHasBeenLoaded.awardsHaveBeenLoaded(season))) {
-            await loadAllAwards(season);
+            await loadAllAwards(season, LoadType.Full);
         } else {
             console.info(`Awards already loaded.`);
         }
@@ -53,8 +59,10 @@ export async function watchApi() {
         console.info(`Syncing. (Cycle ${cycleCount})`);
         await runJob(async () => await loadAllTeams(CURRENT_SEASON), MINS_PER_DAY);
         await runJob(async () => await loadAllEvents(CURRENT_SEASON), MINS_PER_HOUR);
-        await runJob(async () => await loadAllMatches(CURRENT_SEASON), 1);
-        await runJob(async () => await loadAllAwards(CURRENT_SEASON), 5);
+        await runJob(async () => await loadAllMatches(CURRENT_SEASON, LoadType.Partial), 1);
+        await runJob(async () => await loadAllMatches(CURRENT_SEASON, LoadType.Full), MINS_PER_DAY);
+        await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Partial), 5);
+        await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Full), MINS_PER_HOUR);
 
         cycleCount += 1;
         setTimeout(run, MS_PER_MIN);
