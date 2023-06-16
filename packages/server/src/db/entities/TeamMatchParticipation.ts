@@ -8,7 +8,16 @@ import {
     allianceRoleFromApiStation,
     notEmpty,
 } from "@ftc-scout/common";
-import { BaseEntity, Column, DeepPartial, Entity, ManyToOne, PrimaryColumn } from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    DeepPartial,
+    Entity,
+    ManyToOne,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from "typeorm";
 import { Match } from "./Match";
 import { Team } from "./Team";
 
@@ -51,6 +60,12 @@ export class TeamMatchParticipation extends BaseEntity {
 
     @Column("bool")
     onField!: boolean;
+
+    @CreateDateColumn()
+    createdAt!: Date;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
 
     static fromApi(
         teams: TeamMatchParticipationFtcApi[],

@@ -1,5 +1,13 @@
 import { AwardFtcApi, Season } from "@ftc-scout/common";
-import { BaseEntity, Column, DeepPartial, Entity, PrimaryColumn } from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    DeepPartial,
+    Entity,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class Award extends BaseEntity {
@@ -17,6 +25,12 @@ export class Award extends BaseEntity {
 
     @Column("varchar", { nullable: true })
     personName!: string | null;
+
+    @CreateDateColumn()
+    createdAt!: Date;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
 
     static fromApi(season: Season, api: AwardFtcApi): Award | null {
         if (api.eventCode == null || api.teamNumber == null) {

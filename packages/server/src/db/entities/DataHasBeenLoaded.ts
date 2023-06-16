@@ -1,5 +1,12 @@
 import { Season } from "@ftc-scout/common";
-import { BaseEntity, Column, Entity, PrimaryColumn } from "typeorm";
+import {
+    BaseEntity,
+    Column,
+    CreateDateColumn,
+    Entity,
+    PrimaryColumn,
+    UpdateDateColumn,
+} from "typeorm";
 
 @Entity()
 export class DataHasBeenLoaded extends BaseEntity {
@@ -17,6 +24,12 @@ export class DataHasBeenLoaded extends BaseEntity {
 
     @Column({ default: false })
     awards!: boolean;
+
+    @CreateDateColumn()
+    createdAt!: Date;
+
+    @UpdateDateColumn()
+    updatedAt!: Date;
 
     static async teamsHaveBeenLoaded(season: Season): Promise<boolean> {
         return (await DataHasBeenLoaded.findOneBy({ season }))?.teams ?? false;
