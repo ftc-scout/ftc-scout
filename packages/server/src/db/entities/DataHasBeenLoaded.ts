@@ -25,10 +25,10 @@ export class DataHasBeenLoaded extends BaseEntity {
     @Column({ default: false })
     awards!: boolean;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
     static async teamsHaveBeenLoaded(season: Season): Promise<boolean> {

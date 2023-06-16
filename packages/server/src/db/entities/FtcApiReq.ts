@@ -15,9 +15,9 @@ export class FtcApiReq extends BaseEntity {
     @Column("json")
     resp!: any;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 }

@@ -85,10 +85,10 @@ export class Event extends BaseEntity {
     @Column("date")
     end!: Date;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
     static fromApi(api: EventFtcApi, season: Season): Event {

@@ -61,10 +61,10 @@ export class TeamMatchParticipation extends BaseEntity {
     @Column("bool")
     onField!: boolean;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
     static fromApi(

@@ -43,10 +43,10 @@ export class Team extends BaseEntity {
     @Column({ type: "varchar", nullable: true })
     website?: string | null;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
     static fromApi(api: TeamFtcApi): Team | null {

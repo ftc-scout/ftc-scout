@@ -26,10 +26,10 @@ export class Award extends BaseEntity {
     @Column("varchar", { nullable: true })
     personName!: string | null;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
     static fromApi(season: Season, api: AwardFtcApi): Award | null {

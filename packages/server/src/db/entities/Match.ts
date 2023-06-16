@@ -35,8 +35,8 @@ export class Match extends BaseEntity {
     @Column()
     hasBeenPlayed!: boolean;
 
-    @Column("timestamptz")
-    scheduledStartTime!: Date;
+    @Column("timestamptz", { nullable: true })
+    scheduledStartTime!: Date | null;
 
     @Column("timestamptz", { nullable: true })
     actualStartTime!: Date | null;
@@ -47,24 +47,28 @@ export class Match extends BaseEntity {
     @Column("enum", { enum: TournamentLevel })
     tournamentLevel!: TournamentLevel;
 
-    @CreateDateColumn()
+    @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @UpdateDateColumn()
+    @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
     static fromApi(api: MatchFtcApi, event: Event, hasBeenPlayed: boolean): Match {
         let timezone = event.timezone ?? "utc";
         let tournamentLevel = tournamentLevelFromFtcApi(api.tournamentLevel);
-        let id = event.remote
-            ? api.teams[0].teamNumber * 1000 + api.matchNumber
-            : tournamentLevelValue(tournamentLevel) * 10000 + api.series * 1000 + api.matchNumber;
         return Match.create({
             eventSeason: event.season,
             eventCode: event.code,
-            id,
+            id: event.remote
+                ? api.teams[0].teamNumber * 1000 + api.matchNumber
+                : tournamentLevelValue(tournamentLevel) * 10000 +
+                  api.series * 1000 +
+                  api.matchNumber,
             hasBeenPlayed,
-            scheduledStartTime: DateTime.fromISO(api.startTime, { zone: timezone }).toJSDate(),
+            scheduledStartTime:
+                DateTime.fromISO(api.startTime, { zone: timezone }).year > 2000
+                    ? DateTime.fromISO(api.startTime, { zone: timezone }).toJSDate()
+                    : null,
             actualStartTime: api.actualStartTime
                 ? DateTime.fromISO(api.actualStartTime, { zone: timezone }).toJSDate()
                 : null,
