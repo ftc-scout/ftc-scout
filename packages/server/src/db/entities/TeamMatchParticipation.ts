@@ -32,19 +32,19 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("int")
     matchId!: number;
 
-    @PrimaryColumn("int")
-    teamNumber!: number;
+    @PrimaryColumn("enum", { enum: Alliance })
+    alliance!: Alliance;
+
+    @PrimaryColumn("enum", { enum: Station })
+    station!: Station;
 
     match!: Match;
 
     @ManyToOne(() => Team, (team) => team.matches)
     team!: Team;
 
-    @Column("enum", { enum: Alliance })
-    alliance!: Alliance;
-
-    @Column("enum", { enum: Station })
-    station!: Station;
+    @Column("int")
+    teamNumber!: number;
 
     @Column("enum", { enum: AllianceRole })
     allianceRole!: AllianceRole;
@@ -82,7 +82,7 @@ export class TeamMatchParticipation extends BaseEntity {
             return teams
                 .filter(
                     (t) =>
-                        (match.eventSeason == 2019 ? true : !!t.onField) &&
+                        (match.eventSeason == 2019 ? true : t.onField ?? true) &&
                         t.station.includes(color)
                 )
                 .sort(cmp);
@@ -119,14 +119,14 @@ export class TeamMatchParticipation extends BaseEntity {
                     season: match.eventSeason,
                     eventCode: match.eventCode,
                     matchId: match.id,
-                    teamNumber: t.teamNumber,
                     alliance: allianceFromApiStation(t.station),
                     station: getStation(t),
+                    teamNumber: t.teamNumber,
                     allianceRole: allianceRoleFromApiStation(t.station),
                     surrogate: t.surrogate,
                     noShow: t.noShow,
-                    dq: match.eventSeason == 2019 ? false : !!t.dq, // For 2019 the api always returns false for dq
-                    onField: match.eventSeason == 2019 ? true : !!t.onField, // And doesn't return the teams that weren't on the field.
+                    dq: match.eventSeason == 2019 ? false : t.dq ?? false, // For 2019 the api always returns false for dq
+                    onField: match.eventSeason == 2019 ? true : t.onField ?? true, // And doesn't return the teams that weren't on the field.
                 } as DeepPartial<TeamMatchParticipation>);
             })
             .filter(notEmpty);
