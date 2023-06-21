@@ -79,7 +79,7 @@ function getMatchScoreColumns<T extends SeasonDescriptor>(
     descriptor.columns.forEach((c) => {
         let name: ColumnNames = c.name;
         let type = getTypeormType(c.type);
-        let nullable = descriptor.hasRemote && c.fromRemoteApi == undefined;
+        let nullable = !!c.tradOnly;
         typeormColumns[name] = { type, nullable };
     });
 

@@ -24,6 +24,7 @@ type DistributeColumn<TradAllianceScore, RemoteScore, U extends ColumnTypeStr> =
     ? {
           name: string;
           type: U;
+          tradOnly?: boolean;
           fromTradApi: (api: TradAllianceScore) => StrToColumnType<U>;
           fromRemoteApi?: (api: RemoteScore) => StrToColumnType<U>;
       }
