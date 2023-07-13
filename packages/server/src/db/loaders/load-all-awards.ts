@@ -7,7 +7,7 @@ import { Award } from "../entities/Award";
 import { LoadType } from "../../ftc-api/watch";
 
 export async function loadAllAwards(season: Season, loadType: LoadType) {
-    console.info(`Loading awards for season ${season}.`);
+    console.info(`Loading awards for season ${season}. (${loadType})`);
 
     let events = await eventsToFetch(season, loadType);
 

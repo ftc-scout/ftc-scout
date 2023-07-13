@@ -1,10 +1,12 @@
-import { AllianceScores2021TradFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2021Trad";
 import { Season } from "../../Season";
-import { SpecificSeasonDescriptor } from "../SeasonDescriptor";
-import { Scores2021RemoteFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2021Remote";
+import { type SeasonDescriptor, inferMSTD } from "../descriptor_types";
 
-export const FreightFrenzyDescriptor = {
+export const SeasonDescriptor2021: SeasonDescriptor = {
     season: Season.FreightFrenzy,
     hasRemote: true,
+};
+
+export const MatchScoreTD2021 = inferMSTD({
+    season: Season.FreightFrenzy,
     columns: [],
-} satisfies SpecificSeasonDescriptor<AllianceScores2021TradFtcApi, Scores2021RemoteFtcApi>;
+});

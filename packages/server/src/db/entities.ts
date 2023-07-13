@@ -4,7 +4,7 @@ import { Event } from "./entities/Event";
 import { IS_DEV } from "../constants";
 import { FtcApiReq } from "./entities/FtcApiReq";
 import { DataHasBeenLoaded } from "./entities/DataHasBeenLoaded";
-import { matchScoreSchemas } from "./entities/dyn/match-score";
+import { MatchScoreSchemas } from "./entities/dyn/match-score";
 import { Match } from "./entities/Match";
 import { tepSchemas } from "./entities/dyn/team-event-participation";
 import { TeamMatchParticipation } from "./entities/TeamMatchParticipation";
@@ -19,7 +19,7 @@ export const ENTITIES: MixedList<string | Function | EntitySchema<any>> = [
     Award,
     Match,
     TeamMatchParticipation,
-    ...matchScoreSchemas,
+    ...Object.values(MatchScoreSchemas),
     ...tepSchemas,
     ...(IS_DEV ? DEV_ENTITIES : []),
 ];

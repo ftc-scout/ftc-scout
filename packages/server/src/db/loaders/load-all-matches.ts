@@ -6,12 +6,12 @@ import { Match } from "../entities/Match";
 import { getMatches } from "../../ftc-api/get-matches";
 import { getMatchScores } from "../../ftc-api/get-match-scores";
 import { getTeams } from "../../ftc-api/get-teams";
-import { MatchScore } from "../entities/dyn/match-score";
+import { MatchScore, MatchScoreSchemas } from "../entities/dyn/match-score";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { LoadType } from "../../ftc-api/watch";
 
 export async function loadAllMatches(season: Season, loadType: LoadType) {
-    console.info(`Loading events for season ${season}.`);
+    console.info(`Loading matches for season ${season}. (${loadType})`);
 
     let events = await eventsToFetch(season, loadType);
 
@@ -50,7 +50,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
             await DATA_SOURCE.transaction(async (em) => {
                 await em.save(allDbMatches, { chunk: 100 });
                 await em.save(allDbTmps, { chunk: 500 });
-                await em.getRepository(MatchScore[season]).save(allDbScores, { chunk: 100 });
+                await em.getRepository(MatchScoreSchemas[season]).save(allDbScores, { chunk: 100 });
             });
             console.info(`Loaded ${i + 1}/${events.length}.`);
         } catch (e) {
@@ -90,7 +90,7 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
             .distinct(true)
             .leftJoin(Match, "m", "e.season = m.event_season AND e.code = m.event_code")
             .leftJoin(
-                MatchScore[season],
+                `match_score_${season}`,
                 "s",
                 "s.season = m.event_season AND s.event_code = m.event_code AND m.id = s.match_id"
             )

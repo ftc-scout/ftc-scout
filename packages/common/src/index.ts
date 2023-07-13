@@ -6,7 +6,8 @@ export * from "./logic/TournamentLevel";
 export * from "./logic/Alliance";
 export * from "./logic/Station";
 // HELP: Season Specific
-export * from "./logic/seasons/SeasonDescriptor";
+export * from "./logic/seasons/descriptor_types";
+export * from "./logic/seasons/descriptor_lists";
 export * from "./logic/seasons/descriptors/SkystoneDescriptor";
 export * from "./logic/seasons/descriptors/UltimateGoalDescriptor";
 export * from "./logic/seasons/descriptors/FreightFrenzyDescriptor";

@@ -5,10 +5,12 @@
         "ftccmp",
         "jemi",
         "jemison",
+        "mstd", // match score table descriptor
         "ocho",
         "quals",
         "stateprov",
         "timestamptz",
+        "tmps",
         "typeorm"
     ]
 }

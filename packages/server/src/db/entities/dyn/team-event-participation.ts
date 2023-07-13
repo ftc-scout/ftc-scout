@@ -1,20 +1,16 @@
 import {
-    ColumnNames,
-    Columns,
-    FreightFrenzyDescriptor,
-    PowerPlayDescriptor,
-    Season,
+    type Season,
     SeasonDescriptor,
-    SkystoneDescriptor,
-    StrToColumnType,
-    UltimateGoalDescriptor,
+    SeasonDescriptor2019,
+    SeasonDescriptor2020,
+    SeasonDescriptor2021,
+    SeasonDescriptor2022,
 } from "@ftc-scout/common";
-import { BaseEntity, EntitySchema } from "typeorm";
-import { SubtypeClass, getTypeormType } from "./types";
+import { EntitySchema, EntitySchemaColumnOptions, Repository } from "typeorm";
+import { DATA_SOURCE } from "../../data-source";
+import { AnyObject } from "../../../type-utils";
 
-export type TypeormRecord<T extends SeasonDescriptor> = {
-    [K in ColumnNames<T>]: StrToColumnType<Extract<Columns<T>, { name: K }>["type"]>;
-} & {
+type BaseColumns = {
     season: Season;
     eventCode: string;
     teamNumber: number;
@@ -22,28 +18,16 @@ export type TypeormRecord<T extends SeasonDescriptor> = {
     updatedAt: Date;
 };
 
-function makeTep<T extends SeasonDescriptor>(
-    descriptor: T
-): [EntitySchema<TypeormRecord<T>>, SubtypeClass<typeof BaseEntity, TypeormRecord<T>>] {
-    class Entity extends BaseEntity {}
-
-    let entity = new EntitySchema<TypeormRecord<T>>({
+function makeTep(descriptor: SeasonDescriptor): EntitySchema<TeamEventParticipation> {
+    return new EntitySchema<TeamEventParticipation>({
         tableName: `tep_${descriptor.season}`,
         name: `tep_${descriptor.season}`,
-        target: Entity,
-        columns: getTepColumns(descriptor),
+        columns: getTepColumns(),
     });
-
-    return [entity, Entity as any];
 }
 
-function getTepColumns<T extends SeasonDescriptor>(
-    descriptor: T
-): EntitySchema<TypeormRecord<T>>["options"]["columns"] {
-    type Schema = EntitySchema<TypeormRecord<T>>;
-    type ColumnNames = Columns<T>["name"];
-
-    let typeormColumns: Schema["options"]["columns"] = {
+function getTepColumns(): Record<string, EntitySchemaColumnOptions> {
+    let typeormColumns: Record<keyof BaseColumns, EntitySchemaColumnOptions> = {
         season: {
             type: "smallint",
             primary: true,
@@ -66,28 +50,28 @@ function getTepColumns<T extends SeasonDescriptor>(
         },
     };
 
-    descriptor.columns.forEach((c) => {
-        let name: ColumnNames = c.name;
-        let type = getTypeormType(c.type);
-        let nullable = descriptor.hasRemote && c.fromRemoteApi == undefined;
-        typeormColumns[name] = { type, nullable };
-    });
-
     return typeormColumns;
 }
 
 // HELP: Season Specific
 
-let [tepSchema2019, tepClass2019] = makeTep(SkystoneDescriptor);
-let [tepSchema2020, tepClass2020] = makeTep(UltimateGoalDescriptor);
-let [tepSchema2021, tepClass2021] = makeTep(FreightFrenzyDescriptor);
-let [tepSchema2022, tepClass2022] = makeTep(PowerPlayDescriptor);
+let tepSchema2019 = makeTep(SeasonDescriptor2019);
+let tepSchema2020 = makeTep(SeasonDescriptor2020);
+let tepSchema2021 = makeTep(SeasonDescriptor2021);
+let tepSchema2022 = makeTep(SeasonDescriptor2022);
 
 export let tepSchemas = [tepSchema2019, tepSchema2020, tepSchema2021, tepSchema2022];
 
-export let TeamEventParticipation = {
-    [2019]: tepClass2019,
-    [2020]: tepClass2020,
-    [2021]: tepClass2021,
-    [2022]: tepClass2022,
-} as const;
+export type TeamEventParticipation = BaseColumns & AnyObject;
+export let TeamEventParticipation: {
+    [s in Season]: Repository<TeamEventParticipation>;
+};
+
+export function initTep() {
+    TeamEventParticipation = {
+        [2019]: DATA_SOURCE.getRepository(tepSchema2019),
+        [2020]: DATA_SOURCE.getRepository(tepSchema2020),
+        [2021]: DATA_SOURCE.getRepository(tepSchema2021),
+        [2022]: DATA_SOURCE.getRepository(tepSchema2022),
+    };
+}

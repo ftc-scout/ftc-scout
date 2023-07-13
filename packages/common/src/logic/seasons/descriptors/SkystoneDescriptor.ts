@@ -1,9 +1,12 @@
-import { AllianceScores2019TradFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2019Trad";
 import { Season } from "../../Season";
-import { SpecificSeasonDescriptor } from "../SeasonDescriptor";
+import { type SeasonDescriptor, inferMSTD } from "../descriptor_types";
 
-export const SkystoneDescriptor = {
+export const SeasonDescriptor2019: SeasonDescriptor = {
     season: Season.Skystone,
     hasRemote: false,
+};
+
+export const MatchScoreTD2019 = inferMSTD({
+    season: Season.Skystone,
     columns: [],
-} satisfies SpecificSeasonDescriptor<AllianceScores2019TradFtcApi, never>;
+});

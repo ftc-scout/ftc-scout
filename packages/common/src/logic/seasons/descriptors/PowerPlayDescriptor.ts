@@ -1,15 +1,19 @@
-import { AllianceScores2022TradFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2022Trad";
+import { AllianceScores2022TradFtcApi } from "../../../ftc-api-types/match-scores/MatchScores2022Trad";
 import { Season } from "../../Season";
-import { SpecificSeasonDescriptor } from "../SeasonDescriptor";
+import { type SeasonDescriptor, inferMSTD } from "../descriptor_types";
 
-export const PowerPlayDescriptor = {
+export const SeasonDescriptor2022: SeasonDescriptor = {
     season: Season.PowerPlay,
-    hasRemote: false,
+    hasRemote: true,
+};
+
+export const MatchScoreTD2022 = inferMSTD({
+    season: Season.PowerPlay,
     columns: [
         {
             name: "autoTerminalCones" as const,
-            type: "int8",
-            fromTradApi: (api) => api.autoTerminal,
+            ty: "int8",
+            fromApi: (api: AllianceScores2022TradFtcApi) => api.autoTerminal,
         },
     ],
-} satisfies SpecificSeasonDescriptor<AllianceScores2022TradFtcApi, never>;
+});

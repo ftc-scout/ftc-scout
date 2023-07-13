@@ -1,10 +1,12 @@
-import { AllianceScores2020TradFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2020Trad";
 import { Season } from "../../Season";
-import { SpecificSeasonDescriptor } from "../SeasonDescriptor";
-import { Scores2020RemoteFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2020Remote";
+import { type SeasonDescriptor, inferMSTD } from "../descriptor_types";
 
-export const UltimateGoalDescriptor = {
+export const SeasonDescriptor2020: SeasonDescriptor = {
     season: Season.UltimateGoal,
     hasRemote: true,
+};
+
+export const MatchScoreTD2020 = inferMSTD({
+    season: Season.UltimateGoal,
     columns: [],
-} satisfies SpecificSeasonDescriptor<AllianceScores2020TradFtcApi, Scores2020RemoteFtcApi>;
+});

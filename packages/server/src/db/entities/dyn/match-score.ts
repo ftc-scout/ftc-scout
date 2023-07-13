@@ -1,24 +1,20 @@
 import {
     Alliance,
-    ColumnNames,
-    Columns,
-    FreightFrenzyDescriptor,
+    MS_TABLE_DESCRIPTORS,
+    MatchScoreTD2019,
+    MatchScoreTD2020,
+    MatchScoreTD2021,
+    MatchScoreTD2022,
+    MatchScoreTableDescriptor,
     MatchScoresFtcApi,
-    PowerPlayDescriptor,
-    SEASON_DESCRIPTORS,
     Season,
-    SeasonDescriptor,
-    SkystoneDescriptor,
-    StrToColumnType,
-    UltimateGoalDescriptor,
 } from "@ftc-scout/common";
-import { BaseEntity, EntitySchema } from "typeorm";
-import { SubtypeClass, getTypeormType } from "./types";
+import { EntitySchema, EntitySchemaColumnOptions, Repository } from "typeorm";
 import { Match } from "../Match";
+import { DATA_SOURCE } from "../../data-source";
+import { AnyObject } from "../../../type-utils";
 
-export type TypeormRecord<T extends SeasonDescriptor> = {
-    [K in ColumnNames<T>]: StrToColumnType<Extract<Columns<T>, { name: K }>["type"]>;
-} & {
+type BaseColumns = {
     season: Season;
     eventCode: string;
     matchId: number;
@@ -27,28 +23,18 @@ export type TypeormRecord<T extends SeasonDescriptor> = {
     updatedAt: Date;
 };
 
-function makeMatchScore<T extends SeasonDescriptor>(
-    descriptor: T
-): [EntitySchema<TypeormRecord<T>>, SubtypeClass<typeof BaseEntity, TypeormRecord<T>>] {
-    class Entity extends BaseEntity {}
-
-    let entity = new EntitySchema<TypeormRecord<T>>({
+function makeMatchScore<TrScore, RemScore>(
+    descriptor: MatchScoreTableDescriptor<TrScore, RemScore>
+): EntitySchema<MatchScore> {
+    return new EntitySchema<MatchScore>({
         tableName: `match_score_${descriptor.season}`,
         name: `match_score_${descriptor.season}`,
-        target: Entity,
-        columns: getMatchScoreColumns(descriptor),
+        columns: getMatchScoreColumns(descriptor.season),
     });
-
-    return [entity, Entity as any];
 }
 
-function getMatchScoreColumns<T extends SeasonDescriptor>(
-    descriptor: T
-): EntitySchema<TypeormRecord<T>>["options"]["columns"] {
-    type Schema = EntitySchema<TypeormRecord<T>>;
-    type ColumnNames = Columns<T>["name"];
-
-    let typeormColumns: Schema["options"]["columns"] = {
+function getMatchScoreColumns(season: Season): Record<string, EntitySchemaColumnOptions> {
+    let baseColumns: Record<keyof BaseColumns, EntitySchemaColumnOptions> = {
         season: {
             type: "smallint",
             primary: true,
@@ -76,52 +62,67 @@ function getMatchScoreColumns<T extends SeasonDescriptor>(
         },
     };
 
-    descriptor.columns.forEach((c) => {
-        let name: ColumnNames = c.name;
-        let type = getTypeormType(c.type);
-        let nullable = !!c.tradOnly;
-        typeormColumns[name] = { type, nullable };
+    let extraColumns: Record<string, EntitySchemaColumnOptions> = {};
+    MS_TABLE_DESCRIPTORS[season].columns.forEach((c) => {
+        extraColumns[c.name] = {
+            type: c.ty,
+            nullable: !!c.tradOnly,
+        };
     });
 
-    return typeormColumns;
+    return { ...baseColumns, ...extraColumns };
 }
 
 // HELP: Season Specific
 
-let [msSchema2019, msClass2019] = makeMatchScore(SkystoneDescriptor);
-let [msSchema2020, msClass2020] = makeMatchScore(UltimateGoalDescriptor);
-let [msSchema2021, msClass2021] = makeMatchScore(FreightFrenzyDescriptor);
-let [msSchema2022, msClass2022] = makeMatchScore(PowerPlayDescriptor);
+let msSchema2019 = makeMatchScore(MatchScoreTD2019);
+let msSchema2020 = makeMatchScore(MatchScoreTD2020);
+let msSchema2021 = makeMatchScore(MatchScoreTD2021);
+let msSchema2022 = makeMatchScore(MatchScoreTD2022);
 
-export let matchScoreSchemas = [msSchema2019, msSchema2020, msSchema2021, msSchema2022];
+export let MatchScoreSchemas = {
+    [2019]: msSchema2019,
+    [2020]: msSchema2020,
+    [2021]: msSchema2021,
+    [2022]: msSchema2022,
+};
 
-export type MatchScore = SubtypeClass<typeof BaseEntity, TypeormRecord<SeasonDescriptor>>;
-export let MatchScore = {
-    [2019]: msClass2019,
-    [2020]: msClass2020,
-    [2021]: msClass2021,
-    [2022]: msClass2022,
+export type MatchScore = BaseColumns & AnyObject;
+export let MatchScore: {
+    [s in Season]: Repository<MatchScore>;
+} & {
+    fromApi(api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[];
+};
 
-    fromApi(api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[] {
-        return ("scores" in api ? [api.scores] : api.alliances).map((s) => {
-            type Ret = Partial<TypeormRecord<SeasonDescriptor>>;
-            let score: Ret = {
-                season: match.eventSeason,
-                eventCode: match.eventCode,
-                matchId: match.id,
-                alliance: "alliance" in s ? s.alliance : Alliance.Solo,
-            };
+export function initMS() {
+    MatchScore = {
+        [2019]: DATA_SOURCE.getRepository(msSchema2019),
+        [2020]: DATA_SOURCE.getRepository(msSchema2020),
+        [2021]: DATA_SOURCE.getRepository(msSchema2021),
+        [2022]: DATA_SOURCE.getRepository(msSchema2022),
 
-            let descriptor = SEASON_DESCRIPTORS[match.eventSeason];
-            for (let column of descriptor.columns) {
-                let value =
-                    remote && "fromRemoteApi" in column
-                        ? column.fromRemoteApi(s)
-                        : column.fromTradApi(s);
-                score[column.name] = value;
-            }
+        fromApi(api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[] {
+            return ("scores" in api ? [api.scores] : api.alliances).map((s) => {
+                type Ret = Partial<BaseColumns> & Record<string, any>;
 
-            return MatchScore[match.eventSeason].create(score) as any;
-        });
-    },
-} as const;
+                let score: Ret = {
+                    season: match.eventSeason,
+                    eventCode: match.eventCode,
+                    matchId: match.id,
+                    alliance: "alliance" in s ? s.alliance : Alliance.Solo,
+                };
+
+                let descriptor = MS_TABLE_DESCRIPTORS[match.eventSeason];
+                for (let column of descriptor.columns) {
+                    let value =
+                        remote && "fromRemoteApi" in column
+                            ? column.fromRemoteApi(s)
+                            : column.fromApi(s as any);
+                    score[column.name] = value;
+                }
+
+                return MatchScore[match.eventSeason].create(score);
+            });
+        },
+    };
+}
