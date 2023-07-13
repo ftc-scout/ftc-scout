@@ -1,4 +1,5 @@
 import { AwardFtcApi, Season } from "@ftc-scout/common";
+import { Field, Int, ObjectType } from "type-graphql";
 import {
     BaseEntity,
     Column,
@@ -9,26 +10,44 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 
+@ObjectType()
 @Entity()
 export class Award extends BaseEntity {
+    @Field(() => Int)
     @PrimaryColumn("smallint")
     season!: Season;
 
+    @Field()
     @PrimaryColumn()
     eventCode!: string;
 
+    @Field(() => Int)
     @PrimaryColumn("smallint")
     awardCode!: number;
 
+    @Field(() => Int)
     @PrimaryColumn("int")
     teamNumber!: number;
 
+    @Field(() => String, { nullable: true })
     @Column("varchar", { nullable: true })
     personName!: string | null;
 
+    @Field(() => AwardTypes)
+    type(): AwardTypes {
+        return this.awardCode - (this.awardCode % 100);
+    }
+
+    @Field(() => Int)
+    placement(): number {
+        return this.awardCode % 100;
+    }
+
+    @Field()
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
+    @Field()
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 

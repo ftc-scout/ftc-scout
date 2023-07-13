@@ -31,5 +31,8 @@
         "packages/common",
         "packages/web",
         "packages/server"
-    ]
+    ],
+    "dependencies": {
+        "graphql": "^16.7.1"
+    }
 }

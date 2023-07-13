@@ -10,9 +10,10 @@ import { apiLoggerMiddleware } from "./db/entities/ApiReq";
 import { SERVER_PORT } from "./constants";
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
-import { buildSchema } from "type-graphql";
-import { resolvers } from "./graphql/resolvers";
+import { buildTypeDefsAndResolvers } from "type-graphql";
+import { typeGQLResolvers } from "./graphql/resolvers";
 import { expressMiddleware } from "@apollo/server/express4";
+import { dynTypesSchema } from "./graphql/types/dyn/dyn-types-schema";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -30,12 +31,15 @@ async function main() {
         express.json()
     );
 
+    let { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
+        resolvers: typeGQLResolvers,
+        validate: false,
+    });
+
     let apolloServer = new ApolloServer({
         introspection: true,
-        schema: await buildSchema({
-            resolvers,
-            validate: false,
-        }),
+        typeDefs: [typeDefs, dynTypesSchema],
+        resolvers,
         plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
     });
 
