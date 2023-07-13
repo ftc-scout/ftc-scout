@@ -23,8 +23,8 @@ type BaseColumns = {
     updatedAt: Date;
 };
 
-function makeMatchScore<TrScore, RemScore>(
-    descriptor: MatchScoreTableDescriptor<TrScore, RemScore>
+function makeMatchScore<TrScore, RemScore, CNames extends string>(
+    descriptor: MatchScoreTableDescriptor<TrScore, RemScore, CNames>
 ): EntitySchema<MatchScore> {
     return new EntitySchema<MatchScore>({
         tableName: `match_score_${descriptor.season}`,
@@ -67,6 +67,7 @@ function getMatchScoreColumns(season: Season): Record<string, EntitySchemaColumn
         extraColumns[c.name] = {
             type: c.ty,
             nullable: !!c.tradOnly,
+            ...(c.ty == "enum" ? { enum: c.enum! } : {}),
         };
     });
 
@@ -102,7 +103,10 @@ export function initMS() {
         [2022]: DATA_SOURCE.getRepository(msSchema2022),
 
         fromApi(api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[] {
-            return ("scores" in api ? [api.scores] : api.alliances).map((s) => {
+            let scores = "scores" in api ? [api.scores] : api.alliances;
+            return scores.map((s, i) => {
+                let other = scores.length == 2 ? scores[1 - i] : null;
+
                 type Ret = Partial<BaseColumns> & Record<string, any>;
 
                 let score: Ret = {
@@ -114,11 +118,15 @@ export function initMS() {
 
                 let descriptor = MS_TABLE_DESCRIPTORS[match.eventSeason];
                 for (let column of descriptor.columns) {
-                    let value =
-                        remote && "fromRemoteApi" in column
-                            ? column.fromRemoteApi(s)
-                            : column.fromApi(s as any);
-                    score[column.name] = value;
+                    if ("fromSelf" in column) {
+                        score[column.name] = column.fromSelf(score);
+                    } else {
+                        let value =
+                            remote && "fromRemoteApi" in column
+                                ? column.fromRemoteApi(s)
+                                : column.fromApi(s as any, other as any);
+                        score[column.name] = value;
+                    }
                 }
 
                 return MatchScore[match.eventSeason].create(score);

@@ -79,10 +79,15 @@ export class TeamMatchParticipation extends BaseEntity {
             teams: TeamMatchParticipationFtcApi[],
             color: string
         ): TeamMatchParticipationFtcApi[] {
+            // In some cases when teams are disqualified they are marked as not on the field.
+            // If every team is not on the field we ignore this as we still need to know their
+            // positions.
+            let anyOnField = teams.some((t) => t.onField && t.station.includes(color));
+
             return teams
                 .filter(
                     (t) =>
-                        (match.eventSeason == 2019 ? true : t.onField ?? true) &&
+                        (match.eventSeason == 2019 ? true : !anyOnField || (t.onField ?? true)) &&
                         t.station.includes(color)
                 )
                 .sort(cmp);

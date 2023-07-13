@@ -6,23 +6,43 @@ export type SeasonDescriptor = {
     hasRemote: boolean;
 };
 
-export type MatchScoreTableDescriptor<TrScore, RemScore> = {
+export type MatchScoreTableDescriptor<TrScore, RemScore, CNames extends string> = {
     season: Season;
-    columns: MatchScoreTableDescriptorColumn<TrScore, RemScore, ColumnType>[];
+    columns: MatchScoreTableDescriptorColumn<TrScore, RemScore, CNames, ColumnType>[];
 };
-export type MatchScoreTableDescriptorColumn<TrScore, RemScore, T extends ColumnType> = T extends any
+
+export type MatchScoreTableDescriptorColumn<
+    TrScore,
+    RemScore,
+    CNames extends string,
+    CT extends ColumnType
+> = CT extends any
     ? {
-          name: string;
-          ty: T;
+          name: CNames;
+          ty: CT;
+          enum?: Object | any[];
           tradOnly?: boolean;
-          fromApi: (api: TrScore) => TsTypeFromToType<T>;
-          fromRemoteApi?: (api: RemScore) => TsTypeFromToType<T>;
-      }
+      } & CreatorFunc<TrScore, RemScore, CNames, CT>
     : never;
-export function inferMSTD<TrScore, RemScore>(
-    x: MatchScoreTableDescriptor<TrScore, RemScore>
-): MatchScoreTableDescriptor<TrScore, RemScore> {
+
+type CreatorFunc<TrScore, RemScore, CNames extends string, CT extends ColumnType> =
+    | {
+          fromApi: (api: TrScore, other: TrScore) => TsTypeFromToType<CT>;
+          fromRemoteApi?: (api: RemScore) => TsTypeFromToType<CT>;
+      }
+    | {
+          fromSelf: (self: Record<CNames, any>) => TsTypeFromToType<CT>;
+      };
+export function inferMSTD<TrScore, RemScore, CNames extends string>(
+    x: MatchScoreTableDescriptor<TrScore, RemScore, CNames>
+): MatchScoreTableDescriptor<TrScore, RemScore, CNames> {
     return x;
 }
 
-type TsTypeFromToType<T extends ColumnType> = T extends "int8" | "int16" ? number : never;
+type TsTypeFromToType<T extends ColumnType> = T extends "int8" | "smallint"
+    ? number
+    : T extends "bool"
+    ? boolean
+    : T extends "enum" | "json"
+    ? any
+    : never;
