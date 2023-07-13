@@ -9,5 +9,8 @@ declare namespace NodeJS {
         LOGGING: string;
         SYNC: string;
         CACHE_REQ: string;
+
+        // Secrets
+        FRONTEND_CODE: string;
     }
 }

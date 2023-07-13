@@ -8,3 +8,5 @@ export const SERVER_PORT = +process.env.PORT;
 export const LOGGING = process.env.LOGGING === "1";
 export const SYNC = process.env.SYNC === "1";
 export const CACHE_REQ = process.env.CACHE_REQ === "1" && IS_DEV;
+
+export const FRONTEND_CODE = process.env.FRONTEND_CODE;
