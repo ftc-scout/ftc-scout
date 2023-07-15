@@ -7,7 +7,8 @@ declare namespace NodeJS {
 
         // switches
         LOGGING: string;
-        SYNC: string;
+        SYNC_DB: string;
+        SYNC_API: string;
         CACHE_REQ: string;
 
         // Secrets

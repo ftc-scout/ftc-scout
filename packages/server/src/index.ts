@@ -6,11 +6,12 @@ import express from "express";
 import cors from "cors";
 import compression from "compression";
 import { apiLoggerMiddleware } from "./db/entities/ApiReq";
-import { SERVER_PORT } from "./constants";
+import { SERVER_PORT, SYNC_API } from "./constants";
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
 import { expressMiddleware } from "@apollo/server/express4";
 import { GQL_SCHEMA } from "./graphql/schema";
+import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -42,8 +43,10 @@ async function main() {
         console.log(`Server started and listening on port ${SERVER_PORT}.`);
     });
 
-    // await fetchPriorSeasons();
-    // await watchApi();
+    if (SYNC_API) {
+        await fetchPriorSeasons();
+        await watchApi();
+    }
 }
 
 main();
