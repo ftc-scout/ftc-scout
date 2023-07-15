@@ -2,8 +2,7 @@ export const TournamentLevel = {
     Quals: "Quals",
     Semis: "Semis",
     Finals: "Finals",
-};
-
+} as const;
 export type TournamentLevel = (typeof TournamentLevel)[keyof typeof TournamentLevel];
 
 export function tournamentLevelFromFtcApi(

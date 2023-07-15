@@ -1,4 +1,4 @@
-import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema } from "graphql";
+import { GraphQLNamedType, GraphQLOutputType } from "graphql";
 import { Season } from "../Season";
 import { type ColumnType } from "typeorm";
 

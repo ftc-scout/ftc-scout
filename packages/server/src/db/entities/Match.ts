@@ -17,6 +17,7 @@ import {
 } from "typeorm";
 import { Event } from "./Event";
 import { DateTime } from "luxon";
+import { MatchScore } from "./dyn/match-score";
 
 @Entity()
 export class Match extends BaseEntity {
@@ -32,6 +33,8 @@ export class Match extends BaseEntity {
     @ManyToOne(() => Event, (event) => event.matches)
     event!: Event;
 
+    scores!: MatchScore[];
+
     @Column()
     hasBeenPlayed!: boolean;
 
@@ -46,6 +49,24 @@ export class Match extends BaseEntity {
 
     @Column("enum", { enum: TournamentLevel })
     tournamentLevel!: TournamentLevel;
+
+    @PrimaryColumn("int8")
+    series!: number;
+
+    get matchNum(): number {
+        return this.id % 1000;
+    }
+
+    get description(): string {
+        switch (this.tournamentLevel) {
+            case TournamentLevel.Quals:
+                return `Q-${this.matchNum}`;
+            case TournamentLevel.Semis:
+                return `SF${this.series}-${this.matchNum}`;
+            case TournamentLevel.Finals:
+                return `F-${this.matchNum}`;
+        }
+    }
 
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
@@ -76,6 +97,7 @@ export class Match extends BaseEntity {
                 ? DateTime.fromISO(api.postResultTime, { zone: timezone }).toJSDate()
                 : null,
             tournamentLevel,
+            series: api.series,
         } satisfies DeepPartial<Match>);
     }
 }

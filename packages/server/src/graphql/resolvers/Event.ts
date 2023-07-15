@@ -12,13 +12,13 @@ import {
     nullTy,
 } from "../utils";
 import { EventTypeGQL } from "./enums";
-import { AwardGQL } from "./Award";
+import { AwardGQL, teamAwareAwardLoader } from "./Award";
 import { Event } from "../../db/entities/Event";
 import { Award } from "../../db/entities/Award";
 import { Season } from "@ftc-scout/common";
 import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
-import { MatchGQL } from "./Match";
+import { MatchGQL, scoreAwareMatchLoader } from "./Match";
 import { Match } from "../../db/entities/Match";
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
@@ -52,15 +52,15 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
 
         awards: {
             type: list(nn(AwardGQL)),
-            resolver: dataLoaderResolverList<Event, Award, { season: Season; eventCode: string }>(
+            resolve: dataLoaderResolverList<Event, Award, { season: Season; eventCode: string }>(
                 (event) => ({ season: event.season, eventCode: event.code }),
-                (keys) => Award.find({ where: keys })
+                teamAwareAwardLoader
             ),
         },
         teamMatches: {
             type: list(nn(TeamMatchParticipationGQL)),
             args: { teamNumber: nullTy(IntTy) },
-            resolver: dataLoaderResolverList<
+            resolve: dataLoaderResolverList<
                 Event,
                 TeamMatchParticipation,
                 { season: Season; eventCode: string; teamNumber?: number },
@@ -75,17 +75,17 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
         },
         matches: {
             type: list(nn(MatchGQL)),
-            resolver: dataLoaderResolverList<
+            resolve: dataLoaderResolverList<
                 Event,
                 Match,
-                { season: Season; eventCode: string; id?: number },
+                { eventSeason: Season; eventCode: string; id?: number },
                 { id: number | null }
             >(
                 (e, { id }) =>
                     id != null
-                        ? { season: e.season, eventCode: e.code, id }
-                        : { season: e.season, eventCode: e.code },
-                (keys) => Match.find({ where: keys })
+                        ? { eventSeason: e.season, eventCode: e.code, id }
+                        : { eventSeason: e.season, eventCode: e.code },
+                scoreAwareMatchLoader
             ),
         },
     }),

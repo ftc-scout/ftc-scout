@@ -21,6 +21,7 @@
         "*.{ts,js,css,md,json,svelte,graphql}": "prettier --write"
     },
     "devDependencies": {
+        "@types/graphql-fields": "^1.3.5",
         "husky": "^8.0.0",
         "lint-staged": "^13.2.2",
         "prettier": "^2.8.8",
@@ -33,6 +34,7 @@
         "packages/server"
     ],
     "dependencies": {
-        "graphql": "^16.7.1"
+        "graphql": "^16.7.1",
+        "graphql-fields": "^2.0.3"
     }
 }

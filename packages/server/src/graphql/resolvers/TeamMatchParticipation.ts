@@ -8,7 +8,7 @@ import { In } from "typeorm";
 import { EventGQL } from "./Event";
 import { Event } from "../../db/entities/Event";
 import { Season } from "@ftc-scout/common";
-import { MatchGQL } from "./Match";
+import { MatchGQL, scoreAwareMatchLoader } from "./Match";
 import { Match } from "../../db/entities/Match";
 
 export const TeamMatchParticipationGQL: GraphQLObjectType = new GraphQLObjectType({
@@ -30,7 +30,7 @@ export const TeamMatchParticipationGQL: GraphQLObjectType = new GraphQLObjectTyp
 
         team: {
             type: nn(TeamGQL),
-            resolver: dataLoaderResolverSingle<TeamMatchParticipation, Team, number>(
+            resolve: dataLoaderResolverSingle<TeamMatchParticipation, Team, number>(
                 (tmp) => tmp.teamNumber,
                 (keys) => Team.find({ where: { number: In(keys) } }),
                 (k, r) => k == r.number
@@ -38,18 +38,18 @@ export const TeamMatchParticipationGQL: GraphQLObjectType = new GraphQLObjectTyp
         },
         match: {
             type: nn(MatchGQL),
-            resolver: dataLoaderResolverSingle<
+            resolve: dataLoaderResolverSingle<
                 TeamMatchParticipation,
                 Match,
                 { eventSeason: Season; eventCode: string; id: number }
             >(
                 (tmp) => ({ eventSeason: tmp.season, eventCode: tmp.eventCode, id: tmp.matchId }),
-                (keys) => Match.find({ where: keys })
+                scoreAwareMatchLoader
             ),
         },
         event: {
             type: nn(EventGQL),
-            resolver: dataLoaderResolverSingle<
+            resolve: dataLoaderResolverSingle<
                 TeamMatchParticipation,
                 Event,
                 { season: Season; code: string }

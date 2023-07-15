@@ -5,12 +5,15 @@ import {
     GraphQLList,
     GraphQLNonNull,
     GraphQLNullableType,
+    GraphQLResolveInfo,
     GraphQLString,
     GraphQLType,
 } from "graphql";
 import { GQLContext } from "./context";
 import DataLoader from "dataloader";
 import { GraphQLDateTime } from "graphql-scalars";
+import { Brackets } from "typeorm";
+import { AnyObject } from "../type-utils";
 
 type Wr<T> = { type: T };
 function wr<T>(t: T): Wr<T> {
@@ -39,18 +42,23 @@ export function nullTy<T extends GraphQLNullableType>(ty: Wr<GraphQLNonNull<T>>)
 
 export function dataLoaderResolver<Source, Result, Key, Args = {}, LookupResult = Result>(
     argsToKey: (s: Source, a: Args) => Key,
-    keysToResults: (_: Key[]) => Promise<LookupResult[]>,
+    keysToResults: (k: Key[], i: GraphQLResolveInfo[]) => Promise<LookupResult[]>,
     groupResults: (k: Key[], r: LookupResult[]) => Result[]
 ): GraphQLFieldResolver<Source, GQLContext, Args, Promise<Result>> {
-    let dl = new DataLoader<Key, Result>(async (keys) => {
-        let results = await keysToResults(keys as Key[]);
-        let groups = groupResults(keys as Key[], results);
-        return groups;
-    });
+    let dl = new DataLoader<[Key, GraphQLResolveInfo], Result>(
+        async (kAndI) => {
+            let keys = kAndI.map((k) => k[0]);
+            let info = kAndI.map((k) => k[1]);
+            let results = await keysToResults(keys, info);
+            let groups = groupResults(keys, results);
+            return groups;
+        },
+        { cache: false }
+    );
 
-    return async (source: Source, args: Args) => {
+    return async (source: Source, args: Args, _ctx: GQLContext, info: GraphQLResolveInfo) => {
         let key = argsToKey(source, args);
-        let res = await dl.load(key);
+        let res = await dl.load([key, info]);
         return res;
     };
 }
@@ -74,7 +82,7 @@ export function dataLoaderResolverSingle<
     LookupResult extends Result = NonNullable<Result>
 >(
     argsToKey: (s: Source, a: Args) => Key,
-    keysToResults: (_: Key[]) => Promise<LookupResult[]>,
+    keysToResults: (k: Key[], i: GraphQLResolveInfo[]) => Promise<LookupResult[]>,
     keyMatchesResult: (k: Key, r: LookupResult) => boolean = matchByKeys
 ): GraphQLFieldResolver<Source, GQLContext, Args, Promise<Result>> {
     return dataLoaderResolver(argsToKey, keysToResults, (keys, results) =>
@@ -84,10 +92,26 @@ export function dataLoaderResolverSingle<
 
 export function dataLoaderResolverList<Source, LookupResult, Key, Args = {}>(
     argsToKey: (s: Source, a: Args) => Key,
-    keysToResults: (_: Key[]) => Promise<LookupResult[]>,
+    keysToResults: (k: Key[], i: GraphQLResolveInfo[]) => Promise<LookupResult[]>,
     keyMatchesResult: (k: Key, r: LookupResult) => boolean = matchByKeys
 ): GraphQLFieldResolver<Source, GQLContext, Args, Promise<LookupResult[]>> {
     return dataLoaderResolver(argsToKey, keysToResults, (keys, results) =>
         keys.map((k) => results.filter((r) => keyMatchesResult(k, r)))
     );
+}
+
+export function keyListToWhereClause<T extends AnyObject>(tableName: string, keys: T[]): Brackets {
+    let vIdx = 0;
+
+    return new Brackets((qb) => {
+        for (let key of keys) {
+            let thisKey = new Brackets((subQb) => {
+                for (let [k, v] of Object.entries(key)) {
+                    subQb.andWhere(`${tableName}.${k} = :v${vIdx}`, { [`v${vIdx}`]: v });
+                    vIdx += 1;
+                }
+            });
+            qb.orWhere(thisKey);
+        }
+    });
 }

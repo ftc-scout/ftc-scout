@@ -1,10 +1,4 @@
-import {
-    GraphQLEnumType,
-    GraphQLInt,
-    GraphQLList,
-    GraphQLNonNull,
-    GraphQLObjectType,
-} from "graphql";
+import { GraphQLInt, GraphQLList, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import {
     AllianceScores2022TradFtcApi,
     ApiConeType,

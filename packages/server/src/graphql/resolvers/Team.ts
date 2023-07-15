@@ -11,7 +11,7 @@ import {
 } from "../utils";
 import { Team } from "../../db/entities/Team";
 import { In } from "typeorm";
-import { AwardGQL } from "./Award";
+import { AwardGQL, teamAwareAwardLoader } from "./Award";
 import { Award } from "../../db/entities/Award";
 import { Season } from "@ftc-scout/common";
 import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
@@ -35,7 +35,7 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
         awards: {
             type: list(AwardGQL),
             args: { season: nullTy(IntTy) },
-            resolver: dataLoaderResolverList<
+            resolve: dataLoaderResolverList<
                 Team,
                 Award,
                 { season?: Season; teamNumber: number },
@@ -45,13 +45,13 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
                     a.season != null
                         ? { season: a.season, teamNumber: team.number }
                         : { teamNumber: team.number },
-                (keys) => Award.find({ where: keys })
+                teamAwareAwardLoader
             ),
         },
         matches: {
             type: list(TeamMatchParticipationGQL),
             args: { season: nullTy(IntTy), eventCode: nullTy(StrTy) },
-            resolver: dataLoaderResolverList<
+            resolve: dataLoaderResolverList<
                 Team,
                 TeamMatchParticipation,
                 { season?: Season; eventCode?: string; teamNumber: number },

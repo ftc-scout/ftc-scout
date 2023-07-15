@@ -1,13 +1,22 @@
-import { GraphQLObjectType } from "graphql";
-import { DateTy, IntTy, StrTy, dataLoaderResolverSingle, nn, nullTy } from "../utils";
+import { GraphQLObjectType, GraphQLResolveInfo } from "graphql";
+import {
+    DateTy,
+    IntTy,
+    StrTy,
+    dataLoaderResolverSingle,
+    keyListToWhereClause,
+    nn,
+    nullTy,
+} from "../utils";
 import { AwardTypeGQL } from "./enums";
 import { TeamGQL } from "./Team";
 import { Award } from "../../db/entities/Award";
-import { Team } from "../../db/entities/Team";
-import { In } from "typeorm";
+import { FindOptionsWhere } from "typeorm";
 import { EventGQL } from "./Event";
 import { Event } from "../../db/entities/Event";
 import { Season } from "@ftc-scout/common";
+import graphqlFields from "graphql-fields";
+import { DATA_SOURCE } from "../../db/data-source";
 
 export const AwardGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Award",
@@ -21,19 +30,32 @@ export const AwardGQL: GraphQLObjectType = new GraphQLObjectType({
         createdAt: DateTy,
         updatedAt: DateTy,
 
-        team: {
-            type: nn(TeamGQL),
-            resolver: dataLoaderResolverSingle<Award, Team, number>(
-                (award) => award.teamNumber,
-                (keys) => Team.find({ where: { number: In(keys) } })
-            ),
-        },
+        // Must use aware loader
+        team: { type: nn(TeamGQL) },
+
         event: {
             type: nn(EventGQL),
-            resolver: dataLoaderResolverSingle<Award, Event, { season: Season; code: string }>(
+            resolve: dataLoaderResolverSingle<Award, Event, { season: Season; code: string }>(
                 (a) => ({ season: a.season, code: a.eventCode }),
                 (keys) => Event.find({ where: keys })
             ),
         },
     }),
 });
+
+export function teamAwareAwardLoader<K extends FindOptionsWhere<Award>>(
+    keys: K[],
+    info: GraphQLResolveInfo[]
+) {
+    let includeTeam = info.some((i) => "team" in graphqlFields(i));
+
+    let q = DATA_SOURCE.getRepository(Award)
+        .createQueryBuilder("a")
+        .where(keyListToWhereClause("a", keys));
+
+    if (includeTeam) {
+        q.leftJoinAndMapOne("a.team", "team", "t", "a.team_number = t.number");
+    }
+
+    return q.getMany();
+}
