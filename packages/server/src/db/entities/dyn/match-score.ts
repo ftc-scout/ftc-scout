@@ -23,8 +23,8 @@ type BaseColumns = {
     updatedAt: Date;
 };
 
-function makeMatchScore<TrScore, RemScore, CNames extends string>(
-    descriptor: MatchScoreTableDescriptor<TrScore, RemScore, CNames>
+function makeMatchScore(
+    descriptor: MatchScoreTableDescriptor<any, any, any>
 ): EntitySchema<MatchScore> {
     return new EntitySchema<MatchScore>({
         tableName: `match_score_${descriptor.season}`,
@@ -64,10 +64,10 @@ function getMatchScoreColumns(season: Season): Record<string, EntitySchemaColumn
 
     let extraColumns: Record<string, EntitySchemaColumnOptions> = {};
     MS_TABLE_DESCRIPTORS[season].columns.forEach((c) => {
-        extraColumns[c.name] = {
-            type: c.ty,
+        extraColumns[c.dbName] = {
+            type: c.dbTy,
             nullable: !!c.tradOnly,
-            ...(c.ty == "enum" ? { enum: c.enum! } : {}),
+            ...(c.dbTy == "enum" ? { enum: c.enum! } : {}),
         };
     });
 
@@ -119,13 +119,13 @@ export function initMS() {
                 let descriptor = MS_TABLE_DESCRIPTORS[match.eventSeason];
                 for (let column of descriptor.columns) {
                     if ("fromSelf" in column) {
-                        score[column.name] = column.fromSelf(score);
+                        score[column.dbName] = column.fromSelf(score);
                     } else {
                         let value =
                             remote && "fromRemoteApi" in column
                                 ? column.fromRemoteApi(s)
                                 : column.fromApi(s as any, other as any);
-                        score[column.name] = value;
+                        score[column.dbName] = value;
                     }
                 }
 

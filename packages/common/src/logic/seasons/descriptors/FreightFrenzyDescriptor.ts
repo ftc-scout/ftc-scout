@@ -7,6 +7,7 @@ export const SeasonDescriptor2021: SeasonDescriptor = {
 };
 
 export const MatchScoreTD2021 = inferMSTD({
-    season: Season.FreightFrenzy,
+    ...SeasonDescriptor2021,
+    gqlTys: [],
     columns: [],
 });

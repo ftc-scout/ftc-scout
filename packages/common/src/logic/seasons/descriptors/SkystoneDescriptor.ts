@@ -7,6 +7,7 @@ export const SeasonDescriptor2019: SeasonDescriptor = {
 };
 
 export const MatchScoreTD2019 = inferMSTD({
-    season: Season.Skystone,
+    ...SeasonDescriptor2019,
+    gqlTys: [],
     columns: [],
 });

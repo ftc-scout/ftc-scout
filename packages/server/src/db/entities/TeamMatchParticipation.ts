@@ -20,28 +20,21 @@ import {
 } from "typeorm";
 import { Match } from "./Match";
 import { Team } from "./Team";
-import { Field, Int, ObjectType } from "type-graphql";
 
-@ObjectType()
 @Entity()
 export class TeamMatchParticipation extends BaseEntity {
-    @Field(() => Int)
     @PrimaryColumn("smallint")
     season!: Season;
 
-    @Field()
     @PrimaryColumn()
     eventCode!: string;
 
-    @Field(() => Int)
     @PrimaryColumn("int")
     matchId!: number;
 
-    @Field(() => Alliance)
     @PrimaryColumn("enum", { enum: Alliance })
     alliance!: Alliance;
 
-    @Field(() => Station)
     @PrimaryColumn("enum", { enum: Station })
     station!: Station;
 
@@ -50,35 +43,27 @@ export class TeamMatchParticipation extends BaseEntity {
     @ManyToOne(() => Team, (team) => team.matches)
     team!: Team;
 
-    @Field(() => Int)
     @Column("int")
     teamNumber!: number;
 
-    @Field(() => AllianceRole)
     @Column("enum", { enum: AllianceRole })
     allianceRole!: AllianceRole;
 
-    @Field()
     @Column("bool")
     surrogate!: boolean;
 
-    @Field()
     @Column("bool")
     noShow!: boolean;
 
-    @Field()
     @Column("bool")
     dq!: boolean;
 
-    @Field()
     @Column("bool")
     onField!: boolean;
 
-    @Field()
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @Field()
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 

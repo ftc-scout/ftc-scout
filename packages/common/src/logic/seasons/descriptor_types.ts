@@ -1,13 +1,20 @@
+import { GraphQLNamedType, GraphQLOutputType, GraphQLSchema } from "graphql";
 import { Season } from "../Season";
 import { type ColumnType } from "typeorm";
+
+// --- Season ---
 
 export type SeasonDescriptor = {
     season: Season;
     hasRemote: boolean;
 };
 
+// --- Backend Match ---
+
 export type MatchScoreTableDescriptor<TrScore, RemScore, CNames extends string> = {
     season: Season;
+    hasRemote: boolean;
+    gqlTys: GraphQLNamedType[];
     columns: MatchScoreTableDescriptorColumn<TrScore, RemScore, CNames, ColumnType>[];
 };
 
@@ -18,10 +25,11 @@ export type MatchScoreTableDescriptorColumn<
     CT extends ColumnType
 > = CT extends any
     ? {
-          name: CNames;
-          ty: CT;
+          dbName: CNames;
           enum?: Object | any[];
+          apiTy?: GraphQLOutputType;
           tradOnly?: boolean;
+          dbTy: CT;
       } & CreatorFunc<TrScore, RemScore, CNames, CT>
     : never;
 
@@ -39,7 +47,9 @@ export function inferMSTD<TrScore, RemScore, CNames extends string>(
     return x;
 }
 
-type TsTypeFromToType<T extends ColumnType> = T extends "int8" | "smallint"
+type TsTypeFromToType<T extends ColumnType> = T extends "enum"
+    ? string
+    : T extends "int8" | "smallint"
     ? number
     : T extends "bool"
     ? boolean

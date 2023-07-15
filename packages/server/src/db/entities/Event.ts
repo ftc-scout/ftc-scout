@@ -10,111 +10,84 @@ import {
 } from "typeorm";
 import { EventFtcApi, EventType, Season, eventTypeFromFtcApi } from "@ftc-scout/common";
 import { Match } from "./Match";
-import { Field, Int, ObjectType } from "type-graphql";
 
-@ObjectType()
 @Entity()
 export class Event extends BaseEntity {
-    @Field(() => Int)
     @PrimaryColumn("smallint")
     season!: Season;
 
-    @Field()
     @PrimaryColumn()
     code!: string;
 
     @OneToMany(() => Match, (match) => match.event)
     matches!: Match[];
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     divisionCode!: string | null;
 
-    @Field()
     @Column()
     name!: string;
 
-    @Field()
     @Column()
     remote!: boolean;
 
-    @Field()
     @Column()
     hybrid!: boolean;
 
-    @Field(() => Int)
     @Column()
     fieldCount!: number;
 
-    @Field()
     @Column()
     published!: boolean;
 
-    @Field(() => EventType)
     @Column("enum", { enum: EventType })
     type!: EventType;
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     regionCode!: string | null;
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     leagueCode!: string | null;
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     districtCode!: string | null;
 
-    @Field()
     @Column()
     venue!: string;
 
-    @Field()
     @Column()
     address!: string;
 
-    @Field()
     @Column()
     country!: string;
 
-    @Field()
     @Column()
     state!: string;
 
-    @Field()
     @Column()
     city!: string;
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     website!: string | null;
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     liveStreamURL!: string | null;
 
-    @Field(() => [String])
     @Column("json")
     webcasts!: string[];
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     timezone!: string | null;
 
-    @Field()
     @Column("date")
     start!: Date;
 
-    @Field()
     @Column("date")
     end!: Date;
 
-    @Field()
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @Field()
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 

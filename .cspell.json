@@ -8,6 +8,7 @@
         "luxon",
         "mstd", // match score table descriptor
         "ocho",
+        "qliso",
         "quals",
         "stateprov",
         "timestamptz",

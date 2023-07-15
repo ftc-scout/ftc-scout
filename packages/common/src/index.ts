@@ -1,5 +1,6 @@
 export * from "./utils/throttle";
 export * from "./utils/filter";
+export * from "./utils/makeGQLEnum";
 export * from "./logic/Season";
 export * from "./logic/EventType";
 export * from "./logic/TournamentLevel";

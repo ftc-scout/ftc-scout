@@ -1,10 +1,18 @@
 import {
+    GraphQLEnumType,
+    GraphQLInt,
+    GraphQLList,
+    GraphQLNonNull,
+    GraphQLObjectType,
+} from "graphql";
+import {
     AllianceScores2022TradFtcApi,
     ApiConeType,
 } from "../../../ftc-api-types/match-scores/MatchScores2022Trad";
 import { Alliance } from "../../Alliance";
 import { Season } from "../../Season";
 import { type SeasonDescriptor, inferMSTD } from "../descriptor_types";
+import { makeGQLEnum } from "../../../utils/makeGQLEnum";
 
 export const AutoNav2022 = {
     None: "None",
@@ -13,6 +21,7 @@ export const AutoNav2022 = {
     TeamSignal: "TeamSignal",
 } as const;
 export type AutoNav2022 = (typeof AutoNav2022)[keyof typeof AutoNav2022];
+const autoNav2022GQL = makeGQLEnum(AutoNav2022, "AutoNav2022");
 
 function autoNav2022FromApi(
     place: "NONE" | "SIGNAL_ZONE" | "SUBSTATION_TERMINAL",
@@ -49,6 +58,7 @@ export const ConeType = {
     BlueBeacon2: "BlueBeacon2",
 } as const;
 export type ConeType = (typeof ConeType)[keyof typeof ConeType];
+const coneTypeGQL = makeGQLEnum(ConeType, "ConeType");
 
 function coneTypeFromApi(coneType: ApiConeType, myColor: Alliance): ConeType {
     switch (coneType) {
@@ -87,166 +97,191 @@ function coneLayoutFromApi(api: ApiConeType[][][], myAlliance: Alliance): ConeTy
     return res;
 }
 
+let coneLayoutGQL = new GraphQLObjectType({
+    name: "ConeLayout",
+    fields: {
+        redNearTerminal: { type: new GraphQLNonNull(GraphQLInt) },
+        redFarTerminal: { type: new GraphQLNonNull(GraphQLInt) },
+        blueNearTerminal: { type: new GraphQLNonNull(GraphQLInt) },
+        blueFarTerminal: { type: new GraphQLNonNull(GraphQLInt) },
+        junctions: {
+            type: new GraphQLNonNull(
+                new GraphQLList(
+                    new GraphQLNonNull(
+                        new GraphQLList(
+                            new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(coneTypeGQL)))
+                        )
+                    )
+                )
+            ),
+        },
+    },
+});
+
 export const SeasonDescriptor2022: SeasonDescriptor = {
     season: Season.PowerPlay,
     hasRemote: false,
 };
 
 export const MatchScoreTD2022 = inferMSTD({
-    season: Season.PowerPlay,
+    ...SeasonDescriptor2022,
+    gqlTys: [autoNav2022GQL, coneTypeGQL, coneLayoutGQL],
     columns: [
         {
-            name: "autoNav1",
-            ty: "enum",
+            dbName: "autoNav1",
+            dbTy: "enum",
             enum: AutoNav2022,
-            fromApi: (api: AllianceScores2022TradFtcApi) =>
-                autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
+            apiTy: autoNav2022GQL,
+            fromApi: (api) => autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
         },
         {
-            name: "autoNav2",
-            ty: "enum",
+            dbName: "autoNav2",
+            dbTy: "enum",
             enum: AutoNav2022,
+            apiTy: autoNav2022GQL,
             fromApi: (api) => autoNav2022FromApi(api.robot2Auto, api.initSignalSleeve2),
         },
         {
-            name: "autoTerminalCones",
-            ty: "int8",
+            dbName: "autoTerminalCones",
+            dbTy: "int8",
+            fromApi: (api: AllianceScores2022TradFtcApi) => api.autoTerminal,
+        },
+        {
+            dbName: "autoTerminalCones",
+            dbTy: "int8",
             fromApi: (api) => api.autoTerminal,
         },
         {
-            name: "autoTerminalCones",
-            ty: "int8",
-            fromApi: (api) => api.autoTerminal,
-        },
-        {
-            name: "autoGroundCones",
-            ty: "int8",
+            dbName: "autoGroundCones",
+            dbTy: "int8",
             fromApi: (api) => api.autoJunctionCones[0],
         },
         {
-            name: "autoLowCones",
-            ty: "int8",
+            dbName: "autoLowCones",
+            dbTy: "int8",
             fromApi: (api) => api.autoJunctionCones[1],
         },
         {
-            name: "autoMediumCones",
-            ty: "int8",
+            dbName: "autoMediumCones",
+            dbTy: "int8",
             fromApi: (api) => api.autoJunctionCones[2],
         },
         {
-            name: "autoHighCones",
-            ty: "int8",
+            dbName: "autoHighCones",
+            dbTy: "int8",
             fromApi: (api) => api.autoJunctionCones[3],
         },
         {
-            name: "autoConeLayout",
-            ty: "json",
+            dbName: "autoConeLayout",
+            dbTy: "json",
+            apiTy: coneLayoutGQL,
             fromApi: (api) => coneLayoutFromApi(api.autoJunctions, api.alliance),
         },
         {
-            name: "dcNearTerminalCones",
-            ty: "int8",
+            dbName: "dcNearTerminalCones",
+            dbTy: "int8",
             fromApi: (api) => api.dcTerminalNear,
         },
         {
-            name: "dcFarTerminalCones",
-            ty: "int8",
+            dbName: "dcFarTerminalCones",
+            dbTy: "int8",
             fromApi: (api) => api.dcTerminalFar,
         },
         {
-            name: "dcTerminalCones",
-            ty: "int8",
+            dbName: "dcTerminalCones",
+            dbTy: "int8",
             fromSelf: (self) => self.dcNearTerminalCones + self.dcFarTerminalCones,
         },
         {
-            name: "dcGroundCones",
-            ty: "int8",
+            dbName: "dcGroundCones",
+            dbTy: "int8",
             fromApi: (api) => api.dcJunctionCones[0],
         },
         {
-            name: "dcLowCones",
-            ty: "int8",
+            dbName: "dcLowCones",
+            dbTy: "int8",
             fromApi: (api) => api.dcJunctionCones[1],
         },
         {
-            name: "dcMediumCones",
-            ty: "int8",
+            dbName: "dcMediumCones",
+            dbTy: "int8",
             fromApi: (api) => api.dcJunctionCones[2],
         },
         {
-            name: "dcHighCones",
-            ty: "int8",
+            dbName: "dcHighCones",
+            dbTy: "int8",
             fromApi: (api) => api.dcJunctionCones[3],
         },
         {
-            name: "dcConeLayout",
-            ty: "json",
+            dbName: "dcConeLayout",
+            dbTy: "json",
+            apiTy: coneLayoutGQL,
             fromApi: (api) => coneLayoutFromApi(api.dcJunctions, api.alliance),
         },
         {
-            name: "egNav1",
-            ty: "bool",
+            dbName: "egNav1",
+            dbTy: "bool",
             fromApi: (api) => api.egNavigated1,
         },
         {
-            name: "egNav2",
-            ty: "bool",
+            dbName: "egNav2",
+            dbTy: "bool",
             fromApi: (api) => api.egNavigated2,
         },
         {
-            name: "coneOwnedJunctions",
-            ty: "int8",
+            dbName: "coneOwnedJunctions",
+            dbTy: "int8",
             fromApi: (api) => api.ownedJunctions - api.beacons,
         },
         {
-            name: "beaconOwnedJunctions",
-            ty: "int8",
+            dbName: "beaconOwnedJunctions",
+            dbTy: "int8",
             fromApi: (api) => api.beacons,
         },
         {
-            name: "circuit",
-            ty: "bool",
+            dbName: "circuit",
+            dbTy: "bool",
             fromApi: (api) => api.circuit,
         },
         {
-            name: "minorsCommitted",
-            ty: "int8",
+            dbName: "minorsCommitted",
+            dbTy: "int8",
             fromApi: (api) => api.minorPenalties,
         },
         {
-            name: "majorsCommitted",
-            ty: "int8",
+            dbName: "majorsCommitted",
+            dbTy: "int8",
             fromApi: (api) => api.majorPenalties,
         },
         {
-            name: "penaltyPointsCommitted",
-            ty: "smallint",
+            dbName: "penaltyPointsCommitted",
+            dbTy: "smallint",
             fromSelf: (self) => self.minorsCommitted * 10 + self.majorsCommitted * 30,
         },
 
         {
-            name: "minorsByOpp",
-            ty: "int8",
+            dbName: "minorsByOpp",
+            dbTy: "int8",
             fromApi: (_, oth) => oth.minorPenalties,
         },
         {
-            name: "majorsByOpp",
-            ty: "int8",
+            dbName: "majorsByOpp",
+            dbTy: "int8",
             fromApi: (_, oth) => oth.majorPenalties,
         },
         {
-            name: "penaltyPointsByOpp",
-            ty: "smallint",
+            dbName: "penaltyPointsByOpp",
+            dbTy: "smallint",
             fromSelf: (self) => self.minorsByOpp * 10 + self.majorsByOpp * 30,
         },
         {
-            name: "autoNavPoints",
-            ty: "smallint",
+            dbName: "autoNavPoints",
+            dbTy: "smallint",
             fromSelf: (self) => autoNav2022Points(self.autoNav1) + autoNav2022Points(self.autoNav2),
         },
         {
-            name: "autoConePoints",
-            ty: "smallint",
+            dbName: "autoConePoints",
+            dbTy: "smallint",
             fromSelf: (self) =>
                 self.autoTerminalCones * 1 +
                 self.autoGroundCones * 2 +
@@ -255,28 +290,28 @@ export const MatchScoreTD2022 = inferMSTD({
                 self.autoHighCones * 5,
         },
         {
-            name: "egNavPoints",
-            ty: "smallint",
+            dbName: "egNavPoints",
+            dbTy: "smallint",
             fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2,
         },
         {
-            name: "ownershipPoints",
-            ty: "smallint",
+            dbName: "ownershipPoints",
+            dbTy: "smallint",
             fromSelf: (self) => self.coneOwnedJunctions * 3 + self.beaconOwnedJunctions * 10,
         },
         {
-            name: "circuitPoints",
-            ty: "smallint",
+            dbName: "circuitPoints",
+            dbTy: "smallint",
             fromSelf: (self) => self.circuit * 20,
         },
         {
-            name: "autoPoints",
-            ty: "smallint",
+            dbName: "autoPoints",
+            dbTy: "smallint",
             fromSelf: (self) => self.autoNavPoints + self.autoConePoints,
         },
         {
-            name: "dcPoints",
-            ty: "smallint",
+            dbName: "dcPoints",
+            dbTy: "smallint",
             fromSelf: (self) =>
                 self.dcTerminalCones * 1 +
                 self.dcGroundCones * 2 +
@@ -285,18 +320,18 @@ export const MatchScoreTD2022 = inferMSTD({
                 self.dcHighCones * 5,
         },
         {
-            name: "egPoints",
-            ty: "smallint",
+            dbName: "egPoints",
+            dbTy: "smallint",
             fromSelf: (self) => self.egNavPoints + self.ownershipPoints + self.circuitPoints,
         },
         {
-            name: "totalPointsNp",
-            ty: "smallint",
+            dbName: "totalPointsNp",
+            dbTy: "smallint",
             fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints,
         },
         {
-            name: "totalPoints",
-            ty: "smallint",
+            dbName: "totalPoints",
+            dbTy: "smallint",
             fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp,
         },
     ],

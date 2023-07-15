@@ -10,55 +10,42 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
-import { Field, Int, ObjectType } from "type-graphql";
 
-@ObjectType()
 @Entity()
 export class Team extends BaseEntity {
-    @Field(() => Int)
     @PrimaryColumn("int")
     number!: number;
 
     @OneToMany(() => TeamMatchParticipation, (tmp) => tmp.team)
     matches!: TeamMatchParticipation[];
 
-    @Field()
     @Column()
     name!: string;
 
-    @Field()
     @Column()
     schoolName!: string;
 
-    @Field(() => [String])
     @Column("json")
     sponsors!: string[];
 
-    @Field()
     @Column()
     country!: string;
 
-    @Field()
     @Column()
     state!: string;
 
-    @Field()
     @Column()
     city!: string;
 
-    @Field(() => Int)
     @Column()
     rookieYear!: number;
 
-    @Field(() => String, { nullable: true })
     @Column({ type: "varchar", nullable: true })
     website?: string | null;
 
-    @Field()
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
-    @Field()
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 

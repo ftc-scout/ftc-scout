@@ -7,6 +7,7 @@ export const SeasonDescriptor2020: SeasonDescriptor = {
 };
 
 export const MatchScoreTD2020 = inferMSTD({
-    season: Season.UltimateGoal,
+    ...SeasonDescriptor2020,
+    gqlTys: [],
     columns: [],
 });

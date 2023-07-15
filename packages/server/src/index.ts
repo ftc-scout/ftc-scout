@@ -1,7 +1,6 @@
 import "dotenv/config";
 
 import { DATA_SOURCE } from "./db/data-source";
-import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
 import { initDynamicEntities } from "./db/entities/dyn/init";
 import express from "express";
 import cors from "cors";
@@ -10,10 +9,8 @@ import { apiLoggerMiddleware } from "./db/entities/ApiReq";
 import { SERVER_PORT } from "./constants";
 import { ApolloServer } from "@apollo/server";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
-import { buildTypeDefsAndResolvers } from "type-graphql";
-import { typeGQLResolvers } from "./graphql/resolvers";
 import { expressMiddleware } from "@apollo/server/express4";
-import { dynTypesSchema } from "./graphql/types/dyn/dyn-types-schema";
+import { GQL_SCHEMA } from "./graphql/schema";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -31,15 +28,9 @@ async function main() {
         express.json()
     );
 
-    let { typeDefs, resolvers } = await buildTypeDefsAndResolvers({
-        resolvers: typeGQLResolvers,
-        validate: false,
-    });
-
     let apolloServer = new ApolloServer({
         introspection: true,
-        typeDefs: [typeDefs, dynTypesSchema],
-        resolvers,
+        schema: GQL_SCHEMA,
         plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
     });
 
@@ -51,8 +42,8 @@ async function main() {
         console.log(`Server started and listening on port ${SERVER_PORT}.`);
     });
 
-    await fetchPriorSeasons();
-    await watchApi();
+    // await fetchPriorSeasons();
+    // await watchApi();
 }
 
 main();
