@@ -6,9 +6,9 @@ import { FtcApiReq } from "./entities/FtcApiReq";
 import { DataHasBeenLoaded } from "./entities/DataHasBeenLoaded";
 import { MatchScoreSchemas } from "./entities/dyn/match-score";
 import { Match } from "./entities/Match";
-import { tepSchemas } from "./entities/dyn/team-event-participation";
 import { TeamMatchParticipation } from "./entities/TeamMatchParticipation";
 import { Award } from "./entities/Award";
+import { TeamEventParticipationSchemas } from "./entities/dyn/team-event-participation";
 
 export const DEV_ENTITIES: MixedList<string | Function | EntitySchema<any>> = [FtcApiReq];
 
@@ -20,6 +20,6 @@ export const ENTITIES: MixedList<string | Function | EntitySchema<any>> = [
     Match,
     TeamMatchParticipation,
     ...Object.values(MatchScoreSchemas),
-    ...tepSchemas,
+    ...Object.values(TeamEventParticipationSchemas),
     ...(IS_DEV ? DEV_ENTITIES : []),
 ];

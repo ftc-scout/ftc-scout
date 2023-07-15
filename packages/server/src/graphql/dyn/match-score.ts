@@ -1,18 +1,11 @@
-import {
-    Alliance,
-    MS_TABLE_DESCRIPTORS,
-    MatchScoreTableDescriptor,
-    SEASON_DESCRIPTORS,
-} from "@ftc-scout/common";
+import { Alliance, DESCRIPTORS, Descriptor, IntTy, StrTy, nn } from "@ftc-scout/common";
 import { GraphQLFieldConfig, GraphQLNonNull, GraphQLObjectType } from "graphql";
-import { typeormTypeToGraphQLType } from "./db-to-api-type";
-import { IntTy, StrTy, nn } from "../utils";
 import { AllianceGQL } from "../resolvers/enums";
 import { MatchScore } from "../../db/entities/dyn/match-score";
 import { AnyObject } from "../../type-utils";
 
 export function makeMatchScoreTys(
-    descriptor: MatchScoreTableDescriptor<any, any, any>
+    descriptor: Descriptor
 ): [GraphQLObjectType, GraphQLObjectType, GraphQLObjectType | null] {
     return [...makeMSTysTrad(descriptor), makeMSTysRemote(descriptor)];
 }
@@ -20,10 +13,12 @@ export function makeMatchScoreTys(
 export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
     function fields(s: MatchScore): AnyObject {
         let ret: AnyObject = {};
-        let descriptor = MS_TABLE_DESCRIPTORS[s.season];
+        let descriptor = DESCRIPTORS[s.season];
 
         for (let c of descriptor.columns) {
-            ret[c.dbName] = s[c.dbName];
+            if (c.msApi == undefined || c.msApi.outer) continue;
+
+            ret[c.name] = s[c.name];
         }
 
         return ret;
@@ -45,8 +40,8 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
         let blue = ms.find((s) => s.alliance == Alliance.Blue);
         if (red == undefined || blue == undefined) return null;
 
-        return {
-            __typename: SEASON_DESCRIPTORS[red.season].hasRemote
+        let ret: AnyObject = {
+            __typename: DESCRIPTORS[red.season].hasRemote
                 ? `MatchScores${red.season}Trad`
                 : `MatchScores${red.season}`,
             season: red.season,
@@ -55,30 +50,49 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
             red: fields(red),
             blue: fields(blue),
         };
+
+        let descriptor = DESCRIPTORS[red.season];
+
+        for (let c of descriptor.columns) {
+            if (c.msApi == undefined || !c.msApi.outer) continue;
+
+            ret[c.name] = "map" in c.msApi ? c.msApi.map(red, blue) : red[c.name];
+        }
+
+        return ret;
     }
 
     return null;
 }
 
-function makeMSTysTrad(
-    descriptor: MatchScoreTableDescriptor<any, any, any>
-): [GraphQLObjectType, GraphQLObjectType] {
-    let fields: Record<string, GraphQLFieldConfig<any, any>> = {
+function makeMSTysTrad(descriptor: Descriptor): [GraphQLObjectType, GraphQLObjectType] {
+    let innerFields: Record<string, GraphQLFieldConfig<any, any>> = {
         season: IntTy,
         eventCode: StrTy,
         matchID: IntTy,
         alliance: { type: nn(AllianceGQL) },
     };
 
+    let outerFields: Record<string, GraphQLFieldConfig<any, any>> = {
+        season: IntTy,
+        eventCode: StrTy,
+        matchID: IntTy,
+    };
+
     for (let c of descriptor.columns) {
-        let type = c.apiTy ?? typeormTypeToGraphQLType(c.dbTy);
-        if (type == null) throw `Unknown type ${c.dbTy}`;
-        fields[c.dbName] = { type: new GraphQLNonNull(type) };
+        if (c.msApi == undefined) continue;
+
+        let type = new GraphQLNonNull(c.type.gql);
+        if (c.msApi.outer) {
+            outerFields[c.name] = { type };
+        } else {
+            innerFields[c.name] = { type };
+        }
     }
 
     let allianceTy = new GraphQLObjectType({
         name: `MatchScores${descriptor.season}Alliance`,
-        fields,
+        fields: innerFields,
     });
 
     let outerTy = new GraphQLObjectType({
@@ -86,9 +100,7 @@ function makeMSTysTrad(
             ? `MatchScores${descriptor.season}Trad`
             : `MatchScores${descriptor.season}`,
         fields: {
-            season: IntTy,
-            eventCode: StrTy,
-            matchID: IntTy,
+            ...outerFields,
             red: { type: nn(allianceTy) },
             blue: { type: nn(allianceTy) },
         },
@@ -97,9 +109,7 @@ function makeMSTysTrad(
     return [outerTy, allianceTy];
 }
 
-function makeMSTysRemote(
-    descriptor: MatchScoreTableDescriptor<any, any, any>
-): GraphQLObjectType | null {
+function makeMSTysRemote(descriptor: Descriptor): GraphQLObjectType | null {
     if (!descriptor.hasRemote) return null;
 
     let fields: Record<string, GraphQLFieldConfig<any, any>> = {
@@ -109,9 +119,10 @@ function makeMSTysRemote(
     };
 
     for (let c of descriptor.columns) {
-        let type = c.apiTy ?? typeormTypeToGraphQLType(c.dbTy);
-        if (type == null) throw `Unknown type ${c.dbTy}`;
-        fields[c.dbName] = { type: new GraphQLNonNull(type) };
+        if (c.msApi == undefined) continue;
+
+        let type = c.type.gql;
+        fields[c.name] = { type: new GraphQLNonNull(type) };
     }
 
     let outerTy = new GraphQLObjectType({

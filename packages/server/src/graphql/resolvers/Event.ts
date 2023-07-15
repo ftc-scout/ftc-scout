@@ -1,21 +1,10 @@
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
-import {
-    BoolTy,
-    DateTy,
-    IntTy,
-    StrTy,
-    dataLoaderResolverList,
-    dataLoaderResolverSingle,
-    list,
-    listTy,
-    nn,
-    nullTy,
-} from "../utils";
+import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
 import { EventTypeGQL } from "./enums";
 import { AwardGQL, teamAwareAwardLoader } from "./Award";
 import { Event } from "../../db/entities/Event";
 import { Award } from "../../db/entities/Award";
-import { Season } from "@ftc-scout/common";
+import { BoolTy, DateTy, IntTy, Season, StrTy, list, listTy, nn, nullTy } from "@ftc-scout/common";
 import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { MatchGQL, scoreAwareMatchLoader } from "./Match";

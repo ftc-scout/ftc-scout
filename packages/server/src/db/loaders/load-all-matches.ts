@@ -1,4 +1,4 @@
-import { MatchFtcApi, MatchScoresFtcApi, SEASON_DESCRIPTORS, Season } from "@ftc-scout/common";
+import { DESCRIPTORS, MatchFtcApi, MatchScoresFtcApi, Season } from "@ftc-scout/common";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
 import { Event } from "../entities/Event";
 import { DATA_SOURCE } from "../data-source";
@@ -20,7 +20,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
     for (let i = 0; i < events.length; i++) {
         let event = events[i];
 
-        if (event.remote && !SEASON_DESCRIPTORS[season].hasRemote) continue;
+        if (event.remote && !DESCRIPTORS[season].hasRemote) continue;
 
         try {
             let [matches, scores, _teams] = await Promise.all([

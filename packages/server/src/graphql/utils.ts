@@ -1,44 +1,8 @@
-import {
-    GraphQLBoolean,
-    GraphQLFieldResolver,
-    GraphQLInt,
-    GraphQLList,
-    GraphQLNonNull,
-    GraphQLNullableType,
-    GraphQLResolveInfo,
-    GraphQLString,
-    GraphQLType,
-} from "graphql";
+import { GraphQLFieldResolver, GraphQLResolveInfo } from "graphql";
 import { GQLContext } from "./context";
 import DataLoader from "dataloader";
-import { GraphQLDateTime } from "graphql-scalars";
 import { Brackets } from "typeorm";
 import { AnyObject } from "../type-utils";
-
-type Wr<T> = { type: T };
-function wr<T>(t: T): Wr<T> {
-    return { type: t };
-}
-
-export function nn<T extends GraphQLNullableType>(ty: T): GraphQLNonNull<T> {
-    return new GraphQLNonNull(ty) as GraphQLNonNull<T>;
-}
-export function list<T extends GraphQLType>(ty: T): GraphQLNonNull<GraphQLList<T>> {
-    return nn(new GraphQLList(ty) as GraphQLList<T>);
-}
-
-export const IntTy = wr(nn(GraphQLInt));
-export const StrTy = wr(nn(GraphQLString));
-export const BoolTy = wr(nn(GraphQLBoolean));
-export const DateTy = wr(nn(GraphQLDateTime));
-
-export function listTy<T extends GraphQLType>(ty: Wr<T>): Wr<GraphQLNonNull<GraphQLList<T>>> {
-    return wr(list(ty.type));
-}
-
-export function nullTy<T extends GraphQLNullableType>(ty: Wr<GraphQLNonNull<T>>) {
-    return wr(ty.type.ofType);
-}
 
 export function dataLoaderResolver<Source, Result, Key, Args = {}, LookupResult = Result>(
     argsToKey: (s: Source, a: Args) => Key,

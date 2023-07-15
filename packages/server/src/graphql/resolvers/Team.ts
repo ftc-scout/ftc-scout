@@ -1,14 +1,6 @@
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
-import {
-    DateTy,
-    IntTy,
-    StrTy,
-    dataLoaderResolverList,
-    dataLoaderResolverSingle,
-    list,
-    listTy,
-    nullTy,
-} from "../utils";
+import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
+import { DateTy, IntTy, StrTy, list, listTy, nullTy } from "@ftc-scout/common";
 import { Team } from "../../db/entities/Team";
 import { In } from "typeorm";
 import { AwardGQL, teamAwareAwardLoader } from "./Award";

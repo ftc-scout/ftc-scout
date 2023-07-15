@@ -1,15 +1,6 @@
 import { GraphQLObjectType, GraphQLResolveInfo } from "graphql";
-import {
-    BoolTy,
-    DateTy,
-    IntTy,
-    StrTy,
-    dataLoaderResolverSingle,
-    keyListToWhereClause,
-    list,
-    nn,
-    nullTy,
-} from "../utils";
+import { dataLoaderResolverSingle, keyListToWhereClause } from "../utils";
+import { BoolTy, DateTy, IntTy, StrTy, list, nn, nullTy } from "@ftc-scout/common";
 import { Match } from "../../db/entities/Match";
 import { Event } from "../../db/entities/Event";
 import { EventTypeGQL, TournamentLevelGQL } from "./enums";

@@ -1,11 +1,4 @@
-import {
-    type Season,
-    SeasonDescriptor,
-    SeasonDescriptor2019,
-    SeasonDescriptor2020,
-    SeasonDescriptor2021,
-    SeasonDescriptor2022,
-} from "@ftc-scout/common";
+import { DESCRIPTORS_LIST, Descriptor, type Season } from "@ftc-scout/common";
 import { EntitySchema, EntitySchemaColumnOptions, Repository } from "typeorm";
 import { DATA_SOURCE } from "../../data-source";
 import { AnyObject } from "../../../type-utils";
@@ -18,7 +11,7 @@ type BaseColumns = {
     updatedAt: Date;
 };
 
-function makeTep(descriptor: SeasonDescriptor): EntitySchema<TeamEventParticipation> {
+function makeTep(descriptor: Descriptor): EntitySchema<TeamEventParticipation> {
     return new EntitySchema<TeamEventParticipation>({
         tableName: `tep_${descriptor.season}`,
         name: `tep_${descriptor.season}`,
@@ -55,23 +48,21 @@ function getTepColumns(): Record<string, EntitySchemaColumnOptions> {
 
 // HELP: Season Specific
 
-let tepSchema2019 = makeTep(SeasonDescriptor2019);
-let tepSchema2020 = makeTep(SeasonDescriptor2020);
-let tepSchema2021 = makeTep(SeasonDescriptor2021);
-let tepSchema2022 = makeTep(SeasonDescriptor2022);
-
-export let tepSchemas = [tepSchema2019, tepSchema2020, tepSchema2021, tepSchema2022];
+export let TeamEventParticipationSchemas = {} as Record<
+    Season,
+    EntitySchema<TeamEventParticipation>
+>;
+for (let d of DESCRIPTORS_LIST) {
+    TeamEventParticipationSchemas[d.season] = makeTep(d);
+}
 
 export type TeamEventParticipation = BaseColumns & AnyObject;
-export let TeamEventParticipation: {
-    [s in Season]: Repository<TeamEventParticipation>;
-};
+export let TeamEventParticipation = {} as Record<Season, Repository<TeamEventParticipation>>;
 
 export function initTep() {
-    TeamEventParticipation = {
-        [2019]: DATA_SOURCE.getRepository(tepSchema2019),
-        [2020]: DATA_SOURCE.getRepository(tepSchema2020),
-        [2021]: DATA_SOURCE.getRepository(tepSchema2021),
-        [2022]: DATA_SOURCE.getRepository(tepSchema2022),
-    };
+    for (let d of DESCRIPTORS_LIST) {
+        TeamEventParticipation[d.season] = DATA_SOURCE.getRepository(
+            TeamEventParticipationSchemas[d.season]
+        );
+    }
 }

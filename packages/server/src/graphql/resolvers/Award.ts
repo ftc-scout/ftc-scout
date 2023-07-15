@@ -1,20 +1,12 @@
 import { GraphQLObjectType, GraphQLResolveInfo } from "graphql";
-import {
-    DateTy,
-    IntTy,
-    StrTy,
-    dataLoaderResolverSingle,
-    keyListToWhereClause,
-    nn,
-    nullTy,
-} from "../utils";
+import { dataLoaderResolverSingle, keyListToWhereClause } from "../utils";
 import { AwardTypeGQL } from "./enums";
 import { TeamGQL } from "./Team";
 import { Award } from "../../db/entities/Award";
 import { FindOptionsWhere } from "typeorm";
 import { EventGQL } from "./Event";
 import { Event } from "../../db/entities/Event";
-import { Season } from "@ftc-scout/common";
+import { DateTy, IntTy, Season, StrTy, nn, nullTy } from "@ftc-scout/common";
 import graphqlFields from "graphql-fields";
 import { DATA_SOURCE } from "../../db/data-source";
 
