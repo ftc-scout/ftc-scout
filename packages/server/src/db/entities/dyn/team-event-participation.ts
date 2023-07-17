@@ -74,9 +74,9 @@ function getAggregateStatColumns(descriptor: Descriptor): EntitySchema<any> {
     let columns: Record<string, EntitySchemaColumnOptions> = {};
 
     descriptor.columns.forEach((c) => {
-        if (c.tepDb == undefined) return;
+        if (c.tep == undefined) return;
         columns[c.name] = { type: "float" };
-        if (c.tepDb.individual != undefined) columns[c.name + "Individual"] = { type: "float" };
+        if (c.tep.individual != undefined) columns[c.name + "Individual"] = { type: "float" };
     });
 
     return new EntitySchema({

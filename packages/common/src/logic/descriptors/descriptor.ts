@@ -30,14 +30,12 @@ export type GenDescriptor<TradApi, RemoteApi, Names extends string> = {
     columns: {
         name: Names;
         type: DescriptorType;
-        msDb?: MsDbDescriptor<TradApi, RemoteApi, Names>;
-        msApi?: MsApiDescriptor<Names>;
-        tepDb?: TepDbDescriptor<Names>;
+        ms?: MsDbDescriptor<TradApi, RemoteApi, Names> & MsApiDescriptor<Names>;
+        tep?: TepDbDescriptor<Names>;
     }[];
 };
 
 type MsDbDescriptor<TradApi, RemoteApi, Names extends string> = {
-    name?: string;
     tradOnly?: boolean;
 } & (
     | {
@@ -51,7 +49,7 @@ type MsDbDescriptor<TradApi, RemoteApi, Names extends string> = {
 
 type MsApiDescriptor<Names extends string> = {
     outer?: boolean;
-    map?(red: Record<Names, any>, blue: Record<Names, any>): any;
+    mapForApi?(red: Record<Names, any>, blue: Record<Names, any>): any;
 };
 
 type TepDbDescriptor<Names extends string> = {

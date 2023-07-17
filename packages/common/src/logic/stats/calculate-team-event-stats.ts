@@ -63,10 +63,10 @@ export function calculateTeamEventStats(
 
     let emptyGroup = {} as Record<string, any>;
     for (let c of descriptor.columns) {
-        if (c.tepDb == undefined) continue;
+        if (c.tep == undefined) continue;
 
         emptyGroup[c.name] = 0;
-        if (c.tepDb.individual != undefined) emptyGroup[c.name + "Individual"] = 0;
+        if (c.tep.individual != undefined) emptyGroup[c.name + "Individual"] = 0;
     }
 
     let teps = {} as Record<number, Tep>;
@@ -164,8 +164,8 @@ const dev = (arr: number[]) => {
 function getStat(s: AnyObject, c: Descriptor["columns"][number]): any {
     if (c.name in s) {
         return s[c.name];
-    } else if (c.tepDb?.fromSelf != undefined) {
-        return c.tepDb.fromSelf(s);
+    } else if (c.tep?.fromSelf != undefined) {
+        return c.tep.fromSelf(s);
     } else {
         throw `Can't get stat ${c.name}`;
     }
@@ -176,9 +176,9 @@ function calculateGroupStats(matches: Match[], teps: Record<number, Tep>, descri
     for (let team of Object.keys(teps)) {
         dataPoints[+team] = {};
         for (let c of descriptor.columns) {
-            if (c.tepDb == undefined) continue;
+            if (c.tep == undefined) continue;
             dataPoints[+team][c.name] = [];
-            if (c.tepDb.individual != undefined) dataPoints[+team][c.name + "Individual"] = [];
+            if (c.tep.individual != undefined) dataPoints[+team][c.name + "Individual"] = [];
         }
     }
 
@@ -194,14 +194,14 @@ function calculateGroupStats(matches: Match[], teps: Record<number, Tep>, descri
             let s = allianceScores[t.alliance]!;
 
             for (let c of descriptor.columns) {
-                if (c.tepDb == undefined) continue;
+                if (c.tep == undefined) continue;
                 dataPoints[t.teamNumber][c.name].push(getStat(s, c));
-                if (c.tepDb.individual != undefined) {
+                if (c.tep.individual != undefined) {
                     let arr = dataPoints[t.teamNumber][c.name + "Individual"];
                     if (t.station == Station.One) {
-                        arr.push(c.tepDb.individual.first(s));
+                        arr.push(c.tep.individual.first(s));
                     } else if (t.station == Station.Two) {
-                        arr.push(c.tepDb.individual.second(s));
+                        arr.push(c.tep.individual.second(s));
                     } else if (t.station == Station.Solo) {
                         arr.push(getStat(s, c));
                     }
@@ -236,10 +236,10 @@ function calculateOprs(
 
     let dataPoints = {} as Record<string, OprData[]>;
     for (let c of descriptor.columns) {
-        if (c.tepDb == undefined) continue;
+        if (c.tep == undefined) continue;
         dataPoints[c.name] = [];
 
-        if (c.tepDb.individual != undefined) {
+        if (c.tep.individual != undefined) {
             for (let [team, data] of Object.entries(teps)) {
                 teps[+team].opr[c.name + "Individual"] = data.opr[c.name];
             }
@@ -251,7 +251,7 @@ function calculateOprs(
             let [team1, team2] = m.teams.filter((t) => t.alliance == a).map((t) => t.teamNumber);
             let s = m.scores.find((s) => s.alliance == a)!;
             for (let c of descriptor.columns) {
-                if (c.tepDb == undefined) continue;
+                if (c.tep == undefined) continue;
                 dataPoints[c.name].push({ team1, team2, result: getStat(s, c) });
             }
         }

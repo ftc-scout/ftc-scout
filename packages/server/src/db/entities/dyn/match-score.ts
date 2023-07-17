@@ -63,11 +63,11 @@ function getMatchScoreColumns(descriptor: Descriptor): Record<string, EntitySche
 
     let extraColumns: Record<string, EntitySchemaColumnOptions> = {};
     descriptor.columns.forEach((c) => {
-        if (c.msDb == undefined) return;
+        if (c.ms == undefined) return;
 
         extraColumns[c.name] = {
             ...c.type.typeorm,
-            nullable: !!c.msDb.tradOnly,
+            nullable: !!c.ms.tradOnly,
         };
     });
 
@@ -105,15 +105,15 @@ export function initMS() {
 
             let descriptor = DESCRIPTORS[match.eventSeason];
             for (let column of descriptor.columns) {
-                if (column.msDb == undefined) continue;
+                if (column.ms == undefined) continue;
 
-                if ("fromSelf" in column.msDb) {
-                    score[column.name] = column.msDb.fromSelf(score);
+                if ("fromSelf" in column.ms) {
+                    score[column.name] = column.ms.fromSelf(score);
                 } else {
                     score[column.name] =
-                        remote && "fromRemoteApi" in column.msDb
-                            ? column.msDb.fromRemoteApi(s)
-                            : column.msDb.fromTradApi(s, other!);
+                        remote && "fromRemoteApi" in column.ms
+                            ? column.ms.fromRemoteApi(s)
+                            : column.ms.fromTradApi(s, other!);
                 }
             }
 

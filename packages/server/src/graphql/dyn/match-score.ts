@@ -16,7 +16,7 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
         let descriptor = DESCRIPTORS[s.season];
 
         for (let c of descriptor.columns) {
-            if (c.msApi == undefined || c.msApi.outer) continue;
+            if (c.ms == undefined || c.ms.outer) continue;
 
             ret[c.name] = s[c.name];
         }
@@ -54,9 +54,9 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
         let descriptor = DESCRIPTORS[red.season];
 
         for (let c of descriptor.columns) {
-            if (c.msApi == undefined || !c.msApi.outer) continue;
+            if (c.ms == undefined || !c.ms.outer) continue;
 
-            ret[c.name] = "map" in c.msApi ? c.msApi.map(red, blue) : red[c.name];
+            ret[c.name] = "mapForApi" in c.ms ? c.ms.mapForApi(red, blue) : red[c.name];
         }
 
         return ret;
@@ -80,10 +80,10 @@ function makeMSTysTrad(descriptor: Descriptor): [GraphQLObjectType, GraphQLObjec
     };
 
     for (let c of descriptor.columns) {
-        if (c.msApi == undefined) continue;
+        if (c.ms == undefined) continue;
 
         let type = new GraphQLNonNull(c.type.gql);
-        if (c.msApi.outer) {
+        if (c.ms.outer) {
             outerFields[c.name] = { type };
         } else {
             innerFields[c.name] = { type };
@@ -119,7 +119,7 @@ function makeMSTysRemote(descriptor: Descriptor): GraphQLObjectType | null {
     };
 
     for (let c of descriptor.columns) {
-        if (c.msApi == undefined) continue;
+        if (c.ms == undefined) continue;
 
         let type = c.type.gql;
         fields[c.name] = { type: new GraphQLNonNull(type) };
