@@ -6,6 +6,7 @@ import { AnyObject } from "../../../type-utils";
 type BaseColumns = {
     season: Season;
     eventCode: string;
+    isRemote: boolean; // Needed to resolve types for graphql
     teamNumber: number;
     rank: number;
     rp: number;
@@ -40,6 +41,7 @@ function makeTep(descriptor: Descriptor): EntitySchema<TeamEventParticipation> {
                 type: "int",
                 primary: true,
             },
+            isRemote: { type: "bool" },
             rank: { type: "int" },
             rp: { type: "float" },
             tb1: { type: "float" },

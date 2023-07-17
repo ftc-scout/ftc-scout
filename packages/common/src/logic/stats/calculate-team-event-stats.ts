@@ -32,6 +32,7 @@ type Tep = {
     season: Season;
     eventCode: string;
     teamNumber: number;
+    isRemote: boolean;
     hasStats: boolean;
     rank: number;
     rp: number;
@@ -76,6 +77,7 @@ export function calculateTeamEventStats(
                 season: season,
                 eventCode,
                 teamNumber: t,
+                isRemote,
                 hasStats: false,
                 rank: 0,
                 rp: 0,

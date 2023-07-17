@@ -1,5 +1,6 @@
 import {
     GraphQLBoolean,
+    GraphQLFloat,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
@@ -22,6 +23,7 @@ export function list<T extends GraphQLType>(ty: T): GraphQLNonNull<GraphQLList<T
 }
 
 export const IntTy = wr(nn(GraphQLInt));
+export const FloatTy = wr(nn(GraphQLFloat));
 export const StrTy = wr(nn(GraphQLString));
 export const BoolTy = wr(nn(GraphQLBoolean));
 export const DateTy = wr(nn(GraphQLDateTime));

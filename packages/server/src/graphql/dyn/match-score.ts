@@ -1,13 +1,11 @@
-import { Alliance, DESCRIPTORS, Descriptor, IntTy, StrTy, nn } from "@ftc-scout/common";
+import { Alliance, DESCRIPTORS, Descriptor, IntTy, StrTy, nn, notEmpty } from "@ftc-scout/common";
 import { GraphQLFieldConfig, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import { AllianceGQL } from "../resolvers/enums";
 import { MatchScore } from "../../db/entities/dyn/match-score";
 import { AnyObject } from "../../type-utils";
 
-export function makeMatchScoreTys(
-    descriptor: Descriptor
-): [GraphQLObjectType, GraphQLObjectType, GraphQLObjectType | null] {
-    return [...makeMSTysTrad(descriptor), makeMSTysRemote(descriptor)];
+export function makeMatchScoreTys(descriptor: Descriptor): GraphQLObjectType[] {
+    return [makeMSTysTrad(descriptor), makeMSTysRemote(descriptor)].filter(notEmpty);
 }
 
 export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
@@ -65,7 +63,7 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
     return null;
 }
 
-function makeMSTysTrad(descriptor: Descriptor): [GraphQLObjectType, GraphQLObjectType] {
+function makeMSTysTrad(descriptor: Descriptor): GraphQLObjectType {
     let innerFields: Record<string, GraphQLFieldConfig<any, any>> = {
         season: IntTy,
         eventCode: StrTy,
@@ -106,7 +104,7 @@ function makeMSTysTrad(descriptor: Descriptor): [GraphQLObjectType, GraphQLObjec
         },
     });
 
-    return [outerTy, allianceTy];
+    return outerTy;
 }
 
 function makeMSTysRemote(descriptor: Descriptor): GraphQLObjectType | null {

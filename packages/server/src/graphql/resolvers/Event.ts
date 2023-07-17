@@ -4,11 +4,24 @@ import { EventTypeGQL } from "./enums";
 import { AwardGQL, teamAwareAwardLoader } from "./Award";
 import { Event } from "../../db/entities/Event";
 import { Award } from "../../db/entities/Award";
-import { BoolTy, DateTy, IntTy, Season, StrTy, list, listTy, nn, nullTy } from "@ftc-scout/common";
+import {
+    BoolTy,
+    DateTy,
+    IntTy,
+    Season,
+    StrTy,
+    groupBy,
+    list,
+    listTy,
+    nn,
+    nullTy,
+} from "@ftc-scout/common";
 import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { MatchGQL, scoreAwareMatchLoader } from "./Match";
 import { Match } from "../../db/entities/Match";
+import { TeamEventParticipationGQL } from "./TeamEventParticipation";
+import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Event",
@@ -44,6 +57,23 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             resolve: dataLoaderResolverList<Event, Award, { season: Season; eventCode: string }>(
                 (event) => ({ season: event.season, eventCode: event.code }),
                 teamAwareAwardLoader
+            ),
+        },
+        teams: {
+            type: list(nn(TeamEventParticipationGQL)),
+            resolve: dataLoaderResolverList<
+                Event,
+                TeamEventParticipation,
+                { season: Season; eventCode: string }
+            >(
+                (event) => ({ season: event.season, eventCode: event.code }),
+                async (keys) => {
+                    let groups = groupBy(keys, (k) => k.season);
+                    let qs = Object.entries(groups).map(([season, k]) =>
+                        TeamEventParticipation[+season as Season].find({ where: k })
+                    );
+                    return (await Promise.all(qs)).flat();
+                }
             ),
         },
         teamMatches: {

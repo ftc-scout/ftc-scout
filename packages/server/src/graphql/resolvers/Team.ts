@@ -1,6 +1,6 @@
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
 import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
-import { DateTy, IntTy, StrTy, list, listTy, nullTy } from "@ftc-scout/common";
+import { DateTy, IntTy, StrTy, list, listTy, nn, nullTy } from "@ftc-scout/common";
 import { Team } from "../../db/entities/Team";
 import { In } from "typeorm";
 import { AwardGQL, teamAwareAwardLoader } from "./Award";
@@ -25,7 +25,7 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
         updatedAt: DateTy,
 
         awards: {
-            type: list(AwardGQL),
+            type: list(nn(AwardGQL)),
             args: { season: nullTy(IntTy) },
             resolve: dataLoaderResolverList<
                 Team,
@@ -41,7 +41,7 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
             ),
         },
         matches: {
-            type: list(TeamMatchParticipationGQL),
+            type: list(nn(TeamMatchParticipationGQL)),
             args: { season: nullTy(IntTy), eventCode: nullTy(StrTy) },
             resolve: dataLoaderResolverList<
                 Team,
