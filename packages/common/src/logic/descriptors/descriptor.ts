@@ -1,20 +1,6 @@
 import { GraphQLOutputType } from "graphql";
 import { Season } from "../Season";
 import { type ColumnType } from "typeorm";
-import { Descriptor2019 } from "./seasons/SkystoneDescriptor";
-import { Descriptor2020 } from "./seasons/UltimateGoalDescriptor";
-import { Descriptor2021 } from "./seasons/FreightFrenzyDescriptor";
-import { Descriptor2022 } from "./seasons/PowerPlayDescriptor";
-
-// HELP: Season Specific
-
-export const DESCRIPTORS: Record<Season, Descriptor> = {
-    [Season.Skystone]: Descriptor2019,
-    [Season.UltimateGoal]: Descriptor2020,
-    [Season.FreightFrenzy]: Descriptor2021,
-    [Season.PowerPlay]: Descriptor2022,
-};
-export const DESCRIPTORS_LIST = Object.values(DESCRIPTORS);
 
 export type AnyObject = { [key: string]: any };
 
@@ -37,11 +23,16 @@ export function inferDescriptor<
 export type GenDescriptor<TradApi, RemoteApi, Names extends string> = {
     season: Season;
     hasRemote: boolean;
+    rankings: {
+        rp: "TotalPoints" | "Record";
+        tb: "AutoEndgameTot" | "AutoEndgameAvg" | "LosingScore";
+    };
     columns: {
         name: Names;
         type: DescriptorType;
-        msDB?: MsDbDescriptor<TradApi, RemoteApi, Names>;
+        msDb?: MsDbDescriptor<TradApi, RemoteApi, Names>;
         msApi?: MsApiDescriptor<Names>;
+        tepDb?: TepDbDescriptor<Names>;
     }[];
 };
 
@@ -61,4 +52,12 @@ type MsDbDescriptor<TradApi, RemoteApi, Names extends string> = {
 type MsApiDescriptor<Names extends string> = {
     outer?: boolean;
     map?(red: Record<Names, any>, blue: Record<Names, any>): any;
+};
+
+type TepDbDescriptor<Names extends string> = {
+    individual?: {
+        first(self: Record<Names, any>): any;
+        second(self: Record<Names, any>): any;
+    };
+    fromSelf?(self: Record<Names, any>): any;
 };

@@ -18,6 +18,7 @@ import {
 import { Event } from "./Event";
 import { DateTime } from "luxon";
 import { MatchScore } from "./dyn/match-score";
+import { TeamMatchParticipation } from "./TeamMatchParticipation";
 
 @Entity()
 export class Match extends BaseEntity {
@@ -35,6 +36,8 @@ export class Match extends BaseEntity {
 
     scores!: MatchScore[];
 
+    teams!: TeamMatchParticipation[];
+
     @Column()
     hasBeenPlayed!: boolean;
 
@@ -50,7 +53,7 @@ export class Match extends BaseEntity {
     @Column("enum", { enum: TournamentLevel })
     tournamentLevel!: TournamentLevel;
 
-    @PrimaryColumn("int8")
+    @Column("int8")
     series!: number;
 
     get matchNum(): number {

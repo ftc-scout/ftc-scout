@@ -1,6 +1,7 @@
 {
     "words": [
         "edis",
+        "embeddeds",
         "frnk",
         "ftccmp",
         "jemi",
@@ -8,9 +9,11 @@
         "luxon",
         "mstd", // match score table descriptor
         "ocho",
+        "oprs",
         "qliso",
         "quals",
         "stateprov",
+        "teps",
         "timestamptz",
         "tmps",
         "typeorm"

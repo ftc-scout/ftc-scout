@@ -6,7 +6,7 @@ import {
 import { Alliance } from "../../Alliance";
 import { Season } from "../../Season";
 import { AnyObject, inferDescriptor } from "../descriptor";
-import { AnyDTy, BoolDTy, EnumDTy, IntDTy, IntTy, listTy, nn } from "../types";
+import { AnyDTy, BoolDTy, EnumDTy, FloatDTy, IntDTy, IntTy, listTy, nn } from "../types";
 
 export const AutoNav2022 = {
     None: "None",
@@ -124,11 +124,15 @@ function coneLayoutFromDb(red: AnyObject, blue: AnyObject, auto: boolean): ConeL
 export const Descriptor2022 = inferDescriptor({
     season: Season.PowerPlay,
     hasRemote: false,
+    rankings: {
+        rp: "Record",
+        tb: "AutoEndgameAvg",
+    },
     columns: [
         {
             name: "autoNav1",
             type: AutoNav2022DTy,
-            msDB: {
+            msDb: {
                 fromTradApi: (api) => autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
             },
             msApi: {},
@@ -136,7 +140,7 @@ export const Descriptor2022 = inferDescriptor({
         {
             name: "autoNav2",
             type: AutoNav2022DTy,
-            msDB: {
+            msDb: {
                 fromTradApi: (api) => autoNav2022FromApi(api.robot2Auto, api.initSignalSleeve2),
             },
             msApi: {},
@@ -144,173 +148,181 @@ export const Descriptor2022 = inferDescriptor({
         {
             name: "autoTerminalCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api: AllianceScores2022TradFtcApi) => api.autoTerminal },
+            msDb: { fromTradApi: (api: AllianceScores2022TradFtcApi) => api.autoTerminal },
             msApi: {},
         },
         {
             name: "autoTerminalCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.autoTerminal },
+            msDb: { fromTradApi: (api) => api.autoTerminal },
             msApi: {},
         },
         {
             name: "autoGroundCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.autoJunctionCones[0] },
+            msDb: { fromTradApi: (api) => api.autoJunctionCones[0] },
             msApi: {},
         },
         {
             name: "autoLowCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.autoJunctionCones[1] },
+            msDb: { fromTradApi: (api) => api.autoJunctionCones[1] },
             msApi: {},
         },
         {
             name: "autoMediumCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.autoJunctionCones[2] },
+            msDb: { fromTradApi: (api) => api.autoJunctionCones[2] },
             msApi: {},
         },
         {
             name: "autoHighCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.autoJunctionCones[3] },
+            msDb: { fromTradApi: (api) => api.autoJunctionCones[3] },
             msApi: {},
         },
         {
             name: "autoConeLayout",
             type: ConeLayoutDTy,
-            msDB: { fromTradApi: (api) => junctionsFromApi(api.autoJunctions, api.alliance) },
+            msDb: { fromTradApi: (api) => junctionsFromApi(api.autoJunctions, api.alliance) },
             msApi: { outer: true, map: (r, b) => coneLayoutFromDb(r, b, true) },
         },
         {
             name: "dcNearTerminalCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.dcTerminalNear },
+            msDb: { fromTradApi: (api) => api.dcTerminalNear },
             msApi: {},
         },
         {
             name: "dcFarTerminalCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.dcTerminalFar },
+            msDb: { fromTradApi: (api) => api.dcTerminalFar },
             msApi: {},
         },
         {
             name: "dcTerminalCones",
             type: IntDTy(8),
-            msDB: { fromSelf: (self) => self.dcNearTerminalCones + self.dcFarTerminalCones },
+            msDb: { fromSelf: (self) => self.dcNearTerminalCones + self.dcFarTerminalCones },
             msApi: {},
         },
         {
             name: "dcGroundCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.dcJunctionCones[0] },
+            msDb: { fromTradApi: (api) => api.dcJunctionCones[0] },
             msApi: {},
         },
         {
             name: "dcLowCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.dcJunctionCones[1] },
+            msDb: { fromTradApi: (api) => api.dcJunctionCones[1] },
             msApi: {},
         },
         {
             name: "dcMediumCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.dcJunctionCones[2] },
+            msDb: { fromTradApi: (api) => api.dcJunctionCones[2] },
             msApi: {},
         },
         {
             name: "dcHighCones",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.dcJunctionCones[3] },
+            msDb: { fromTradApi: (api) => api.dcJunctionCones[3] },
             msApi: {},
         },
         {
             name: "dcConeLayout",
             type: ConeLayoutDTy,
-            msDB: { fromTradApi: (api) => junctionsFromApi(api.dcJunctions, api.alliance) },
+            msDb: { fromTradApi: (api) => junctionsFromApi(api.dcJunctions, api.alliance) },
             msApi: { outer: true, map: (r, b) => coneLayoutFromDb(r, b, false) },
         },
         {
             name: "egNav1",
             type: BoolDTy,
-            msDB: { fromTradApi: (api) => api.egNavigated1 },
+            msDb: { fromTradApi: (api) => api.egNavigated1 },
             msApi: {},
         },
         {
             name: "egNav2",
             type: BoolDTy,
-            msDB: { fromTradApi: (api) => api.egNavigated2 },
+            msDb: { fromTradApi: (api) => api.egNavigated2 },
             msApi: {},
         },
         {
             name: "coneOwnedJunctions",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.ownedJunctions - api.beacons },
+            msDb: { fromTradApi: (api) => api.ownedJunctions - api.beacons },
             msApi: {},
         },
         {
             name: "beaconOwnedJunctions",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.beacons },
+            msDb: { fromTradApi: (api) => api.beacons },
             msApi: {},
         },
         {
             name: "circuit",
             type: BoolDTy,
-            msDB: { fromTradApi: (api) => api.circuit },
+            msDb: { fromTradApi: (api) => api.circuit },
             msApi: {},
         },
         {
             name: "minorsCommitted",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.minorPenalties },
+            msDb: { fromTradApi: (api) => api.minorPenalties },
             msApi: {},
         },
         {
             name: "majorsCommitted",
             type: IntDTy(8),
-            msDB: { fromTradApi: (api) => api.majorPenalties },
+            msDb: { fromTradApi: (api) => api.majorPenalties },
             msApi: {},
         },
         {
             name: "penaltyPointsCommitted",
             type: IntDTy(16),
-            msDB: { fromSelf: (self) => self.minorsCommitted * 10 + self.majorsCommitted * 30 },
+            msDb: { fromSelf: (self) => self.minorsCommitted * 10 + self.majorsCommitted * 30 },
             msApi: {},
+            tepDb: {},
         },
 
         {
             name: "minorsByOpp",
             type: IntDTy(8),
-            msDB: { fromTradApi: (_, oth) => oth.minorPenalties },
+            msDb: { fromTradApi: (_, oth) => oth.minorPenalties },
             msApi: {},
         },
         {
             name: "majorsByOpp",
             type: IntDTy(8),
-            msDB: { fromTradApi: (_, oth) => oth.majorPenalties },
+            msDb: { fromTradApi: (_, oth) => oth.majorPenalties },
             msApi: {},
         },
         {
             name: "penaltyPointsByOpp",
             type: IntDTy(16),
-            msDB: { fromSelf: (self) => self.minorsByOpp * 10 + self.majorsByOpp * 30 },
+            msDb: { fromSelf: (self) => self.minorsByOpp * 10 + self.majorsByOpp * 30 },
             msApi: {},
+            tepDb: {},
         },
         {
             name: "autoNavPoints",
             type: IntDTy(16),
-            msDB: {
+            msDb: {
                 fromSelf: (self) =>
                     autoNav2022Points(self.autoNav1) + autoNav2022Points(self.autoNav2),
             },
             msApi: {},
+            tepDb: {
+                individual: {
+                    first: (self) => autoNav2022Points(self.autoNav1),
+                    second: (self) => autoNav2022Points(self.autoNav2),
+                },
+            },
         },
         {
             name: "autoConePoints",
             type: IntDTy(16),
-            msDB: {
+            msDb: {
                 fromSelf: (self) =>
                     self.autoTerminalCones * 1 +
                     self.autoGroundCones * 2 +
@@ -319,37 +331,82 @@ export const Descriptor2022 = inferDescriptor({
                     self.autoHighCones * 5,
             },
             msApi: {},
+            tepDb: {},
+        },
+        {
+            name: "autoTerminalPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.autoTerminalCones },
+        },
+        {
+            name: "autoGroundPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.autoGroundCones * 2 },
+        },
+        {
+            name: "autoLowPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.autoLowCones * 3 },
+        },
+        {
+            name: "autoMediumPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.autoMediumCones * 4 },
+        },
+        {
+            name: "autoHighPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.autoTerminalCones * 5 },
         },
         {
             name: "egNavPoints",
             type: IntDTy(16),
-            msDB: { fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2 },
+            msDb: { fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2 },
             msApi: {},
+            tepDb: {
+                individual: {
+                    first: (self) => self.egNav1 * 2,
+                    second: (self) => self.egNav2 * 2,
+                },
+            },
         },
         {
             name: "ownershipPoints",
             type: IntDTy(16),
-            msDB: {
+            msDb: {
                 fromSelf: (self) => self.coneOwnedJunctions * 3 + self.beaconOwnedJunctions * 10,
             },
             msApi: {},
+            tepDb: {},
+        },
+        {
+            name: "coneOwnershipPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.coneOwnedJunctions * 3 },
+        },
+        {
+            name: "beaconOwnershipPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.beaconOwnedJunctions * 10 },
         },
         {
             name: "circuitPoints",
             type: IntDTy(16),
-            msDB: { fromSelf: (self) => self.circuit * 20 },
+            msDb: { fromSelf: (self) => self.circuit * 20 },
             msApi: {},
+            tepDb: {},
         },
         {
             name: "autoPoints",
             type: IntDTy(16),
-            msDB: { fromSelf: (self) => self.autoNavPoints + self.autoConePoints },
+            msDb: { fromSelf: (self) => self.autoNavPoints + self.autoConePoints },
             msApi: {},
+            tepDb: {},
         },
         {
             name: "dcPoints",
             type: IntDTy(16),
-            msDB: {
+            msDb: {
                 fromSelf: (self) =>
                     self.dcTerminalCones * 1 +
                     self.dcGroundCones * 2 +
@@ -358,26 +415,55 @@ export const Descriptor2022 = inferDescriptor({
                     self.dcHighCones * 5,
             },
             msApi: {},
+            tepDb: {},
+        },
+        {
+            name: "dcTerminalPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.dcTerminalCones },
+        },
+        {
+            name: "dcGroundPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.dcGroundCones * 2 },
+        },
+        {
+            name: "dcLowPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.dcLowCones * 3 },
+        },
+        {
+            name: "dcMediumPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.dcMediumCones * 4 },
+        },
+        {
+            name: "dcHighPoints",
+            type: FloatDTy,
+            tepDb: { fromSelf: (self) => self.dcTerminalCones * 5 },
         },
         {
             name: "egPoints",
             type: IntDTy(16),
-            msDB: {
+            msDb: {
                 fromSelf: (self) => self.egNavPoints + self.ownershipPoints + self.circuitPoints,
             },
             msApi: {},
+            tepDb: {},
         },
         {
             name: "totalPointsNp",
             type: IntDTy(16),
-            msDB: { fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints },
+            msDb: { fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints },
             msApi: {},
+            tepDb: {},
         },
         {
             name: "totalPoints",
             type: IntDTy(16),
-            msDB: { fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp },
+            msDb: { fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp },
             msApi: {},
+            tepDb: {},
         },
     ],
 });

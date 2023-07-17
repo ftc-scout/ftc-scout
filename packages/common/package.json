@@ -9,6 +9,7 @@
         "check": "tsc --noEmit"
     },
     "dependencies": {
-        "async-mutex": "^0.4.0"
+        "async-mutex": "^0.4.0",
+        "ml-matrix": "^6.10.4"
     }
 }

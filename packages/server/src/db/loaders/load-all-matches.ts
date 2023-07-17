@@ -1,4 +1,10 @@
-import { DESCRIPTORS, MatchFtcApi, MatchScoresFtcApi, Season } from "@ftc-scout/common";
+import {
+    DESCRIPTORS,
+    MatchFtcApi,
+    MatchScoresFtcApi,
+    Season,
+    calculateTeamEventStats,
+} from "@ftc-scout/common";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
 import { Event } from "../entities/Event";
 import { DATA_SOURCE } from "../data-source";
@@ -9,6 +15,10 @@ import { getTeams } from "../../ftc-api/get-teams";
 import { MatchScore, MatchScoreSchemas } from "../entities/dyn/match-score";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { LoadType } from "../../ftc-api/watch";
+import {
+    TeamEventParticipation,
+    TeamEventParticipationSchemas as TepSchemas,
+} from "../entities/dyn/team-event-participation";
 
 export async function loadAllMatches(season: Season, loadType: LoadType) {
     console.info(`Loading matches for season ${season}. (${loadType})`);
@@ -23,7 +33,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
         if (event.remote && !DESCRIPTORS[season].hasRemote) continue;
 
         try {
-            let [matches, scores, _teams] = await Promise.all([
+            let [matches, scores, teams] = await Promise.all([
                 getMatches(season, event.code),
                 getMatchScores(season, event.code),
                 getTeams(season, event.code),
@@ -42,20 +52,34 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 );
                 let dbTmps = TeamMatchParticipation.fromApi(match.teams, dbMatch, event.remote);
 
+                dbMatch.teams = dbTmps;
+                dbMatch.scores = dbScores;
+
                 allDbMatches.push(dbMatch);
                 allDbScores.push(...dbScores);
                 allDbTmps.push(...dbTmps);
             }
 
+            let allDbTeps: Partial<TeamEventParticipation>[] = calculateTeamEventStats(
+                season,
+                event.code,
+                event.remote,
+                allDbMatches,
+                teams.map((t) => t.teamNumber)
+            );
+
             await DATA_SOURCE.transaction(async (em) => {
                 await em.save(allDbMatches, { chunk: 100 });
                 await em.save(allDbTmps, { chunk: 500 });
                 await em.getRepository(MatchScoreSchemas[season]).save(allDbScores, { chunk: 100 });
+                await em.getRepository(TepSchemas[season]).save(allDbTeps, { chunk: 100 });
             });
             console.info(`Loaded ${i + 1}/${events.length}.`);
         } catch (e) {
             console.error(`Loaded ${i + 1}/${events.length} !!! ERROR !!!`);
             console.error(e);
+
+            return;
         }
     }
 

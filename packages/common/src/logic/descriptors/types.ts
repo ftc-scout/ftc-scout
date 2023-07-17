@@ -1,5 +1,6 @@
 import {
     GraphQLBoolean,
+    GraphQLFloat,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
@@ -41,6 +42,11 @@ export function IntDTy(width: 8 | 16): DescriptorType {
         gql: GraphQLInt,
     };
 }
+
+export const FloatDTy: DescriptorType = {
+    typeorm: { type: "float" },
+    gql: GraphQLFloat,
+};
 
 export const BoolDTy: DescriptorType = {
     typeorm: { type: "bool" },

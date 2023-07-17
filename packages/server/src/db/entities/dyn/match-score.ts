@@ -20,6 +20,10 @@ type BaseColumns = {
     updatedAt: Date;
 };
 
+type KnownColumns = {
+    totalPoints: number;
+};
+
 function makeMatchScore(descriptor: Descriptor): EntitySchema<MatchScore> {
     return new EntitySchema<MatchScore>({
         tableName: `match_score_${descriptor.season}`,
@@ -59,25 +63,23 @@ function getMatchScoreColumns(descriptor: Descriptor): Record<string, EntitySche
 
     let extraColumns: Record<string, EntitySchemaColumnOptions> = {};
     descriptor.columns.forEach((c) => {
-        if (c.msDB == undefined) return;
+        if (c.msDb == undefined) return;
 
         extraColumns[c.name] = {
             ...c.type.typeorm,
-            nullable: !!c.msDB.tradOnly,
+            nullable: !!c.msDb.tradOnly,
         };
     });
 
     return { ...baseColumns, ...extraColumns };
 }
 
-// HELP: Season Specific
-
 export let MatchScoreSchemas = {} as Record<Season, EntitySchema<MatchScore>>;
 for (let d of DESCRIPTORS_LIST) {
     MatchScoreSchemas[d.season] = makeMatchScore(d);
 }
 
-export type MatchScore = BaseColumns & AnyObject;
+export type MatchScore = BaseColumns & KnownColumns & AnyObject;
 export let MatchScore = {} as Record<Season, Repository<MatchScore>> & {
     fromApi(api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[];
 };
@@ -103,15 +105,15 @@ export function initMS() {
 
             let descriptor = DESCRIPTORS[match.eventSeason];
             for (let column of descriptor.columns) {
-                if (column.msDB == undefined) continue;
+                if (column.msDb == undefined) continue;
 
-                if ("fromSelf" in column.msDB) {
-                    score[column.name] = column.msDB.fromSelf(score);
+                if ("fromSelf" in column.msDb) {
+                    score[column.name] = column.msDb.fromSelf(score);
                 } else {
                     score[column.name] =
-                        remote && "fromRemoteApi" in column.msDB
-                            ? column.msDB.fromRemoteApi(s)
-                            : column.msDB.fromTradApi(s, other!);
+                        remote && "fromRemoteApi" in column.msDb
+                            ? column.msDb.fromRemoteApi(s)
+                            : column.msDb.fromTradApi(s, other!);
                 }
             }
 
