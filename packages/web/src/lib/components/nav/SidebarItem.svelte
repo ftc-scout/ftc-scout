@@ -29,12 +29,11 @@
         flex-direction: row;
         align-items: center;
         gap: var(--lg-gap);
-
-        text-decoration: none;
     }
 
     a:hover {
         background: var(--hover-color);
+        text-decoration: none;
     }
 
     a.active {

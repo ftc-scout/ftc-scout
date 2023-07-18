@@ -1,11 +1,7 @@
 <script lang="ts">
-    import Navbar from "../lib/components/nav/Navbar.svelte";
+    import Navbar from "$lib/components/nav/Navbar.svelte";
     import { browser } from "$app/environment";
-    import Sidebar from "../lib/components/nav/Sidebar.svelte";
-
-    // import "@fontsource/inter";
-    // import "@fontsource/inter/700.css";
-    // import "@fontsource/inter/700.css";
+    import Sidebar from "$lib/components/nav/Sidebar.svelte";
 
     if (browser) {
         // Svelte uses window.scrollTo to emulate the scroll resetting when navigation. However we
@@ -48,7 +44,7 @@
         scrollbar-gutter: stable both-edges;
     }
 
-    @media (max-width: 1600px) {
+    @media (max-width: 1500px) {
         #content {
             margin-left: 0;
         }

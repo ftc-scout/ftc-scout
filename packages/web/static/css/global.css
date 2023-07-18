@@ -1,5 +1,5 @@
 /*
-    Sidebar limit: 1600px
+    Sidebar limit: 1500px
     Shrink limit:   800px
     Phone limit:    550px
 */
@@ -94,12 +94,15 @@ body:not(.dark) {
     --fg-color: #ffffff;
     --hover-color: #f0f0f0;
     --theme-color: #2c666e;
+    --inline-theme-color: var(--theme-color);
 
     --sep-color: lightgray;
 
     --text-color: #000000;
     --secondary-text-color: #636466;
     --theme-text-color: #ffffff;
+
+    color-scheme: light;
 }
 
 body.dark {
@@ -107,12 +110,15 @@ body.dark {
     --fg-color: #2d2d2d;
     --hover-color: #3a3a3a;
     --theme-color: #1f4c52;
+    --inline-theme-color: #39848e;
 
     --sep-color: #4a4e51;
 
     --text-color: #cfd2d6;
     --secondary-text-color: #dcdfe2;
     --theme-text-color: #ffffff;
+
+    color-scheme: dark;
 }
 
 /* --- Resets --- */
@@ -126,4 +132,20 @@ body {
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+}
+
+h1 {
+    font-size: var(--xl-font-size);
+}
+
+h2 {
+    font-size: var(--vl-font-size);
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
 }

@@ -62,7 +62,7 @@
         display: none;
     }
 
-    @media (max-width: 1600px) {
+    @media (max-width: 1500px) {
         .normal {
             display: none;
         }

@@ -6,7 +6,7 @@ import { Award } from "../../db/entities/Award";
 import { FindOptionsWhere } from "typeorm";
 import { EventGQL } from "./Event";
 import { Event } from "../../db/entities/Event";
-import { DateTy, IntTy, Season, StrTy, nn, nullTy } from "@ftc-scout/common";
+import { DateTimeTy, IntTy, Season, StrTy, nn, nullTy } from "@ftc-scout/common";
 import graphqlFields from "graphql-fields";
 import { DATA_SOURCE } from "../../db/data-source";
 
@@ -19,8 +19,8 @@ export const AwardGQL: GraphQLObjectType = new GraphQLObjectType({
         personName: nullTy(StrTy),
         type: { type: nn(AwardTypeGQL) },
         placement: IntTy,
-        createdAt: DateTy,
-        updatedAt: DateTy,
+        createdAt: DateTimeTy,
+        updatedAt: DateTimeTy,
 
         // Must use aware loader
         team: { type: nn(TeamGQL) },

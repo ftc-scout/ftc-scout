@@ -124,6 +124,7 @@ function coneLayoutFromDb(red: AnyObject, blue: AnyObject, auto: boolean): ConeL
 export const Descriptor2022 = inferDescriptor({
     season: Season.PowerPlay,
     hasRemote: false,
+    penaltiesSubtract: false,
     rankings: {
         rp: "Record",
         tb: "AutoEndgameAvg",

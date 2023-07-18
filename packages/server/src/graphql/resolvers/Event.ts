@@ -6,6 +6,7 @@ import { Event } from "../../db/entities/Event";
 import { Award } from "../../db/entities/Award";
 import {
     BoolTy,
+    DateTimeTy,
     DateTy,
     IntTy,
     Season,
@@ -22,6 +23,8 @@ import { MatchGQL, scoreAwareMatchLoader } from "./Match";
 import { Match } from "../../db/entities/Match";
 import { TeamEventParticipationGQL } from "./TeamEventParticipation";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
+import { LocationGQL } from "../objs/Location";
+import { DateTime } from "luxon";
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Event",
@@ -38,19 +41,38 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
         regionCode: nullTy(StrTy),
         leagueCode: nullTy(StrTy),
         districtCode: nullTy(StrTy),
-        venue: StrTy,
         address: StrTy,
-        country: StrTy,
-        state: StrTy,
-        city: StrTy,
+        location: {
+            type: nn(LocationGQL),
+            resolve: (e) => ({ venue: e.venue, city: e.city, state: e.state, country: e.country }),
+        },
         website: nullTy(StrTy),
         livestreamURL: nullTy(StrTy),
         webcasts: listTy(StrTy),
         timezone: nullTy(StrTy),
         start: DateTy,
         end: DateTy,
-        createdAt: DateTy,
-        updatedAt: DateTy,
+        createdAt: DateTimeTy,
+        updatedAt: DateTimeTy,
+
+        started: {
+            ...BoolTy,
+            resolve: (e) =>
+                DateTime.fromISO(e.start as any, { zone: e.timezone ?? undefined }) <
+                DateTime.now(),
+        },
+        ongoing: {
+            ...BoolTy,
+            resolve: (e) =>
+                DateTime.fromISO(e.start as any, { zone: e.timezone ?? undefined }) <
+                    DateTime.now() &&
+                DateTime.now() < DateTime.fromISO(e.end as any, { zone: e.timezone ?? undefined }),
+        },
+        finished: {
+            ...BoolTy,
+            resolve: (e) =>
+                DateTime.fromISO(e.end as any, { zone: e.timezone ?? undefined }) < DateTime.now(),
+        },
 
         awards: {
             type: list(nn(AwardGQL)),

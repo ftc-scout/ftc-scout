@@ -11,7 +11,7 @@
         user-select: none;
     }
 
-    a {
+    a:hover {
         text-decoration: none;
     }
 </style>

@@ -13,4 +13,4 @@ export const StationGQL = makeGQLEnum(Station, "Station");
 export const AllianceRoleGQL = makeGQLEnum(AllianceRole, "AllianceRole");
 export const EventTypeGQL = makeGQLEnum(EventType, "EventType");
 export const TournamentLevelGQL = makeGQLEnum(TournamentLevel, "TournamentLevel");
-export const AwardTypeGQL = makeGQLEnum(AwardType, "AwardTypes");
+export const AwardTypeGQL = makeGQLEnum(AwardType, "AwardType");

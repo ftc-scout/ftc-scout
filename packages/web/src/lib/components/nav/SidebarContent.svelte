@@ -52,7 +52,7 @@
         font-weight: 600;
     }
 
-    @media (max-width: 1600px) {
+    @media (max-width: 1500px) {
         b {
             display: flex;
         }

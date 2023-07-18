@@ -1,0 +1,50 @@
+query Team($number: Int!, $season: Int!) {
+    teamByNumber(number: $number) {
+        name
+        number
+        website
+        name
+        location {
+            city
+            state
+            country
+        }
+        schoolName
+        sponsors
+        rookieYear
+        events(season: $season) {
+            season
+            eventCode
+            teamNumber
+            stats {
+                __typename
+                ...TeamPageStats
+            }
+            awards {
+                season
+                eventCode
+                teamNumber
+                type
+                placement
+                personName
+            }
+            event {
+                season
+                code
+                name
+                remote
+                start
+                end
+                location {
+                    venue
+                    city
+                    state
+                    country
+                }
+                started
+                published
+                timezone
+            }
+        }
+    }
+}

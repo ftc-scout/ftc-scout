@@ -1,6 +1,6 @@
 import { GraphQLObjectType } from "graphql";
 import { dataLoaderResolverSingle } from "../utils";
-import { BoolTy, DateTy, IntTy, StrTy, nn } from "@ftc-scout/common";
+import { BoolTy, DateTimeTy, IntTy, StrTy, nn } from "@ftc-scout/common";
 import { AllianceGQL, AllianceRoleGQL, StationGQL } from "./enums";
 import { TeamGQL } from "./Team";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
@@ -26,8 +26,8 @@ export const TeamMatchParticipationGQL: GraphQLObjectType = new GraphQLObjectTyp
         noShow: BoolTy,
         dq: BoolTy,
         onField: BoolTy,
-        createdAt: DateTy,
-        updatedAt: DateTy,
+        createdAt: DateTimeTy,
+        updatedAt: DateTimeTy,
 
         team: {
             type: nn(TeamGQL),

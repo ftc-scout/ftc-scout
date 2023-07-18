@@ -23,6 +23,7 @@ export function inferDescriptor<
 export type GenDescriptor<TradApi, RemoteApi, Names extends string> = {
     season: Season;
     hasRemote: boolean;
+    penaltiesSubtract: boolean;
     rankings: {
         rp: "TotalPoints" | "Record";
         tb: "AutoEndgameTot" | "AutoEndgameAvg" | "LosingScore";

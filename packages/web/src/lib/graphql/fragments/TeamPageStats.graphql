@@ -1,0 +1,75 @@
+# // HELP: Season Specific
+fragment TeamPageStats on TeamEventStats {
+    ... on TeamEventStats2022 {
+        rank
+        rp
+        wins
+        losses
+        ties
+        opr {
+            totalPointsNp
+        }
+        avg {
+            totalPointsNp
+        }
+    }
+    ... on TeamEventStats2021Trad {
+        rank
+        rp
+        wins
+        losses
+        ties
+        # opr {
+        # totalPoints
+        # }
+        # avg {
+        # totalPoints
+        # }
+    }
+    ... on TeamEventStats2021Remote {
+        rank
+        rp
+        # opr {
+        # totalPoints
+        # }
+        # avg {
+        # totalPoints
+        # }
+    }
+    ... on TeamEventStats2020Trad {
+        rank
+        rp
+        wins
+        losses
+        ties
+        # opr {
+        # totalPoints
+        # }
+        # avg {
+        # totalPoints
+        # }
+    }
+    ... on TeamEventStats2020Remote {
+        rank
+        rp
+        # opr {
+        # totalPoints
+        # }
+        # avg {
+        # totalPoints
+        # }
+    }
+    ... on TeamEventStats2019 {
+        rank
+        rp
+        wins
+        losses
+        ties
+        # opr {
+        # totalPointsNp
+        # }
+        # avg {
+        # totalPointsNp
+        # }
+    }
+}

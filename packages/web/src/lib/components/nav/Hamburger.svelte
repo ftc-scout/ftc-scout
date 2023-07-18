@@ -40,7 +40,7 @@
         background: rgba(0, 0, 0, 0.2);
     }
 
-    @media (min-width: 1600px) {
+    @media (min-width: 1500px) {
         .wrapper {
             display: none;
         }

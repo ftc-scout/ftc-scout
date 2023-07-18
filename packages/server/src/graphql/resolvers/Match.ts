@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLResolveInfo } from "graphql";
 import { dataLoaderResolverSingle, keyListToWhereClause } from "../utils";
-import { BoolTy, DateTy, IntTy, StrTy, list, nn, nullTy } from "@ftc-scout/common";
+import { BoolTy, DateTimeTy, IntTy, StrTy, list, nn, nullTy } from "@ftc-scout/common";
 import { Match } from "../../db/entities/Match";
 import { Event } from "../../db/entities/Event";
 import { EventTypeGQL, TournamentLevelGQL } from "./enums";
@@ -22,15 +22,15 @@ export const MatchGQL: GraphQLObjectType = new GraphQLObjectType({
         eventCode: StrTy,
         id: IntTy,
         hasBeenPlayed: BoolTy,
-        scheduledStartTime: nullTy(DateTy),
-        actualStartTime: nullTy(DateTy),
-        postResultTime: nullTy(DateTy),
+        scheduledStartTime: nullTy(DateTimeTy),
+        actualStartTime: nullTy(DateTimeTy),
+        postResultTime: nullTy(DateTimeTy),
         tournamentLevel: { type: nn(TournamentLevelGQL) },
         series: IntTy,
         matchNum: IntTy,
         description: StrTy,
-        createdAt: DateTy,
-        updatedAt: DateTy,
+        createdAt: DateTimeTy,
+        updatedAt: DateTimeTy,
 
         // Must use aware loader
         scores: {

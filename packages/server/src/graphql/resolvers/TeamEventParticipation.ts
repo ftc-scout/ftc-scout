@@ -1,6 +1,5 @@
 import { IntTy, Season, StrTy, list, nn } from "@ftc-scout/common";
 import { GraphQLObjectType } from "graphql";
-import { EventTypeGQL } from "./enums";
 import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
 import { Event } from "../../db/entities/Event";
@@ -13,6 +12,7 @@ import { MatchGQL } from "./Match";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { TepStatsUnionGQL } from "../dyn/dyn-types-schema";
 import { addTypename } from "../dyn/tep";
+import { EventGQL } from "./Event";
 
 export const TeamEventParticipationGQL = new GraphQLObjectType({
     name: "TeamEventParticipation",
@@ -26,14 +26,14 @@ export const TeamEventParticipationGQL = new GraphQLObjectType({
         },
 
         event: {
-            type: nn(EventTypeGQL),
+            type: nn(EventGQL),
             resolve: dataLoaderResolverSingle<
                 TeamEventParticipation,
                 Event,
                 { season: Season; code: string }
             >(
-                (tep) => ({ season: tep.eventSeason, code: tep.eventCode }),
-                (keys) => Event.find({ where: keys })
+                (tep) => ({ season: tep.season, code: tep.eventCode }),
+                async (keys) => Event.find({ where: keys })
             ),
         },
         team: {

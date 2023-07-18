@@ -4,6 +4,7 @@ import { inferDescriptor } from "../descriptor";
 export const Descriptor2021 = inferDescriptor({
     season: Season.FreightFrenzy,
     hasRemote: true,
+    penaltiesSubtract: true,
     rankings: {
         rp: "TotalPoints",
         tb: "AutoEndgameTot",

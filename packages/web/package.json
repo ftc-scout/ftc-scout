@@ -7,9 +7,15 @@
         "build": "vite build",
         "preview": "vite preview",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
-        "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+        "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
+        "gen": "graphql-codegen"
     },
     "devDependencies": {
+        "@graphql-codegen/cli": "^4.0.1",
+        "@graphql-codegen/introspection": "^4.0.0",
+        "@graphql-codegen/typed-document-node": "^5.0.1",
+        "@graphql-codegen/typescript": "^4.0.1",
+        "@graphql-codegen/typescript-operations": "^4.0.1",
         "@sveltejs/adapter-auto": "^2.0.0",
         "@sveltejs/kit": "^1.20.4",
         "svelte": "^4.0.5",
@@ -19,9 +25,12 @@
         "vite": "^4.4.2"
     },
     "dependencies": {
+        "@apollo/client": "^3.7.17",
         "@fontsource/inter": "^5.0.5",
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@ftc-scout/common": "^0.0.1",
+        "@graphql-typed-document-node/core": "^3.2.0",
+        "graphql": "^16.7.1",
         "svelte-fa": "^3.0.4"
     },
     "type": "module"

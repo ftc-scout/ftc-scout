@@ -8,7 +8,7 @@ import {
     GraphQLString,
     GraphQLType,
 } from "graphql";
-import { GraphQLDateTime } from "graphql-scalars";
+import { GraphQLDateTime, GraphQLDate } from "graphql-scalars";
 
 type Wr<T> = { type: T };
 function wr<T>(t: T): Wr<T> {
@@ -26,7 +26,8 @@ export const IntTy = wr(nn(GraphQLInt));
 export const FloatTy = wr(nn(GraphQLFloat));
 export const StrTy = wr(nn(GraphQLString));
 export const BoolTy = wr(nn(GraphQLBoolean));
-export const DateTy = wr(nn(GraphQLDateTime));
+export const DateTimeTy = wr(nn(GraphQLDateTime));
+export const DateTy = wr(nn(GraphQLDate));
 
 export function listTy<T extends GraphQLType>(ty: Wr<T>): Wr<GraphQLNonNull<GraphQLList<T>>> {
     return wr(list(ty.type));
