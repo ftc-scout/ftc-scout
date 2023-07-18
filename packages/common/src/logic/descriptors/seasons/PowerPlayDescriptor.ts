@@ -268,7 +268,6 @@ export const Descriptor2022 = inferDescriptor({
             ms: { fromSelf: (self) => self.minorsCommitted * 10 + self.majorsCommitted * 30 },
             tep: {},
         },
-
         {
             name: "minorsByOpp",
             type: IntDTy(8),
@@ -371,6 +370,16 @@ export const Descriptor2022 = inferDescriptor({
             type: IntDTy(16),
             ms: { fromSelf: (self) => self.circuit * 20 },
             tep: {},
+        },
+        {
+            name: "majorsCommittedPoints",
+            type: IntDTy(8),
+            tep: { fromSelf: (self) => self.majorsCommitted * 30 },
+        },
+        {
+            name: "minorsCommittedPoints",
+            type: IntDTy(8),
+            tep: { fromSelf: (self) => self.minorsCommitted * 10 },
         },
         {
             name: "autoPoints",

@@ -19,6 +19,7 @@ import {
     TeamEventParticipation,
     TeamEventParticipationSchemas as TepSchemas,
 } from "../entities/dyn/team-event-participation";
+import { exit } from "process";
 
 export async function loadAllMatches(season: Season, loadType: LoadType) {
     console.info(`Loading matches for season ${season}. (${loadType})`);
@@ -79,6 +80,8 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
             console.error(`Loaded ${i + 1}/${events.length} !!! ERROR !!!`);
             console.error(e);
 
+            // TODO
+            exit(1);
             return;
         }
     }

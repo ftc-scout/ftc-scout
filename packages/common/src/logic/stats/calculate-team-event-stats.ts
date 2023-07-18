@@ -2,7 +2,7 @@ import { Alliance } from "../Alliance";
 import { Season } from "../Season";
 import { Station } from "../Station";
 import { TournamentLevel } from "../TournamentLevel";
-import { AnyObject, Descriptor } from "../descriptors/descriptor";
+import { AnyObject, Descriptor, desGqlName } from "../descriptors/descriptor";
 import { DESCRIPTORS } from "../descriptors/descriptor-list";
 import { OprData, calculateOpr } from "./calculate-opr";
 
@@ -66,8 +66,9 @@ export function calculateTeamEventStats(
     for (let c of descriptor.columns) {
         if (c.tep == undefined) continue;
 
-        emptyGroup[c.name] = 0;
-        if (c.tep.individual != undefined) emptyGroup[c.name + "Individual"] = 0;
+        let name = desGqlName(c, isRemote);
+        emptyGroup[name] = 0;
+        if (c.tep.individual != undefined) emptyGroup[name + "Individual"] = 0;
     }
 
     let teps = {} as Record<number, Tep>;
@@ -98,7 +99,7 @@ export function calculateTeamEventStats(
     );
 
     (isRemote ? calculateRemoteMatchesPlayed : calculateRecords)(matches, teps);
-    calculateGroupStats(matches, teps, descriptor);
+    calculateGroupStats(matches, teps, descriptor, isRemote);
     calculateOprs(matches, teps, isRemote, descriptor);
     calculateRanks(teps, descriptor);
 
@@ -163,9 +164,10 @@ const dev = (arr: number[]) => {
     return Math.sqrt(diffAvg);
 };
 
-function getStat(s: AnyObject, c: Descriptor["columns"][number]): any {
-    if (c.name in s) {
-        return s[c.name];
+function getStat(s: AnyObject, c: Descriptor["columns"][number], remote: boolean): any {
+    let name = desGqlName(c, remote);
+    if (name in s) {
+        return s[name];
     } else if (c.tep?.fromSelf != undefined) {
         return c.tep.fromSelf(s);
     } else {
@@ -173,14 +175,20 @@ function getStat(s: AnyObject, c: Descriptor["columns"][number]): any {
     }
 }
 
-function calculateGroupStats(matches: Match[], teps: Record<number, Tep>, descriptor: Descriptor) {
+function calculateGroupStats(
+    matches: Match[],
+    teps: Record<number, Tep>,
+    descriptor: Descriptor,
+    isRemote: boolean
+) {
     let dataPoints = {} as Record<number, Record<string, number[]>>;
     for (let team of Object.keys(teps)) {
         dataPoints[+team] = {};
         for (let c of descriptor.columns) {
             if (c.tep == undefined) continue;
-            dataPoints[+team][c.name] = [];
-            if (c.tep.individual != undefined) dataPoints[+team][c.name + "Individual"] = [];
+            let name = desGqlName(c, isRemote);
+            dataPoints[+team][name] = [];
+            if (c.tep.individual != undefined) dataPoints[+team][name + "Individual"] = [];
         }
     }
 
@@ -197,15 +205,16 @@ function calculateGroupStats(matches: Match[], teps: Record<number, Tep>, descri
 
             for (let c of descriptor.columns) {
                 if (c.tep == undefined) continue;
-                dataPoints[t.teamNumber][c.name].push(getStat(s, c));
+                let name = desGqlName(c, isRemote);
+                dataPoints[t.teamNumber][name].push(getStat(s, c, isRemote));
                 if (c.tep.individual != undefined) {
-                    let arr = dataPoints[t.teamNumber][c.name + "Individual"];
+                    let arr = dataPoints[t.teamNumber][name + "Individual"];
                     if (t.station == Station.One) {
                         arr.push(c.tep.individual.first(s));
                     } else if (t.station == Station.Two) {
                         arr.push(c.tep.individual.second(s));
                     } else if (t.station == Station.Solo) {
-                        arr.push(getStat(s, c));
+                        arr.push(getStat(s, c, isRemote));
                     }
                 }
             }
@@ -254,7 +263,7 @@ function calculateOprs(
             let s = m.scores.find((s) => s.alliance == a)!;
             for (let c of descriptor.columns) {
                 if (c.tep == undefined) continue;
-                dataPoints[c.name].push({ team1, team2, result: getStat(s, c) });
+                dataPoints[c.name].push({ team1, team2, result: getStat(s, c, false) });
             }
         }
     }

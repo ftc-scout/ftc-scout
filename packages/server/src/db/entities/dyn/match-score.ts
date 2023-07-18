@@ -67,7 +67,7 @@ function getMatchScoreColumns(descriptor: Descriptor): Record<string, EntitySche
 
         extraColumns[c.name] = {
             ...c.type.typeorm,
-            nullable: !!c.ms.tradOnly,
+            nullable: !!c.tradOnly,
         };
     });
 

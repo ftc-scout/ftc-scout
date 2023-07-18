@@ -1,4 +1,13 @@
-import { Alliance, DESCRIPTORS, Descriptor, IntTy, StrTy, nn, notEmpty } from "@ftc-scout/common";
+import {
+    Alliance,
+    DESCRIPTORS,
+    Descriptor,
+    IntTy,
+    StrTy,
+    desGqlName,
+    nn,
+    notEmpty,
+} from "@ftc-scout/common";
 import { GraphQLFieldConfig, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import { AllianceGQL } from "../resolvers/enums";
 import { MatchScore } from "../../db/entities/dyn/match-score";
@@ -54,7 +63,8 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
         for (let c of descriptor.columns) {
             if (c.ms == undefined || !c.ms.outer) continue;
 
-            ret[c.name] = "mapForApi" in c.ms ? c.ms.mapForApi(red, blue) : red[c.name];
+            let name = desGqlName(c, true);
+            ret[name] = "mapForApi" in c.ms ? c.ms.mapForApi(red, blue) : red[c.name];
         }
 
         return ret;
@@ -81,10 +91,11 @@ function makeMSTysTrad(descriptor: Descriptor): GraphQLObjectType {
         if (c.ms == undefined) continue;
 
         let type = new GraphQLNonNull(c.type.gql);
+        let name = desGqlName(c, false);
         if (c.ms.outer) {
-            outerFields[c.name] = { type };
+            outerFields[name] = { type };
         } else {
-            innerFields[c.name] = { type };
+            innerFields[name] = { type };
         }
     }
 
@@ -117,10 +128,11 @@ function makeMSTysRemote(descriptor: Descriptor): GraphQLObjectType | null {
     };
 
     for (let c of descriptor.columns) {
-        if (c.ms == undefined) continue;
+        if (c.ms == undefined || c.tradOnly) continue;
 
         let type = c.type.gql;
-        fields[c.name] = { type: new GraphQLNonNull(type) };
+        let name = desGqlName(c, true);
+        fields[name] = { type: new GraphQLNonNull(type) };
     }
 
     let outerTy = new GraphQLObjectType({

@@ -22,7 +22,7 @@ function make(descriptor: Descriptor, remote: boolean, hasRemote: boolean): Grap
     let innerFields = {} as Record<string, GraphQLFieldConfig<any, any>>;
 
     for (let c of descriptor.columns) {
-        if (c.tep == undefined) continue;
+        if (c.tep == undefined || (c.tradOnly && remote)) continue;
 
         innerFields[c.name] = FloatTy;
         if (c.tep.individual) innerFields[c.name + "Individual"] = FloatTy;

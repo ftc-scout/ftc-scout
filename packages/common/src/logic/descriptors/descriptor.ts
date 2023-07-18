@@ -31,22 +31,20 @@ export type GenDescriptor<TradApi, RemoteApi, Names extends string> = {
     columns: {
         name: Names;
         type: DescriptorType;
+        tradOnly?: boolean;
         ms?: MsDbDescriptor<TradApi, RemoteApi, Names> & MsApiDescriptor<Names>;
         tep?: TepDbDescriptor<Names>;
     }[];
 };
 
-type MsDbDescriptor<TradApi, RemoteApi, Names extends string> = {
-    tradOnly?: boolean;
-} & (
+type MsDbDescriptor<TradApi, RemoteApi, Names extends string> =
     | {
           fromTradApi(ours: TradApi, opp: TradApi): any;
           fromRemoteApi?(ours: RemoteApi): any;
       }
     | {
           fromSelf(self: Record<Names, any>): any;
-      }
-);
+      };
 
 type MsApiDescriptor<Names extends string> = {
     outer?: boolean;
@@ -60,3 +58,11 @@ type TepDbDescriptor<Names extends string> = {
     };
     fromSelf?(self: Record<Names, any>): any;
 };
+
+export function desGqlName(col: Descriptor["columns"][number], remote: boolean): string {
+    if (remote && col.name.endsWith("1")) {
+        return col.name.replace(/1$/, "");
+    } else {
+        return col.name;
+    }
+}

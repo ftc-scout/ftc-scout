@@ -1,0 +1,5 @@
+fragment FullMatch on Match {
+    season
+    eventCode
+    id
+}
