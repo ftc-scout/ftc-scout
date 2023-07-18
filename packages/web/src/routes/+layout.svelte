@@ -1,10 +1,11 @@
 <script lang="ts">
-    import Navbar from "./Navbar.svelte";
+    import Navbar from "../lib/components/nav/Navbar.svelte";
     import { browser } from "$app/environment";
-    import Sidebar from "./Sidebar.svelte";
+    import Sidebar from "../lib/components/nav/Sidebar.svelte";
 
-    import "@fontsource/inter";
-    import "@fontsource/inter/700.css";
+    // import "@fontsource/inter";
+    // import "@fontsource/inter/700.css";
+    // import "@fontsource/inter/700.css";
 
     if (browser) {
         // Svelte uses window.scrollTo to emulate the scroll resetting when navigation. However we
@@ -14,6 +15,15 @@
         window.scrollTo = (x: any, y?: any) => document.getElementById("content")?.scrollTo(x, y);
     }
 </script>
+
+<svelte:head>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap"
+        rel="stylesheet"
+    />
+</svelte:head>
 
 <Navbar />
 <Sidebar />
@@ -30,7 +40,7 @@
     #content {
         margin-top: var(--navbar-size);
         margin-left: var(--sidebar-size);
-        padding: var(--padding);
+        padding: var(--md-pad);
         padding-bottom: 80px;
 
         overflow: auto;
@@ -57,7 +67,7 @@
         position: fixed;
         overflow: hidden;
 
-        background: var(--background-color);
+        background: var(--bg-color);
 
         font-family: "Inter", sans-serif;
         font-size: 16px;

@@ -15,14 +15,14 @@
         max-width: 50rem;
         margin: auto;
 
-        background: var(--foreground-color);
-        padding: var(--padding);
-        border: 1px solid var(--separator-color);
+        background: var(--fg-color);
+        padding: var(--md-pad);
+        border: 1px solid var(--sep-color);
         border-radius: 8px;
     }
 
     h1 {
-        margin-bottom: 8px;
+        margin-bottom: var(--md-gap);
         font-size: 32px;
     }
 </style>

@@ -1,4 +1,14 @@
+<script>
+    import Hamburger from "./Hamburger.svelte";
+    import Logo from "./Logo.svelte";
+</script>
+
 <nav>
+    <div class="left">
+        <Hamburger />
+        <Logo />
+    </div>
+
     <button on:click={() => document.body.classList.toggle("dark")}> Toggle Dark Mode </button>
 </nav>
 
@@ -10,14 +20,19 @@
         right: 0;
         height: var(--navbar-size);
 
-        background: var(--theme-color);
-        border-bottom: 1px solid var(--separator-color);
-        z-index: var(--navbar-zi);
+        padding: var(--md-pad);
 
-        padding: var(--padding);
+        background: var(--theme-color);
+        border-bottom: 1px solid var(--sep-color);
+        z-index: var(--navbar-zi);
 
         display: flex;
         align-items: center;
-        justify-content: right;
+        justify-content: space-between;
+    }
+
+    .left {
+        display: flex;
+        align-items: center;
     }
 </style>

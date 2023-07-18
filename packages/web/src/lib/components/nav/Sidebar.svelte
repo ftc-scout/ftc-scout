@@ -1,11 +1,14 @@
 <script lang="ts" context="module">
     import { writable } from "svelte/store";
     import { fade, fly } from "svelte/transition";
+    import SidebarContent from "./SidebarContent.svelte";
 
-    export let sidebarOpen = writable(true);
+    export let sidebarOpen = writable(false);
 </script>
 
-<div class="sidebar normal" />
+<div class="sidebar normal">
+    <SidebarContent />
+</div>
 {#if $sidebarOpen}
     <div
         aria-hidden="true"
@@ -13,7 +16,9 @@
         on:click={() => ($sidebarOpen = false)}
         transition:fade={{ duration: 300 }}
     />
-    <div class="sidebar small" transition:fly={{ duration: 300, x: -300, opacity: 1 }} />
+    <div class="sidebar small" transition:fly={{ duration: 300, x: -300, opacity: 1 }}>
+        <SidebarContent />
+    </div>
 {/if}
 
 <style>
@@ -23,8 +28,13 @@
         bottom: 0;
         width: var(--sidebar-size);
 
-        background: var(--foreground-color);
-        border-right: 1px solid var(--separator-color);
+        background: var(--fg-color);
+        border-right: 1px solid var(--sep-color);
+
+        padding: var(--md-pad);
+        padding-top: var(--lg-pad);
+
+        overflow-y: auto;
     }
 
     .normal {
@@ -47,7 +57,7 @@
         right: 0;
 
         z-index: var(--mobile-sidebar-bg-zi);
-        background: var(--modal-background-color);
+        background: var(--modal-bg-color);
 
         display: none;
     }

@@ -20,7 +20,9 @@
     },
     "dependencies": {
         "@fontsource/inter": "^5.0.5",
-        "@ftc-scout/common": "^0.0.1"
+        "@fortawesome/free-solid-svg-icons": "^6.4.0",
+        "@ftc-scout/common": "^0.0.1",
+        "svelte-fa": "^3.0.4"
     },
     "type": "module"
 }
