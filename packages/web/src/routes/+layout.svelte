@@ -50,6 +50,13 @@
         }
     }
 
+    @media (max-width: 550px) {
+        #content {
+            padding-left: 0;
+            padding-right: 0;
+        }
+    }
+
     #content:focus,
     #content:focus-visible {
         outline: none;
@@ -64,8 +71,5 @@
         overflow: hidden;
 
         background: var(--bg-color);
-
-        font-family: "Inter", sans-serif;
-        font-size: 16px;
     }
 </style>

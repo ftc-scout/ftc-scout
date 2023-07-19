@@ -6,10 +6,9 @@
     export let style = "";
 
     let requestedWidth: Readable<string> = getContext(REQUESTED_WIDTH);
-    $: minWidth = `min(${$requestedWidth}, 100% - 2 * var(--lg-gap))`;
 </script>
 
-<div style:min-width={minWidth} {style}>
+<div style:--requested-width={$requestedWidth} {style}>
     <slot />
 </div>
 
@@ -23,8 +22,17 @@
         margin: var(--lg-gap) auto;
         margin-bottom: var(--vl-gap);
 
+        --side-gap: var(--lg-gap);
+
         position: relative;
         width: min-content;
-        max-width: calc(100% - 2 * var(--lg-gap));
+        max-width: calc(100% - 2 * var(--side-gap));
+        min-width: min(var(--requested-width), 100% - 2 * var(--side-gap));
+    }
+
+    @media (max-width: 550px) {
+        div {
+            --side-gap: var(--md-gap);
+        }
     }
 </style>

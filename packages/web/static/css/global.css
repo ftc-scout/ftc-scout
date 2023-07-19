@@ -24,6 +24,7 @@
     --lg-font-size: 20px;
     --vl-font-size: 24px;
     --xl-font-size: 32px;
+    --font-family: "Inter", sans-serif;
 
     /* --- Z-Indices --- */
     --sidebar-zi: 500;
@@ -126,6 +127,7 @@ body.dark {
 body {
     color: var(--text-color);
     font-size: var(--md-font-size);
+    font-family: var(--font-family);
 }
 
 * {
