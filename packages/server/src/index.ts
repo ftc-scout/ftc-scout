@@ -47,19 +47,6 @@ async function main() {
         await fetchPriorSeasons();
         await watchApi();
     }
-
-    // let m = await DATA_SOURCE.getRepository(Match)
-    //     .createQueryBuilder("m")
-    //     .leftJoinAndMapMany(
-    //         "m.scores",
-    //         "match_score_2022",
-    //         "ms",
-    //         "m.event_season = ms.season AND m.event_code = ms.event_code AND m.id = ms.match_id"
-    //     )
-    //     .where("m.event_season = :season", { season: 2022 })
-    //     .andWhere("m.event_code = :code", { code: "USCALAROQ2" })
-    //     .getOne();
-    // console.log(m);
 }
 
 main();
