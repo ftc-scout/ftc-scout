@@ -19,22 +19,22 @@ fragment TeamPageStats on TeamEventStats {
         wins
         losses
         ties
-        # opr {
-        # totalPoints
-        # }
-        # avg {
-        # totalPoints
-        # }
+        opr {
+            totalPoints
+        }
+        avg {
+            totalPoints
+        }
     }
     ... on TeamEventStats2021Remote {
         rank
         rp
-        # opr {
-        # totalPoints
-        # }
-        # avg {
-        # totalPoints
-        # }
+        opr {
+            totalPoints
+        }
+        avg {
+            totalPoints
+        }
     }
     ... on TeamEventStats2020Trad {
         rank
@@ -42,22 +42,22 @@ fragment TeamPageStats on TeamEventStats {
         wins
         losses
         ties
-        # opr {
-        # totalPoints
-        # }
-        # avg {
-        # totalPoints
-        # }
+        opr {
+            totalPoints
+        }
+        avg {
+            totalPoints
+        }
     }
     ... on TeamEventStats2020Remote {
         rank
         rp
-        # opr {
-        # totalPoints
-        # }
-        # avg {
-        # totalPoints
-        # }
+        opr {
+            totalPoints
+        }
+        avg {
+            totalPoints
+        }
     }
     ... on TeamEventStats2019 {
         rank
@@ -65,11 +65,11 @@ fragment TeamPageStats on TeamEventStats {
         wins
         losses
         ties
-        # opr {
-        # totalPointsNp
-        # }
-        # avg {
-        # totalPointsNp
-        # }
+        opr {
+            totalPointsNp
+        }
+        avg {
+            totalPointsNp
+        }
     }
 }
