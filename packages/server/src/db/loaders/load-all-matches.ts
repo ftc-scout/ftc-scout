@@ -19,12 +19,13 @@ import {
     TeamEventParticipation,
     TeamEventParticipationSchemas as TepSchemas,
 } from "../entities/dyn/team-event-participation";
-import { exit } from "process";
 
 const IGNORED_MATCHES = [
+    //cSpell:disable
     { season: Season.UltimateGoal, eventCode: "USNYEXS1", teamNumber: 14903 },
     { season: Season.UltimateGoal, eventCode: "USNYEXS1", teamNumber: 17222 },
     { season: Season.UltimateGoal, eventCode: "USNJCWS1", teamNumber: 9889 },
+    //cSpell:enable
 ];
 
 function isIgnored(season: Season, eCode: string, m: MatchFtcApi): boolean {
@@ -96,10 +97,6 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
         } catch (e) {
             console.error(`Loaded ${i + 1}/${events.length} !!! ERROR !!!`);
             console.error(e);
-
-            // TODO
-            exit(1);
-            return;
         }
     }
 

@@ -26,6 +26,7 @@ type Score = {
     matchId: number;
     alliance: Alliance;
     totalPoints: number;
+    totalPointsNp: number;
 } & Record<string, any>;
 
 type Tep = {
@@ -101,7 +102,7 @@ export function calculateTeamEventStats(
     (isRemote ? calculateRemoteMatchesPlayed : calculateRecords)(matches, teps);
     calculateGroupStats(matches, teps, descriptor, isRemote);
     calculateOprs(matches, teps, isRemote, descriptor);
-    calculateRanks(teps, descriptor);
+    calculateRanks(teps, matches, descriptor);
 
     return Object.values(teps);
 }
@@ -276,7 +277,7 @@ function calculateOprs(
     }
 }
 
-function calculateRanks(teps: Record<number, Tep>, descriptor: Descriptor) {
+function calculateRanks(teps: Record<number, Tep>, matches: Match[], descriptor: Descriptor) {
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
 
@@ -303,8 +304,7 @@ function calculateRanks(teps: Record<number, Tep>, descriptor: Descriptor) {
                 stats.tb2 = stats.avg.egPoints;
                 break;
             case "LosingScore":
-                // TODO: actually implement skystone tb
-                stats.tb1 = 0;
+                calcLosingScoreTb(teps, matches);
                 break;
         }
     }
@@ -317,5 +317,42 @@ function calculateRanks(teps: Record<number, Tep>, descriptor: Descriptor) {
 
     for (let rank = 0; rank < ranked.length; rank++) {
         teps[+ranked[rank][0]].rank = rank + 1;
+    }
+}
+
+function calcLosingScoreTb(teps: Record<number, Tep>, matches: Match[]) {
+    let tbs = {} as Record<number, number[]>;
+    for (let team of Object.keys(teps)) {
+        tbs[+team] = [];
+    }
+
+    for (let m of matches) {
+        // TODO: this will be wrong once dq = 0 is implemented
+        let lowestScore = Math.min(...m.scores.map((s) => s.totalPointsNp));
+
+        for (let t of m.teams) {
+            if (t.surrogate) continue;
+
+            tbs[t.teamNumber].push(t.dq ? -1 : lowestScore);
+        }
+    }
+
+    for (let team of Object.keys(teps)) {
+        let scores = tbs[+team];
+        let dqs = scores.filter((s) => s == -1).length;
+        let realScores = scores.filter((s) => s != -1).sort((a, b) => b - a); // Sort desc
+
+        let denom: number;
+        if (scores.length == 5 || scores.length == 6) {
+            denom = scores.length - 1;
+        } else if (scores.length >= 7) {
+            denom = scores.length - 2;
+        } else {
+            denom = scores.length;
+        }
+        let taken = Math.max(0, denom - dqs);
+
+        teps[+team].tb1 = realScores.slice(0, taken).reduce((a, b) => a + b, 0) / denom;
+        teps[+team].tb2 = 0;
     }
 }

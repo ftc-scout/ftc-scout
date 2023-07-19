@@ -22,6 +22,7 @@ type BaseColumns = {
 
 type KnownColumns = {
     totalPoints: number;
+    totalPointsNp: number;
 };
 
 function makeMatchScore(descriptor: Descriptor): EntitySchema<MatchScore> {

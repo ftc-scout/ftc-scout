@@ -28,11 +28,6 @@ function make(descriptor: Descriptor, remote: boolean, hasRemote: boolean): Grap
         if (c.tep.individual) innerFields[c.name + "Individual"] = FloatTy;
     }
 
-    // TODO: remove
-    if (Object.keys(innerFields).length == 0) {
-        innerFields.placeholder = FloatTy;
-    }
-
     let inner = new GraphQLObjectType({
         name: `TeamEventStats${descriptor.season}${nameSuffix}Group`,
         fields: innerFields,
