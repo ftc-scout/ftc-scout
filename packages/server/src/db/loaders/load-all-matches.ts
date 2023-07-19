@@ -21,6 +21,21 @@ import {
 } from "../entities/dyn/team-event-participation";
 import { exit } from "process";
 
+const IGNORED_MATCHES = [
+    { season: Season.UltimateGoal, eventCode: "USNYEXS1", teamNumber: 14903 },
+    { season: Season.UltimateGoal, eventCode: "USNYEXS1", teamNumber: 17222 },
+    { season: Season.UltimateGoal, eventCode: "USNJCWS1", teamNumber: 9889 },
+];
+
+function isIgnored(season: Season, eCode: string, m: MatchFtcApi): boolean {
+    return IGNORED_MATCHES.some(
+        (im) =>
+            im.season == season &&
+            im.eventCode == eCode &&
+            m.teams.some((t) => im.teamNumber == t.teamNumber)
+    );
+}
+
 export async function loadAllMatches(season: Season, loadType: LoadType) {
     console.info(`Loading matches for season ${season}. (${loadType})`);
 
@@ -45,6 +60,8 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
             let allDbTmps: TeamMatchParticipation[] = [];
 
             for (let match of matches) {
+                if (isIgnored(season, event.code, match)) continue;
+
                 let theseScores = findScores(match, scores);
                 let hasBeenPlayed = !!theseScores.length;
                 let dbMatch = Match.fromApi(match, event, hasBeenPlayed);

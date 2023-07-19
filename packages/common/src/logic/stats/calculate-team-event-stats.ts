@@ -252,7 +252,7 @@ function calculateOprs(
 
         if (c.tep.individual != undefined) {
             for (let [team, data] of Object.entries(teps)) {
-                teps[+team].opr[c.name + "Individual"] = data.opr[c.name];
+                teps[+team].opr[c.name + "Individual"] = data.avg[c.name];
             }
         }
     }

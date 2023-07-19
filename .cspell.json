@@ -1,8 +1,8 @@
 {
     "words": [
+        "codegen",
         "edis",
         "embeddeds",
-        "codegen",
         "fontsource",
         "fortawesome",
         "frnk",
@@ -13,6 +13,8 @@
         "mstd", // match score table descriptor
         "ocho",
         "oprs",
+        "powershot",
+        "powershots",
         "qliso",
         "quals",
         "stateprov",
