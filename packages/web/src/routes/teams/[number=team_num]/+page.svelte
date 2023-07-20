@@ -51,7 +51,7 @@
 
             {#if team.website}
                 <InfoIconRow icon={faLink}>
-                    <a href="team.website">{prettyPrintURL(team.website)}</a>
+                    <a href={team.website}>{prettyPrintURL(team.website)}</a>
                 </InfoIconRow>
             {/if}
 
