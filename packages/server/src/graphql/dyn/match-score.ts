@@ -18,14 +18,15 @@ export function makeMatchScoreTys(descriptor: Descriptor): GraphQLObjectType[] {
 }
 
 export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
-    function fields(s: MatchScore): AnyObject {
+    function fields(s: MatchScore, remote: boolean): AnyObject {
         let ret: AnyObject = {};
         let descriptor = DESCRIPTORS[s.season];
 
         for (let c of descriptor.columns) {
-            if (c.ms == undefined || c.ms.outer) continue;
+            if (c.ms == undefined || c.ms.outer || (remote && c.tradOnly)) continue;
 
-            ret[c.name] = s[c.name];
+            let name = desGqlName(c, remote);
+            ret[name] = s[c.name];
         }
 
         return ret;
@@ -40,7 +41,7 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
             season: s.season,
             eventCode: s.eventCode,
             matchId: s.matchId,
-            ...fields(s),
+            ...fields(s, true),
         };
     } else if (ms.length == 2) {
         let red = ms.find((s) => s.alliance == Alliance.Red);
@@ -54,8 +55,20 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
             season: red.season,
             eventCode: red.eventCode,
             matchId: red.matchId,
-            red: fields(red),
-            blue: fields(blue),
+            red: {
+                season: red.season,
+                eventCode: red.eventCode,
+                matchId: red.matchId,
+                alliance: Alliance.Red,
+                ...fields(red, false),
+            },
+            blue: {
+                season: red.season,
+                eventCode: red.eventCode,
+                matchId: red.matchId,
+                alliance: Alliance.Blue,
+                ...fields(blue, false),
+            },
         };
 
         let descriptor = DESCRIPTORS[red.season];
@@ -77,14 +90,14 @@ function makeMSTysTrad(descriptor: Descriptor): GraphQLObjectType {
     let innerFields: Record<string, GraphQLFieldConfig<any, any>> = {
         season: IntTy,
         eventCode: StrTy,
-        matchID: IntTy,
+        matchId: IntTy,
         alliance: { type: nn(AllianceGQL) },
     };
 
     let outerFields: Record<string, GraphQLFieldConfig<any, any>> = {
         season: IntTy,
         eventCode: StrTy,
-        matchID: IntTy,
+        matchId: IntTy,
     };
 
     for (let c of descriptor.columns) {
@@ -124,7 +137,7 @@ function makeMSTysRemote(descriptor: Descriptor): GraphQLObjectType | null {
     let fields: Record<string, GraphQLFieldConfig<any, any>> = {
         season: IntTy,
         eventCode: StrTy,
-        matchID: IntTy,
+        matchId: IntTy,
     };
 
     for (let c of descriptor.columns) {

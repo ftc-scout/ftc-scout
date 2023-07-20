@@ -8,11 +8,11 @@ import { Team } from "../../db/entities/Team";
 import { In } from "typeorm";
 import { AwardGQL, teamAwareAwardLoader } from "./Award";
 import { Award } from "../../db/entities/Award";
-import { MatchGQL } from "./Match";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
 import { TepStatsUnionGQL } from "../dyn/dyn-types-schema";
 import { addTypename } from "../dyn/tep";
 import { EventGQL } from "./Event";
+import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
 
 export const TeamEventParticipationGQL = new GraphQLObjectType({
     name: "TeamEventParticipation",
@@ -59,8 +59,8 @@ export const TeamEventParticipationGQL = new GraphQLObjectType({
                 teamAwareAwardLoader
             ),
         },
-        match: {
-            type: list(nn(MatchGQL)),
+        matches: {
+            type: list(nn(TeamMatchParticipationGQL)),
             resolve: dataLoaderResolverList<
                 TeamEventParticipation,
                 TeamMatchParticipation,

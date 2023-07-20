@@ -1,4 +1,5 @@
 <script>
+    import DarkModeToggle from "./DarkModeToggle.svelte";
     import Hamburger from "./Hamburger.svelte";
     import Logo from "./Logo.svelte";
 </script>
@@ -9,7 +10,7 @@
         <Logo />
     </div>
 
-    <button on:click={() => document.body.classList.toggle("dark")}> Toggle Dark Mode </button>
+    <DarkModeToggle />
 </nav>
 
 <style>

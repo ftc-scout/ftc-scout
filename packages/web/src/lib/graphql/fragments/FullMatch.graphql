@@ -2,4 +2,29 @@ fragment FullMatch on Match {
     season
     eventCode
     id
+    matchNum
+    description
+    tournamentLevel
+    scheduledStartTime
+    actualStartTime
+    scores {
+        ...FullMatchScores
+    }
+    teams {
+        season
+        eventCode
+        matchId
+        station
+        allianceRole
+        alliance
+        teamNumber
+        team {
+            number
+            name
+        }
+        surrogate
+        noShow
+        dq
+        onField
+    }
 }

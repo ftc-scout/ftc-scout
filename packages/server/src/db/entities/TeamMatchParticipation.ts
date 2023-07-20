@@ -85,11 +85,15 @@ export class TeamMatchParticipation extends BaseEntity {
             let anyOnField = teams.some((t) => t.onField && t.station.includes(color));
 
             return teams
-                .filter(
-                    (t) =>
-                        (match.eventSeason == 2019 ? true : !anyOnField || (t.onField ?? true)) &&
-                        t.station.includes(color)
-                )
+                .filter((t) => {
+                    if (!t.station.includes(color)) return false;
+
+                    if (match.eventSeason == 2019) return true;
+                    if (!anyOnField) return true;
+                    if (!t.dq && !(t.onField ?? true)) return false;
+
+                    return true;
+                })
                 .sort(cmp);
         }
 

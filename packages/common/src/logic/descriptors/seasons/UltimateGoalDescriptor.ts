@@ -54,12 +54,12 @@ export const Descriptor2020 = inferDescriptor({
             ms: { fromTradApi: (api) => api.wobbleDelivered2 },
         },
         {
-            name: "autoNav1",
+            name: "autoNav2020_1",
             type: BoolDTy,
             ms: { fromTradApi: (api) => api.navigated1 },
         },
         {
-            name: "autoNav2",
+            name: "autoNav2020_2",
             type: BoolDTy,
             tradOnly: true,
             ms: { fromTradApi: (api) => api.navigated2 },
@@ -138,11 +138,11 @@ export const Descriptor2020 = inferDescriptor({
         {
             name: "autoNavPoints",
             type: IntDTy(8),
-            ms: { fromSelf: (self) => (self.autoNav1 ? 5 : 0) + (self.autoNav2 ? 5 : 0) },
+            ms: { fromSelf: (self) => (self.autoNav2020_1 ? 5 : 0) + (self.autoNav2020_2 ? 5 : 0) },
             tep: {
                 individual: {
-                    first: (self) => (self.autoNav1 ? 5 : 0),
-                    second: (self) => (self.autoNav2 ? 5 : 0),
+                    first: (self) => (self.autoNav2020_1 ? 5 : 0),
+                    second: (self) => (self.autoNav2020_2 ? 5 : 0),
                 },
             },
         },

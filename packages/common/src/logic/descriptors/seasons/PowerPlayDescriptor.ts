@@ -131,14 +131,14 @@ export const Descriptor2022 = inferDescriptor({
     },
     columns: [
         {
-            name: "autoNav1",
+            name: "autoNav2022_1",
             type: AutoNav2022DTy,
             ms: {
                 fromTradApi: (api) => autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
             },
         },
         {
-            name: "autoNav2",
+            name: "autoNav2022_2",
             type: AutoNav2022DTy,
             ms: {
                 fromTradApi: (api) => autoNav2022FromApi(api.robot2Auto, api.initSignalSleeve2),
@@ -289,12 +289,12 @@ export const Descriptor2022 = inferDescriptor({
             type: IntDTy(16),
             ms: {
                 fromSelf: (self) =>
-                    autoNav2022Points(self.autoNav1) + autoNav2022Points(self.autoNav2),
+                    autoNav2022Points(self.autoNav2022_1) + autoNav2022Points(self.autoNav2022_2),
             },
             tep: {
                 individual: {
-                    first: (self) => autoNav2022Points(self.autoNav1),
-                    second: (self) => autoNav2022Points(self.autoNav2),
+                    first: (self) => autoNav2022Points(self.autoNav2022_1),
+                    second: (self) => autoNav2022Points(self.autoNav2022_2),
                 },
             },
         },

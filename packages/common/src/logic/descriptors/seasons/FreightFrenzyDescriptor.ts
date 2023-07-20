@@ -130,7 +130,7 @@ export const Descriptor2021 = inferDescriptor({
             ms: { fromTradApi: (api) => api.carousel },
         },
         {
-            name: "autoNav1",
+            name: "autoNav2021_1",
             type: AutoNav2021DTy,
             ms: {
                 fromTradApi: (api) => autoNav2021FromApi(api.autoNavigated1),
@@ -138,7 +138,7 @@ export const Descriptor2021 = inferDescriptor({
             },
         },
         {
-            name: "autoNav2",
+            name: "autoNav2021_2",
             type: AutoNav2021DTy,
             tradOnly: true,
             ms: {
@@ -269,12 +269,12 @@ export const Descriptor2021 = inferDescriptor({
             type: IntDTy(8),
             ms: {
                 fromSelf: (self) =>
-                    autoNav2021Points(self.autoNav1) + autoNav2021Points(self.autoNav2),
+                    autoNav2021Points(self.autoNav2021_1) + autoNav2021Points(self.autoNav2021_2),
             },
             tep: {
                 individual: {
-                    first: (self) => autoNav2021Points(self.autoNav1),
-                    second: (self) => autoNav2021Points(self.autoNav2),
+                    first: (self) => autoNav2021Points(self.autoNav2021_1),
+                    second: (self) => autoNav2021Points(self.autoNav2021_2),
                 },
             },
         },

@@ -88,6 +88,14 @@
 
 body {
     --modal-bg-color: rgba(0, 0, 0, 0.4);
+
+    --red-team-color: rgb(var(--red-team-color-vs));
+    --red-team-bg-color: rgba(var(--red-team-color-vs), var(--team-color-transparency));
+    --blue-team-color: rgb(var(--blue-team-color-vs));
+    --blue-team-bg-color: rgba(var(--blue-team-color-vs), var(--team-color-transparency));
+    --neutral-team-color: rgb(var(--neutral-team-color-vs));
+    --neutral-team-bg-color: rgba(var(--neutral-team-color-vs), var(--team-color-transparency));
+    --team-text-color: white;
 }
 
 body:not(.dark) {
@@ -103,6 +111,17 @@ body:not(.dark) {
     --secondary-text-color: #636466;
     --theme-text-color: #ffffff;
 
+    --team-color-transparency: 0.15;
+    --red-team-color-vs: 244, 67, 54;
+    --blue-team-color-vs: 33, 150, 243;
+    --neutral-team-color-vs: 170, 0, 255;
+    --red-team-text-color: rgb(var(--red-team-color-vs));
+    --blue-team-text-color: rgb(var(--blue-team-color-vs));
+    --neutral-team-text-color: rgb(var(--neutral-team-color-vs));
+    --zebra-stripe-color: rgb(245, 245, 245);
+
+    --grayed-out-text-color: gray;
+
     color-scheme: light;
 }
 
@@ -115,9 +134,20 @@ body.dark {
 
     --sep-color: #4a4e51;
 
-    --text-color: #cfd2d6;
+    --text-color: #dfe2e6;
     --secondary-text-color: #dcdfe2;
     --theme-text-color: #ffffff;
+
+    --team-color-transparency: 0.25;
+    --red-team-color-vs: 204, 47, 47;
+    --blue-team-color-vs: 27, 87, 179;
+    --neutral-team-color-vs: 170, 0, 255;
+    --red-team-text-color: rgb(244, 67, 54);
+    --blue-team-text-color: rgb(33, 150, 243);
+    --neutral-team-text-color: rgb(196, 79, 255);
+    --zebra-stripe-color: #353535;
+
+    --grayed-out-text-color: #a0a0a0;
 
     color-scheme: dark;
 }

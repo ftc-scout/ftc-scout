@@ -49,12 +49,12 @@ export const MatchGQL: GraphQLObjectType = new GraphQLObjectType({
     }),
 });
 
-export function scoreAwareMatchLoader<K extends FindOptionsWhere<Match>>(
-    keys: K[],
-    info: GraphQLResolveInfo[]
-) {
+export function singleSeasonScoreAwareMatchLoader<
+    K extends { eventSeason: Season } & FindOptionsWhere<Match>
+>(keys: K[], info: GraphQLResolveInfo[]) {
     let includeScores = info.some((i) => "scores" in graphqlFields(i));
     let includeTeams = info.some((i) => "teams" in graphqlFields(i));
+    let season = keys[0].eventSeason;
 
     let q = DATA_SOURCE.getRepository(Match)
         .createQueryBuilder("m")
@@ -63,7 +63,7 @@ export function scoreAwareMatchLoader<K extends FindOptionsWhere<Match>>(
     if (includeScores) {
         q.leftJoinAndMapMany(
             "m.scores",
-            "match_score_2022",
+            `match_score_${season}`,
             "ms",
             "m.event_season = ms.season AND m.event_code = ms.event_code AND m.id = ms.match_id"
         );

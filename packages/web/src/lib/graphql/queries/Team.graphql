@@ -45,6 +45,16 @@ query Team($number: Int!, $season: Int!) {
                 published
                 timezone
             }
+            matches {
+                season
+                eventCode
+                matchId
+                station
+                alliance
+                match {
+                    ...FullMatch
+                }
+            }
         }
     }
 }

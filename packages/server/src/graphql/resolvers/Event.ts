@@ -19,7 +19,7 @@ import {
 } from "@ftc-scout/common";
 import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
-import { MatchGQL, scoreAwareMatchLoader } from "./Match";
+import { MatchGQL, singleSeasonScoreAwareMatchLoader } from "./Match";
 import { Match } from "../../db/entities/Match";
 import { TeamEventParticipationGQL } from "./TeamEventParticipation";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
@@ -126,7 +126,7 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                     id != null
                         ? { eventSeason: e.season, eventCode: e.code, id }
                         : { eventSeason: e.season, eventCode: e.code },
-                scoreAwareMatchLoader
+                singleSeasonScoreAwareMatchLoader
             ),
         },
     }),

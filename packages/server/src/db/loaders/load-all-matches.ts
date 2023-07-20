@@ -66,10 +66,11 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 let theseScores = findScores(match, scores);
                 let hasBeenPlayed = !!theseScores.length;
                 let dbMatch = Match.fromApi(match, event, hasBeenPlayed);
-                let dbScores = theseScores.flatMap((s) =>
-                    MatchScore.fromApi(s, dbMatch, event.remote)
-                );
                 let dbTmps = TeamMatchParticipation.fromApi(match.teams, dbMatch, event.remote);
+                let dbScores =
+                    event.remote && dbTmps[0].noShow
+                        ? [] // Remote matches that weren't played still return scores
+                        : theseScores.flatMap((s) => MatchScore.fromApi(s, dbMatch, event.remote));
 
                 dbMatch.teams = dbTmps;
                 dbMatch.scores = dbScores;

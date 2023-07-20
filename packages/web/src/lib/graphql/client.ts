@@ -24,6 +24,7 @@ export function getClient(
 
     let cache = new InMemoryCache({
         possibleTypes: {
+            // TODO
             TeamEventStats: [
                 "TeamEventStats2022",
                 "TeamEventStats2021Trad",
@@ -32,9 +33,24 @@ export function getClient(
                 "TeamEventStats2020Remote",
                 "TeamEventStats2019",
             ],
+            MatchScores: [
+                "MatchScores2022",
+                "MatchScores2021Remote",
+                "MatchScores2021Trad",
+                "MatchScores2020Remote",
+                "MatchScores2020Trad",
+                "MatchScores2019",
+            ],
         },
         typePolicies: {
             Team: { keyFields: ["number"] },
+            Event: { keyFields: ["season", "code"] },
+            Match: { keyFields: ["season", "eventCode", "id"] },
+            TeamMatchParticipation: {
+                keyFields: ["season", "eventCode", "matchId", "station", "alliance"],
+            },
+            TeamEventParticipation: { keyFields: ["season", "eventCode", "teamNumber"] },
+            Award: { keyFields: ["season", "eventCode", "type", "placement", "teamNumber"] },
         },
     });
 

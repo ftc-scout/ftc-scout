@@ -13,12 +13,12 @@ export const Descriptor2019 = inferDescriptor({
     },
     columns: [
         {
-            name: "autoNav1",
+            name: "autoNav2019_1",
             type: BoolDTy,
             ms: { fromTradApi: (api: AllianceScores2019TradFtcApi) => api.robot1Navigated },
         },
         {
-            name: "autoNav2",
+            name: "autoNav2019_2",
             type: BoolDTy,
             ms: { fromTradApi: (api) => api.robot2Navigated },
         },
@@ -138,11 +138,11 @@ export const Descriptor2019 = inferDescriptor({
         {
             name: "autoNavPoints",
             type: IntDTy(8),
-            ms: { fromSelf: (self) => self.autoNav1 * 5 + self.autoNav2 * 5 },
+            ms: { fromSelf: (self) => self.autoNav2019_1 * 5 + self.autoNav2019_2 * 5 },
             tep: {
                 individual: {
-                    first: (self) => self.autoNav1 * 5,
-                    second: (self) => self.autoNav2 * 5,
+                    first: (self) => self.autoNav2019_1 * 5,
+                    second: (self) => self.autoNav2019_2 * 5,
                 },
             },
         },

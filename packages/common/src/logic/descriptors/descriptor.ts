@@ -60,8 +60,8 @@ type TepDbDescriptor<Names extends string> = {
 };
 
 export function desGqlName(col: Descriptor["columns"][number], remote: boolean): string {
-    if (remote && col.name.endsWith("1")) {
-        return col.name.replace(/1$/, "");
+    if (remote && (col.name.endsWith("1") || col.name.endsWith("_1"))) {
+        return col.name.replace(/_?1$/, "");
     } else {
         return col.name;
     }

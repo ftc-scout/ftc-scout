@@ -1,0 +1,304 @@
+# // HELPSpecific
+fragment FullMatchScores on MatchScores {
+    __typename
+    ... on MatchScores2022 {
+        season
+        eventCode
+        matchId
+        autoConeLayout {
+            ...FullConeLayout
+        }
+        dcConeLayout {
+            ...FullConeLayout
+        }
+        red {
+            ...FullMatchScore2022Alliance
+        }
+        blue {
+            ...FullMatchScore2022Alliance
+        }
+    }
+    ... on MatchScores2021Remote {
+        season
+        eventCode
+        matchId
+        barcodeElement
+        autoCarousel
+        autoNav2021
+        autoBonus
+        autoStorageFreight
+        autoFreight
+        autoFreight2
+        autoFreight3
+        dcStorageFreight
+        dcFreight
+        dcFreight2
+        dcFreight3
+        egDucks
+        allianceBalanced
+        egPark
+        capped
+        minorsCommitted
+        majorsCommitted
+        autoCarouselPoints
+        autoNavPoints
+        autoFreightPoints
+        autoBonusPoints
+        dcAllianceHubPoints
+        dcStoragePoints
+        egDuckPoints
+        allianceBalancedPoints
+        egParkPoints
+        cappingPoints
+        autoPoints
+        dcPoints
+        egPoints
+        penaltyPoints
+        totalPoints
+        totalPointsNp
+    }
+    ... on MatchScores2021Trad {
+        season
+        eventCode
+        matchId
+        red {
+            ...FullMatchScore2021Alliance
+        }
+        blue {
+            ...FullMatchScore2021Alliance
+        }
+    }
+    ... on MatchScores2020Remote {
+        season
+        eventCode
+        matchId
+        autoWobble
+        autoWobble2
+        autoNav2020
+        autoPowershots
+        autoTowerLow
+        autoTowerMid
+        autoTowerHigh
+        dcTowerLow
+        dcTowerMid
+        dcTowerHigh
+        wobbleEndPos
+        wobbleEndPos2
+        egWobbleRings
+        egPowershots
+        minorsCommitted
+        majorsCommitted
+        autoNavPoints
+        autoTowerPoints
+        autoWobblePoints
+        autoPowershotPoints
+        egWobblePoints
+        egPowershotPoints
+        egWobbleRingPoints
+        autoPoints
+        dcPoints
+        egPoints
+        penaltyPoints
+        totalPoints
+        totalPointsNp
+    }
+    ... on MatchScores2020Trad {
+        season
+        eventCode
+        matchId
+        red {
+            ...FullMatchScore2020Alliance
+        }
+        blue {
+            ...FullMatchScore2020Alliance
+        }
+    }
+    ... on MatchScores2019 {
+        season
+        eventCode
+        matchId
+        red {
+            ...FullMatchScore2019Alliance
+        }
+        blue {
+            ...FullMatchScore2019Alliance
+        }
+    }
+}
+
+fragment FullConeLayout on ConeLayout {
+    redNearTerminal
+    redFarTerminal
+    blueNearTerminal
+    blueFarTerminal
+    junctions
+}
+
+fragment FullMatchScore2022Alliance on MatchScores2022Alliance {
+    season
+    eventCode
+    matchId
+    alliance
+    autoNav2022_1
+    autoNav2022_2
+    autoTerminalCones
+    autoGroundCones
+    autoLowCones
+    autoMediumCones
+    autoHighCones
+    dcNearTerminalCones
+    dcFarTerminalCones
+    dcGroundCones
+    dcLowCones
+    dcMediumCones
+    dcHighCones
+    egNav1
+    egNav2
+    coneOwnedJunctions
+    beaconOwnedJunctions
+    circuit
+    minorsCommitted
+    majorsCommitted
+    penaltyPointsCommitted
+    autoNavPoints
+    autoConePoints
+    egNavPoints
+    ownershipPoints
+    circuitPoints
+    autoPoints
+    dcPoints
+    egPoints
+    totalPointsNp
+    totalPoints
+}
+
+fragment FullMatchScore2021Alliance on MatchScores2021Alliance {
+    season
+    eventCode
+    matchId
+    alliance
+    barcodeElement1
+    barcodeElement2
+    autoCarousel
+    autoNav2021_1
+    autoNav2021_2
+    autoBonus1
+    autoBonus2
+    autoStorageFreight
+    autoFreight1
+    autoFreight2
+    autoFreight3
+    dcStorageFreight
+    dcFreight1
+    dcFreight2
+    dcFreight3
+    sharedFreight
+    egDucks
+    allianceBalanced
+    sharedUnbalanced
+    egPark1
+    egPark2
+    capped
+    minorsCommitted
+    majorsCommitted
+    autoCarouselPoints
+    autoNavPoints
+    autoFreightPoints
+    autoBonusPoints
+    dcAllianceHubPoints
+    dcSharedHubPoints
+    dcStoragePoints
+    egDuckPoints
+    allianceBalancedPoints
+    sharedUnbalancedPoints
+    egParkPoints
+    cappingPoints
+    autoPoints
+    dcPoints
+    egPoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}
+
+fragment FullMatchScore2020Alliance on MatchScores2020Alliance {
+    season
+    eventCode
+    matchId
+    alliance
+    autoWobble1
+    autoWobble2
+    autoNav2020_1
+    autoNav2020_2
+    autoPowershots
+    autoTowerLow
+    autoTowerMid
+    autoTowerHigh
+    dcTowerLow
+    dcTowerMid
+    dcTowerHigh
+    wobbleEndPos1
+    wobbleEndPos2
+    egWobbleRings
+    egPowershots
+    minorsCommitted
+    majorsCommitted
+    autoNavPoints
+    autoTowerPoints
+    autoWobblePoints
+    autoPowershotPoints
+    egWobblePoints
+    egPowershotPoints
+    egWobbleRingPoints
+    autoPoints
+    dcPoints
+    egPoints
+    penaltyPoints
+    totalPoints
+    totalPointsNp
+}
+
+fragment FullMatchScore2019Alliance on MatchScores2019Alliance {
+    season
+    eventCode
+    matchId
+    alliance
+    autoNav2019_1
+    autoNav2019_2
+    repositioned
+    autoDelivered
+    autoSkystonesDeliveredFirst
+    autoReturned
+    autoFirstReturnedSkystone
+    autoPlaced
+    dcDelivered
+    dcReturned
+    dcPlaced
+    skyscraperHeight
+    capLevel1
+    capLevel2
+    egFoundationMoved
+    egParked1
+    egParked2
+    minorsCommitted
+    majorsCommitted
+    penaltyPointsCommitted
+    minorsByOpp
+    majorsByOpp
+    penaltyPointsByOpp
+    autoNavPoints
+    autoRepositioningPoints
+    autoDeliveryPoints
+    autoPlacementPoints
+    dcDeliveryPoints
+    dcPlacementPoints
+    skyscraperBonusPoints
+    cappingPoints
+    egParkPoints
+    egFoundationMovedPoints
+    autoPoints
+    dcPoints
+    egPoints
+    totalPoints
+    totalPointsNp
+}

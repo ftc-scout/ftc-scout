@@ -15,9 +15,6 @@
     $: hasOpr = stats && "opr" in stats;
     $: hasAvg = stats && "avg" in stats;
     $: np = DESCRIPTORS[season].penaltiesSubtract || remote ? "" : "np";
-
-    $: opr = "totalPoints" in stats!.opr ? stats?.opr.totalPoints! : stats?.opr.totalPointsNp!;
-    $: avg = "totalPoints" in stats!.avg ? stats?.avg.totalPoints! : stats?.avg.totalPointsNp!;
 </script>
 
 {#if stats}
@@ -36,10 +33,16 @@
             <b>{rpFormat(stats.rp)}</b> RP {hasOpr || hasAvg ? " · " : ""}
         {/if}
         {#if "opr" in stats}
-            <b>{prettyPrintFloat(opr)}</b> {np}OPR {hasAvg ? " · " : ""}
+            {@const opr =
+                "totalPoints" in stats.opr ? stats.opr.totalPoints : stats.opr.totalPointsNp}
+            <b>{prettyPrintFloat(opr)}</b>
+            {np}OPR {hasAvg ? " · " : ""}
         {/if}
         {#if "avg" in stats}
-            <b>{prettyPrintFloat(avg)}</b> {np}AVG
+            {@const avg =
+                "totalPoints" in stats.avg ? stats.avg.totalPoints : stats.avg.totalPointsNp}
+            <b>{prettyPrintFloat(avg)}</b>
+            {np}AVG
         {/if}
     </InfoIconRow>
 {/if}

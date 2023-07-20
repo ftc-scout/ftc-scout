@@ -1,7 +1,6 @@
 <script lang="ts">
     import WidthProvider from "$lib/components/WidthProvider.svelte";
     import Card from "$lib/components/Card.svelte";
-    import type { PageData } from "./$types";
     import Loading from "$lib/components/Loading.svelte";
     import ErrorPage from "$lib/components/ErrorPage.svelte";
     import { page } from "$app/stores";
@@ -18,20 +17,21 @@
     import { prettyPrintURL } from "$lib/printers/url";
     import Location from "$lib/components/Location.svelte";
     import DataFromFirst from "$lib/components/DataFromFirst.svelte";
-    import { eventSorter } from "$lib/util/sortEvents";
+    import { eventSorter } from "$lib/util/sorters";
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import TeamEventStats from "./TeamEventStats.svelte";
     import type { Season } from "@ftc-scout/common";
     import Award from "$lib/components/Award.svelte";
+    import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
 
     const season = (n: number) => n as Season;
 
-    export let data: PageData;
+    export let data;
 
     $: teamStore = data.team;
     $: team = $teamStore?.data.teamByNumber!;
 
-    $: sortedEvents = (team.events ?? []).sort(eventSorter);
+    $: sortedEvents = ([...team.events] ?? []).sort(eventSorter);
 </script>
 
 <WidthProvider>
@@ -91,6 +91,12 @@
                         {/each}
                     </InfoIconRow>
                 {/if}
+
+                <MatchTable
+                    matches={tep.matches.map((m) => m.match)}
+                    {event}
+                    focusedTeam={team.number}
+                />
             </Card>
         {/each}
     </Loading>

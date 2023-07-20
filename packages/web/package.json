@@ -31,7 +31,9 @@
         "@ftc-scout/common": "^0.0.1",
         "@graphql-typed-document-node/core": "^3.2.0",
         "graphql": "^16.7.1",
-        "svelte-fa": "^3.0.4"
+        "svelte-fa": "^3.0.4",
+        "svelte-tippy": "^1.3.2",
+        "tippy": "^0.0.0"
     },
     "type": "module"
 }
