@@ -14,6 +14,10 @@
             return Alliance.Solo;
         }
     }
+
+    export type TradScoresTy = NonNullable<
+        Exclude<FullMatchFragment["scores"], { __typename: `${string}Remote` }>
+    >;
 </script>
 
 <script lang="ts">
@@ -25,6 +29,8 @@
     import "tippy.js/themes/light.css";
     import { tippyTheme } from "../nav/DarkModeToggle.svelte";
     import { matchTimeTip } from "../../util/tippy";
+    import { getContext } from "svelte";
+    import { SHOW_MATCH_SCORE, type ShowMatchFn } from "./MatchTable.svelte";
 
     export let match: FullMatchFragment;
     export let timeZone: string;
@@ -33,9 +39,11 @@
 
     const tippy = createTippy({ placement: "left", delay: [750, 0] });
     $: tip = matchTimeTip(match, timeZone, $tippyTheme);
+
+    let show: ShowMatchFn = getContext(SHOW_MATCH_SCORE);
 </script>
 
-<td class:hasScores={match.scores} use:tippy={tip}>
+<td class:hasScores={match.scores} use:tippy={tip} on:click={() => show(match)}>
     <div
         class="description"
         class:red={winner == Alliance.Red}

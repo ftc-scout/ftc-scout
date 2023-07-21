@@ -1,3 +1,8 @@
+<script lang="ts" context="module">
+    export const SHOW_MATCH_SCORE = {};
+    export type ShowMatchFn = (match: FullMatchFragment) => void;
+</script>
+
 <script lang="ts">
     import { groupBy } from "@ftc-scout/common";
     import {
@@ -11,6 +16,8 @@
     import TradMatchTableHeader from "./TradMatchTableHeader.svelte";
     import RemoteMatches from "./RemoteMatches.svelte";
     import { page } from "$app/stores";
+    import ScoreModal from "./score-modal/ScoreModal.svelte";
+    import { setContext } from "svelte";
 
     export let matches: FullMatchFragment[];
     export let event: {
@@ -36,7 +43,19 @@
 
     $: anySurrogate = matches.some((m) => m.teams.some((t) => t.surrogate));
     $: anyDq = matches.some((m) => m.teams.some((t) => t.dq));
+
+    let modalShown = false;
+    let modalMatch: FullMatchFragment | null;
+
+    function show(match: FullMatchFragment) {
+        modalMatch = match;
+        modalShown = true;
+    }
+
+    setContext(SHOW_MATCH_SCORE, show);
 </script>
+
+<ScoreModal bind:shown={modalShown} bind:match={modalMatch} />
 
 <table class:remote>
     {#if remote}

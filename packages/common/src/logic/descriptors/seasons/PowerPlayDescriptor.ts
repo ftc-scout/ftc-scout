@@ -446,4 +446,86 @@ export const Descriptor2022 = inferDescriptor({
             tep: {},
         },
     ],
+    scoreTree: [
+        {
+            getScore: (self) => self.autoPoints,
+            displayName: "Auto",
+            heading: true,
+        },
+        {
+            getScore: (self) => self.autoNavPoints,
+            displayName: "Auto Navigation Points",
+            subProps: [
+                {
+                    getScore: (self) => autoNav2022Points(self.autoNav2022_1),
+                    displayName: "Robot 1",
+                },
+                {
+                    getScore: (self) => autoNav2022Points(self.autoNav2022_2),
+                    displayName: "Robot 2",
+                },
+            ],
+        },
+        {
+            getScore: (self) => self.autoConePoints,
+            displayName: "Cone Points",
+            subProps: [
+                {
+                    getScore: (self) => self.autoTerminalCones,
+                    getCount: (self) => self.autoTerminalCones,
+                    displayName: "Terminal",
+                },
+                {
+                    getScore: (self) => self.autoGroundCones * 2,
+                    getCount: (self) => self.autoGroundCones,
+                    displayName: "Ground",
+                },
+                {
+                    getScore: (self) => self.autoLowCones * 3,
+                    getCount: (self) => self.autoLowCones,
+                    displayName: "Low",
+                },
+                {
+                    getScore: (self) => self.autoMediumCones * 4,
+                    getCount: (self) => self.autoMediumCones,
+                    displayName: "Medium",
+                },
+                {
+                    getScore: (self) => self.autoHighCones * 5,
+                    getCount: (self) => self.autoHighCones,
+                    displayName: "High",
+                },
+            ],
+        },
+        {
+            getScore: (self) => self.dcPoints,
+            displayName: "Driver-Controlled",
+            heading: true,
+        },
+        {
+            getScore: (self) => self.dcTerminalCones,
+            getCount: (self) => self.dcTerminalCones,
+            displayName: "Terminal",
+        },
+        {
+            getScore: (self) => self.dcGroundCones * 2,
+            getCount: (self) => self.dcGroundCones,
+            displayName: "Ground",
+        },
+        {
+            getScore: (self) => self.dcLowCones * 3,
+            getCount: (self) => self.dcLowCones,
+            displayName: "Low",
+        },
+        {
+            getScore: (self) => self.dcMediumCones * 4,
+            getCount: (self) => self.dcMediumCones,
+            displayName: "Medium",
+        },
+        {
+            getScore: (self) => self.dcHighCones * 5,
+            getCount: (self) => self.dcHighCones,
+            displayName: "High",
+        },
+    ],
 });

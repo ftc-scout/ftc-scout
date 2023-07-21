@@ -35,6 +35,18 @@ export type GenDescriptor<TradApi, RemoteApi, Names extends string> = {
         ms?: MsDbDescriptor<TradApi, RemoteApi, Names> & MsApiDescriptor<Names>;
         tep?: TepDbDescriptor<Names>;
     }[];
+    scoreTree: {
+        displayName: string;
+        getScore: (self: Record<Names, any>) => number;
+        getCount?: (self: Record<Names, any>) => number;
+        subProps?: {
+            displayName: string;
+            getScore: (self: Record<Names, any>) => number;
+            getCount?: (self: Record<Names, any>) => number;
+            heading?: boolean;
+        }[];
+        heading?: boolean;
+    }[];
 };
 
 type MsDbDescriptor<TradApi, RemoteApi, Names extends string> =

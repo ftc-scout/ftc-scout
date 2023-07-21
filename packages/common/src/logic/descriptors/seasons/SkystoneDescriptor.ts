@@ -266,4 +266,5 @@ export const Descriptor2019 = inferDescriptor({
             tep: {},
         },
     ],
+    scoreTree: [],
 });

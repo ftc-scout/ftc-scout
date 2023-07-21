@@ -148,6 +148,7 @@ fragment FullMatchScore2022Alliance on MatchScores2022Alliance {
     autoHighCones
     dcNearTerminalCones
     dcFarTerminalCones
+    dcTerminalCones
     dcGroundCones
     dcLowCones
     dcMediumCones
