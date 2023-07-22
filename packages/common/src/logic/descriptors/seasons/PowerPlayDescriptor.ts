@@ -5,8 +5,9 @@ import {
 } from "../../../ftc-api-types/match-scores/MatchScores2022Trad";
 import { Alliance } from "../../Alliance";
 import { Season } from "../../Season";
-import { AnyObject, inferDescriptor } from "../descriptor";
-import { AnyDTy, BoolDTy, EnumDTy, FloatDTy, IntDTy, IntTy, listTy, nn } from "../types";
+import { Descriptor, DescriptorColumn } from "../descriptor";
+import { AnyDTy, BoolDTy, EnumDTy, IntDTy, IntTy, listTy, nn } from "../types";
+import { Station } from "../../Station";
 
 export const AutoNav2022 = {
     None: "None",
@@ -111,7 +112,7 @@ let coneLayoutGQL = new GraphQLObjectType({
 });
 const ConeLayoutDTy = AnyDTy(coneLayoutGQL);
 
-function coneLayoutFromDb(red: AnyObject, blue: AnyObject, auto: boolean): ConeLayout {
+function coneLayoutFromDb(red: any, blue: any, auto: boolean): ConeLayout {
     return {
         redNearTerminal: auto ? red.autoTerminalCones : red.dcNearTerminalCones,
         redFarTerminal: auto ? 0 : red.dcFarTerminalCones,
@@ -121,411 +122,453 @@ function coneLayoutFromDb(red: AnyObject, blue: AnyObject, auto: boolean): ConeL
     };
 }
 
-export const Descriptor2022 = inferDescriptor({
+type API = AllianceScores2022TradFtcApi;
+
+export const Descriptor2022 = new Descriptor({
     season: Season.PowerPlay,
     hasRemote: false,
-    penaltiesSubtract: false,
+    pensSubtract: false,
     rankings: {
         rp: "Record",
         tb: "AutoEndgameAvg",
     },
-    columns: [
-        {
-            name: "autoNav2022_1",
-            type: AutoNav2022DTy,
-            ms: {
-                fromTradApi: (api) => autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
-            },
-        },
-        {
-            name: "autoNav2022_2",
-            type: AutoNav2022DTy,
-            ms: {
-                fromTradApi: (api) => autoNav2022FromApi(api.robot2Auto, api.initSignalSleeve2),
-            },
-        },
-        {
-            name: "autoTerminalCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api: AllianceScores2022TradFtcApi) => api.autoTerminal },
-        },
-        {
-            name: "autoTerminalCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.autoTerminal },
-        },
-        {
-            name: "autoGroundCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.autoJunctionCones[0] },
-        },
-        {
-            name: "autoLowCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.autoJunctionCones[1] },
-        },
-        {
-            name: "autoMediumCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.autoJunctionCones[2] },
-        },
-        {
-            name: "autoHighCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.autoJunctionCones[3] },
-        },
-        {
-            name: "autoConeLayout",
-            type: ConeLayoutDTy,
-            ms: {
-                fromTradApi: (api) => junctionsFromApi(api.autoJunctions, api.alliance),
+})
+    .addColumn(
+        new DescriptorColumn({ name: "autoNav1" })
+            .addMatchScore({
+                apiName: "autoNav2022_1",
+                remoteApiName: "autoNav2022",
+                create: {
+                    fromApi: (api: API) =>
+                        autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
+                },
+                dataTy: AutoNav2022DTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoNav2" })
+            .addMatchScore({
+                apiName: "autoNav2022_2",
+                create: {
+                    fromApi: (api: API) =>
+                        autoNav2022FromApi(api.robot2Auto, api.initSignalSleeve2),
+                },
+                dataTy: AutoNav2022DTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoTerminalCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.autoTerminal },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoGroundCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.autoJunctionCones[0] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoLowCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.autoJunctionCones[1] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoMediumCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.autoJunctionCones[2] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoHighCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.autoJunctionCones[3] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoConeLayout" })
+            .addMatchScore({
                 outer: true,
-                mapForApi: (r, b) => coneLayoutFromDb(r, b, true),
-            },
-        },
-        {
-            name: "dcNearTerminalCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.dcTerminalNear },
-        },
-        {
-            name: "dcFarTerminalCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.dcTerminalFar },
-        },
-        {
-            name: "dcTerminalCones",
-            type: IntDTy(8),
-            ms: { fromSelf: (self) => self.dcNearTerminalCones + self.dcFarTerminalCones },
-        },
-        {
-            name: "dcGroundCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.dcJunctionCones[0] },
-        },
-        {
-            name: "dcLowCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.dcJunctionCones[1] },
-        },
-        {
-            name: "dcMediumCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.dcJunctionCones[2] },
-        },
-        {
-            name: "dcHighCones",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.dcJunctionCones[3] },
-        },
-        {
-            name: "dcConeLayout",
-            type: ConeLayoutDTy,
-            ms: {
-                fromTradApi: (api) => junctionsFromApi(api.dcJunctions, api.alliance),
+                create: {
+                    fromApi: (api: API) => junctionsFromApi(api.autoJunctions, api.alliance),
+                },
+                dataTy: ConeLayoutDTy,
+                apiMap: (r, b) => coneLayoutFromDb(r, b, true),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcNearTerminalCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.dcTerminalNear },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcFarTerminalCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.dcTerminalFar },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcTerminalCones" })
+            .addMatchScore({
+                create: { fromSelf: (self) => self.dcNearTerminalCones + self.dcFarTerminalCones },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcGroundCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.dcJunctionCones[0] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcLowCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.dcJunctionCones[1] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcMediumCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.dcJunctionCones[2] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcHighCones" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.dcJunctionCones[3] },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcConeLayout" })
+            .addMatchScore({
                 outer: true,
-                mapForApi: (r, b) => coneLayoutFromDb(r, b, false),
-            },
-        },
-        {
-            name: "egNav1",
-            type: BoolDTy,
-            ms: { fromTradApi: (api) => api.egNavigated1 },
-        },
-        {
-            name: "egNav2",
-            type: BoolDTy,
-            ms: { fromTradApi: (api) => api.egNavigated2 },
-        },
-        {
-            name: "coneOwnedJunctions",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.ownedJunctions - api.beacons },
-        },
-        {
-            name: "beaconOwnedJunctions",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.beacons },
-        },
-        {
-            name: "circuit",
-            type: BoolDTy,
-            ms: { fromTradApi: (api) => api.circuit },
-        },
-        {
-            name: "minorsCommitted",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.minorPenalties },
-        },
-        {
-            name: "majorsCommitted",
-            type: IntDTy(8),
-            ms: { fromTradApi: (api) => api.majorPenalties },
-        },
-        {
-            name: "penaltyPointsCommitted",
-            type: IntDTy(16),
-            ms: { fromSelf: (self) => self.minorsCommitted * 10 + self.majorsCommitted * 30 },
-            tep: {},
-        },
-        {
-            name: "minorsByOpp",
-            type: IntDTy(8),
-            ms: { fromTradApi: (_, oth) => oth.minorPenalties },
-        },
-        {
-            name: "majorsByOpp",
-            type: IntDTy(8),
-            ms: { fromTradApi: (_, oth) => oth.majorPenalties },
-        },
-        {
-            name: "penaltyPointsByOpp",
-            type: IntDTy(16),
-            ms: { fromSelf: (self) => self.minorsByOpp * 10 + self.majorsByOpp * 30 },
-            tep: {},
-        },
-        {
-            name: "autoNavPoints",
-            type: IntDTy(16),
-            ms: {
-                fromSelf: (self) =>
-                    autoNav2022Points(self.autoNav2022_1) + autoNav2022Points(self.autoNav2022_2),
-            },
-            tep: {
-                individual: {
-                    first: (self) => autoNav2022Points(self.autoNav2022_1),
-                    second: (self) => autoNav2022Points(self.autoNav2022_2),
+                create: { fromApi: (api: API) => junctionsFromApi(api.dcJunctions, api.alliance) },
+                dataTy: ConeLayoutDTy,
+                apiMap: (r, b) => coneLayoutFromDb(r, b, false),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egNav1" })
+            .addMatchScore({
+                remoteApiName: "egNav",
+                create: { fromApi: (api: API) => api.egNavigated1 },
+                dataTy: BoolDTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egNav2" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.egNavigated2 },
+                dataTy: BoolDTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "coneOwnedJunctions" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.ownedJunctions - api.beacons },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "beaconOwnedJunctions" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.beacons },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "circuit" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.circuit },
+                dataTy: BoolDTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsCommitted" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.minorPenalties },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "majorsCommitted" })
+            .addMatchScore({
+                create: { fromApi: (api: API) => api.majorPenalties },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsByOpp" })
+            .addMatchScore({
+                create: { fromApi: (_, api: API) => api.minorPenalties },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "majorsByOpp" })
+            .addMatchScore({
+                create: { fromApi: (_, api: API) => api.majorPenalties },
+                dataTy: IntDTy(8),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoNavPoints" })
+            .addMatchScore({
+                create: {
+                    fromSelf: (self) =>
+                        autoNav2022Points(self.autoNav1) + autoNav2022Points(self.autoNav2),
                 },
-            },
-        },
-        {
-            name: "autoConePoints",
-            type: IntDTy(16),
-            ms: {
-                fromSelf: (self) =>
-                    self.autoTerminalCones * 1 +
-                    self.autoGroundCones * 2 +
-                    self.autoLowCones * 3 +
-                    self.autoMediumCones * 4 +
-                    self.autoHighCones * 5,
-            },
-            tep: {},
-        },
-        {
-            name: "autoTerminalPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.autoTerminalCones },
-        },
-        {
-            name: "autoGroundPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.autoGroundCones * 2 },
-        },
-        {
-            name: "autoLowPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.autoLowCones * 3 },
-        },
-        {
-            name: "autoMediumPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.autoMediumCones * 4 },
-        },
-        {
-            name: "autoHighPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.autoTerminalCones * 5 },
-        },
-        {
-            name: "egNavPoints",
-            type: IntDTy(16),
-            ms: { fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2 },
-            tep: {
-                individual: {
-                    first: (self) => self.egNav1 * 2,
-                    second: (self) => self.egNav2 * 2,
+                dataTy: IntDTy(16),
+            })
+            .addTep({})
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoNavPointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) =>
+                    station == Station.One
+                        ? autoNav2022Points(ms.autoNav2022_1)
+                        : autoNav2022Points(ms.autoNav2022_2),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoConePoints" })
+            .addMatchScore({
+                create: {
+                    fromSelf: (self) =>
+                        self.autoTerminalCones * 1 +
+                        self.autoGroundCones * 2 +
+                        self.autoLowCones * 3 +
+                        self.autoMediumCones * 4 +
+                        self.autoHighCones * 5,
                 },
-            },
-        },
-        {
-            name: "ownershipPoints",
-            type: IntDTy(16),
-            ms: {
-                fromSelf: (self) => self.coneOwnedJunctions * 3 + self.beaconOwnedJunctions * 10,
-            },
-            tep: {},
-        },
-        {
-            name: "coneOwnershipPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.coneOwnedJunctions * 3 },
-        },
-        {
-            name: "beaconOwnershipPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.beaconOwnedJunctions * 10 },
-        },
-        {
-            name: "circuitPoints",
-            type: IntDTy(16),
-            ms: { fromSelf: (self) => self.circuit * 20 },
-            tep: {},
-        },
-        {
-            name: "majorsCommittedPoints",
-            type: IntDTy(8),
-            tep: { fromSelf: (self) => self.majorsCommitted * 30 },
-        },
-        {
-            name: "minorsCommittedPoints",
-            type: IntDTy(8),
-            tep: { fromSelf: (self) => self.minorsCommitted * 10 },
-        },
-        {
-            name: "autoPoints",
-            type: IntDTy(16),
-            ms: { fromSelf: (self) => self.autoNavPoints + self.autoConePoints },
-            tep: {},
-        },
-        {
-            name: "dcPoints",
-            type: IntDTy(16),
-            ms: {
-                fromSelf: (self) =>
-                    self.dcTerminalCones * 1 +
-                    self.dcGroundCones * 2 +
-                    self.dcLowCones * 3 +
-                    self.dcMediumCones * 4 +
-                    self.dcHighCones * 5,
-            },
-            tep: {},
-        },
-        {
-            name: "dcTerminalPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.dcTerminalCones },
-        },
-        {
-            name: "dcGroundPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.dcGroundCones * 2 },
-        },
-        {
-            name: "dcLowPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.dcLowCones * 3 },
-        },
-        {
-            name: "dcMediumPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.dcMediumCones * 4 },
-        },
-        {
-            name: "dcHighPoints",
-            type: FloatDTy,
-            tep: { fromSelf: (self) => self.dcTerminalCones * 5 },
-        },
-        {
-            name: "egPoints",
-            type: IntDTy(16),
-            ms: {
-                fromSelf: (self) => self.egNavPoints + self.ownershipPoints + self.circuitPoints,
-            },
-            tep: {},
-        },
-        {
-            name: "totalPointsNp",
-            type: IntDTy(16),
-            ms: { fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints },
-            tep: {},
-        },
-        {
-            name: "totalPoints",
-            type: IntDTy(16),
-            ms: { fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp },
-            tep: {},
-        },
-    ],
-    scoreTree: [
-        {
-            getScore: (self) => self.autoPoints,
-            displayName: "Auto",
-            heading: true,
-        },
-        {
-            getScore: (self) => self.autoNavPoints,
-            displayName: "Auto Navigation Points",
-            subProps: [
-                {
-                    getScore: (self) => autoNav2022Points(self.autoNav2022_1),
-                    displayName: "Robot 1",
+                dataTy: IntDTy(16),
+            })
+            .addTep({})
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoTerminalPoints" })
+            .addTep({ make: (ms) => ms.autoTerminalCones * 1 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoGroundPoints" })
+            .addTep({ make: (ms) => ms.autoGroundCones * 2 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoLowPoints" })
+            .addTep({ make: (ms) => ms.autoLowCones * 3 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoMediumPoints" })
+            .addTep({ make: (ms) => ms.autoMediumCones * 4 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoHighPoints" })
+            .addTep({ make: (ms) => ms.autoHighCones * 5 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egNavPoints" })
+            .addMatchScore({
+                create: { fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2 },
+                dataTy: IntDTy(8),
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egNavPointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) => (station == Station.One ? ms.egNav1 : ms.egNav2) * 2,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "ownershipPoints" })
+            .addMatchScore({
+                create: {
+                    fromSelf: (self) =>
+                        self.coneOwnedJunctions * 3 + self.beaconOwnedJunctions * 10,
                 },
-                {
-                    getScore: (self) => autoNav2022Points(self.autoNav2022_2),
-                    displayName: "Robot 2",
+                dataTy: IntDTy(8),
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "coneOwnershipPoints" })
+            .addTep({ make: (ms) => ms.coneOwnedJunctions * 3 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "beaconOwnershipPoints" })
+            .addTep({ make: (ms) => ms.coneOwnedJunctions * 10 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "circuitPoints" })
+            .addMatchScore({
+                create: { fromSelf: (self) => self.circuit * 20 },
+                dataTy: IntDTy(8),
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "majorsCommittedPoints" })
+            .addTep({ make: (ms) => ms.majorsCommitted * 30 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsCommittedPoints" })
+            .addTep({ make: (ms) => ms.minorsCommitted * 10 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "penaltyPointsCommitted" })
+            .addMatchScore({
+                create: {
+                    fromSelf: (self) => self.majorsCommitted * 30 + self.minorsCommitted * 10,
                 },
-            ],
-        },
-        {
-            getScore: (self) => self.autoConePoints,
-            displayName: "Cone Points",
-            subProps: [
-                {
-                    getScore: (self) => self.autoTerminalCones,
-                    getCount: (self) => self.autoTerminalCones,
-                    displayName: "Terminal",
+                dataTy: IntDTy(16),
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "majorsByOppPoints" })
+            .addTep({ make: (ms) => ms.majorsByOpp * 30 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsByOppPoints" })
+            .addTep({ make: (ms) => ms.minorsCommitted * 10 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "penaltyPointsByOpp" })
+            .addMatchScore({
+                create: {
+                    fromSelf: (self) => self.majorsByOpp * 30 + self.minorsByOpp * 10,
                 },
-                {
-                    getScore: (self) => self.autoGroundCones * 2,
-                    getCount: (self) => self.autoGroundCones,
-                    displayName: "Ground",
+                dataTy: IntDTy(16),
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoPoints" })
+            .addMatchScore({
+                create: { fromSelf: (self) => self.autoNavPoints + self.autoConePoints },
+                dataTy: IntDTy(16),
+            })
+            .addTep({})
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcPoints" })
+            .addMatchScore({
+                create: {
+                    fromSelf: (self) =>
+                        self.dcTerminalCones * 1 +
+                        self.dcGroundCones * 2 +
+                        self.dcLowCones * 3 +
+                        self.dcMediumCones * 4 +
+                        self.dcHighCones * 5,
                 },
-                {
-                    getScore: (self) => self.autoLowCones * 3,
-                    getCount: (self) => self.autoLowCones,
-                    displayName: "Low",
+                dataTy: IntDTy(16),
+            })
+            .addTep({})
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcTerminalPoints" })
+            .addTep({ make: (ms) => ms.dcTerminalCones * 1 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcGroundPoints" })
+            .addTep({ make: (ms) => ms.dcGroundCones * 2 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcLowPoints" })
+            .addTep({ make: (ms) => ms.dcLowCones * 3 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcMediumPoints" })
+            .addTep({ make: (ms) => ms.dcMediumCones * 4 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcHighPoints" })
+            .addTep({ make: (ms) => ms.dcHighCones * 5 })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egPoints" })
+            .addMatchScore({
+                create: {
+                    fromSelf: (self) =>
+                        self.egNavPoints + self.ownershipPoints + self.circuitPoints,
                 },
-                {
-                    getScore: (self) => self.autoMediumCones * 4,
-                    getCount: (self) => self.autoMediumCones,
-                    displayName: "Medium",
-                },
-                {
-                    getScore: (self) => self.autoHighCones * 5,
-                    getCount: (self) => self.autoHighCones,
-                    displayName: "High",
-                },
-            ],
-        },
-        {
-            getScore: (self) => self.dcPoints,
-            displayName: "Driver-Controlled",
-            heading: true,
-        },
-        {
-            getScore: (self) => self.dcTerminalCones,
-            getCount: (self) => self.dcTerminalCones,
-            displayName: "Terminal",
-        },
-        {
-            getScore: (self) => self.dcGroundCones * 2,
-            getCount: (self) => self.dcGroundCones,
-            displayName: "Ground",
-        },
-        {
-            getScore: (self) => self.dcLowCones * 3,
-            getCount: (self) => self.dcLowCones,
-            displayName: "Low",
-        },
-        {
-            getScore: (self) => self.dcMediumCones * 4,
-            getCount: (self) => self.dcMediumCones,
-            displayName: "Medium",
-        },
-        {
-            getScore: (self) => self.dcHighCones * 5,
-            getCount: (self) => self.dcHighCones,
-            displayName: "High",
-        },
-    ],
-});
+                dataTy: IntDTy(16),
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "totalPointsNp" })
+            .addMatchScore({
+                create: { fromSelf: (self) => self.autoNavPoints + self.dcPoints + self.egPoints },
+                dataTy: IntDTy(16),
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "totalPoints" })
+            .addMatchScore({
+                create: { fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp },
+                dataTy: IntDTy(16),
+            })
+            .addTep()
+    )
+    .finish();

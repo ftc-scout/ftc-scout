@@ -3,29 +3,29 @@ import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
 
 export function makeTepTypes(descriptor: Descriptor): GraphQLObjectType[] {
-    return [
-        make(descriptor, false, descriptor.hasRemote),
-        descriptor.hasRemote ? make(descriptor, true, true) : null,
-    ].filter(notEmpty);
+    let l = [make(descriptor, false), descriptor.hasRemote ? make(descriptor, true) : null];
+    return l.filter(notEmpty);
 }
 
 export function addTypename(tep: TeamEventParticipation): TeamEventParticipation {
-    let hasRemote = DESCRIPTORS[tep.season].hasRemote;
-    let nameSuffix = tep.isRemote ? "Remote" : hasRemote ? "Trad" : "";
-    let __typename = `TeamEventStats${tep.season}${nameSuffix}`;
+    let suffix = DESCRIPTORS[tep.season].typeSuffix(tep.isRemote);
+    let __typename = `TeamEventStats${tep.season}${suffix}`;
     return { ...tep, __typename };
 }
 
-function make(descriptor: Descriptor, remote: boolean, hasRemote: boolean): GraphQLObjectType {
-    let nameSuffix = remote ? "Remote" : hasRemote ? "Trad" : "";
+function make(descriptor: Descriptor, remote: boolean): GraphQLObjectType {
+    let nameSuffix = descriptor.typeSuffix(remote);
 
     let innerFields = {} as Record<string, GraphQLFieldConfig<any, any>>;
 
-    for (let c of descriptor.columns) {
-        if (c.tep == undefined || (c.tradOnly && remote)) continue;
+    for (let c of descriptor.tepColumns()) {
+        if (c.tradOnly && remote) continue;
 
-        innerFields[c.name] = FloatTy;
-        if (c.tep.individual) innerFields[c.name + "Individual"] = FloatTy;
+        innerFields[c.apiName] = FloatTy;
+    }
+
+    if (descriptor.tepColumns().length == 0) {
+        innerFields["placeholder"] = FloatTy;
     }
 
     let inner = new GraphQLObjectType({

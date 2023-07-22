@@ -1,11 +1,9 @@
 <script lang="ts">
-    import { DESCRIPTORS, Season } from "@ftc-scout/common";
     import type { TradScoresTy } from "../MatchScore.svelte";
-    import TradScoreLine from "./TradScoreLine.svelte";
     import TradScoresHeader from "./TradScoresHeader.svelte";
 
     export let scores: TradScoresTy;
-    $: season = scores.season as Season;
+    // $: season = scores.season as Season;
 </script>
 
 <table>
@@ -13,9 +11,9 @@
         <TradScoresHeader {scores} />
     </thead>
     <tbody>
-        {#each DESCRIPTORS[season].scoreTree as prop}
+        <!-- {#each DESCRIPTORS[season].scoreTree as prop}
             <TradScoreLine {scores} {prop} />
-        {/each}
+        {/each} -->
     </tbody>
 </table>
 

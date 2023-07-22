@@ -9,7 +9,7 @@ import {
     GraphQLString,
     GraphQLType,
 } from "graphql";
-import { DescriptorType } from "./descriptor";
+import { DescriptorDataType } from "./descriptor";
 import { makeGQLEnum } from "../../utils/gql/enum";
 
 type Wr<T> = { type: T };
@@ -36,24 +36,24 @@ export function nullTy<T extends GraphQLNullableType>(ty: Wr<GraphQLNonNull<T>>)
     return wr(ty.type.ofType);
 }
 
-export function IntDTy(width: 8 | 16): DescriptorType {
+export function IntDTy(width: 8 | 16): DescriptorDataType {
     return {
         typeorm: { type: width == 8 ? "int8" : "smallint" },
         gql: GraphQLInt,
     };
 }
 
-export const FloatDTy: DescriptorType = {
+export const FloatDTy: DescriptorDataType = {
     typeorm: { type: "float" },
     gql: GraphQLFloat,
 };
 
-export const BoolDTy: DescriptorType = {
+export const BoolDTy: DescriptorDataType = {
     typeorm: { type: "bool" },
     gql: GraphQLBoolean,
 };
 
-export function EnumDTy(obj: Record<string, string>, name: string): DescriptorType {
+export function EnumDTy(obj: Record<string, string>, name: string): DescriptorDataType {
     return {
         typeorm: {
             type: "enum",
@@ -63,7 +63,7 @@ export function EnumDTy(obj: Record<string, string>, name: string): DescriptorTy
     };
 }
 
-export function AnyDTy(gql: GraphQLOutputType): DescriptorType {
+export function AnyDTy(gql: GraphQLOutputType): DescriptorDataType {
     return {
         typeorm: { type: "json" },
         gql,

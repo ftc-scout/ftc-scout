@@ -75,10 +75,8 @@ function makeTep(descriptor: Descriptor): EntitySchema<TeamEventParticipation> {
 function getAggregateStatColumns(descriptor: Descriptor): EntitySchema<any> {
     let columns: Record<string, EntitySchemaColumnOptions> = {};
 
-    descriptor.columns.forEach((c) => {
-        if (c.tep == undefined) return;
-        columns[c.name] = { type: "float" };
-        if (c.tep.individual != undefined) columns[c.name + "Individual"] = { type: "float" };
+    descriptor.tepColumns().forEach((c) => {
+        columns[c.dbName] = { type: "float" };
     });
 
     return new EntitySchema({

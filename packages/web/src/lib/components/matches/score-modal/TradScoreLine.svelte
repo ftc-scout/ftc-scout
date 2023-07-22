@@ -1,11 +1,11 @@
-<script lang="ts">
+<!-- <script lang="ts">
     import type { Descriptor } from "@ftc-scout/common";
     import type { TradScoresTy } from "../MatchScore.svelte";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
 
     export let scores: TradScoresTy;
-    export let prop: Descriptor["scoreTree"][number];
+    // export let prop: Descriptor["scoreTree"][number];
 
     $: red = prop.getScore(scores.red);
     $: blue = prop.getScore(scores.blue);
@@ -131,4 +131,4 @@
     .sub .data {
         font-weight: normal;
     }
-</style>
+</style> -->

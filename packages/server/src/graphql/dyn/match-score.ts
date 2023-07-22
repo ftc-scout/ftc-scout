@@ -1,13 +1,4 @@
-import {
-    Alliance,
-    DESCRIPTORS,
-    Descriptor,
-    IntTy,
-    StrTy,
-    desGqlName,
-    nn,
-    notEmpty,
-} from "@ftc-scout/common";
+import { Alliance, DESCRIPTORS, Descriptor, IntTy, StrTy, nn, notEmpty } from "@ftc-scout/common";
 import { GraphQLFieldConfig, GraphQLNonNull, GraphQLObjectType } from "graphql";
 import { AllianceGQL } from "../resolvers/enums";
 import { MatchScore } from "../../db/entities/dyn/match-score";
@@ -22,11 +13,10 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
         let ret: AnyObject = {};
         let descriptor = DESCRIPTORS[s.season];
 
-        for (let c of descriptor.columns) {
-            if (c.ms == undefined || c.ms.outer || (remote && c.tradOnly)) continue;
+        for (let c of descriptor.msColumns()) {
+            if (c.outer || (remote && c.tradOnly)) continue;
 
-            let name = desGqlName(c, remote);
-            ret[name] = s[c.name];
+            ret[c.getApiName(remote)] = s[c.dbColName];
         }
 
         return ret;
@@ -73,11 +63,11 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
 
         let descriptor = DESCRIPTORS[red.season];
 
-        for (let c of descriptor.columns) {
-            if (c.ms == undefined || !c.ms.outer) continue;
+        for (let c of descriptor.msColumns()) {
+            if (!c.outer) continue;
 
-            let name = desGqlName(c, true);
-            ret[name] = "mapForApi" in c.ms ? c.ms.mapForApi(red, blue) : red[c.name];
+            ret[c.getApiName(false)] =
+                "apiMap" in c && c.apiMap ? c.apiMap(red, blue) : red[c.dbColName];
         }
 
         return ret;
@@ -100,15 +90,12 @@ function makeMSTysTrad(descriptor: Descriptor): GraphQLObjectType {
         matchId: IntTy,
     };
 
-    for (let c of descriptor.columns) {
-        if (c.ms == undefined) continue;
-
-        let type = new GraphQLNonNull(c.type.gql);
-        let name = desGqlName(c, false);
-        if (c.ms.outer) {
-            outerFields[name] = { type };
+    for (let c of descriptor.msColumns()) {
+        let type = new GraphQLNonNull(c.dataTy.gql);
+        if (c.outer) {
+            outerFields[c.getApiName(false)] = { type };
         } else {
-            innerFields[name] = { type };
+            innerFields[c.getApiName(false)] = { type };
         }
     }
 
@@ -140,12 +127,11 @@ function makeMSTysRemote(descriptor: Descriptor): GraphQLObjectType | null {
         matchId: IntTy,
     };
 
-    for (let c of descriptor.columns) {
-        if (c.ms == undefined || c.tradOnly) continue;
+    for (let c of descriptor.msColumns()) {
+        if (c.tradOnly) continue;
 
-        let type = c.type.gql;
-        let name = desGqlName(c, true);
-        fields[name] = { type: new GraphQLNonNull(type) };
+        let type = c.dataTy.gql;
+        fields[c.getApiName(true)] = { type: new GraphQLNonNull(type) };
     }
 
     let outerTy = new GraphQLObjectType({

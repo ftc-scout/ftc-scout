@@ -84,7 +84,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 season,
                 event.code,
                 event.remote,
-                allDbMatches,
+                allDbMatches.map((m) => m.toFrontend()),
                 teams.map((t) => t.teamNumber)
             );
 

@@ -14,7 +14,7 @@
     $: rpFormat = DESCRIPTORS[season].rankings.rp == "Record" ? prettyPrintFloat : prettyPrintInt;
     $: hasOpr = stats && "opr" in stats;
     $: hasAvg = stats && "avg" in stats;
-    $: np = DESCRIPTORS[season].penaltiesSubtract || remote ? "" : "np";
+    $: np = DESCRIPTORS[season].pensSubtract || remote ? "" : "np";
 </script>
 
 {#if stats}

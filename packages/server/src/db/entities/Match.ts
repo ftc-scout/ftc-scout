@@ -1,4 +1,5 @@
 import {
+    FrontendMatch,
     MatchFtcApi,
     Season,
     TournamentLevel,
@@ -19,6 +20,7 @@ import { Event } from "./Event";
 import { DateTime } from "luxon";
 import { MatchScore } from "./dyn/match-score";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
+import { frontendMSFromDB } from "../../graphql/dyn/match-score";
 
 @Entity()
 export class Match extends BaseEntity {
@@ -102,5 +104,9 @@ export class Match extends BaseEntity {
             tournamentLevel,
             series: api.series,
         } satisfies DeepPartial<Match>);
+    }
+
+    toFrontend(): FrontendMatch {
+        return { ...this, scores: frontendMSFromDB(this.scores) as any };
     }
 }

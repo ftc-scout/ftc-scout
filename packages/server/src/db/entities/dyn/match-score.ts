@@ -63,12 +63,10 @@ function getMatchScoreColumns(descriptor: Descriptor): Record<string, EntitySche
     };
 
     let extraColumns: Record<string, EntitySchemaColumnOptions> = {};
-    descriptor.columns.forEach((c) => {
-        if (c.ms == undefined) return;
-
-        extraColumns[c.name] = {
-            ...c.type.typeorm,
-            nullable: !!c.tradOnly,
+    descriptor.msColumns().forEach((c) => {
+        extraColumns[c.dbColName] = {
+            ...c.dataTy.typeorm,
+            nullable: c.tradOnly,
         };
     });
 
@@ -90,7 +88,7 @@ export function initMS() {
         MatchScore[d.season] = DATA_SOURCE.getRepository(MatchScoreSchemas[d.season]);
     }
 
-    MatchScore.fromApi = (api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[] => {
+    MatchScore.fromApi = (api: MatchScoresFtcApi, match: Match): MatchScore[] => {
         let scores = "scores" in api ? [api.scores] : api.alliances;
         return scores.map((s, i) => {
             let other = scores.length == 2 ? scores[1 - i] : null;
@@ -105,17 +103,8 @@ export function initMS() {
             };
 
             let descriptor = DESCRIPTORS[match.eventSeason];
-            for (let column of descriptor.columns) {
-                if (column.ms == undefined) continue;
-
-                if ("fromSelf" in column.ms) {
-                    score[column.name] = column.ms.fromSelf(score);
-                } else {
-                    score[column.name] =
-                        remote && "fromRemoteApi" in column.ms
-                            ? column.ms.fromRemoteApi(s)
-                            : column.ms.fromTradApi(s, other!);
-                }
+            for (let column of descriptor.msColumns()) {
+                column.addSelfFromApi(s, other, score);
             }
 
             return MatchScore[match.eventSeason].create(score);

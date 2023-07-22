@@ -2,14 +2,16 @@ import { Alliance } from "../Alliance";
 import { Season } from "../Season";
 import { Station } from "../Station";
 import { TournamentLevel } from "../TournamentLevel";
-import { AnyObject, Descriptor, desGqlName } from "../descriptors/descriptor";
+import { Descriptor } from "../descriptors/descriptor";
 import { DESCRIPTORS } from "../descriptors/descriptor-list";
 import { OprData, calculateOpr } from "./calculate-opr";
 
-type Match = {
+type AnyObject = Record<string, any>;
+
+export type FrontendMatch = {
     tournamentLevel: TournamentLevel;
     teams: Tmp[];
-    scores: Score[];
+    scores: Score | { red: Score; blue: Score } | null;
 };
 
 type Tmp = {
@@ -56,7 +58,7 @@ export function calculateTeamEventStats(
     season: Season,
     eventCode: string,
     isRemote: boolean,
-    matches: Match[],
+    matches: FrontendMatch[],
     teams: number[]
 ): Tep[] {
     matches = filterMatches(matches);
@@ -64,12 +66,8 @@ export function calculateTeamEventStats(
     let descriptor = DESCRIPTORS[season];
 
     let emptyGroup = {} as Record<string, any>;
-    for (let c of descriptor.columns) {
-        if (c.tep == undefined) continue;
-
-        let name = desGqlName(c, isRemote);
-        emptyGroup[name] = 0;
-        if (c.tep.individual != undefined) emptyGroup[name + "Individual"] = 0;
+    for (let c of descriptor.tepColumns()) {
+        emptyGroup[c.apiName] = 0;
     }
 
     let teps = {} as Record<number, Tep>;
@@ -100,15 +98,15 @@ export function calculateTeamEventStats(
     );
 
     (isRemote ? calculateRemoteMatchesPlayed : calculateRecords)(matches, teps);
-    calculateGroupStats(matches, teps, descriptor, isRemote);
+    calculateGroupStats(matches, teps, descriptor);
     calculateOprs(matches, teps, isRemote, descriptor);
     calculateRanks(teps, matches, descriptor);
 
     return Object.values(teps);
 }
 
-function filterMatches(matches: Match[]): Match[] {
-    return matches.filter((m) => m.tournamentLevel == TournamentLevel.Quals && m?.scores?.length);
+function filterMatches(matches: FrontendMatch[]): FrontendMatch[] {
+    return matches.filter((m) => m.tournamentLevel == TournamentLevel.Quals && m?.scores);
 }
 
 function winner(red: Score, blue: Score): Alliance | null {
@@ -121,10 +119,10 @@ function winner(red: Score, blue: Score): Alliance | null {
     }
 }
 
-function calculateRecords(matches: Match[], teps: Record<number, Tep>) {
+function calculateRecords(matches: FrontendMatch[], teps: Record<number, Tep>) {
     for (let m of matches) {
-        let red = m.scores.find((m) => m.alliance == Alliance.Red)!;
-        let blue = m.scores.find((m) => m.alliance == Alliance.Blue)!;
+        let red = m.scores!.red;
+        let blue = m.scores!.blue;
         let winningAlliance = winner(red, blue);
 
         for (let t of m.teams) {
@@ -145,7 +143,7 @@ function calculateRecords(matches: Match[], teps: Record<number, Tep>) {
     }
 }
 
-function calculateRemoteMatchesPlayed(matches: Match[], teps: Record<number, Tep>) {
+function calculateRemoteMatchesPlayed(matches: FrontendMatch[], teps: Record<number, Tep>) {
     for (let m of matches) {
         let t = m.teams[0];
         if (t.onField) {
@@ -165,59 +163,32 @@ const dev = (arr: number[]) => {
     return Math.sqrt(diffAvg);
 };
 
-function getStat(s: AnyObject, c: Descriptor["columns"][number], remote: boolean): any {
-    let name = desGqlName(c, remote);
-    if (name in s) {
-        return s[name];
-    } else if (c.tep?.fromSelf != undefined) {
-        return c.tep.fromSelf(s);
-    } else {
-        throw `Can't get stat ${c.name}`;
-    }
-}
-
 function calculateGroupStats(
-    matches: Match[],
+    matches: FrontendMatch[],
     teps: Record<number, Tep>,
-    descriptor: Descriptor,
-    isRemote: boolean
+    descriptor: Descriptor
 ) {
     let dataPoints = {} as Record<number, Record<string, number[]>>;
     for (let team of Object.keys(teps)) {
         dataPoints[+team] = {};
-        for (let c of descriptor.columns) {
-            if (c.tep == undefined) continue;
-            let name = desGqlName(c, isRemote);
-            dataPoints[+team][name] = [];
-            if (c.tep.individual != undefined) dataPoints[+team][name + "Individual"] = [];
+        for (let c of descriptor.tepColumns()) {
+            dataPoints[+team][c.apiName] = [];
         }
     }
 
     for (let m of matches) {
         let allianceScores = {
-            Red: m.scores.find((s) => s.alliance == Alliance.Red),
-            Blue: m.scores.find((s) => s.alliance == Alliance.Blue),
-            Solo: m.scores.find((s) => s.alliance == Alliance.Solo),
+            Red: m.scores!.red,
+            Blue: m.scores!.blue,
+            Solo: m.scores,
         };
 
         for (let t of m.teams) {
             if (t.surrogate) continue;
             let s = allianceScores[t.alliance]!;
 
-            for (let c of descriptor.columns) {
-                if (c.tep == undefined) continue;
-                let name = desGqlName(c, isRemote);
-                dataPoints[t.teamNumber][name].push(getStat(s, c, isRemote));
-                if (c.tep.individual != undefined) {
-                    let arr = dataPoints[t.teamNumber][name + "Individual"];
-                    if (t.station == Station.One) {
-                        arr.push(c.tep.individual.first(s));
-                    } else if (t.station == Station.Two) {
-                        arr.push(c.tep.individual.second(s));
-                    } else if (t.station == Station.Solo) {
-                        arr.push(getStat(s, c, isRemote));
-                    }
-                }
+            for (let c of descriptor.tepColumns()) {
+                dataPoints[t.teamNumber][c.apiName].push(c.make(s, t.station));
             }
         }
     }
@@ -234,7 +205,7 @@ function calculateGroupStats(
 }
 
 function calculateOprs(
-    matches: Match[],
+    matches: FrontendMatch[],
     teps: Record<number, Tep>,
     isRemote: boolean,
     descriptor: Descriptor
@@ -247,13 +218,12 @@ function calculateOprs(
     }
 
     let dataPoints = {} as Record<string, OprData[]>;
-    for (let c of descriptor.columns) {
-        if (c.tep == undefined) continue;
-        dataPoints[c.name] = [];
+    for (let c of descriptor.tepColumns()) {
+        dataPoints[c.apiName] = [];
 
-        if (c.tep.individual != undefined) {
+        if (c.isIndividual) {
             for (let [team, data] of Object.entries(teps)) {
-                teps[+team].opr[c.name + "Individual"] = data.avg[c.name];
+                teps[+team].opr[c.apiName] = data.avg[c.apiName];
             }
         }
     }
@@ -261,10 +231,10 @@ function calculateOprs(
     for (let m of matches) {
         for (let a of [Alliance.Red, Alliance.Blue]) {
             let [team1, team2] = m.teams.filter((t) => t.alliance == a).map((t) => t.teamNumber);
-            let s = m.scores.find((s) => s.alliance == a)!;
-            for (let c of descriptor.columns) {
-                if (c.tep == undefined) continue;
-                dataPoints[c.name].push({ team1, team2, result: getStat(s, c, false) });
+            let s = a == Alliance.Red ? m.scores!.red : m.scores!.blue;
+            for (let c of descriptor.tepColumns()) {
+                if (c.isIndividual) continue;
+                dataPoints[c.apiName].push({ team1, team2, result: c.make(s, Station.One) });
             }
         }
     }
@@ -277,7 +247,11 @@ function calculateOprs(
     }
 }
 
-function calculateRanks(teps: Record<number, Tep>, matches: Match[], descriptor: Descriptor) {
+function calculateRanks(
+    teps: Record<number, Tep>,
+    matches: FrontendMatch[],
+    descriptor: Descriptor
+) {
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
 
@@ -320,7 +294,7 @@ function calculateRanks(teps: Record<number, Tep>, matches: Match[], descriptor:
     }
 }
 
-function calcLosingScoreTb(teps: Record<number, Tep>, matches: Match[]) {
+function calcLosingScoreTb(teps: Record<number, Tep>, matches: FrontendMatch[]) {
     let tbs = {} as Record<number, number[]>;
     for (let team of Object.keys(teps)) {
         tbs[+team] = [];
@@ -328,7 +302,7 @@ function calcLosingScoreTb(teps: Record<number, Tep>, matches: Match[]) {
 
     for (let m of matches) {
         // TODO: this will be wrong once dq = 0 is implemented
-        let lowestScore = Math.min(...m.scores.map((s) => s.totalPointsNp));
+        let lowestScore = Math.min(m.scores!.red.totalPointsNp, m.scores!.blue.totalPointsNp);
 
         for (let t of m.teams) {
             if (t.surrogate) continue;
