@@ -144,22 +144,23 @@ export class DescriptorColumn {
         this.tradOnly = !!opts.tradOnly;
     }
 
-    addMatchScore(opts: {
-        dbColName?: string;
-        apiName?: string;
-        remoteApiName?: string;
-        outer?: boolean;
-        create: MsCreationMethod;
-        dataTy: DescriptorDataType;
-        apiMap?: (r: any, b: any) => any;
-    }): DescriptorColumn {
+    addMatchScore(
+        opts: {
+            dbColName?: string;
+            apiName?: string;
+            remoteApiName?: string;
+            outer?: boolean;
+            dataTy: DescriptorDataType;
+            apiMap?: (r: any, b: any) => any;
+        } & MsCreationMethod
+    ): DescriptorColumn {
         this.ms = new MatchScoreComponent({
             tradOnly: this.tradOnly,
             dbColName: opts.dbColName ?? this.baseName,
             apiName: opts.apiName ?? this.baseName,
             remoteApiName: opts.remoteApiName ?? opts.apiName ?? this.baseName,
             outer: !!opts.outer,
-            create: opts.create,
+            create: opts,
             dataTy: opts.dataTy,
             apiMap: opts.apiMap ?? null,
         });

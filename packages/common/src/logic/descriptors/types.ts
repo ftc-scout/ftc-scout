@@ -1,6 +1,5 @@
 import {
     GraphQLBoolean,
-    GraphQLFloat,
     GraphQLInt,
     GraphQLList,
     GraphQLNonNull,
@@ -36,16 +35,14 @@ export function nullTy<T extends GraphQLNullableType>(ty: Wr<GraphQLNonNull<T>>)
     return wr(ty.type.ofType);
 }
 
-export function IntDTy(width: 8 | 16): DescriptorDataType {
-    return {
-        typeorm: { type: width == 8 ? "int8" : "smallint" },
-        gql: GraphQLInt,
-    };
-}
+export const Int8DTy: DescriptorDataType = {
+    typeorm: { type: "int8" },
+    gql: GraphQLInt,
+};
 
-export const FloatDTy: DescriptorDataType = {
-    typeorm: { type: "float" },
-    gql: GraphQLFloat,
+export const Int16DTy: DescriptorDataType = {
+    typeorm: { type: "smallint" },
+    gql: GraphQLInt,
 };
 
 export const BoolDTy: DescriptorDataType = {

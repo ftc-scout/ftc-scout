@@ -6,7 +6,7 @@ import {
 import { Alliance } from "../../Alliance";
 import { Season } from "../../Season";
 import { Descriptor, DescriptorColumn } from "../descriptor";
-import { AnyDTy, BoolDTy, EnumDTy, IntDTy, IntTy, listTy, nn } from "../types";
+import { AnyDTy, BoolDTy, EnumDTy, Int16DTy, Int8DTy, IntTy, listTy, nn } from "../types";
 import { Station } from "../../Station";
 
 export const AutoNav2022 = {
@@ -122,7 +122,7 @@ function coneLayoutFromDb(red: any, blue: any, auto: boolean): ConeLayout {
     };
 }
 
-type API = AllianceScores2022TradFtcApi;
+type Api = AllianceScores2022TradFtcApi;
 
 export const Descriptor2022 = new Descriptor({
     season: Season.PowerPlay,
@@ -138,10 +138,7 @@ export const Descriptor2022 = new Descriptor({
             .addMatchScore({
                 apiName: "autoNav2022_1",
                 remoteApiName: "autoNav2022",
-                create: {
-                    fromApi: (api: API) =>
-                        autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
-                },
+                fromApi: (api: Api) => autoNav2022FromApi(api.robot1Auto, api.initSignalSleeve1),
                 dataTy: AutoNav2022DTy,
             })
             .finish()
@@ -150,10 +147,7 @@ export const Descriptor2022 = new Descriptor({
         new DescriptorColumn({ name: "autoNav2" })
             .addMatchScore({
                 apiName: "autoNav2022_2",
-                create: {
-                    fromApi: (api: API) =>
-                        autoNav2022FromApi(api.robot2Auto, api.initSignalSleeve2),
-                },
+                fromApi: (api: Api) => autoNav2022FromApi(api.robot2Auto, api.initSignalSleeve2),
                 dataTy: AutoNav2022DTy,
             })
             .finish()
@@ -161,40 +155,40 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "autoTerminalCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.autoTerminal },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.autoTerminal,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoGroundCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.autoJunctionCones[0] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.autoJunctionCones[0],
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoLowCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.autoJunctionCones[1] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.autoJunctionCones[1],
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoMediumCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.autoJunctionCones[2] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.autoJunctionCones[2],
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoHighCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.autoJunctionCones[3] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.autoJunctionCones[3],
+                dataTy: Int8DTy,
             })
             .finish()
     )
@@ -202,9 +196,7 @@ export const Descriptor2022 = new Descriptor({
         new DescriptorColumn({ name: "autoConeLayout" })
             .addMatchScore({
                 outer: true,
-                create: {
-                    fromApi: (api: API) => junctionsFromApi(api.autoJunctions, api.alliance),
-                },
+                fromApi: (api: Api) => junctionsFromApi(api.autoJunctions, api.alliance),
                 dataTy: ConeLayoutDTy,
                 apiMap: (r, b) => coneLayoutFromDb(r, b, true),
             })
@@ -213,56 +205,56 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "dcNearTerminalCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.dcTerminalNear },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.dcTerminalNear,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcFarTerminalCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.dcTerminalFar },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.dcTerminalFar,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcTerminalCones" })
             .addMatchScore({
-                create: { fromSelf: (self) => self.dcNearTerminalCones + self.dcFarTerminalCones },
-                dataTy: IntDTy(8),
+                fromSelf: (self) => self.dcNearTerminalCones + self.dcFarTerminalCones,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcGroundCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.dcJunctionCones[0] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.dcJunctionCones[0],
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcLowCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.dcJunctionCones[1] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.dcJunctionCones[1],
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcMediumCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.dcJunctionCones[2] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.dcJunctionCones[2],
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcHighCones" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.dcJunctionCones[3] },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.dcJunctionCones[3],
+                dataTy: Int8DTy,
             })
             .finish()
     )
@@ -270,7 +262,7 @@ export const Descriptor2022 = new Descriptor({
         new DescriptorColumn({ name: "dcConeLayout" })
             .addMatchScore({
                 outer: true,
-                create: { fromApi: (api: API) => junctionsFromApi(api.dcJunctions, api.alliance) },
+                fromApi: (api: Api) => junctionsFromApi(api.dcJunctions, api.alliance),
                 dataTy: ConeLayoutDTy,
                 apiMap: (r, b) => coneLayoutFromDb(r, b, false),
             })
@@ -280,7 +272,7 @@ export const Descriptor2022 = new Descriptor({
         new DescriptorColumn({ name: "egNav1" })
             .addMatchScore({
                 remoteApiName: "egNav",
-                create: { fromApi: (api: API) => api.egNavigated1 },
+                fromApi: (api: Api) => api.egNavigated1,
                 dataTy: BoolDTy,
             })
             .finish()
@@ -288,7 +280,7 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "egNav2" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.egNavigated2 },
+                fromApi: (api: Api) => api.egNavigated2,
                 dataTy: BoolDTy,
             })
             .finish()
@@ -296,23 +288,23 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "coneOwnedJunctions" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.ownedJunctions - api.beacons },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.ownedJunctions - api.beacons,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "beaconOwnedJunctions" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.beacons },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.beacons,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "circuit" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.circuit },
+                fromApi: (api: Api) => api.circuit,
                 dataTy: BoolDTy,
             })
             .finish()
@@ -320,43 +312,42 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "minorsCommitted" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.minorPenalties },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.minorPenalties,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsCommitted" })
             .addMatchScore({
-                create: { fromApi: (api: API) => api.majorPenalties },
-                dataTy: IntDTy(8),
+                fromApi: (api: Api) => api.majorPenalties,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "minorsByOpp" })
             .addMatchScore({
-                create: { fromApi: (_, api: API) => api.minorPenalties },
-                dataTy: IntDTy(8),
+                fromApi: (_, api: Api) => api.minorPenalties,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsByOpp" })
             .addMatchScore({
-                create: { fromApi: (_, api: API) => api.majorPenalties },
-                dataTy: IntDTy(8),
+                fromApi: (_, api: Api) => api.majorPenalties,
+                dataTy: Int8DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoNavPoints" })
             .addMatchScore({
-                create: {
-                    fromSelf: (self) =>
-                        autoNav2022Points(self.autoNav1) + autoNav2022Points(self.autoNav2),
-                },
-                dataTy: IntDTy(16),
+                fromSelf: (self) =>
+                    autoNav2022Points(self.autoNav1) + autoNav2022Points(self.autoNav2),
+
+                dataTy: Int16DTy,
             })
             .addTep({})
     )
@@ -367,6 +358,8 @@ export const Descriptor2022 = new Descriptor({
                 make: (ms, station) =>
                     station == Station.One
                         ? autoNav2022Points(ms.autoNav2022_1)
+                        : station == Station.Solo
+                        ? autoNav2022Points(ms.autoNav2022)
                         : autoNav2022Points(ms.autoNav2022_2),
             })
             .finish()
@@ -374,15 +367,14 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "autoConePoints" })
             .addMatchScore({
-                create: {
-                    fromSelf: (self) =>
-                        self.autoTerminalCones * 1 +
-                        self.autoGroundCones * 2 +
-                        self.autoLowCones * 3 +
-                        self.autoMediumCones * 4 +
-                        self.autoHighCones * 5,
-                },
-                dataTy: IntDTy(16),
+                fromSelf: (self) =>
+                    self.autoTerminalCones * 1 +
+                    self.autoGroundCones * 2 +
+                    self.autoLowCones * 3 +
+                    self.autoMediumCones * 4 +
+                    self.autoHighCones * 5,
+
+                dataTy: Int16DTy,
             })
             .addTep({})
     )
@@ -414,8 +406,8 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "egNavPoints" })
             .addMatchScore({
-                create: { fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2 },
-                dataTy: IntDTy(8),
+                fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2,
+                dataTy: Int8DTy,
             })
             .addTep()
     )
@@ -423,18 +415,21 @@ export const Descriptor2022 = new Descriptor({
         new DescriptorColumn({ name: "egNavPointsIndividual" })
             .addTep({
                 isIndividual: true,
-                make: (ms, station) => (station == Station.One ? ms.egNav1 : ms.egNav2) * 2,
+                make: (ms, station) =>
+                    (station == Station.One
+                        ? ms.egNav1
+                        : station == Station.Solo
+                        ? ms.egNav
+                        : ms.egNav2) * 2,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "ownershipPoints" })
             .addMatchScore({
-                create: {
-                    fromSelf: (self) =>
-                        self.coneOwnedJunctions * 3 + self.beaconOwnedJunctions * 10,
-                },
-                dataTy: IntDTy(8),
+                fromSelf: (self) => self.coneOwnedJunctions * 3 + self.beaconOwnedJunctions * 10,
+
+                dataTy: Int8DTy,
             })
             .addTep()
     )
@@ -451,8 +446,8 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "circuitPoints" })
             .addMatchScore({
-                create: { fromSelf: (self) => self.circuit * 20 },
-                dataTy: IntDTy(8),
+                fromSelf: (self) => self.circuit * 20,
+                dataTy: Int8DTy,
             })
             .addTep()
     )
@@ -469,10 +464,9 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "penaltyPointsCommitted" })
             .addMatchScore({
-                create: {
-                    fromSelf: (self) => self.majorsCommitted * 30 + self.minorsCommitted * 10,
-                },
-                dataTy: IntDTy(16),
+                fromSelf: (self) => self.majorsCommitted * 30 + self.minorsCommitted * 10,
+
+                dataTy: Int16DTy,
             })
             .addTep()
     )
@@ -489,33 +483,31 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "penaltyPointsByOpp" })
             .addMatchScore({
-                create: {
-                    fromSelf: (self) => self.majorsByOpp * 30 + self.minorsByOpp * 10,
-                },
-                dataTy: IntDTy(16),
+                fromSelf: (self) => self.majorsByOpp * 30 + self.minorsByOpp * 10,
+
+                dataTy: Int16DTy,
             })
             .addTep()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoPoints" })
             .addMatchScore({
-                create: { fromSelf: (self) => self.autoNavPoints + self.autoConePoints },
-                dataTy: IntDTy(16),
+                fromSelf: (self) => self.autoNavPoints + self.autoConePoints,
+                dataTy: Int16DTy,
             })
             .addTep({})
     )
     .addColumn(
         new DescriptorColumn({ name: "dcPoints" })
             .addMatchScore({
-                create: {
-                    fromSelf: (self) =>
-                        self.dcTerminalCones * 1 +
-                        self.dcGroundCones * 2 +
-                        self.dcLowCones * 3 +
-                        self.dcMediumCones * 4 +
-                        self.dcHighCones * 5,
-                },
-                dataTy: IntDTy(16),
+                fromSelf: (self) =>
+                    self.dcTerminalCones * 1 +
+                    self.dcGroundCones * 2 +
+                    self.dcLowCones * 3 +
+                    self.dcMediumCones * 4 +
+                    self.dcHighCones * 5,
+
+                dataTy: Int16DTy,
             })
             .addTep({})
     )
@@ -547,27 +539,25 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "egPoints" })
             .addMatchScore({
-                create: {
-                    fromSelf: (self) =>
-                        self.egNavPoints + self.ownershipPoints + self.circuitPoints,
-                },
-                dataTy: IntDTy(16),
+                fromSelf: (self) => self.egNavPoints + self.ownershipPoints + self.circuitPoints,
+
+                dataTy: Int16DTy,
             })
             .addTep()
     )
     .addColumn(
         new DescriptorColumn({ name: "totalPointsNp" })
             .addMatchScore({
-                create: { fromSelf: (self) => self.autoNavPoints + self.dcPoints + self.egPoints },
-                dataTy: IntDTy(16),
+                fromSelf: (self) => self.autoNavPoints + self.dcPoints + self.egPoints,
+                dataTy: Int16DTy,
             })
             .addTep()
     )
     .addColumn(
         new DescriptorColumn({ name: "totalPoints" })
             .addMatchScore({
-                create: { fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp },
-                dataTy: IntDTy(16),
+                fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp,
+                dataTy: Int16DTy,
             })
             .addTep()
     )

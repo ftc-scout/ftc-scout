@@ -19,6 +19,8 @@ import {
     TeamEventParticipation,
     TeamEventParticipationSchemas as TepSchemas,
 } from "../entities/dyn/team-event-participation";
+import { exit } from "process";
+import { IS_DEV } from "../../constants";
 
 const IGNORED_MATCHES = [
     //cSpell:disable
@@ -98,6 +100,10 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
         } catch (e) {
             console.error(`Loaded ${i + 1}/${events.length} !!! ERROR !!!`);
             console.error(e);
+
+            if (IS_DEV) {
+                exit(1);
+            }
         }
     }
 
