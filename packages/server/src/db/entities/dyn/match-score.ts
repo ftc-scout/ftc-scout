@@ -88,14 +88,20 @@ export function initMS() {
         MatchScore[d.season] = DATA_SOURCE.getRepository(MatchScoreSchemas[d.season]);
     }
 
-    MatchScore.fromApi = (api: MatchScoresFtcApi, match: Match): MatchScore[] => {
+    MatchScore.fromApi = (api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[] => {
         let scores = "scores" in api ? [api.scores] : api.alliances;
         return scores.map((s, i) => {
             let other = scores.length == 2 ? scores[1 - i] : null;
 
             type Ret = Partial<BaseColumns> & Record<string, any>;
 
-            let score: Ret = {
+            let dbScore: Ret = {
+                season: match.eventSeason,
+                eventCode: match.eventCode,
+                matchId: match.id,
+                alliance: "alliance" in s ? s.alliance : Alliance.Solo,
+            };
+            let apiScore = {
                 season: match.eventSeason,
                 eventCode: match.eventCode,
                 matchId: match.id,
@@ -104,10 +110,10 @@ export function initMS() {
 
             let descriptor = DESCRIPTORS[match.eventSeason];
             for (let column of descriptor.msColumns()) {
-                column.addSelfFromApi(s, other, score);
+                column.addSelfFromApi(s, other, dbScore, apiScore, remote);
             }
 
-            return MatchScore[match.eventSeason].create(score);
+            return MatchScore[match.eventSeason].create(dbScore);
         });
     };
 }

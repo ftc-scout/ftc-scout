@@ -99,11 +99,14 @@ export class MatchScoreComponent {
         this.apiMap = opts.apiMap;
     }
 
-    addSelfFromApi(api: any, other: any, self: any) {
-        self[this.dbColName] =
+    addSelfFromApi(api: any, other: any, dbSelf: any, apiSelf: any, remote: boolean) {
+        let val =
             "fromSelf" in this.create
-                ? this.create.fromSelf(self)
+                ? this.create.fromSelf(apiSelf)
                 : this.create.fromApi(api, other);
+
+        dbSelf[this.dbColName] = val;
+        apiSelf[this.getApiName(remote)] = val;
     }
 
     getApiName(remote: boolean): string {
