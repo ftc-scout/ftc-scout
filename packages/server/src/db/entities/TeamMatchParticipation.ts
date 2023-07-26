@@ -32,10 +32,10 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("int")
     matchId!: number;
 
-    @PrimaryColumn("enum", { enum: Alliance })
+    @PrimaryColumn("enum", { enum: Alliance, enumName: "alliance_enum" })
     alliance!: Alliance;
 
-    @PrimaryColumn("enum", { enum: Station })
+    @PrimaryColumn("enum", { enum: Station, enumName: "station_enum" })
     station!: Station;
 
     match!: Match;
@@ -46,7 +46,7 @@ export class TeamMatchParticipation extends BaseEntity {
     @Column("int")
     teamNumber!: number;
 
-    @Column("enum", { enum: AllianceRole })
+    @Column("enum", { enum: AllianceRole, enumName: "alliance_role_enum" })
     allianceRole!: AllianceRole;
 
     @Column("bool")

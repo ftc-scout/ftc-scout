@@ -52,7 +52,7 @@ export class Match extends BaseEntity {
     @Column("timestamptz", { nullable: true })
     postResultTime!: Date | null;
 
-    @Column("enum", { enum: TournamentLevel })
+    @Column("enum", { enum: TournamentLevel, enumName: "tournament_level_enum" })
     tournamentLevel!: TournamentLevel;
 
     @Column("int8")

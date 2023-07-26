@@ -50,11 +50,16 @@ export const BoolDTy: DescriptorDataType = {
     gql: GraphQLBoolean,
 };
 
-export function EnumDTy(obj: Record<string, string>, name: string): DescriptorDataType {
+export function EnumDTy(
+    obj: Record<string, string>,
+    name: string,
+    dbName: string
+): DescriptorDataType {
     return {
         typeorm: {
             type: "enum",
             enum: obj,
+            enumName: dbName,
         },
         gql: makeGQLEnum(obj, name),
     };

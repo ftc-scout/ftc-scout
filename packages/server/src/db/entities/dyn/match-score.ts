@@ -50,6 +50,7 @@ function getMatchScoreColumns(descriptor: Descriptor): Record<string, EntitySche
         alliance: {
             type: "enum",
             enum: Alliance,
+            enumName: "alliance_enum",
             primary: true,
         },
         createdAt: {

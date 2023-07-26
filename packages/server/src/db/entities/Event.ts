@@ -40,7 +40,7 @@ export class Event extends BaseEntity {
     @Column()
     published!: boolean;
 
-    @Column("enum", { enum: EventType })
+    @Column("enum", { enum: EventType, enumName: "event_type_enum" })
     type!: EventType;
 
     @Column({ type: "varchar", nullable: true })

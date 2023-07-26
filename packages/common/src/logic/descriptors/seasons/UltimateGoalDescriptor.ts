@@ -12,7 +12,11 @@ export const WobbleEndPosition2020 = {
 } as const;
 export type WobbleEndPosition2020 =
     (typeof WobbleEndPosition2020)[keyof typeof WobbleEndPosition2020];
-const WobbleEndPosition2020DTy = EnumDTy(WobbleEndPosition2020, "WobbleEndPosition2020");
+const WobbleEndPosition2020DTy = EnumDTy(
+    WobbleEndPosition2020,
+    "WobbleEndPosition2020",
+    "wobble_end_pos_2020_enum"
+);
 
 function wobbleEndPosFromApi(api: number): WobbleEndPosition2020 {
     switch (api) {

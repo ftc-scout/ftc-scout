@@ -13,7 +13,11 @@ export const BarcodeElement2021 = {
     TSE: "TSE",
 } as const;
 export type BarcodeElement2021 = (typeof BarcodeElement2021)[keyof typeof BarcodeElement2021];
-const BarcodeElement2021DTy = EnumDTy(BarcodeElement2021, "BarcodeElement2021");
+const BarcodeElement2021DTy = EnumDTy(
+    BarcodeElement2021,
+    "BarcodeElement2021",
+    "barcode_element_2021_enum"
+);
 
 function barcodeElementFromApi(api: "DUCK" | "TEAM_SHIPPING_ELEMENT"): BarcodeElement2021 {
     switch (api) {
@@ -32,7 +36,7 @@ export const AutoNav2021 = {
     CompletelyInWarehouse: "CompletelyInWarehouse",
 } as const;
 export type AutoNav2021 = (typeof AutoNav2021)[keyof typeof AutoNav2021];
-const AutoNav2021DTy = EnumDTy(AutoNav2021, "AutoNav2021");
+const AutoNav2021DTy = EnumDTy(AutoNav2021, "AutoNav2021", "auto_nav_2021_enum");
 
 function autoNav2021FromApi(api: AutoNavigation2021FtcApi): AutoNav2021 {
     switch (api) {
@@ -72,7 +76,7 @@ export const EgPark2021 = {
     CompletelyInWarehouse: "CompletelyInWarehouse",
 } as const;
 export type EgPark2021 = (typeof EgPark2021)[keyof typeof EgPark2021];
-const EgPark2021DTy = EnumDTy(EgPark2021, "EgPark2021");
+const EgPark2021DTy = EnumDTy(EgPark2021, "EgPark2021", "eg_park_2021_enum");
 
 function egPark2021FromApi(api: "NONE" | "IN_WAREHOUSE" | "COMPLETELY_IN_WAREHOUSE"): EgPark2021 {
     switch (api) {

@@ -16,7 +16,7 @@ export const AutoNav2022 = {
     TeamSignal: "TeamSignal",
 } as const;
 export type AutoNav2022 = (typeof AutoNav2022)[keyof typeof AutoNav2022];
-const AutoNav2022DTy = EnumDTy(AutoNav2022, "AutoNav2022");
+const AutoNav2022DTy = EnumDTy(AutoNav2022, "AutoNav2022", "auto_nav_2022_enum");
 
 function autoNav2022FromApi(
     place: "NONE" | "SIGNAL_ZONE" | "SUBSTATION_TERMINAL",
@@ -53,7 +53,7 @@ export const ConeType = {
     BlueBeacon2: "BlueBeacon2",
 } as const;
 export type ConeType = (typeof ConeType)[keyof typeof ConeType];
-const ConeTypeDTy = EnumDTy(ConeType, "ConeType");
+const ConeTypeDTy = EnumDTy(ConeType, "ConeType", "cone_type_enum");
 
 function coneTypeFromApi(coneType: ApiConeType, myColor: Alliance): ConeType {
     switch (coneType) {
@@ -550,7 +550,7 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "totalPointsNp" })
             .addMatchScore({
-                fromSelf: (self) => self.autoNavPoints + self.dcPoints + self.egPoints,
+                fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints,
                 dataTy: Int16DTy,
             })
             .addTep()

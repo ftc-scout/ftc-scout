@@ -65,6 +65,7 @@ export type DescriptorDataType = {
     typeorm: {
         type: ColumnType;
         enum?: Object | any[];
+        enumName?: string;
     };
     gql: GraphQLOutputType;
 };

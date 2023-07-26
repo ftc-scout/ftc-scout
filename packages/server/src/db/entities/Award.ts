@@ -43,7 +43,7 @@ export class Award extends BaseEntity {
     @PrimaryColumn("int")
     teamNumber!: number;
 
-    @PrimaryColumn("enum", { enum: AwardType })
+    @PrimaryColumn("enum", { enum: AwardType, enumName: "award_type_enum" })
     type!: AwardType;
 
     @PrimaryColumn("int8")
