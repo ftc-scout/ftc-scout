@@ -98,7 +98,7 @@ export function calculateTeamEventStats(
     );
 
     (isRemote ? calculateRemoteMatchesPlayed : calculateRecords)(matches, teps);
-    calculateGroupStats(matches, teps, descriptor);
+    calculateGroupStats(matches, teps, descriptor, isRemote);
     calculateOprs(matches, teps, isRemote, descriptor);
     calculateRanks(teps, matches, descriptor);
 
@@ -166,7 +166,8 @@ const dev = (arr: number[]) => {
 function calculateGroupStats(
     matches: FrontendMatch[],
     teps: Record<number, Tep>,
-    descriptor: Descriptor
+    descriptor: Descriptor,
+    remote: boolean
 ) {
     let dataPoints = {} as Record<number, Record<string, number[]>>;
     for (let team of Object.keys(teps)) {
@@ -188,6 +189,8 @@ function calculateGroupStats(
             let s = allianceScores[t.alliance]!;
 
             for (let c of descriptor.tepColumns()) {
+                if (c.tradOnly && remote) continue;
+
                 dataPoints[t.teamNumber][c.apiName].push(c.make(s, t.station));
             }
         }
@@ -326,7 +329,8 @@ function calcLosingScoreTb(teps: Record<number, Tep>, matches: FrontendMatch[]) 
         }
         let taken = Math.max(0, denom - dqs);
 
-        teps[+team].tb1 = realScores.slice(0, taken).reduce((a, b) => a + b, 0) / denom;
+        teps[+team].tb1 =
+            denom == 0 ? 0 : realScores.slice(0, taken).reduce((a, b) => a + b, 0) / denom;
         teps[+team].tb2 = 0;
     }
 }

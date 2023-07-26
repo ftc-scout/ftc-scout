@@ -345,8 +345,10 @@ export const Descriptor2022 = new Descriptor({
         new DescriptorColumn({ name: "autoNavPoints" })
             .addMatchScore({
                 fromSelf: (self) =>
-                    autoNav2022Points(self.autoNav1) + autoNav2022Points(self.autoNav2),
-
+                    "autoNav2022" in self
+                        ? autoNav2022Points(self.autoNav2022)
+                        : autoNav2022Points(self.autoNav2022_1) +
+                          autoNav2022Points(self.autoNav2022_2),
                 dataTy: Int16DTy,
             })
             .addTep({})

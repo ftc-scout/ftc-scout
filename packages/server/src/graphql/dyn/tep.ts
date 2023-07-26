@@ -24,10 +24,6 @@ function make(descriptor: Descriptor, remote: boolean): GraphQLObjectType {
         innerFields[c.apiName] = FloatTy;
     }
 
-    if (descriptor.tepColumns().length == 0) {
-        innerFields["placeholder"] = FloatTy;
-    }
-
     let inner = new GraphQLObjectType({
         name: `TeamEventStats${descriptor.season}${nameSuffix}Group`,
         fields: innerFields,

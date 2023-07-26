@@ -1,5 +1,9 @@
+import { AllianceScores2019TradFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2019Trad";
 import { Season } from "../../Season";
-import { Descriptor } from "../descriptor";
+import { Descriptor, DescriptorColumn } from "../descriptor";
+import { Int16DTy } from "../types";
+
+type Api = AllianceScores2019TradFtcApi;
 
 export const Descriptor2019 = new Descriptor({
     season: Season.Skystone,
@@ -9,7 +13,14 @@ export const Descriptor2019 = new Descriptor({
         rp: "Record",
         tb: "LosingScore",
     },
-});
+}).addColumn(
+    new DescriptorColumn({ name: "totalPointsNp" })
+        .addMatchScore({
+            fromApi: (api: Api) => Math.max(0, api.totalPoints - api.penaltyPoints),
+            dataTy: Int16DTy,
+        })
+        .addTep()
+);
 
 // export const Descriptor2019 = inferDescriptor({
 //     season: Season.Skystone,

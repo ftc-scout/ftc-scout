@@ -1,7 +1,13 @@
 import { DESCRIPTORS_LIST, Descriptor, type Season } from "@ftc-scout/common";
-import { EntitySchema, EntitySchemaColumnOptions, Repository } from "typeorm";
+import {
+    EntitySchema,
+    EntitySchemaColumnOptions,
+    NamingStrategyInterface,
+    Repository,
+} from "typeorm";
 import { DATA_SOURCE } from "../../data-source";
 import { AnyObject } from "../../../type-utils";
+import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
 type BaseColumns = {
     season: Season;
@@ -21,6 +27,8 @@ type BaseColumns = {
     createdAt: Date;
     updatedAt: Date;
 };
+
+const ns = new SnakeNamingStrategy() as NamingStrategyInterface;
 
 function makeTep(descriptor: Descriptor): EntitySchema<TeamEventParticipation> {
     let agg = getAggregateStatColumns(descriptor);
@@ -69,6 +77,21 @@ function makeTep(descriptor: Descriptor): EntitySchema<TeamEventParticipation> {
             dev: { schema: agg },
             opr: { schema: agg },
         },
+        checks: [
+            { expression: "rp <> 'NaN'" },
+            { expression: "tb1 <> 'NaN'" },
+            { expression: "tb2 <> 'NaN'" },
+            ...descriptor.tepColumns().flatMap((c) => {
+                return [
+                    { expression: `${ns.columnName(c.dbName, undefined, ["tot"])} <> 'NaN'` },
+                    { expression: `${ns.columnName(c.dbName, undefined, ["avg"])} <> 'NaN'` },
+                    { expression: `${ns.columnName(c.dbName, undefined, ["min"])} <> 'NaN'` },
+                    { expression: `${ns.columnName(c.dbName, undefined, ["max"])} <> 'NaN'` },
+                    { expression: `${ns.columnName(c.dbName, undefined, ["dev"])} <> 'NaN'` },
+                    { expression: `${ns.columnName(c.dbName, undefined, ["opr"])} <> 'NaN'` },
+                ];
+            }),
+        ],
     });
 }
 
