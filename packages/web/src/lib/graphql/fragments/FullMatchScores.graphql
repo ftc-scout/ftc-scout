@@ -27,11 +27,11 @@ fragment FullMatchScores on MatchScores {
         autoNav2021
         autoBonus
         autoStorageFreight
-        autoFreight
+        autoFreight1
         autoFreight2
         autoFreight3
         dcStorageFreight
-        dcFreight
+        dcFreight1
         dcFreight2
         dcFreight3
         egDucks
@@ -53,7 +53,7 @@ fragment FullMatchScores on MatchScores {
         autoPoints
         dcPoints
         egPoints
-        penaltyPoints
+        penaltyPointsCommitted
         totalPoints
         totalPointsNp
     }
@@ -72,7 +72,7 @@ fragment FullMatchScores on MatchScores {
         season
         eventCode
         matchId
-        autoWobble
+        autoWobble1
         autoWobble2
         autoNav2020
         autoPowershots
@@ -82,7 +82,7 @@ fragment FullMatchScores on MatchScores {
         dcTowerLow
         dcTowerMid
         dcTowerHigh
-        wobbleEndPos
+        wobbleEndPos1
         wobbleEndPos2
         egWobbleRings
         egPowershots
@@ -98,7 +98,7 @@ fragment FullMatchScores on MatchScores {
         autoPoints
         dcPoints
         egPoints
-        penaltyPoints
+        penaltyPointsCommitted
         totalPoints
         totalPointsNp
     }
@@ -217,7 +217,7 @@ fragment FullMatchScore2021Alliance on MatchScores2021Alliance {
     autoPoints
     dcPoints
     egPoints
-    penaltyPoints
+    penaltyPointsCommitted
     totalPoints
     totalPointsNp
 }
@@ -254,7 +254,7 @@ fragment FullMatchScore2020Alliance on MatchScores2020Alliance {
     autoPoints
     dcPoints
     egPoints
-    penaltyPoints
+    penaltyPointsCommitted
     totalPoints
     totalPointsNp
 }
