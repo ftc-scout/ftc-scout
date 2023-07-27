@@ -1,7 +1,12 @@
 import { AllianceScores2019TradFtcApi } from "packages/common/src/ftc-api-types/match-scores/MatchScores2019Trad";
 import { Season } from "../../Season";
 import { Descriptor, DescriptorColumn } from "../descriptor";
-import { Int16DTy } from "../types";
+import { BoolDTy, Int16DTy, Int8DTy } from "../types";
+import { Station } from "../../Station";
+
+function cappingPoints(level: number): number {
+    return level == -1 ? 0 : level * 5;
+}
 
 type Api = AllianceScores2019TradFtcApi;
 
@@ -13,277 +18,283 @@ export const Descriptor2019 = new Descriptor({
         rp: "Record",
         tb: "LosingScore",
     },
-}).addColumn(
-    new DescriptorColumn({ name: "totalPointsNp" })
-        .addMatchScore({
-            fromApi: (api: Api) => Math.max(0, api.totalPoints - api.penaltyPoints),
-            dataTy: Int16DTy,
+})
+    .addColumn(
+        new DescriptorColumn({ name: "autoNav1" })
+            .addMatchScore({
+                apiName: "autoNav2019_1",
+                fromApi: (api: Api) => api.robot1Navigated,
+                dataTy: BoolDTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoNav2" })
+            .addMatchScore({
+                apiName: "autoNav2019_2",
+                fromApi: (api: Api) => api.robot2Navigated,
+                dataTy: BoolDTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "repositioned" })
+            .addMatchScore({ fromApi: (api: Api) => api.foundationRepositioned, dataTy: BoolDTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoDelivered" })
+            .addMatchScore({ fromApi: (api: Api) => api.autoDelivered, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoSkystonesDeliveredFirst" }).addMatchScore({
+            fromApi: (api: Api) =>
+                api.autoStones
+                    ? +(api.autoStones[0] == "SKYSTONE") + +(api.autoStones[1] == "SKYSTONE")
+                    : 0,
+            dataTy: Int8DTy,
         })
-        .addTep()
-);
-
-// export const Descriptor2019 = inferDescriptor({
-//     season: Season.Skystone,
-//     hasRemote: false,
-//     penaltiesSubtract: false,
-//     rankings: {
-//         rp: "Record",
-//         tb: "LosingScore",
-//     },
-//     columns: [
-//         {
-//             name: "autoNav2019_1",
-//             type: BoolDTy,
-//             ms: { fromTradApi: (api: AllianceScores2019TradFtcApi) => api.robot1Navigated },
-//         },
-//         {
-//             name: "autoNav2019_2",
-//             type: BoolDTy,
-//             ms: { fromTradApi: (api) => api.robot2Navigated },
-//         },
-//         {
-//             name: "repositioned",
-//             type: BoolDTy,
-//             ms: { fromTradApi: (api) => api.foundationRepositioned },
-//         },
-//         {
-//             name: "autoDelivered",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.autoDelivered },
-//         },
-//         {
-//             name: "autoSkystonesDeliveredFirst",
-//             type: IntDTy(8),
-//             ms: {
-//                 fromTradApi: (api) =>
-//                     api.autoStones
-//                         ? +(api.autoStones[0] == "SKYSTONE") + +(api.autoStones[1] == "SKYSTONE")
-//                         : 0,
-//             },
-//         },
-//         {
-//             name: "autoReturned",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.autoReturned },
-//         },
-//         {
-//             name: "autoFirstReturnedSkystone",
-//             type: BoolDTy,
-//             ms: { fromTradApi: (api) => api.firstReturnedIsSkystone },
-//         },
-//         {
-//             name: "autoPlaced",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.autoPlaced },
-//         },
-//         {
-//             name: "dcDelivered",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.driverControlledDelivered },
-//         },
-//         {
-//             name: "dcReturned",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.driverControlledReturned },
-//         },
-
-//         {
-//             name: "dcPlaced",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.driverControlledPlaced },
-//         },
-//         {
-//             name: "skyscraperHeight",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.tallestSkyscraper },
-//         },
-//         {
-//             name: "capLevel1",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.robot1CapstoneLevel },
-//         },
-//         {
-//             name: "capLevel2",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.robot2CapstoneLevel },
-//         },
-//         {
-//             name: "egFoundationMoved",
-//             type: BoolDTy,
-//             ms: { fromTradApi: (api) => api.foundationMoved },
-//         },
-//         {
-//             name: "egParked1",
-//             type: BoolDTy,
-//             ms: { fromTradApi: (api) => api.robot1Parked },
-//         },
-//         {
-//             name: "egParked2",
-//             type: BoolDTy,
-//             ms: { fromTradApi: (api) => api.robot2Parked },
-//         },
-//         {
-//             name: "minorsCommitted",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.minorPenalties },
-//         },
-//         {
-//             name: "majorsCommitted",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (api) => api.majorPenalties },
-//         },
-//         {
-//             name: "penaltyPointsCommitted",
-//             type: IntDTy(16),
-//             ms: { fromSelf: (self) => self.minorsCommitted * 5 + self.majorsCommitted * 20 },
-//             tep: {},
-//         },
-//         {
-//             name: "minorsByOpp",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (_, oth) => oth.minorPenalties },
-//         },
-//         {
-//             name: "majorsByOpp",
-//             type: IntDTy(8),
-//             ms: { fromTradApi: (_, oth) => oth.majorPenalties },
-//         },
-//         {
-//             name: "penaltyPointsByOpp",
-//             type: IntDTy(16),
-//             ms: { fromSelf: (self) => self.minorsByOpp * 5 + self.majorsByOpp * 20 },
-//             tep: {},
-//         },
-//         {
-//             name: "autoNavPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.autoNav2019_1 * 5 + self.autoNav2019_2 * 5 },
-//             tep: {
-//                 individual: {
-//                     first: (self) => self.autoNav2019_1 * 5,
-//                     second: (self) => self.autoNav2019_2 * 5,
-//                 },
-//             },
-//         },
-//         {
-//             name: "autoRepositioningPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.repositioned * 10 },
-//             tep: {},
-//         },
-//         {
-//             name: "autoDeliveryPoints",
-//             type: IntDTy(8),
-//             ms: {
-//                 fromSelf: (self) =>
-//                     self.autoDelivered * 2 +
-//                     self.autoSkystonesDeliveredFirst * 8 -
-//                     self.autoReturned * 2 -
-//                     self.autoFirstReturnedSkystone * 8,
-//             },
-//             tep: {},
-//         },
-//         {
-//             name: "autoPlacementPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.autoPlaced * 4 },
-//             tep: {},
-//         },
-//         {
-//             name: "dcDeliveryPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.dcDelivered - self.dcReturned },
-//             tep: {},
-//         },
-//         {
-//             name: "dcPlacementPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.dcPlaced },
-//             tep: {},
-//         },
-//         {
-//             name: "skyscraperBonusPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.skyscraperHeight * 2 },
-//             tep: {},
-//         },
-//         {
-//             name: "cappingPoints",
-//             type: IntDTy(8),
-//             ms: {
-//                 fromSelf: (self) =>
-//                     (self.capLevel1 == -1 ? 0 : self.capLevel1 + 5) +
-//                     (self.capLevel2 == -1 ? 0 : self.capLevel2 + 5),
-//             },
-//             tep: {
-//                 individual: {
-//                     first: (self) => (self.capLevel1 == -1 ? 0 : self.capLevel1 + 5),
-//                     second: (self) => (self.capLevel2 == -1 ? 0 : self.capLevel2 + 5),
-//                 },
-//             },
-//         },
-//         {
-//             name: "egParkPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.egParked1 * 5 + self.egParked2 * 5 },
-//             tep: {
-//                 individual: {
-//                     first: (self) => self.egParked1 * 5,
-//                     second: (self) => self.egParked2 * 5,
-//                 },
-//             },
-//         },
-//         {
-//             name: "egFoundationMovedPoints",
-//             type: IntDTy(8),
-//             ms: { fromSelf: (self) => self.egFoundationMoved * 15 },
-//             tep: {},
-//         },
-//         {
-//             name: "autoPoints",
-//             type: IntDTy(16),
-//             ms: {
-//                 fromSelf: (self) =>
-//                     self.autoNavPoints +
-//                     self.autoRepositioningPoints +
-//                     self.autoDeliveryPoints +
-//                     self.autoPlacementPoints,
-//             },
-//             tep: {},
-//         },
-//         {
-//             name: "dcPoints",
-//             type: IntDTy(16),
-//             ms: {
-//                 fromSelf: (self) =>
-//                     self.dcDeliveryPoints + self.dcPlacementPoints + self.skyscraperBonusPoints,
-//             },
-//             tep: {},
-//         },
-//         {
-//             name: "egPoints",
-//             type: IntDTy(16),
-//             ms: {
-//                 fromSelf: (self) =>
-//                     self.cappingPoints + self.egParkPoints + self.egFoundationMovedPoints,
-//             },
-//             tep: {},
-//         },
-//         {
-//             name: "totalPoints",
-//             type: IntDTy(16),
-//             ms: {
-//                 fromSelf: (self) =>
-//                     self.autoPoints + self.dcPoints + self.egPoints + self.penaltyPointsByOpp,
-//             },
-//             tep: {},
-//         },
-//         {
-//             name: "totalPointsNp",
-//             type: IntDTy(16),
-//             ms: { fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints },
-//             tep: {},
-//         },
-//     ],
-//     scoreTree: [],
-// });
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoReturned" })
+            .addMatchScore({ fromApi: (api: Api) => api.autoReturned, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoFirstReturnedSkystone" })
+            .addMatchScore({ fromApi: (api: Api) => api.firstReturnedIsSkystone, dataTy: BoolDTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoPlaced" })
+            .addMatchScore({ fromApi: (api: Api) => api.autoPlaced, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcDelivered" })
+            .addMatchScore({
+                fromApi: (api: Api) => api.driverControlledDelivered,
+                dataTy: Int8DTy,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcReturned" })
+            .addMatchScore({ fromApi: (api: Api) => api.driverControlledReturned, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcPlaced" })
+            .addMatchScore({ fromApi: (api: Api) => api.driverControlledPlaced, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "skyscraperHeight" })
+            .addMatchScore({ fromApi: (api: Api) => api.tallestSkyscraper, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "capLevel1" })
+            .addMatchScore({ fromApi: (api: Api) => api.robot1CapstoneLevel, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "capLevel2" })
+            .addMatchScore({ fromApi: (api: Api) => api.robot2CapstoneLevel, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egFoundationMoved" })
+            .addMatchScore({ fromApi: (api: Api) => api.foundationMoved, dataTy: BoolDTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egParked1" })
+            .addMatchScore({ fromApi: (api: Api) => api.robot1Parked, dataTy: BoolDTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egParked2" })
+            .addMatchScore({ fromApi: (api: Api) => api.robot2Parked, dataTy: BoolDTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsCommitted" })
+            .addMatchScore({ fromApi: (api: Api) => api.minorPenalties, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "majorsCommitted" })
+            .addMatchScore({ fromApi: (api: Api) => api.majorPenalties, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "penaltyPointsCommitted" })
+            .addMatchScore({
+                fromSelf: (self) => self.minorsCommitted * 5 + self.majorsCommitted * 20,
+                dataTy: Int16DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsByOpp" })
+            .addMatchScore({ fromApi: (_, oth) => oth.minorPenalties, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "majorsByOpp" })
+            .addMatchScore({ fromApi: (_, oth) => oth.majorPenalties, dataTy: Int8DTy })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "penaltyPointsByOpp" })
+            .addMatchScore({
+                fromSelf: (self) => self.minorsByOpp * 5 + self.majorsByOpp * 20,
+                dataTy: Int16DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoNavPoints" })
+            .addMatchScore({
+                fromSelf: (self) => self.autoNav2019_1 * 5 + self.autoNav2019_2 * 5,
+                dataTy: Int8DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoNavPointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) =>
+                    station == Station.One ? ms.autoNav2019_1 * 5 : ms.autoNav2019_2 * 5,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoRepositioningPoints" })
+            .addMatchScore({ fromSelf: (self) => self.repositioned * 10, dataTy: Int8DTy })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoDeliveryPoints" })
+            .addMatchScore({
+                fromSelf: (self) =>
+                    self.autoDelivered * 2 +
+                    self.autoSkystonesDeliveredFirst * 8 -
+                    self.autoReturned * 2 -
+                    self.autoFirstReturnedSkystone * 8,
+                dataTy: Int8DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoPlacementPoints" })
+            .addMatchScore({ fromSelf: (self) => self.autoPlaced * 4, dataTy: Int8DTy })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcDeliveryPoints" })
+            .addMatchScore({
+                fromSelf: (self) => self.dcDelivered - self.dcReturned,
+                dataTy: Int8DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcPlacementPoints" })
+            .addMatchScore({ fromSelf: (self) => self.dcPlaced, dataTy: Int8DTy })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "skyscraperBonusPoints" })
+            .addMatchScore({ fromSelf: (self) => self.skyscraperHeight * 2, dataTy: Int8DTy })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "cappingPoints" })
+            .addMatchScore({
+                fromSelf: (self) => cappingPoints(self.capLevel1) + cappingPoints(self.capLevel2),
+                dataTy: Int8DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "cappingPointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) =>
+                    cappingPoints(station == Station.One ? ms.capLevel1 : ms.capLevel2),
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egParkPoints" })
+            .addMatchScore({
+                fromSelf: (self) => self.egParked1 * 5 + self.egParked2 * 5,
+                dataTy: Int8DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egParkPointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) =>
+                    station == Station.One ? ms.egParked1 * 5 : ms.egParked2 * 5,
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egFoundationMovedPoints" })
+            .addMatchScore({ fromSelf: (self) => self.egFoundationMoved * 15, dataTy: Int8DTy })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoPoints" })
+            .addMatchScore({
+                fromSelf: (self) =>
+                    self.autoNavPoints +
+                    self.autoRepositioningPoints +
+                    self.autoDeliveryPoints +
+                    self.autoPlacementPoints,
+                dataTy: Int16DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcPoints" })
+            .addMatchScore({
+                fromSelf: (self) =>
+                    self.dcDeliveryPoints + self.dcPlacementPoints + self.skyscraperBonusPoints,
+                dataTy: Int16DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "egPoints" })
+            .addMatchScore({
+                fromSelf: (self) =>
+                    self.cappingPoints + self.egParkPoints + self.egFoundationMovedPoints,
+                dataTy: Int16DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "totalPointsNp" })
+            .addMatchScore({
+                fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints,
+                dataTy: Int16DTy,
+            })
+            .addTep()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "totalPoints" })
+            .addMatchScore({
+                fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp,
+                dataTy: Int16DTy,
+            })
+            .addTep()
+    )
+    .finish();
