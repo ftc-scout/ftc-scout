@@ -83,8 +83,9 @@ export const Descriptor2020 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
+                remoteDisplayName: "Navigation Points",
                 getValue: (ms) => ms.autoNav2020_1 * 5,
-                getValueRemote: (ms) => ms.autoNav2020,
+                getValueRemote: (ms) => ms.autoNav2020 * 5,
             })
     )
     .addColumn(
@@ -404,57 +405,106 @@ export const Descriptor2020 = new Descriptor({
             .addTep()
     )
 
-    .addScoreModalTree([
-        {
-            val: "autoPoints",
-            children: [
-                {
-                    val: "autoNavPoints",
-                    children: [
-                        { val: "autoNav1", children: [] },
-                        { val: "autoNav2", children: [] },
-                    ],
-                },
-                {
-                    val: "autoTowerPoints",
-                    children: [
-                        { val: "autoTowerLowPoints", children: [] },
-                        { val: "autoTowerMidPoints", children: [] },
-                        { val: "autoTowerHighPoints", children: [] },
-                    ],
-                },
-                { val: "autoWobblePoints", children: [] },
-                { val: "autoPowershotPoints", children: [] },
-            ],
-        },
-        {
-            val: "dcPoints",
-            children: [
-                { val: "dcTowerLowPoints", children: [] },
-                { val: "dcTowerMidPoints", children: [] },
-                { val: "dcTowerHighPoints", children: [] },
-            ],
-        },
-        {
-            val: "egPoints",
-            children: [
-                { val: "egPowershotPoints", children: [] },
-                {
-                    val: "egWobblePoints",
-                    children: [
-                        { val: "wobbleEndPos1", children: [] },
-                        { val: "wobbleEndPos2", children: [] },
-                    ],
-                },
-                { val: "egWobbleRingPoints", children: [] },
-            ],
-        },
-        {
-            val: "penaltyPointsCommitted",
-            children: [
-                { val: "majorsCommittedPoints", children: [] },
-                { val: "minorsCommittedPoints", children: [] },
-            ],
-        },
-    ])
+    .addScoreModalTree(
+        [
+            {
+                val: "autoPoints",
+                children: [
+                    {
+                        val: "autoNavPoints",
+                        children: [
+                            { val: "autoNav1", children: [] },
+                            { val: "autoNav2", children: [] },
+                        ],
+                    },
+                    {
+                        val: "autoTowerPoints",
+                        children: [
+                            { val: "autoTowerLowPoints", children: [] },
+                            { val: "autoTowerMidPoints", children: [] },
+                            { val: "autoTowerHighPoints", children: [] },
+                        ],
+                    },
+                    { val: "autoWobblePoints", children: [] },
+                    { val: "autoPowershotPoints", children: [] },
+                ],
+            },
+            {
+                val: "dcPoints",
+                children: [
+                    { val: "dcTowerLowPoints", children: [] },
+                    { val: "dcTowerMidPoints", children: [] },
+                    { val: "dcTowerHighPoints", children: [] },
+                ],
+            },
+            {
+                val: "egPoints",
+                children: [
+                    { val: "egPowershotPoints", children: [] },
+                    {
+                        val: "egWobblePoints",
+                        children: [
+                            { val: "wobbleEndPos1", children: [] },
+                            { val: "wobbleEndPos2", children: [] },
+                        ],
+                    },
+                    { val: "egWobbleRingPoints", children: [] },
+                ],
+            },
+            {
+                val: "penaltyPointsCommitted",
+                children: [
+                    { val: "majorsCommittedPoints", children: [] },
+                    { val: "minorsCommittedPoints", children: [] },
+                ],
+            },
+        ],
+        [
+            {
+                val: "autoPoints",
+                children: [
+                    { val: "autoNav1", children: [] },
+                    {
+                        val: "autoTowerPoints",
+                        children: [
+                            { val: "autoTowerLowPoints", children: [] },
+                            { val: "autoTowerMidPoints", children: [] },
+                            { val: "autoTowerHighPoints", children: [] },
+                        ],
+                    },
+                    { val: "autoWobblePoints", children: [] },
+                    { val: "autoPowershotPoints", children: [] },
+                ],
+            },
+            {
+                val: "dcPoints",
+                children: [
+                    { val: "dcTowerLowPoints", children: [] },
+                    { val: "dcTowerMidPoints", children: [] },
+                    { val: "dcTowerHighPoints", children: [] },
+                ],
+            },
+            {
+                val: "egPoints",
+                children: [
+                    { val: "egPowershotPoints", children: [] },
+                    {
+                        val: "egWobblePoints",
+                        children: [
+                            { val: "wobbleEndPos1", children: [] },
+                            { val: "wobbleEndPos2", children: [] },
+                        ],
+                    },
+                    { val: "egWobbleRingPoints", children: [] },
+                ],
+            },
+            {
+                val: "penaltyPointsCommitted",
+                children: [
+                    { val: "majorsCommittedPoints", children: [] },
+                    { val: "minorsCommittedPoints", children: [] },
+                ],
+            },
+        ]
+    )
     .finish();

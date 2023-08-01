@@ -4,6 +4,8 @@
     import MatchTeam from "./MatchTeam.svelte";
     import { matchTimeTip } from "../../util/tippy";
     import { tippyTheme } from "../nav/DarkModeToggle.svelte";
+    import { SHOW_MATCH_SCORE, type ShowMatchFn } from "./MatchTable.svelte";
+    import { getContext } from "svelte";
 
     function matchScore(match: FullMatchFragment | undefined | null): number | null {
         if (!match) return null;
@@ -23,6 +25,8 @@
     $: notReported = matches.every((m) => !m.scores);
 
     const tippy = createTippy({ placement: "bottom", delay: [750, 0] });
+
+    let show: ShowMatchFn = getContext(SHOW_MATCH_SCORE);
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
@@ -33,7 +37,11 @@
             {@const match = matches.find((m) => m.matchNum == n)}
             {@const score = matchScore(match)}
             {@const tip = matchTimeTip(match, timeZone, $tippyTheme)}
-            <td class:score={score != undefined} use:tippy={tip}>
+            <td
+                class:score={score != undefined}
+                use:tippy={tip}
+                on:click={() => match && show(match)}
+            >
                 {#if score != undefined}
                     {score}
                 {/if}

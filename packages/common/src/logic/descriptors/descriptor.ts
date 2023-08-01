@@ -38,6 +38,7 @@ export class Descriptor {
     columnsMap: Record<string, DescriptorColumn> = {};
 
     scoreModalTree: Tree<ScoreModalComponent>[] = [];
+    scoreModalTreeRemote: Tree<ScoreModalComponent>[] = [];
 
     constructor(opts: DescriptorOpts) {
         this.season = opts.season;
@@ -52,8 +53,11 @@ export class Descriptor {
         return this;
     }
 
-    addScoreModalTree(t: Tree<string>[]): Descriptor {
-        this.scoreModalTree = t.map((e) => mapTree(e, (id) => this.columnsMap[id].scoreM!));
+    addScoreModalTree(trad: Tree<string>[], remote: Tree<string>[] = []): Descriptor {
+        this.scoreModalTree = trad.map((e) => mapTree(e, (id) => this.columnsMap[id].scoreM!));
+        this.scoreModalTreeRemote = remote.map((e) =>
+            mapTree(e, (id) => this.columnsMap[id].scoreM!)
+        );
         return this;
     }
 
@@ -160,6 +164,7 @@ export class TepComponent {
 
 export class ScoreModalComponent {
     displayName: string;
+    remoteDisplayName: string;
     getValue: (ms: any) => number;
     getValueRemote: ((ms: any) => number) | null;
     getTitle: (ms: any) => string;
@@ -168,12 +173,14 @@ export class ScoreModalComponent {
 
     constructor(opts: {
         displayName: string;
+        remoteDisplayName: string;
         getValue: (ms: any) => number;
         getValueRemote: ((ms: any) => number) | null;
         getTitle: (ms: any) => string;
         children: string[];
     }) {
         this.displayName = opts.displayName;
+        this.remoteDisplayName = opts.remoteDisplayName;
         this.getValue = opts.getValue;
         this.getValueRemote = opts.getValueRemote;
         this.getTitle = opts.getTitle;
@@ -239,6 +246,7 @@ export class DescriptorColumn {
 
     addScoreModal(opts: {
         displayName: string;
+        remoteDisplayName?: string;
         getValue?: (ms: any) => number;
         getValueRemote?: (ms: any) => number;
         getTitle?: (ms: any) => string;
@@ -248,8 +256,9 @@ export class DescriptorColumn {
         let remoteMsName = this.ms?.getApiName(true) ?? this.baseName;
         this.scoreM = new ScoreModalComponent({
             displayName: opts.displayName,
+            remoteDisplayName: opts.remoteDisplayName ?? opts.displayName,
             getValue: opts.getValue ?? ((ms) => ms[tradMsName]),
-            getValueRemote: opts.getValueRemote ?? ((ms) => ms[remoteMsName]) ?? null,
+            getValueRemote: opts.getValueRemote ?? opts.getValue ?? ((ms) => ms[remoteMsName]),
             getTitle: opts.getTitle ?? (() => ""),
             children: opts.children ?? [],
         });

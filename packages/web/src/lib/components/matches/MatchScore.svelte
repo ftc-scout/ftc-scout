@@ -18,6 +18,9 @@
     export type TradScoresTy = NonNullable<
         Exclude<FullMatchFragment["scores"], { __typename: `${string}Remote` }>
     >;
+    export type RemoteScoresTy = NonNullable<
+        Extract<FullMatchFragment["scores"], { __typename: `${string}Remote` }>
+    >;
 </script>
 
 <script lang="ts">

@@ -197,6 +197,7 @@ export const Descriptor2021 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
+                remoteDisplayName: "Navigation Points",
                 getValue: (ms) => autoNav2021Points(ms.autoNav2021_1),
                 getTitle: (ms) => formatAutoNav2021(ms.autoNav2021_1),
             })
@@ -224,9 +225,13 @@ export const Descriptor2021 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
+                remoteDisplayName: "Bonus Points",
                 getValue: (ms) => autoBonusPoints2021(ms.autoBonus1, ms.barcodeElement1),
                 getValueRemote: (ms) => autoBonusPoints2021(ms.autoBonus, ms.barcodeElement),
-                getTitle: (ms) => formatAutoBonusPoints2021(ms.autoBonus1, ms.barcodeElement1),
+                getTitle: (ms) =>
+                    "autoBonus1" in ms
+                        ? formatAutoBonusPoints2021(ms.autoBonus1, ms.barcodeElement1)
+                        : formatAutoBonusPoints2021(ms.autoBonus, ms.barcodeElement),
             })
     )
     .addColumn(
@@ -332,9 +337,11 @@ export const Descriptor2021 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
+                remoteDisplayName: "Parking Points",
                 getValue: (ms) => egPark2021Points(ms.egPark1),
                 getValueRemote: (ms) => egPark2021Points(ms.egPark),
-                getTitle: (ms) => formatEgPark2021(ms.egPark1),
+                getTitle: (ms) =>
+                    "egPark1" in ms ? formatEgPark2021(ms.egPark1) : formatEgPark2021(ms.egPark),
             })
     )
     .addColumn(
@@ -347,7 +354,6 @@ export const Descriptor2021 = new Descriptor({
             .addScoreModal({
                 displayName: "Robot 2",
                 getValue: (ms) => egPark2021Points(ms.egPark2),
-                getValueRemote: (ms) => egPark2021Points(ms.egPark),
                 getTitle: (ms) => formatEgPark2021(ms.egPark2),
             })
     )
@@ -674,72 +680,124 @@ export const Descriptor2021 = new Descriptor({
             .addTep()
     )
 
-    .addScoreModalTree([
-        {
-            val: "autoPoints",
-            children: [
-                {
-                    val: "autoFreightPoints",
-                    children: [
-                        { val: "autoFreight1Points", children: [] },
-                        { val: "autoFreight2Points", children: [] },
-                        { val: "autoFreight3Points", children: [] },
-                        { val: "autoStorageFreight", children: [] },
-                    ],
-                },
-                { val: "autoCarouselPoints", children: [] },
-                {
-                    val: "autoNavPoints",
-                    children: [
-                        { val: "autoNav1", children: [] },
-                        { val: "autoNav2", children: [] },
-                    ],
-                },
-                {
-                    val: "autoBonusPoints",
-                    children: [
-                        { val: "autoBonus1", children: [] },
-                        { val: "autoBonus2", children: [] },
-                    ],
-                },
-            ],
-        },
-        {
-            val: "dcPoints",
-            children: [
-                {
-                    val: "dcAllianceHubPoints",
-                    children: [
-                        { val: "dcFreight1Points", children: [] },
-                        { val: "dcFreight2Points", children: [] },
-                        { val: "dcFreight3Points", children: [] },
-                    ],
-                },
-                { val: "dcSharedHubPoints", children: [] },
-                { val: "dcStoragePoints", children: [] },
-            ],
-        },
-        {
-            val: "egPoints",
-            children: [
-                { val: "egDuckPoints", children: [] },
-                { val: "cappingPoints", children: [] },
-                {
-                    val: "egParkPoints",
-                    children: [
-                        { val: "egPark1", children: [] },
-                        { val: "egPark2", children: [] },
-                    ],
-                },
-                { val: "allianceBalancedPoints", children: [] },
-                { val: "sharedUnbalancedPoints", children: [] },
-            ],
-        },
-        {
-            val: "penaltyPointsCommitted",
-            children: [
-                { val: "majorsCommittedPoints", children: [] },
-                { val: "minorsCommittedPoints", children: [] },
-            ],
-        },
-    ]);
+    .addScoreModalTree(
+        [
+            {
+                val: "autoPoints",
+                children: [
+                    {
+                        val: "autoFreightPoints",
+                        children: [
+                            { val: "autoFreight1Points", children: [] },
+                            { val: "autoFreight2Points", children: [] },
+                            { val: "autoFreight3Points", children: [] },
+                            { val: "autoStorageFreight", children: [] },
+                        ],
+                    },
+                    { val: "autoCarouselPoints", children: [] },
+                    {
+                        val: "autoNavPoints",
+                        children: [
+                            { val: "autoNav1", children: [] },
+                            { val: "autoNav2", children: [] },
+                        ],
+                    },
+                    {
+                        val: "autoBonusPoints",
+                        children: [
+                            { val: "autoBonus1", children: [] },
+                            { val: "autoBonus2", children: [] },
+                        ],
+                    },
+                ],
+            },
+            {
+                val: "dcPoints",
+                children: [
+                    {
+                        val: "dcAllianceHubPoints",
+                        children: [
+                            { val: "dcFreight1Points", children: [] },
+                            { val: "dcFreight2Points", children: [] },
+                            { val: "dcFreight3Points", children: [] },
+                        ],
+                    },
+                    { val: "dcSharedHubPoints", children: [] },
+                    { val: "dcStoragePoints", children: [] },
+                ],
+            },
+            {
+                val: "egPoints",
+                children: [
+                    { val: "egDuckPoints", children: [] },
+                    { val: "cappingPoints", children: [] },
+                    {
+                        val: "egParkPoints",
+                        children: [
+                            { val: "egPark1", children: [] },
+                            { val: "egPark2", children: [] },
+                        ],
+                    },
+                    { val: "allianceBalancedPoints", children: [] },
+                    { val: "sharedUnbalancedPoints", children: [] },
+                ],
+            },
+            {
+                val: "penaltyPointsCommitted",
+                children: [
+                    { val: "majorsCommittedPoints", children: [] },
+                    { val: "minorsCommittedPoints", children: [] },
+                ],
+            },
+        ],
+
+        [
+            {
+                val: "autoPoints",
+                children: [
+                    {
+                        val: "autoFreightPoints",
+                        children: [
+                            { val: "autoFreight1Points", children: [] },
+                            { val: "autoFreight2Points", children: [] },
+                            { val: "autoFreight3Points", children: [] },
+                            { val: "autoStorageFreight", children: [] },
+                        ],
+                    },
+                    { val: "autoCarouselPoints", children: [] },
+                    { val: "autoNav1", children: [] },
+                    { val: "autoBonus1", children: [] },
+                ],
+            },
+            {
+                val: "dcPoints",
+                children: [
+                    {
+                        val: "dcAllianceHubPoints",
+                        children: [
+                            { val: "dcFreight1Points", children: [] },
+                            { val: "dcFreight2Points", children: [] },
+                            { val: "dcFreight3Points", children: [] },
+                        ],
+                    },
+                    { val: "dcStoragePoints", children: [] },
+                ],
+            },
+            {
+                val: "egPoints",
+                children: [
+                    { val: "egDuckPoints", children: [] },
+                    { val: "cappingPoints", children: [] },
+                    { val: "egPark1", children: [] },
+                    { val: "allianceBalancedPoints", children: [] },
+                ],
+            },
+            {
+                val: "penaltyPointsCommitted",
+                children: [
+                    { val: "majorsCommittedPoints", children: [] },
+                    { val: "minorsCommittedPoints", children: [] },
+                ],
+            },
+        ]
+    );
