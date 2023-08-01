@@ -16,6 +16,18 @@ type DescriptorOpts = {
     rankings: RankingsMethod;
 };
 
+export type Tree<T> = {
+    val: T;
+    children: Tree<T>[];
+};
+
+function mapTree<T, U>(t: Tree<T>, mapper: (_: T) => U): Tree<U> {
+    return {
+        val: mapper(t.val),
+        children: t.children.map((e) => mapTree(e, mapper)),
+    };
+}
+
 export class Descriptor {
     season: Season;
     hasRemote: boolean;
@@ -23,6 +35,9 @@ export class Descriptor {
     rankings: RankingsMethod;
 
     columns: DescriptorColumn[] = [];
+    columnsMap: Record<string, DescriptorColumn> = {};
+
+    scoreModalTree: Tree<ScoreModalComponent>[] = [];
 
     constructor(opts: DescriptorOpts) {
         this.season = opts.season;
@@ -33,6 +48,12 @@ export class Descriptor {
 
     addColumn(col: DescriptorColumn): Descriptor {
         this.columns.push(col);
+        this.columnsMap[col.id] = col;
+        return this;
+    }
+
+    addScoreModalTree(t: Tree<string>[]): Descriptor {
+        this.scoreModalTree = t.map((e) => mapTree(e, (id) => this.columnsMap[id].scoreM!));
         return this;
     }
 
@@ -137,13 +158,39 @@ export class TepComponent {
     }
 }
 
+export class ScoreModalComponent {
+    displayName: string;
+    getValue: (ms: any) => number;
+    getValueRemote: ((ms: any) => number) | null;
+    getTitle: (ms: any) => string;
+
+    children: string[];
+
+    constructor(opts: {
+        displayName: string;
+        getValue: (ms: any) => number;
+        getValueRemote: ((ms: any) => number) | null;
+        getTitle: (ms: any) => string;
+        children: string[];
+    }) {
+        this.displayName = opts.displayName;
+        this.getValue = opts.getValue;
+        this.getValueRemote = opts.getValueRemote;
+        this.getTitle = opts.getTitle;
+        this.children = opts.children;
+    }
+}
+
 export class DescriptorColumn {
+    id: string;
     baseName: string;
     tradOnly: boolean;
     ms?: MatchScoreComponent;
     tep?: TepComponent;
+    scoreM?: ScoreModalComponent;
 
-    constructor(opts: { name: string; tradOnly?: boolean }) {
+    constructor(opts: { name: string; tradOnly?: boolean; id?: string }) {
+        this.id = opts.id ?? opts.name;
         this.baseName = opts.name;
         this.tradOnly = !!opts.tradOnly;
     }
@@ -186,6 +233,25 @@ export class DescriptorColumn {
             tradOnly: !!this.tradOnly,
             isIndividual: !!opts.isIndividual,
             make: opts.make ?? ((ms) => ms[msName]),
+        });
+        return this;
+    }
+
+    addScoreModal(opts: {
+        displayName: string;
+        getValue?: (ms: any) => number;
+        getValueRemote?: (ms: any) => number;
+        getTitle?: (ms: any) => string;
+        children?: string[];
+    }): DescriptorColumn {
+        let tradMsName = this.ms?.getApiName(false) ?? this.baseName;
+        let remoteMsName = this.ms?.getApiName(true) ?? this.baseName;
+        this.scoreM = new ScoreModalComponent({
+            displayName: opts.displayName,
+            getValue: opts.getValue ?? ((ms) => ms[tradMsName]),
+            getValueRemote: opts.getValueRemote ?? ((ms) => ms[remoteMsName]) ?? null,
+            getTitle: opts.getTitle ?? (() => ""),
+            children: opts.children ?? [],
         });
         return this;
     }

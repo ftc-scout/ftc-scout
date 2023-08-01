@@ -161,6 +161,7 @@ fragment FullMatchScore2022Alliance on MatchScores2022Alliance {
     minorsCommitted
     majorsCommitted
     penaltyPointsCommitted
+    penaltyPointsByOpp
     autoNavPoints
     autoConePoints
     egNavPoints

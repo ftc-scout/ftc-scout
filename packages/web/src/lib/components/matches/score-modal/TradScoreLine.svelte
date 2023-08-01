@@ -1,68 +1,43 @@
-<!-- <script lang="ts">
-    import type { Descriptor } from "@ftc-scout/common";
+<script lang="ts">
+    import type { ScoreModalComponent } from "@ftc-scout/common";
     import type { TradScoresTy } from "../MatchScore.svelte";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
 
     export let scores: TradScoresTy;
-    // export let prop: Descriptor["scoreTree"][number];
+    export let prop: ScoreModalComponent;
+    export let children: ScoreModalComponent[] = [];
+    export let heading: boolean = false;
+    export let sub = false;
 
-    $: red = prop.getScore(scores.red);
-    $: blue = prop.getScore(scores.blue);
+    $: red = prop.getValue(scores.red);
+    $: blue = prop.getValue(scores.blue);
 
-    console.log(scores);
+    $: p = sub ? "+" : "";
 
     let showSub = false;
-
-    $: shownList = showSub ? prop.subProps ?? [] : [];
+    $: shownList = showSub ? children ?? [] : [];
 </script>
 
 <tr
-    class:heading={prop.heading}
-    class:has-subs={prop.subProps?.length}
+    class:heading
+    class:sub
+    class:has-subs={children.length}
     on:click={() => (showSub = !showSub)}
+    transition:slide={{ duration: 250 }}
 >
     <td class="name">
-        {#if prop.subProps?.length}
+        {#if children.length}
             <ExpandButton bind:open={showSub} style="position:absolute; left: var(--md-gap)" />
         {/if}
         {prop.displayName}
     </td>
-    {#if prop.getCount}
-        <td class="data red" class:zero={red == 0}>
-            {prop.getCount(scores.red)}
-            {red != 0 ? `(+${red})` : ""}
-        </td>
-        <td class="data blue" class:zero={blue == 0}>
-            {prop.getCount(scores.blue)}
-            {blue != 0 ? `(+${blue})` : ""}
-        </td>
-    {:else}
-        <td class="data red" class:zero={red == 0}> {red} </td>
-        <td class="data blue" class:zero={blue == 0}> {blue} </td>
-    {/if}
+    <td class="data red" class:zero={red == 0} title={prop.getTitle(scores.red)}> {p}{red} </td>
+    <td class="data blue" class:zero={blue == 0} title={prop.getTitle(scores.blue)}> {p}{blue} </td>
 </tr>
 
 {#each shownList as sub}
-    {@const redS = sub.getScore(scores.red)}
-    {@const blueS = sub.getScore(scores.blue)}
-
-    <tr class="sub" transition:slide={{ duration: 250 }}>
-        <td class="name"> {sub.displayName} </td>
-        {#if sub.getCount}
-            <td class="data red" class:zero={redS == 0}>
-                {sub.getCount(scores.red)}
-                {redS != 0 ? `(+${redS})` : ""}
-            </td>
-            <td class="data blue" class:zero={blueS == 0}>
-                {sub.getCount(scores.blue)}
-                {blueS != 0 ? `(+${blueS})` : ""}
-            </td>
-        {:else}
-            <td class="data red" class:zero={redS == 0}> +{redS} </td>
-            <td class="data blue" class:zero={blueS == 0}> +{blueS} </td>
-        {/if}
-    </tr>
+    <svelte:self {scores} prop={sub} sub />
 {/each}
 
 <style>
@@ -106,7 +81,7 @@
     }
 
     .data {
-        /* font-weight: bold; */
+        font-weight: bold;
         text-align: center;
     }
 
@@ -131,4 +106,4 @@
     .sub .data {
         font-weight: normal;
     }
-</style> -->
+</style>
