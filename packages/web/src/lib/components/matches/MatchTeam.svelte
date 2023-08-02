@@ -14,6 +14,13 @@
     $: dq = team.dq;
     $: noShow = team.noShow;
     $: onField = team.onField;
+
+    $: title =
+        `${number} ${name}` +
+        (noShow ? " (No Show)" : "") +
+        (dq && !noShow ? " (Disqualified)" : "") +
+        (!onField && !dq && !noShow ? " (Not on Field)" : "") +
+        (surrogate ? " (Surrogate)" : "");
 </script>
 
 <td
@@ -24,6 +31,7 @@
     class:not-on-field={!onField}
     class:focused={focusedTeam == number}
     class:winner
+    {title}
 >
     <a href="/teams/{number}#{eventCode}">
         <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
