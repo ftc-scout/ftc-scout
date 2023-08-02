@@ -56,6 +56,7 @@ type Api = AllianceScores2020TradFtcApi | Scores2020RemoteFtcApi;
 
 export const Descriptor2020 = new Descriptor({
     season: Season.UltimateGoal,
+    seasonName: "Ultimate Goal",
     hasRemote: true,
     pensSubtract: true,
     rankings: {

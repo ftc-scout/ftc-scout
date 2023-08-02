@@ -17,6 +17,7 @@ type Api = AllianceScores2019TradFtcApi;
 
 export const Descriptor2019 = new Descriptor({
     season: Season.Skystone,
+    seasonName: "Skystone",
     hasRemote: false,
     pensSubtract: false,
     rankings: {

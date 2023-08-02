@@ -11,6 +11,7 @@
 
     export let match: FullMatchFragment;
     export let eventCode: string;
+    export let season: number;
     export let timeZone: string;
     export let focusedTeam: number | null;
     export let zebraStripe: boolean;
@@ -43,6 +44,7 @@
             <MatchTeam
                 {team}
                 {eventCode}
+                {season}
                 {focusedTeam}
                 winner={winner == Alliance.Red}
                 span={6 / reds.length}
@@ -57,6 +59,7 @@
             <MatchTeam
                 {team}
                 {eventCode}
+                {season}
                 {focusedTeam}
                 winner={winner == Alliance.Blue}
                 span={6 / blues.length}

@@ -9,13 +9,6 @@ type RankingsMethod = {
     tb: "AutoEndgameTot" | "AutoEndgameAvg" | "LosingScore";
 };
 
-type DescriptorOpts = {
-    season: Season;
-    hasRemote: boolean;
-    pensSubtract: boolean;
-    rankings: RankingsMethod;
-};
-
 export type Tree<T> = {
     val: T;
     children: Tree<T>[];
@@ -30,6 +23,8 @@ function mapTree<T, U>(t: Tree<T>, mapper: (_: T) => U): Tree<U> {
 
 export class Descriptor {
     season: Season;
+    seasonName: string;
+    seasonNameWithYear: string;
     hasRemote: boolean;
     pensSubtract: boolean;
     rankings: RankingsMethod;
@@ -40,8 +35,16 @@ export class Descriptor {
     scoreModalTree: Tree<ScoreModalComponent>[] = [];
     scoreModalTreeRemote: Tree<ScoreModalComponent>[] = [];
 
-    constructor(opts: DescriptorOpts) {
+    constructor(opts: {
+        season: Season;
+        seasonName: string;
+        hasRemote: boolean;
+        pensSubtract: boolean;
+        rankings: RankingsMethod;
+    }) {
         this.season = opts.season;
+        this.seasonName = opts.seasonName;
+        this.seasonNameWithYear = `${this.season} ${this.seasonName}`;
         this.hasRemote = opts.hasRemote;
         this.pensSubtract = opts.pensSubtract;
         this.rankings = opts.rankings;

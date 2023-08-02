@@ -15,6 +15,7 @@
 
     export let matches: FullMatchFragment[];
     export let eventCode: string;
+    export let season: number;
     export let timeZone: string;
     export let zebraStripe: boolean;
 
@@ -30,7 +31,7 @@
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
-    <MatchTeam {team} {eventCode} focusedTeam={null} winner={false} span={1} />
+    <MatchTeam {team} {eventCode} {season} focusedTeam={null} winner={false} span={1} />
 
     {#if !notReported}
         {#each [1, 2, 3, 4, 5, 6] as n}

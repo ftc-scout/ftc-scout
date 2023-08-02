@@ -1,8 +1,10 @@
 <script lang="ts">
+    import { CURRENT_SEASON } from "@ftc-scout/common";
     import { Alliance, type FullMatchFragment } from "../../graphql/generated/graphql-operations";
 
     export let team: FullMatchFragment["teams"][number];
     export let eventCode: string;
+    export let season: number;
     export let focusedTeam: number | null;
     export let winner: boolean;
     export let span: number;
@@ -33,7 +35,7 @@
     class:winner
     {title}
 >
-    <a href="/teams/{number}#{eventCode}">
+    <a href="/teams/{number}{season == CURRENT_SEASON ? '' : `?season=${season}`}#{eventCode}">
         <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
         <em class="name">{name}</em>
     </a>

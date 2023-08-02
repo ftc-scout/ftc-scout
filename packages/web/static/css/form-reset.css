@@ -1,0 +1,58 @@
+select {
+    appearance: none;
+
+    font-size: inherit;
+    color: inherit;
+
+    background: var(--fg-color);
+    padding: calc(var(--md-pad) * 1.1) var(--md-pad);
+
+    border: none;
+    border-radius: 8px;
+    border: 1px solid var(--sep-color);
+
+    cursor: pointer;
+    user-select: none;
+
+    /* arrow icon */
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-size: 1.5em 1.5em;
+    background-position: right center;
+    padding-right: 30px;
+}
+
+select:hover,
+input:hover {
+    transition-property: background-color, border-color;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.2s;
+
+    background-color: var(--hover-color);
+    border-color: var(--sep-hover-color);
+}
+
+select:focus,
+input:focus {
+    outline: none;
+}
+
+select:focus-visible,
+input:focus-visible {
+    outline: 2px solid var(--text-color);
+    outline-offset: -1px;
+}
+
+input {
+    font-size: inherit;
+    color: inherit;
+
+    background: var(--fg-color);
+    padding: calc(var(--md-pad) * 1.1) var(--md-pad);
+
+    border: none;
+    border-radius: 8px;
+    border: 1px solid var(--sep-color);
+
+    cursor: pointer;
+}

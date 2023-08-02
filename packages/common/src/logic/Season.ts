@@ -10,5 +10,6 @@ export const Season = {
 export type Season = (typeof Season)[keyof typeof Season];
 
 export const CURRENT_SEASON = Season.PowerPlay;
+// Preserve the order oldest to newest
 export const PAST_SEASONS = [Season.Skystone, Season.UltimateGoal, Season.FreightFrenzy] as const;
 export const ALL_SEASONS = [...PAST_SEASONS, CURRENT_SEASON] as const;

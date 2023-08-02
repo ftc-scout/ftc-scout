@@ -107,6 +107,7 @@ body:not(.dark) {
     --inline-theme-color: var(--theme-color);
 
     --sep-color: lightgray;
+    --sep-hover-color: rgb(200, 200, 200);
 
     --text-color: #000000;
     --secondary-text-color: #636466;
@@ -134,6 +135,7 @@ body.dark {
     --inline-theme-color: #39848e;
 
     --sep-color: #4a4e51;
+    --sep-hover-color: #595d61;
 
     --text-color: #dfe2e6;
     --secondary-text-color: #dcdfe2;

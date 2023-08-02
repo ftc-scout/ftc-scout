@@ -32,6 +32,7 @@
 
 <style>
     @import "/static/css/global.css";
+    @import "/static/css/form-reset.css";
 
     #content {
         margin-top: var(--navbar-size);

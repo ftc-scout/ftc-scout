@@ -1,3 +1,10 @@
+<script lang="ts" context="module">
+    export function seasonFromUrl(url: URL): Season {
+        let seasonName = url.searchParams.get("season");
+        return ALL_SEASONS.find((s) => "" + s == seasonName) ?? CURRENT_SEASON;
+    }
+</script>
+
 <script lang="ts">
     import WidthProvider from "$lib/components/WidthProvider.svelte";
     import Card from "$lib/components/Card.svelte";
@@ -20,11 +27,16 @@
     import { eventSorter } from "$lib/util/sorters";
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import TeamEventStats from "./TeamEventStats.svelte";
-    import type { Season } from "@ftc-scout/common";
+    import { ALL_SEASONS, CURRENT_SEASON, DESCRIPTORS, type Season } from "@ftc-scout/common";
     import Award from "$lib/components/Award.svelte";
     import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
+    import SeasonSelect from "../../../lib/components/form/SeasonSelect.svelte";
+    import Form from "../../../lib/components/form/Form.svelte";
+    import type { Writable } from "svelte/store";
+    import { queryParam } from "../../../lib/components/search-params/search-params";
+    import { SEASON_ENCODE } from "../../../lib/components/search-params/season-io";
 
-    const season = (n: number) => n as Season;
+    const toSeason = (n: number) => n as Season;
 
     export let data;
 
@@ -32,6 +44,11 @@
     $: team = $teamStore?.data.teamByNumber!;
 
     $: sortedEvents = ([...team.events] ?? []).sort(eventSorter);
+
+    let season = queryParam("season", SEASON_ENCODE, {
+        keepHash: false,
+        pushHistory: false,
+    }) as Writable<Season>;
 </script>
 
 <WidthProvider>
@@ -40,7 +57,7 @@
             (Try searching for teams on <a href="/teams">the teams page</a>)
         </ErrorPage>
 
-        <Card style="margin-bottom: var(--xl-gap);">
+        <Card>
             <h1>{team.number} - {team.name}</h1>
 
             <InfoIconRow icon={faSchool}>{team.schoolName}</InfoIconRow>
@@ -64,6 +81,12 @@
             <DataFromFirst />
         </Card>
 
+        <Card vis={false}>
+            <Form id="season" noscriptSubmit>
+                <SeasonSelect bind:season={$season} />
+            </Form>
+        </Card>
+
         {#each sortedEvents as tep}
             {@const event = tep.event}
             {@const href = `/events/${event.season}/${event.code}/matches`}
@@ -80,7 +103,7 @@
 
                 <TeamEventStats
                     stats={tep.stats}
-                    season={season(event.season)}
+                    season={toSeason(event.season)}
                     remote={event.remote}
                 />
 
@@ -98,6 +121,19 @@
                     focusedTeam={team.number}
                 />
             </Card>
+        {:else}
+            <Card>
+                <div class="no-events">
+                    <b>
+                        {team.name}
+                        {$season == CURRENT_SEASON ? "has not yet played" : "did not compete"} in any
+                        {DESCRIPTORS[$season].seasonName} events.
+                    </b>
+                    <p class="no-events-help">
+                        Try choosing a different season from the dropdown menu.
+                    </p>
+                </div>
+            </Card>
         {/each}
     </Loading>
 </WidthProvider>
@@ -111,5 +147,12 @@
 
     h2 a {
         color: inherit;
+    }
+
+    .no-events {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--md-gap);
     }
 </style>

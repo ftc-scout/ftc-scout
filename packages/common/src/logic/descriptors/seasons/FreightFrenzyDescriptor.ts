@@ -151,6 +151,7 @@ type Api = AllianceScores2021TradFtcApi | Scores2021RemoteFtcApi;
 
 export const Descriptor2021 = new Descriptor({
     season: Season.FreightFrenzy,
+    seasonName: "Freight Frenzy",
     hasRemote: true,
     pensSubtract: true,
     rankings: {

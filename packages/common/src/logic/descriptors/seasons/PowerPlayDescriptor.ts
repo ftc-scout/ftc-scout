@@ -140,6 +140,7 @@ type Api = AllianceScores2022TradFtcApi;
 
 export const Descriptor2022 = new Descriptor({
     season: Season.PowerPlay,
+    seasonName: "Power Play",
     hasRemote: false,
     pensSubtract: false,
     rankings: {

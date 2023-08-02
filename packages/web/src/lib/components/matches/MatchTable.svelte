@@ -21,6 +21,7 @@
 
     export let matches: FullMatchFragment[];
     export let event: {
+        season: number;
         code: string;
         started: boolean;
         published: boolean;
@@ -32,6 +33,7 @@
     $: timeZone = event.timeZone ?? "UTC";
     $: remote = event.remote;
     $: eventCode = event.code;
+    $: season = event.season;
 
     $: quals = matches.filter((m) => m.tournamentLevel == TournamentLevel.Quals).sort(matchSorter);
     $: semis = matches.filter((m) => m.tournamentLevel == TournamentLevel.Semis);
@@ -65,10 +67,16 @@
     {/if}
 
     <tbody>
-        {#if matches.length}
+        {#if matches.some((m) => !!m.scores)}
             {#if event.remote}
                 {#each Object.values(soloMatches) as matches, i}
-                    <RemoteMatches {matches} {eventCode} {timeZone} zebraStripe={i % 2 == 1} />
+                    <RemoteMatches
+                        {matches}
+                        {eventCode}
+                        {season}
+                        {timeZone}
+                        zebraStripe={i % 2 == 1}
+                    />
                 {/each}
             {:else}
                 {#if finals.length}
@@ -78,6 +86,7 @@
                     <TradMatchRow
                         {match}
                         {eventCode}
+                        {season}
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
@@ -90,6 +99,7 @@
                     <TradMatchRow
                         {match}
                         {eventCode}
+                        {season}
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
@@ -102,6 +112,7 @@
                     <TradMatchRow
                         {match}
                         {eventCode}
+                        {season}
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
