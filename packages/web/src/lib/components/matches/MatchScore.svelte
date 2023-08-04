@@ -46,7 +46,12 @@
     let show: ShowMatchFn = getContext(SHOW_MATCH_SCORE);
 </script>
 
-<td class:hasScores={match.scores} use:tippy={tip} on:click={() => show(match)}>
+<td
+    class:hasScores={match.scores}
+    use:tippy={tip}
+    on:click={() => show(match)}
+    id="{match.eventCode}-{match.id}"
+>
     <div
         class="description"
         class:red={winner == Alliance.Red}

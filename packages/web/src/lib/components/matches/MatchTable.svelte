@@ -18,6 +18,7 @@
     import { page } from "$app/stores";
     import ScoreModal from "./score-modal/ScoreModal.svelte";
     import { setContext } from "svelte";
+    import { queryParam } from "../search-params/search-params";
 
     export let matches: FullMatchFragment[];
     export let event: {
@@ -51,13 +52,35 @@
 
     function show(match: FullMatchFragment) {
         modalMatch = match;
+        $modalMatchId = [match.eventCode, match.id];
         modalShown = true;
     }
 
     setContext(SHOW_MATCH_SCORE, show);
+
+    let modalMatchId = queryParam<[string, number] | null>(
+        "scores",
+        {
+            encode: (m: [string, number] | null) => (m ? `${m[0]}-${m[1]}` : undefined),
+            decode: (s: string | null) => {
+                if (s == null) return null;
+                let parts = s.split("-");
+                return [parts[0], +parts[1]];
+            },
+        },
+        { pushHistory: false }
+    );
+    if ($modalMatchId?.[0] == event.code) {
+        let m = matches.find((m) => $modalMatchId?.[1] == m.id);
+        if (m) show(m);
+    }
 </script>
 
-<ScoreModal bind:shown={modalShown} bind:match={modalMatch} />
+<ScoreModal
+    bind:shown={modalShown}
+    bind:match={modalMatch}
+    on:close={() => ($modalMatchId = null)}
+/>
 
 <table class:remote>
     {#if remote}

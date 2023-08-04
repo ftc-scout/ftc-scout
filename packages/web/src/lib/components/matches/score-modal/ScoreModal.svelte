@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { createEventDispatcher } from "svelte";
     import type { FullMatchFragment } from "../../../graphql/generated/graphql-operations";
     import Modal from "../../Modal.svelte";
     import type { RemoteScoresTy, TradScoresTy } from "../MatchScore.svelte";
@@ -12,10 +13,19 @@
 
     $: trad = scores != null && "red" in scores ? (scores as TradScoresTy) : null;
     $: remote = scores != null && !("red" in scores) ? (scores as RemoteScoresTy) : null;
+
+    let dispatch = createEventDispatcher();
 </script>
 
 {#if match && scores}
-    <Modal bind:shown titleText="Match {match.description}">
+    <Modal
+        bind:shown
+        titleText="Match {match.description}"
+        close={() => {
+            shown = false;
+            dispatch("close");
+        }}
+    >
         {#if trad}
             <TradScores scores={trad} />
         {:else if remote}
