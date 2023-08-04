@@ -29,12 +29,12 @@
     import TeamEventStats from "./TeamEventStats.svelte";
     import { ALL_SEASONS, CURRENT_SEASON, DESCRIPTORS, type Season } from "@ftc-scout/common";
     import Award from "$lib/components/Award.svelte";
-    import MatchTable from "../../../lib/components/matches/MatchTable.svelte";
-    import SeasonSelect from "../../../lib/components/form/SeasonSelect.svelte";
-    import Form from "../../../lib/components/form/Form.svelte";
+    import MatchTable from "$lib/components/matches/MatchTable.svelte";
+    import SeasonSelect from "$lib/components/form/SeasonSelect.svelte";
+    import Form from "$lib/components/form/Form.svelte";
     import type { Writable } from "svelte/store";
-    import { queryParam } from "../../../lib/components/search-params/search-params";
-    import { SEASON_ENCODE } from "../../../lib/components/search-params/season-io";
+    import { queryParam } from "$lib/components/search-params/search-params";
+    import { SEASON_ENCODE } from "$lib/components/search-params/season-io";
     import { afterNavigate, goto } from "$app/navigation";
     import { browser } from "$app/environment";
 

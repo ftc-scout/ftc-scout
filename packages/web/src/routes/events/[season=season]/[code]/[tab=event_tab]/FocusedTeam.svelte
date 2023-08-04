@@ -1,11 +1,11 @@
 <script lang="ts">
     import { CURRENT_SEASON, DESCRIPTORS, Season } from "@ftc-scout/common";
-    import type { EventPageQuery } from "../../../../../lib/graphql/generated/graphql-operations";
+    import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import Fa from "svelte-fa";
     import { faAngleRight } from "@fortawesome/free-solid-svg-icons";
     import { preloadData } from "$app/navigation";
     import { fly } from "svelte/transition";
-    import { prettyPrintFloat, prettyPrintOrdinal } from "../../../../../lib/printers/number";
+    import { prettyPrintFloat, prettyPrintOrdinal } from "$lib/printers/number";
 
     export let team: NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
     export let remote: boolean;

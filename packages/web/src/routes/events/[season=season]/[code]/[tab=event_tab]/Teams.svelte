@@ -1,7 +1,7 @@
 <script lang="ts">
     import { getContext } from "svelte";
-    import { TEAM_CLICK_ACTION_CONTEXT } from "../../../../../lib/components/matches/MatchTeam.svelte";
-    import type { EventPageQuery } from "../../../../../lib/graphql/generated/graphql-operations";
+    import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
+    import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
 
     export let teams: NonNullable<EventPageQuery["eventByCode"]>["teams"];
     export let focusedTeam: number | null;

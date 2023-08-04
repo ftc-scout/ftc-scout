@@ -1,12 +1,12 @@
 <script lang="ts">
     import { DESCRIPTORS, Season } from "@ftc-scout/common";
-    import ErrorPage from "../../../../../lib/components/ErrorPage.svelte";
-    import Loading from "../../../../../lib/components/Loading.svelte";
-    import WidthProvider from "../../../../../lib/components/WidthProvider.svelte";
+    import ErrorPage from "$lib/components/ErrorPage.svelte";
+    import Loading from "$lib/components/Loading.svelte";
+    import WidthProvider from "$lib/components/WidthProvider.svelte";
     import { page } from "$app/stores";
-    import Card from "../../../../../lib/components/Card.svelte";
-    import DataFromFirst from "../../../../../lib/components/DataFromFirst.svelte";
-    import InfoIconRow from "../../../../../lib/components/InfoIconRow.svelte";
+    import Card from "$lib/components/Card.svelte";
+    import DataFromFirst from "$lib/components/DataFromFirst.svelte";
+    import InfoIconRow from "$lib/components/InfoIconRow.svelte";
     import {
         faBolt,
         faCalendarAlt,
@@ -16,16 +16,16 @@
         faMedal,
         faTrophy,
     } from "@fortawesome/free-solid-svg-icons";
-    import { prettyPrintDateRangeString } from "../../../../../lib/printers/dateRange";
-    import { prettyPrintURL } from "../../../../../lib/printers/url";
-    import Location from "../../../../../lib/components/Location.svelte";
-    import TabbedCard from "../../../../../lib/components/tabs/TabbedCard.svelte";
-    import TabContent from "../../../../../lib/components/tabs/TabContent.svelte";
-    import MatchTable from "../../../../../lib/components/matches/MatchTable.svelte";
+    import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
+    import { prettyPrintURL } from "$lib/printers/url";
+    import Location from "$lib/components/Location.svelte";
+    import TabbedCard from "$lib/components/tabs/TabbedCard.svelte";
+    import TabContent from "$lib/components/tabs/TabContent.svelte";
+    import MatchTable from "$lib/components/matches/MatchTable.svelte";
     import { goto } from "$app/navigation";
     import { browser } from "$app/environment";
     import { setContext } from "svelte";
-    import { TEAM_CLICK_ACTION_CONTEXT } from "../../../../../lib/components/matches/MatchTeam.svelte";
+    import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
     import FocusedTeam from "./FocusedTeam.svelte";
     import Teams from "./Teams.svelte";
 
