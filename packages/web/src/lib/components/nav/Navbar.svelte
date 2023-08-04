@@ -24,7 +24,6 @@
         padding: var(--md-pad);
 
         background: var(--theme-color);
-        border-bottom: 1px solid var(--sep-color);
         z-index: var(--navbar-zi);
 
         display: flex;

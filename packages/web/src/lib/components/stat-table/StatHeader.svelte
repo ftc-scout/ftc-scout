@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { stickTableHead } from "../../util/directives";
     import SortButton from "./SortButton.svelte";
     import type { StatColumn } from "./stat-table";
 
@@ -7,7 +8,7 @@
     export let stats: StatColumn<T>[];
 </script>
 
-<thead>
+<thead use:stickTableHead>
     {#each stats as stat}
         <th class={stat.color} class:expand={stat.shouldExpand()}>
             {stat.columnName}
@@ -42,6 +43,7 @@
     .white {
         color: var(--text-color);
         box-shadow: rgb(0 0 0 / 14%) 0px -4px 4px -2px inset;
+        background: var(--fg-color);
     }
 
     .purple {

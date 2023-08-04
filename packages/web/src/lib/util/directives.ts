@@ -17,3 +17,37 @@ export function clickOutside(node: any) {
 export function quickFocus(node: any) {
     node.focus();
 }
+
+export function stickTableHead(node: HTMLElement) {
+    let table = node.parentElement!;
+    let card = table.parentElement?.parentElement!;
+    let content = document.getElementById("content")!;
+    content?.addEventListener("scroll", listener);
+
+    function listener() {
+        let requiredOff = content.scrollTop - table.offsetTop - card.offsetTop - 1; // + table.offsetTop - card.offsetTop  - 1;
+
+        let firstRow = table.lastChild?.firstChild as HTMLElement | null;
+        let minTableHeight = firstRow?.clientHeight ?? 48;
+        requiredOff = Math.min(
+            requiredOff,
+            table.clientHeight - node.clientHeight - minTableHeight
+        );
+
+        if (requiredOff > 0) {
+            node.style.setProperty("transform", `translateY(${requiredOff}px)`);
+            node.classList.add("sticking");
+        } else {
+            node.style.removeProperty("transform");
+            node.classList.remove("sticking");
+        }
+    }
+
+    return {
+        destroy() {
+            content?.removeEventListener("scroll", listener);
+            node.style.removeProperty("transform");
+            node.classList.remove("sticking");
+        },
+    };
+}

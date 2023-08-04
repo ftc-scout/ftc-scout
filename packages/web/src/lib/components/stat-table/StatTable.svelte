@@ -38,10 +38,10 @@
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
     }
-    table :global(thead th:first-child) {
+    table :global(thead:not(.sticking) th:first-child) {
         border-top-left-radius: 7px;
     }
-    table :global(thead th:last-child) {
+    table :global(thead:not(.sticking) th:last-child) {
         border-top-right-radius: 7px;
     }
 

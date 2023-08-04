@@ -42,6 +42,8 @@
     @import "/static/css/form-reset.css";
 
     #content {
+        position: relative;
+
         margin-top: var(--navbar-size);
         margin-left: var(--sidebar-size);
         padding: var(--md-pad);
