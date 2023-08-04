@@ -28,7 +28,6 @@ export type EncodeAndDecodeOptions<T = any> = {
 export type StoreOptions = {
     debounceHistory?: number;
     pushHistory?: boolean;
-    keepHash?: boolean;
 };
 
 type LooseAutocomplete<T> = {
@@ -223,14 +222,14 @@ export function queryParam<T = string>(
         decode: decode = DEFAULT_ENCODER_DECODER.decode,
         defaultValue,
     }: EncodeAndDecodeOptions<T> = DEFAULT_ENCODER_DECODER,
-    { debounceHistory = 0, pushHistory = true, keepHash = true }: StoreOptions = {}
+    { debounceHistory = 0, pushHistory = true }: StoreOptions = {}
 ): Writable<T | null> {
     const { set: _set, subscribe } = writable<T | null>();
     const setRef: { value: Writable<T | null>["set"] } = { value: noop };
     const unsubPage = page.subscribe(($page) => {
         const actualParam = $page?.url?.searchParams?.get?.(name);
         setRef.value = (value) => {
-            const hash = keepHash ? $page.url.hash : "";
+            const hash = $page.url.hash;
             const toBatch = (query: URLSearchParams) => {
                 if (value == undefined) {
                     query.delete(name);

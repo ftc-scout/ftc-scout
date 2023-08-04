@@ -9,7 +9,7 @@
     let form = getContext(FORM_ID) as string | null;
 </script>
 
-<select bind:value {form} {name}>
+<select bind:value {form} {name} on:change>
     {#each options as o}
         <option selected={value == o.value} value={o.value}>{o.name}</option>
     {/each}

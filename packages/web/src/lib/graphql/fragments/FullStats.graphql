@@ -1,0 +1,336 @@
+# // HELP: Season Specific
+fragment FullStats on TeamEventStats {
+    ... on TeamEventStats2022 {
+        rank
+        rp
+        tb1
+        tb2
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        tot {
+            ...FullTeamEventStats2022Group
+        }
+        avg {
+            ...FullTeamEventStats2022Group
+        }
+        opr {
+            ...FullTeamEventStats2022Group
+        }
+        min {
+            ...FullTeamEventStats2022Group
+        }
+        max {
+            ...FullTeamEventStats2022Group
+        }
+        dev {
+            ...FullTeamEventStats2022Group
+        }
+    }
+    ... on TeamEventStats2021Trad {
+        rank
+        rp
+        tb1
+        tb2
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        tot {
+            ...FullTeamEventStats2021TradGroup
+        }
+        avg {
+            ...FullTeamEventStats2021TradGroup
+        }
+        opr {
+            ...FullTeamEventStats2021TradGroup
+        }
+        min {
+            ...FullTeamEventStats2021TradGroup
+        }
+        max {
+            ...FullTeamEventStats2021TradGroup
+        }
+        dev {
+            ...FullTeamEventStats2021TradGroup
+        }
+    }
+    ... on TeamEventStats2021Remote {
+        rank
+        rp
+        tb1
+        tb2
+        qualMatchesPlayed
+        tot {
+            ...FullTeamEventStats2021RemoteGroup
+        }
+        avg {
+            ...FullTeamEventStats2021RemoteGroup
+        }
+        opr {
+            ...FullTeamEventStats2021RemoteGroup
+        }
+        min {
+            ...FullTeamEventStats2021RemoteGroup
+        }
+        max {
+            ...FullTeamEventStats2021RemoteGroup
+        }
+        dev {
+            ...FullTeamEventStats2021RemoteGroup
+        }
+    }
+    ... on TeamEventStats2020Trad {
+        rank
+        rp
+        tb1
+        tb2
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        tot {
+            ...FullTeamEventStats2020TradGroup
+        }
+        avg {
+            ...FullTeamEventStats2020TradGroup
+        }
+        opr {
+            ...FullTeamEventStats2020TradGroup
+        }
+        min {
+            ...FullTeamEventStats2020TradGroup
+        }
+        max {
+            ...FullTeamEventStats2020TradGroup
+        }
+        dev {
+            ...FullTeamEventStats2020TradGroup
+        }
+    }
+    ... on TeamEventStats2020Remote {
+        rank
+        rp
+        tb1
+        tb2
+        qualMatchesPlayed
+        tot {
+            ...FullTeamEventStats2020RemoteGroup
+        }
+        avg {
+            ...FullTeamEventStats2020RemoteGroup
+        }
+        opr {
+            ...FullTeamEventStats2020RemoteGroup
+        }
+        min {
+            ...FullTeamEventStats2020RemoteGroup
+        }
+        max {
+            ...FullTeamEventStats2020RemoteGroup
+        }
+        dev {
+            ...FullTeamEventStats2020RemoteGroup
+        }
+    }
+    ... on TeamEventStats2019 {
+        rank
+        rp
+        tb1
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        tot {
+            ...FullTeamEventStats2019Group
+        }
+        avg {
+            ...FullTeamEventStats2019Group
+        }
+        opr {
+            ...FullTeamEventStats2019Group
+        }
+        min {
+            ...FullTeamEventStats2019Group
+        }
+        max {
+            ...FullTeamEventStats2019Group
+        }
+        dev {
+            ...FullTeamEventStats2019Group
+        }
+    }
+}
+
+fragment FullTeamEventStats2022Group on TeamEventStats2022Group {
+    autoNavPoints
+    autoNavPointsIndividual
+    autoConePoints
+    autoTerminalPoints
+    autoGroundPoints
+    autoLowPoints
+    autoMediumPoints
+    autoHighPoints
+    egNavPoints
+    egNavPointsIndividual
+    ownershipPoints
+    coneOwnershipPoints
+    beaconOwnershipPoints
+    circuitPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    penaltyPointsCommitted
+    majorsByOppPoints
+    minorsByOppPoints
+    penaltyPointsByOpp
+    autoPoints
+    dcPoints
+    dcTerminalPoints
+    dcGroundPoints
+    dcLowPoints
+    dcMediumPoints
+    dcHighPoints
+    egPoints
+    totalPointsNp
+    totalPoints
+}
+
+fragment FullTeamEventStats2021TradGroup on TeamEventStats2021TradGroup {
+    autoCarouselPoints
+    autoNavPoints
+    autoNavPointsIndividual
+    autoFreightPoints
+    autoFreight1Points
+    autoFreight2Points
+    autoFreight3Points
+    autoBonusPoints
+    autoBonusPointsIndividual
+    dcAllianceHubPoints
+    dcFreight1Points
+    dcFreight2Points
+    dcFreight3Points
+    dcSharedHubPoints
+    dcStoragePoints
+    egDuckPoints
+    allianceBalancedPoints
+    sharedUnbalancedPoints
+    egParkPoints
+    egParkPointsIndividual
+    cappingPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    autoPoints
+    dcPoints
+    egPoints
+    penaltyPointsCommitted
+    totalPointsNp
+    totalPoints
+}
+
+fragment FullTeamEventStats2021RemoteGroup on TeamEventStats2021RemoteGroup {
+    autoCarouselPoints
+    autoNavPoints
+    autoNavPointsIndividual
+    autoFreightPoints
+    autoFreight1Points
+    autoFreight2Points
+    autoFreight3Points
+    autoBonusPoints
+    autoBonusPointsIndividual
+    dcAllianceHubPoints
+    dcFreight1Points
+    dcFreight2Points
+    dcFreight3Points
+    dcStoragePoints
+    egDuckPoints
+    allianceBalancedPoints
+    egParkPoints
+    egParkPointsIndividual
+    cappingPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    autoPoints
+    dcPoints
+    egPoints
+    penaltyPointsCommitted
+    totalPointsNp
+    totalPoints
+}
+
+fragment FullTeamEventStats2020TradGroup on TeamEventStats2020TradGroup {
+    autoNavPoints
+    autoNavPointsIndividual
+    autoTowerPoints
+    autoTowerLowPoints
+    autoTowerMidPoints
+    autoTowerHighPoints
+    autoWobblePoints
+    autoPowershotPoints
+    egWobblePoints
+    egPowershotPoints
+    egWobbleRingPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    autoPoints
+    dcPoints
+    dcTowerLowPoints
+    dcTowerMidPoints
+    dcTowerHighPoints
+    egPoints
+    penaltyPointsCommitted
+    totalPointsNp
+    totalPoints
+}
+
+fragment FullTeamEventStats2020RemoteGroup on TeamEventStats2020RemoteGroup {
+    autoNavPoints
+    autoNavPointsIndividual
+    autoTowerPoints
+    autoTowerLowPoints
+    autoTowerMidPoints
+    autoTowerHighPoints
+    autoWobblePoints
+    autoPowershotPoints
+    egWobblePoints
+    egPowershotPoints
+    egWobbleRingPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    autoPoints
+    dcPoints
+    dcTowerLowPoints
+    dcTowerMidPoints
+    dcTowerHighPoints
+    egPoints
+    penaltyPointsCommitted
+    totalPointsNp
+    totalPoints
+}
+
+fragment FullTeamEventStats2019Group on TeamEventStats2019Group {
+    penaltyPointsCommitted
+    penaltyPointsByOpp
+    autoNavPoints
+    autoNavPointsIndividual
+    autoRepositioningPoints
+    autoDeliveryPoints
+    autoPlacementPoints
+    dcDeliveryPoints
+    dcPlacementPoints
+    skyscraperBonusPoints
+    cappingPoints
+    cappingPointsIndividual
+    egParkPoints
+    egParkPointsIndividual
+    egFoundationMovedPoints
+    autoPoints
+    dcPoints
+    egPoints
+    totalPointsNp
+    totalPoints
+}

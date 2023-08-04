@@ -1,6 +1,11 @@
+<script lang="ts" context="module">
+    export const TEAM_CLICK_ACTION_CONTEXT = {};
+</script>
+
 <script lang="ts">
     import { CURRENT_SEASON } from "@ftc-scout/common";
     import { Alliance, type FullMatchFragment } from "../../graphql/generated/graphql-operations";
+    import { getContext } from "svelte";
 
     export let team: FullMatchFragment["teams"][number];
     export let eventCode: string;
@@ -23,6 +28,8 @@
         (dq && !noShow ? " (Disqualified)" : "") +
         (!onField && !dq && !noShow ? " (Not on Field)" : "") +
         (surrogate ? " (Surrogate)" : "");
+
+    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as (_: number) => void | null;
 </script>
 
 <td
@@ -35,10 +42,31 @@
     class:winner
     {title}
 >
-    <a href="/teams/{number}{season == CURRENT_SEASON ? '' : `?season=${season}`}#{eventCode}">
-        <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
-        <em class="name">{name}</em>
-    </a>
+    {#if clickAction}
+        <div
+            class="inner"
+            role="button"
+            tabindex="0"
+            on:click={() => clickAction(number)}
+            on:keypress={(e) => {
+                if (e.code == "Enter" || e.code == "Space") {
+                    e.preventDefault();
+                    clickAction(number);
+                }
+            }}
+        >
+            <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
+            <em class="name">{name}</em>
+        </div>
+    {:else}
+        <a
+            class="inner"
+            href="/teams/{number}{season == CURRENT_SEASON ? '' : `?season=${season}`}#{eventCode}"
+        >
+            <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
+            <em class="name">{name}</em>
+        </a>
+    {/if}
 </td>
 
 <style>
@@ -52,7 +80,7 @@
         transition: outline 0.12s ease 0s;
     }
 
-    a {
+    .inner {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
@@ -120,7 +148,7 @@
             display: none;
         }
 
-        a {
+        .inner {
             align-items: center;
             justify-content: center;
         }

@@ -20,4 +20,5 @@
         value: d.season + "",
         name: d.seasonNameWithYear,
     }))}
+    on:change
 />

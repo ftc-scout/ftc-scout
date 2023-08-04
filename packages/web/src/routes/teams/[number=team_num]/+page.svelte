@@ -35,8 +35,16 @@
     import type { Writable } from "svelte/store";
     import { queryParam } from "../../../lib/components/search-params/search-params";
     import { SEASON_ENCODE } from "../../../lib/components/search-params/season-io";
+    import { afterNavigate, goto } from "$app/navigation";
+    import { browser } from "$app/environment";
 
     const toSeason = (n: number) => n as Season;
+    let shouldRemoveHash = false;
+    const removeHash = () => (shouldRemoveHash = true);
+    afterNavigate(() => {
+        if (shouldRemoveHash && browser) goto(" ");
+        shouldRemoveHash = false;
+    });
 
     export let data;
 
@@ -45,10 +53,7 @@
 
     $: sortedEvents = ([...team.events] ?? []).sort(eventSorter);
 
-    let season = queryParam("season", SEASON_ENCODE, {
-        keepHash: false,
-        pushHistory: false,
-    }) as Writable<Season>;
+    let season = queryParam("season", SEASON_ENCODE, { pushHistory: false }) as Writable<Season>;
 </script>
 
 <WidthProvider>
@@ -83,7 +88,7 @@
 
         <Card vis={false}>
             <Form id="season" noscriptSubmit>
-                <SeasonSelect bind:season={$season} />
+                <SeasonSelect bind:season={$season} on:change={removeHash} />
             </Form>
         </Card>
 

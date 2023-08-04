@@ -29,21 +29,7 @@ query Team($number: Int!, $season: Int!) {
                 personName
             }
             event {
-                season
-                code
-                name
-                remote
-                start
-                end
-                location {
-                    venue
-                    city
-                    state
-                    country
-                }
-                started
-                published
-                timezone
+                ...BasicEventInfo
             }
             matches {
                 season

@@ -8,7 +8,14 @@
         // have overflow hidden on the body (so the scrollbar is under the navbar). Therefore
         // instead of scrolling the window we scroll the content div.
         // This is pretty hacky but seems to work.
-        window.scrollTo = (x: any, y?: any) => document.getElementById("content")?.scrollTo(x, y);
+        window.scrollTo = (x: any, y?: any) => {
+            document.getElementById("content")?.scrollTo(x, y);
+        };
+        // Similarly sveltekit uses these props to figure out the current scroll of the document.
+        Object.defineProperties(window, {
+            pageXOffset: { get: () => document.getElementById("content")?.scrollLeft },
+            pageYOffset: { get: () => document.getElementById("content")?.scrollTop },
+        });
     }
 </script>
 
@@ -43,6 +50,8 @@
         overflow: auto;
         max-height: calc(100vh - var(--navbar-size));
         scrollbar-gutter: stable both-edges;
+
+        scroll-padding-top: var(--lg-gap);
     }
 
     @media (max-width: 1500px) {

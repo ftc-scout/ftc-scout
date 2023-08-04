@@ -28,6 +28,7 @@
 
     /* --- Z-Indices --- */
     --sidebar-zi: 500;
+    --focused-team-zi: 800;
     --navbar-zi: 1000;
     --mobile-sidebar-bg-zi: 1400;
     --mobile-sidebar-zi: 1500;
@@ -103,6 +104,7 @@ body:not(.dark) {
     --bg-color: #f2f2f2;
     --fg-color: #ffffff;
     --hover-color: #f0f0f0;
+    --tab-hover-color: #fbfbfb;
     --theme-color: #2c666e;
     --inline-theme-color: var(--theme-color);
 
@@ -112,6 +114,10 @@ body:not(.dark) {
     --text-color: #000000;
     --secondary-text-color: #636466;
     --theme-text-color: #ffffff;
+
+    --inverse-bg-color: #212121;
+    --inverse-text-color: #ffffff;
+    --inverse-secondary-text-color: #bdbdbd;
 
     --team-color-transparency: 0.15;
     --red-team-color-vs: 244, 67, 54;
@@ -131,6 +137,7 @@ body.dark {
     --bg-color: #161616;
     --fg-color: #2d2d2d;
     --hover-color: #3a3a3a;
+    --tab-hover-color: #232323;
     --theme-color: #1f4c52;
     --inline-theme-color: #39848e;
 
@@ -140,6 +147,10 @@ body.dark {
     --text-color: #dfe2e6;
     --secondary-text-color: #dcdfe2;
     --theme-text-color: #ffffff;
+
+    --inverse-bg-color: #202020;
+    --inverse-text-color: var(--text-color);
+    --inverse-secondary-text-color: var(--secondary-text-color);
 
     --team-color-transparency: 0.25;
     --red-team-color-vs: 204, 47, 47;

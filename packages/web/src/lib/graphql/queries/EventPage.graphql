@@ -1,0 +1,21 @@
+query EventPage($season: Int!, $code: String!) {
+    eventByCode(season: $season, code: $code) {
+        ...BasicEventInfo
+        website
+        matches {
+            ...FullMatch
+        }
+        teams {
+            season
+            eventCode
+            teamNumber
+            team {
+                number
+                name
+            }
+            stats {
+                ...FullStats
+            }
+        }
+    }
+}

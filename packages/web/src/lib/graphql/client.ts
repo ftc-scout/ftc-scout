@@ -49,7 +49,16 @@ export function getClient(
             TeamMatchParticipation: {
                 keyFields: ["season", "eventCode", "matchId", "station", "alliance"],
             },
-            TeamEventParticipation: { keyFields: ["season", "eventCode", "teamNumber"] },
+            TeamEventParticipation: {
+                keyFields: ["season", "eventCode", "teamNumber"],
+                fields: {
+                    stats: {
+                        merge(existing, incoming, { mergeObjects }) {
+                            return mergeObjects(existing, incoming);
+                        },
+                    },
+                },
+            },
             Award: { keyFields: ["season", "eventCode", "type", "placement", "teamNumber"] },
         },
     });

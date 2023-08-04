@@ -1,0 +1,17 @@
+fragment BasicEventInfo on Event {
+    season
+    code
+    name
+    remote
+    start
+    end
+    location {
+        venue
+        city
+        state
+        country
+    }
+    started
+    published
+    timezone
+}
