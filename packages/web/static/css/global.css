@@ -27,8 +27,9 @@
     --font-family: "Inter", sans-serif;
 
     /* --- Z-Indices --- */
+    --hovered-row-zi: 300;
+    --focused-team-zi: 400;
     --sidebar-zi: 500;
-    --focused-team-zi: 800;
     --navbar-zi: 1000;
     --mobile-sidebar-bg-zi: 1400;
     --mobile-sidebar-zi: 1500;
@@ -98,6 +99,9 @@ body {
     --neutral-team-color: rgb(var(--neutral-team-color-vs));
     --neutral-team-bg-color: rgba(var(--neutral-team-color-vs), var(--team-color-transparency));
     --team-text-color: white;
+
+    --stat-transparency: 0.15;
+    --stat-text-color: var(--team-text-color);
 }
 
 body:not(.dark) {
@@ -128,6 +132,12 @@ body:not(.dark) {
     --neutral-team-text-color: rgb(var(--neutral-team-color-vs));
     --zebra-stripe-color: rgb(245, 245, 245);
 
+    --purple-stat-color: rgb(var(--neutral-team-color-vs));
+    --purple-stat-bg-color: rgba(var(--neutral-team-color-vs), var(--stat-transparency));
+    --green-stat-color-vs: 67, 160, 71;
+    --green-stat-color: rgb(var(--green-stat-color-vs));
+    --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
+
     --grayed-out-text-color: gray;
 
     color-scheme: light;
@@ -155,11 +165,17 @@ body.dark {
     --team-color-transparency: 0.25;
     --red-team-color-vs: 204, 47, 47;
     --blue-team-color-vs: 27, 87, 179;
-    --neutral-team-color-vs: 170, 0, 255;
+    --neutral-team-color-vs: 127, 0, 190;
     --red-team-text-color: rgb(244, 67, 54);
     --blue-team-text-color: rgb(33, 150, 243);
     --neutral-team-text-color: rgb(196, 79, 255);
     --zebra-stripe-color: #353535;
+
+    --purple-stat-color: rgb(var(--neutral-team-color-vs));
+    --purple-stat-bg-color: rgba(var(--neutral-team-color-vs), var(--stat-transparency));
+    --green-stat-color-vs: 46, 125, 50;
+    --green-stat-color: rgb(var(--green-stat-color-vs));
+    --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
 
     --grayed-out-text-color: #a0a0a0;
 

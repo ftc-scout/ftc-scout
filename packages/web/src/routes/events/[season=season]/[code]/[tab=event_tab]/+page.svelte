@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { DESCRIPTORS, Season } from "@ftc-scout/common";
+    import { DESCRIPTORS, Season, notEmpty } from "@ftc-scout/common";
     import ErrorPage from "$lib/components/ErrorPage.svelte";
     import Loading from "$lib/components/Loading.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
@@ -28,11 +28,14 @@
     import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
     import FocusedTeam from "./FocusedTeam.svelte";
     import Teams from "./Teams.svelte";
+    import Rankings from "./Rankings.svelte";
 
     export let data;
 
     $: eventStore = data.event;
     $: event = $eventStore?.data.eventByCode!;
+
+    $: stats = event?.teams?.filter((t) => notEmpty(t.stats)) ?? [];
 
     $: season = +$page.params.season as Season;
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} with code ${$page.params.code}`;
@@ -81,7 +84,7 @@
         <TabbedCard
             tabs={[
                 [faBolt, "Matches", "matches", !!event.matches.length],
-                [faTrophy, "Rankings", "rankings", false],
+                [faTrophy, "Rankings", "rankings", !!stats.length],
                 [faMedal, "Awards", "awards", false],
                 [faHashtag, "Teams", "teams", !!event.teams.length],
             ]}
@@ -96,6 +99,10 @@
 
             <TabContent name="matches">
                 <MatchTable matches={event.matches} {event} {focusedTeam} />
+            </TabContent>
+
+            <TabContent name="rankings">
+                <Rankings data={stats} {focusedTeam} />
             </TabContent>
 
             <TabContent name="teams">
