@@ -82,7 +82,7 @@
         border-bottom: 1px solid transparent;
     }
 
-    .tab:first-child:not(.selected):not(:focus-visible) {
+    .tab:first-child:not(.selected) {
         /* Fix extra border */
         clip-path: polygon(
             0 0,
