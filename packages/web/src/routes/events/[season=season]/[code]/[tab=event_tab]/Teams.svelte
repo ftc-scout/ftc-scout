@@ -2,22 +2,33 @@
     import { getContext } from "svelte";
     import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
+    import { CURRENT_SEASON } from "@ftc-scout/common";
+    import { browser } from "$app/environment";
 
     export let teams: NonNullable<EventPageQuery["eventByCode"]>["teams"];
     export let focusedTeam: number | null;
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as (_: number) => void | undefined;
+    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as ((_: number) => void) | undefined;
 </script>
 
 <ul>
     {#each teams as team}
         <li>
-            <button
+            <a
+                href="/teams/{team.teamNumber}{team.season == CURRENT_SEASON
+                    ? ''
+                    : `?season=${team.season}`}#{team.eventCode}"
                 class:selected={focusedTeam == team.teamNumber}
-                on:click={() => clickAction && clickAction(team.teamNumber)}
+                role={browser && clickAction ? "button" : "link"}
+                on:click={(e) => {
+                    if (clickAction) {
+                        e.preventDefault();
+                        clickAction(team.teamNumber);
+                    }
+                }}
             >
                 {team.team.number} - {team.team.name}
-            </button>
+            </a>
         </li>
     {/each}
 </ul>
@@ -27,7 +38,10 @@
         list-style: none;
     }
 
-    button {
+    a {
+        color: inherit;
+        text-decoration: none;
+
         background: none;
         border: none;
         font-size: inherit;
@@ -41,11 +55,11 @@
         cursor: pointer;
     }
 
-    button:hover {
+    a:hover {
         background: var(--hover-color);
     }
 
-    button.selected {
+    a.selected {
         background-color: var(--neutral-team-color);
         color: var(--team-text-color);
     }

@@ -6,6 +6,7 @@
     import { CURRENT_SEASON } from "@ftc-scout/common";
     import { Alliance, type FullMatchFragment } from "../../graphql/generated/graphql-operations";
     import { getContext } from "svelte";
+    import { browser } from "$app/environment";
 
     export let team: FullMatchFragment["teams"][number];
     export let eventCode: string;
@@ -29,7 +30,7 @@
         (!onField && !dq && !noShow ? " (Not on Field)" : "") +
         (surrogate ? " (Surrogate)" : "");
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as (_: number) => void | null;
+    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as ((_: number) => void) | undefined;
 </script>
 
 <td
@@ -42,31 +43,20 @@
     class:winner
     {title}
 >
-    {#if clickAction}
-        <div
-            class="inner"
-            role="button"
-            tabindex="0"
-            on:click={() => clickAction(number)}
-            on:keypress={(e) => {
-                if (e.code == "Enter" || e.code == "Space") {
-                    e.preventDefault();
-                    clickAction(number);
-                }
-            }}
-        >
-            <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
-            <em class="name">{name}</em>
-        </div>
-    {:else}
-        <a
-            class="inner"
-            href="/teams/{number}{season == CURRENT_SEASON ? '' : `?season=${season}`}#{eventCode}"
-        >
-            <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
-            <em class="name">{name}</em>
-        </a>
-    {/if}
+    <a
+        class="inner"
+        href="/teams/{number}{season == CURRENT_SEASON ? '' : `?season=${season}`}#{eventCode}"
+        role={browser && clickAction ? "button" : "link"}
+        on:click={(e) => {
+            if (clickAction) {
+                e.preventDefault();
+                clickAction(number);
+            }
+        }}
+    >
+        <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
+        <em class="name">{name}</em>
+    </a>
 </td>
 
 <style>
