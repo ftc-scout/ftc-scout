@@ -21,4 +21,11 @@
     export let currentSort: Readable<{ id: string; dir: SortDir }>;
 </script>
 
-<StatTable {data} stats={$shownStats} currentSort={$currentSort} {focusedTeam} on:change_sort />
+<StatTable
+    {data}
+    stats={$shownStats}
+    currentSort={$currentSort}
+    {focusedTeam}
+    on:change_sort
+    on:move_column
+/>

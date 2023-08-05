@@ -14,7 +14,7 @@
 </script>
 
 <table>
-    <StatHeader {stats} {currentSort} on:change_sort />
+    <StatHeader {stats} {currentSort} on:change_sort on:move_column />
     <tbody>
         {#each data as dataRow}
             <StatRow data={dataRow} {stats} {focusedTeam} />

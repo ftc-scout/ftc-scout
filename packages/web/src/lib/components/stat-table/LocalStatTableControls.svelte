@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { arrayMove } from "../../util/array";
+
     import { cycleSortDir, cycleSortDirNoNull } from "./SortButton.svelte";
 
     import { sortMixed } from "../../util/sorters";
@@ -26,6 +28,10 @@
         let oldDir = $currentSort.id == id ? $currentSort.dir : null;
         let newDir = id == defaultSort.id ? cycleSortDirNoNull(oldDir) : cycleSortDir(oldDir);
         $currentSort = newDir == null ? defaultSort : { id, dir: newDir };
+    }
+
+    function moveColumn(from: number, to: number) {
+        $shownStats = arrayMove($shownStats, from, to);
     }
 
     function assignRanks(data: StatData<T>[], sorter: NonRankStatColumn<T>, preFilter: boolean) {
@@ -76,4 +82,5 @@
     {currentSort}
     {focusedTeam}
     on:change_sort={(e) => changeSort(e.detail)}
+    on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
 />
