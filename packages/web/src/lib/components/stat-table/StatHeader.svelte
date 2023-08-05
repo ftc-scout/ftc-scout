@@ -1,4 +1,6 @@
 <script lang="ts">
+    import type { SortDir } from "./StatTableControls.svelte";
+    import { createEventDispatcher } from "svelte";
     import { stickTableHead } from "../../util/directives";
     import SortButton from "./SortButton.svelte";
     import type { StatColumn } from "./stat-table";
@@ -6,13 +8,21 @@
     type T = $$Generic;
 
     export let stats: StatColumn<T>[];
+    export let currentSort: { id: string; dir: SortDir };
+
+    let dispatch = createEventDispatcher();
 </script>
 
 <thead use:stickTableHead>
     {#each stats as stat}
+        {@const sort = stat.id == currentSort.id ? currentSort.dir : null}
         <th class={stat.color} class:expand={stat.shouldExpand()}>
             {stat.columnName}
-            <SortButton name={stat.columnName} />
+            <SortButton
+                name={stat.columnName}
+                {sort}
+                on:click={() => dispatch("change_sort", stat.id)}
+            />
         </th>
     {/each}
 </thead>

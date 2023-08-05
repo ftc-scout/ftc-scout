@@ -13,3 +13,17 @@ export function groupBy<T, K extends string | number>(arr: T[], f: (_: T) => K):
 
     return ret;
 }
+
+export function groupBySingle<T, K extends string | number>(
+    arr: T[],
+    f: (_: T) => K
+): Record<K, T> {
+    let ret: Record<K, T> = {} as Record<K, T>;
+
+    for (let i of arr) {
+        let k = f(i);
+        ret[k] = i;
+    }
+
+    return ret;
+}

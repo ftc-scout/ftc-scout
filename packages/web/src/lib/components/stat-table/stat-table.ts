@@ -30,6 +30,22 @@ export class StatColumn<T> {
 
     ty: StatType;
     getValue: (_: StatData<T>) => StatValue | null;
+    getValueDistilled(d: StatData<T>) {
+        return StatColumn.distill(this.getValue(d));
+    }
+
+    static distill(val: StatValue | null): number | string | null {
+        if (val == null) return null;
+        if (val.ty == "int" || val.ty == "float" || val.ty == "rank") {
+            return val.val;
+        } else if (val.ty == "team") {
+            return val.number;
+        } else {
+            let num = val.wins + val.ties / 2;
+            let denom = val.wins + val.losses + val.ties;
+            return num / denom;
+        }
+    }
 
     constructor(opts: {
         id: string;
@@ -53,6 +69,28 @@ export class StatColumn<T> {
 
     shouldExpand(): boolean {
         return this.ty == StatType.Team;
+    }
+}
+
+export class NonRankStatColumn<T> extends StatColumn<T> {
+    getNonRankValue: (_: T) => StatValue | null;
+    getNonRankValueDistilled(d: T) {
+        return StatColumn.distill(this.getNonRankValue(d));
+    }
+
+    constructor(opts: {
+        id: string;
+        columnName: string;
+        dialogName: string;
+        titleName: string;
+
+        color: Color;
+
+        ty: StatType;
+        getNonRankValue: (_: T) => StatValue | null;
+    }) {
+        super({ ...opts, getValue: (d) => opts.getNonRankValue(d.data) });
+        this.getNonRankValue = opts.getNonRankValue;
     }
 }
 

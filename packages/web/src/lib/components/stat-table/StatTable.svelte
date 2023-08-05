@@ -1,4 +1,5 @@
 <script lang="ts">
+    import type { SortDir } from "./StatTableControls.svelte";
     import StatHeader from "./StatHeader.svelte";
     import StatRow from "./StatRow.svelte";
     import type { StatColumn, StatData } from "./stat-table";
@@ -6,12 +7,14 @@
     type T = $$Generic;
 
     export let data: StatData<T>[];
-    export let stats: StatColumn<T>[];
     export let focusedTeam: number | null;
+
+    export let stats: StatColumn<T>[];
+    export let currentSort: { id: string; dir: SortDir };
 </script>
 
 <table>
-    <StatHeader {stats} />
+    <StatHeader {stats} {currentSort} on:change_sort />
     <tbody>
         {#each data as dataRow}
             <StatRow data={dataRow} {stats} {focusedTeam} />

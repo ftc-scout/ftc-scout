@@ -1,76 +1,75 @@
 <script lang="ts">
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
-    import StatTable from "$lib/components/stat-table/StatTable.svelte";
-    import { Color, StatColumn, StatType } from "$lib/components/stat-table/stat-table";
+    import { Color, NonRankStatColumn, StatType } from "$lib/components/stat-table/stat-table";
+    import LocalStatTableControls from "../../../../../lib/components/stat-table/LocalStatTableControls.svelte";
+    import { SortDir } from "../../../../../lib/components/stat-table/StatTableControls.svelte";
 
     type DataTy = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
 
     export let data: DataTy[];
     export let focusedTeam: number | null;
 
-    $: rankedData = data.map((data) => ({
-        noFilterRank: 1,
-        filterRank: 1,
-        noFilterSkipRank: 1,
-        filterSkipRank: 1,
-        data,
-    }));
-
-    let stats: StatColumn<DataTy>[] = [
-        new StatColumn({
+    let stats: NonRankStatColumn<DataTy>[] = [
+        new NonRankStatColumn({
             color: Color.White,
             id: "Rank",
             columnName: "Rank",
             dialogName: "Rank",
             titleName: "Rank",
             ty: StatType.Rank,
-            getValue: (x) => ({ ty: "rank", val: x.filterRank }),
+            getNonRankValue: (x) => ({ ty: "rank", val: x.stats?.rank! }),
         }),
-        new StatColumn({
+        new NonRankStatColumn({
             color: Color.White,
             id: "Team",
             columnName: "Team",
             dialogName: "Team",
             titleName: "Team",
             ty: StatType.Team,
-            getValue: (x) => ({ ty: "team", number: x.data.team.number, name: x.data.team.name }),
+            getNonRankValue: (x) => ({ ty: "team", number: x.team.number, name: x.team.name }),
         }),
-        new StatColumn<DataTy>({
+        new NonRankStatColumn<DataTy>({
             color: Color.Purple,
             id: "OPR",
             columnName: "np OPR",
             dialogName: "OPR",
             titleName: "OPR",
             ty: StatType.Float,
-            getValue: (x) => ({ ty: "float", val: x.data.stats?.opr.totalPointsNp! }),
+            getNonRankValue: (x) => ({ ty: "float", val: x.stats?.opr.totalPointsNp! }),
         }),
-        new StatColumn({
+        new NonRankStatColumn({
             color: Color.Purple,
             id: "AVG",
             columnName: "np AVG",
             dialogName: "AVG",
             titleName: "AVG",
             ty: StatType.Float,
-            getValue: (x) => ({ ty: "float", val: x.data.stats?.avg.totalPointsNp! }),
+            getNonRankValue: (x) => ({ ty: "float", val: x.stats?.avg.totalPointsNp! }),
         }),
-        new StatColumn({
+        new NonRankStatColumn({
             color: Color.Green,
             id: "Record",
             columnName: "Record",
             dialogName: "Record",
             titleName: "Record",
             ty: StatType.Float,
-            getValue: (x) =>
-                x.data.stats && "wins" in x.data.stats
+            getNonRankValue: (x) =>
+                x.stats && "wins" in x.stats
                     ? {
                           ty: "record",
-                          wins: x.data.stats.wins,
-                          losses: x.data.stats.losses,
-                          ties: x.data.stats.ties,
+                          wins: x.stats.wins,
+                          losses: x.stats.losses,
+                          ties: x.stats.ties,
                       }
                     : null,
         }),
     ];
 </script>
 
-<StatTable {stats} data={rankedData} {focusedTeam} />
+<LocalStatTableControls
+    {data}
+    {focusedTeam}
+    allStats={stats}
+    defaultStats={stats}
+    defaultSort={{ id: "Rank", dir: SortDir.Asc }}
+/>

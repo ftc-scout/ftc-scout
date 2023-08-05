@@ -29,3 +29,15 @@ type T = FullMatchFragment["teams"][number];
 export function sortTeams<C extends "Red" | "Blue">(a: T | C, b: T | C): number {
     return allianceRoleVal(a) - allianceRoleVal(b);
 }
+
+export function sortMixed(a: number | string | null, b: number | string | null): number {
+    if (a == b) return 0;
+    if (a == null) return 1;
+    if (b == null) return -1;
+
+    if (typeof a == "number" && typeof b == "number") {
+        return a < b ? -1 : 1;
+    } else {
+        return "" + a < "" + b ? -1 : 1;
+    }
+}

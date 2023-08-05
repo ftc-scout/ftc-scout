@@ -1,19 +1,23 @@
 <script lang="ts" context="module">
-    export const SortType = {
-        None: "None",
-        Desc: "Desc",
-        Asc: "Asc",
-    } as const;
-    export type SortType = (typeof SortType)[keyof typeof SortType];
-
-    export function cycleSortType(sortType: SortType): SortType {
-        switch (sortType) {
-            case "None":
-                return SortType.Desc;
+    export function cycleSortDir(dir: SortDir | null): SortDir | null {
+        switch (dir) {
+            case null:
+                return SortDir.Desc;
             case "Desc":
-                return SortType.Asc;
+                return SortDir.Asc;
             case "Asc":
-                return SortType.None;
+                return null;
+        }
+    }
+
+    export function cycleSortDirNoNull(dir: SortDir | null): SortDir {
+        switch (dir) {
+            case null:
+                return SortDir.Desc;
+            case "Desc":
+                return SortDir.Asc;
+            case "Asc":
+                return SortDir.Desc;
         }
     }
 </script>
@@ -21,19 +25,16 @@
 <script lang="ts">
     import { faSort, faSortAsc, faSortDesc } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
+    import { SortDir } from "./StatTableControls.svelte";
 
-    export let sort: SortType = SortType.None;
+    export let sort: SortDir | null = null;
     export let name: string;
 
-    const SORT_ICONS = {
-        [SortType.None]: faSort,
-        [SortType.Desc]: faSortDesc,
-        [SortType.Asc]: faSortAsc,
-    };
+    $: icon = sort == null ? faSort : sort == SortDir.Desc ? faSortDesc : faSortAsc;
 </script>
 
 <button on:click aria-label="Sort by {name}">
-    <Fa icon={SORT_ICONS[sort]} />
+    <Fa {icon} />
 </button>
 
 <style>
