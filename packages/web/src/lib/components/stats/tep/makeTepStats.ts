@@ -21,6 +21,15 @@ const GROUP_COLORS = {
     [TepStatGroup.Dev]: Color.White,
 };
 
+const GROUP_DATA_TYS = {
+    [TepStatGroup.Tot]: StatType.Int,
+    [TepStatGroup.Avg]: StatType.Float,
+    [TepStatGroup.Opr]: StatType.Float,
+    [TepStatGroup.Min]: StatType.Int,
+    [TepStatGroup.Max]: StatType.Int,
+    [TepStatGroup.Dev]: StatType.Float,
+};
+
 declare module "@ftc-scout/common" {
     interface TepComponent {
         getStatColumn(group: TepStatGroup): NonRankStatColumn<any>;
@@ -36,8 +45,8 @@ TepComponent.prototype.getStatColumn = function (group: TepStatGroup) {
         columnName: (th.columnPrefix + " " + group.toUpperCase()).trim(),
         dialogName: th.apiName, // TODO
         titleName: th.apiName, // TODO
-        ty: StatType.Float,
-        getNonRankValue: (d) => ({ ty: StatType.Float, val: d.stats[group][th.apiName] }),
+        ty: GROUP_DATA_TYS[group],
+        getNonRankValue: (d) => ({ ty: GROUP_DATA_TYS[group], val: d.stats[group][th.apiName] }),
     });
 };
 
@@ -47,12 +56,57 @@ export function getTepStatSet(season: Season): StatSet<any> {
     if (!(season in statSetCache)) {
         let groupStats = DESCRIPTORS[season]
             .tepColumns()
-            .map((t) => t.getStatColumn(TepStatGroup.Avg));
+            .flatMap((t) => [
+                t.getStatColumn(TepStatGroup.Tot),
+                t.getStatColumn(TepStatGroup.Avg),
+                t.getStatColumn(TepStatGroup.Min),
+                t.getStatColumn(TepStatGroup.Max),
+                t.getStatColumn(TepStatGroup.Dev),
+                t.getStatColumn(TepStatGroup.Opr),
+            ]);
 
         statSetCache[season] = new StatSet(groupStats, [
             new StatSetSection(
-                DESCRIPTORS[season].tepColumns().map((c) => c.id),
-                ["avg"]
+                "Match Scores",
+                DESCRIPTORS[season].tepColumns().map((c) => ({ id: c.id, name: c.apiName })),
+                [
+                    {
+                        id: TepStatGroup.Tot,
+                        name: "TOT",
+                        color: Color.Purple,
+                        description: "The sum of all points scored in the category.",
+                    },
+                    {
+                        id: TepStatGroup.Avg,
+                        name: "AVG",
+                        color: Color.Purple,
+                        description: "The average number of points scored in the category.",
+                    },
+                    {
+                        id: TepStatGroup.Opr,
+                        name: "OPR",
+                        color: Color.Purple,
+                        description: "Offensive Power Rating.",
+                    },
+                    {
+                        id: TepStatGroup.Min,
+                        name: "MIN",
+                        color: Color.Purple,
+                        description: "The lowest number of points scored in the category.",
+                    },
+                    {
+                        id: TepStatGroup.Max,
+                        name: "MAX",
+                        color: Color.Purple,
+                        description: "The highest number of points scored in the category.",
+                    },
+                    {
+                        id: TepStatGroup.Dev,
+                        name: "DEV",
+                        color: Color.Green,
+                        description: "The standard deviation of scores in the category.",
+                    },
+                ]
             ),
         ]);
     }

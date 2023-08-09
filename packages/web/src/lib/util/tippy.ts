@@ -20,3 +20,7 @@ export function matchTimeTip(
           }
         : HIDDEN_TIP;
 }
+
+export function maybeTip(content: string | null, theme: "light" | "dark") {
+    return content ? { content, theme } : HIDDEN_TIP;
+}

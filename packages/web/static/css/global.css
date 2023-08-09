@@ -19,6 +19,7 @@
     --md-pad: 8px;
     --lg-pad: 12px;
 
+    --xs-font-size: 10px;
     --sm-font-size: 12px;
     --md-font-size: 16px;
     --lg-font-size: 20px;
@@ -55,6 +56,7 @@
         --md-pad: 7px;
         --lg-pad: 11px;
 
+        --xs-font-size: 8px;
         --sm-font-size: 11px;
         --md-font-size: 14px;
         --lg-font-size: 18px;
@@ -79,6 +81,7 @@
         --md-pad: 6px;
         --lg-pad: 8px;
 
+        --xs-font-size: 6px;
         --sm-font-size: 8px;
         --md-font-size: 12px;
         --lg-font-size: 15px;

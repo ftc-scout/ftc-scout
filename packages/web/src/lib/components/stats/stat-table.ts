@@ -152,11 +152,25 @@ export const RANK_STATS = {
     }),
 };
 
-export class StatSetSection {
-    rows: string[];
-    columns: string[];
+export type StatSectionColumn = {
+    id: string;
+    name: string;
+    color: Color;
+    description: string | null;
+};
 
-    constructor(rows: string[], columns: string[]) {
+export type StatSectionRow = {
+    id: string;
+    name: string;
+};
+
+export class StatSetSection {
+    name: string;
+    rows: StatSectionRow[];
+    columns: StatSectionColumn[];
+
+    constructor(name: string, rows: StatSectionRow[], columns: StatSectionColumn[]) {
+        this.name = name;
         this.rows = rows;
         this.columns = columns;
     }

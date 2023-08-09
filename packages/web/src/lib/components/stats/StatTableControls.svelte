@@ -7,6 +7,8 @@
 </script>
 
 <script lang="ts">
+    import ViewStatsModal from "./view-stats/ViewStatsModal.svelte";
+
     import type { Readable } from "svelte/motion";
     import {
         RANK_STATS,
@@ -27,7 +29,17 @@
 
     export let shownStats: Readable<NonRankStatColumn<T>[]>;
     export let currentSort: Readable<{ id: string; dir: SortDir }>;
+
+    let viewStatsModalShown = false;
+    let viewStatsData: StatData<T>;
+
+    function rowClick(e: CustomEvent) {
+        viewStatsModalShown = true;
+        viewStatsData = e.detail;
+    }
 </script>
+
+<ViewStatsModal bind:shown={viewStatsModalShown} {stats} data={viewStatsData?.data} />
 
 <StatTable
     {data}
@@ -37,4 +49,5 @@
     rankStat={showRank ? RANK_STATS[rankTy] : null}
     on:change_sort
     on:move_column
+    on:row_click={rowClick}
 />

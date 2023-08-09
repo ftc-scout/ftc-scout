@@ -1,6 +1,7 @@
 <script lang="ts">
     import StatCell from "./StatCell.svelte";
     import type { StatColumn, StatData } from "./stat-table";
+    import { createEventDispatcher } from "svelte";
 
     type T = $$Generic;
 
@@ -8,9 +9,11 @@
     export let stats: StatColumn<T>[];
     export let focusedTeam: number | null;
     export let rankStat: StatColumn<T> | null;
+
+    let dispatch = createEventDispatcher();
 </script>
 
-<tr>
+<tr on:click={() => dispatch("row_click", data)}>
     {#if rankStat}
         <StatCell {data} stat={rankStat} {focusedTeam} />
     {/if}

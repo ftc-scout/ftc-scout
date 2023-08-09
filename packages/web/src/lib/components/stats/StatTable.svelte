@@ -18,7 +18,7 @@
     <StatHeader {stats} {currentSort} {rankStat} on:change_sort on:move_column />
     <tbody>
         {#each data as dataRow}
-            <StatRow data={dataRow} {stats} {focusedTeam} {rankStat} />
+            <StatRow data={dataRow} {stats} {focusedTeam} {rankStat} on:row_click />
         {/each}
     </tbody>
 </table>
