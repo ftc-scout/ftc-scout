@@ -1,3 +1,6 @@
+import { groupBySingle } from "@ftc-scout/common";
+import { titleCase } from "../../util/string";
+
 export const StatType = {
     Int: "int",
     Float: "float",
@@ -148,3 +151,34 @@ export const RANK_STATS = {
         getValue: (d) => ({ ty: StatType.Rank, val: d.filterSkipRank }),
     }),
 };
+
+export class StatSetSection {
+    rows: string[];
+    columns: string[];
+
+    constructor(rows: string[], columns: string[]) {
+        this.rows = rows;
+        this.columns = columns;
+    }
+
+    getId(rowId: string, columnId: string) {
+        return rowId + titleCase(columnId);
+    }
+}
+
+export class StatSet<T> {
+    allStats: NonRankStatColumn<T>[];
+    sections: StatSetSection[];
+
+    private allStatsRecord: Record<string, NonRankStatColumn<T>>;
+
+    constructor(allStats: NonRankStatColumn<T>[], sections: StatSetSection[]) {
+        this.allStats = allStats;
+        this.sections = sections;
+        this.allStatsRecord = groupBySingle(allStats, (s) => s.id);
+    }
+
+    getStat(id: string): NonRankStatColumn<T> {
+        return this.allStatsRecord[id];
+    }
+}

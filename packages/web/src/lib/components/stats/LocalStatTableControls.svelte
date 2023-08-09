@@ -1,19 +1,15 @@
 <script lang="ts">
     import { arrayMove } from "../../util/array";
-
     import { cycleSortDir, cycleSortDirNoNull } from "./SortButton.svelte";
-
     import { sortMixed } from "../../util/sorters";
-
-    import { groupBySingle } from "@ftc-scout/common";
-    import { RankTy, type NonRankStatColumn, type StatData } from "./stat-table";
+    import { RankTy, type NonRankStatColumn, type StatData, StatSet } from "./stat-table";
     import StatTableControls, { SortDir } from "./StatTableControls.svelte";
     import { writable } from "svelte/store";
 
     type T = $$Generic;
 
     export let data: T[];
-    export let allStats: NonRankStatColumn<T>[];
+    export let stats: StatSet<T>;
     export let focusedTeam: number | null;
 
     export let defaultStats: NonRankStatColumn<T>[];
@@ -25,8 +21,6 @@
     export let rankTy = RankTy.NoFilter;
     export let hideRankStats: string[] = [];
     $: showRank = hideRankStats.indexOf($currentSort.id) == -1;
-
-    $: allStatsRecord = groupBySingle(allStats, (s) => s.id);
 
     function changeSort(id: string) {
         let oldDir = $currentSort.id == id ? $currentSort.dir : null;
@@ -61,7 +55,7 @@
 
     function sortAndRank(data: T[], sorter: NonRankStatColumn<T>, dir: SortDir): StatData<T>[] {
         let sorted = data
-            .sort(statSortFn(allStatsRecord[defaultSort.id], defaultSort.dir))
+            .sort(statSortFn(stats.getStat(defaultSort.id), defaultSort.dir))
             .sort(statSortFn(sorter, dir))
             .map((s) => ({
                 filterRank: 0,
@@ -76,12 +70,12 @@
         return sorted;
     }
 
-    $: rankedData = sortAndRank(data, allStatsRecord[$currentSort.id], $currentSort.dir);
+    $: rankedData = sortAndRank(data, stats.getStat($currentSort.id), $currentSort.dir);
 </script>
 
 <StatTableControls
     data={rankedData}
-    {allStats}
+    {stats}
     {shownStats}
     {currentSort}
     {focusedTeam}

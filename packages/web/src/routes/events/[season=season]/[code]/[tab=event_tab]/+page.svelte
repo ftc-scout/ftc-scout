@@ -102,7 +102,7 @@
             </TabContent>
 
             <TabContent name="rankings">
-                <Rankings data={stats} {focusedTeam} />
+                <Rankings {season} data={stats} {focusedTeam} />
             </TabContent>
 
             <TabContent name="teams">

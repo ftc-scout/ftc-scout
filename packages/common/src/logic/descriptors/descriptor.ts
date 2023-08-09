@@ -144,23 +144,35 @@ export class MatchScoreComponent {
 }
 
 export class TepComponent {
-    dbName: string;
-    apiName: string;
     tradOnly: boolean;
     isIndividual: boolean;
+    id: string;
+
+    dbName: string;
+    apiName: string;
+    columnPrefix: string;
+
     make: (ms: Record<string, string>, station: Station) => number;
 
     constructor(opts: {
-        dbName: string;
-        apiName: string;
         tradOnly: boolean;
         isIndividual: boolean;
+        id: string;
+
+        dbName: string;
+        apiName: string;
+        columnPrefix: string;
+
         make: (ms: Record<string, any>, station: Station) => number;
     }) {
-        this.dbName = opts.dbName;
-        this.apiName = opts.apiName;
         this.tradOnly = opts.tradOnly;
         this.isIndividual = opts.isIndividual;
+        this.id = opts.id;
+
+        this.dbName = opts.dbName;
+        this.apiName = opts.apiName;
+        this.columnPrefix = opts.columnPrefix;
+
         this.make = opts.make;
     }
 }
@@ -228,20 +240,25 @@ export class DescriptorColumn {
         return this;
     }
 
-    addTep(
-        opts: {
-            dbName?: string;
-            apiName?: string;
-            isIndividual?: boolean;
-            make?: (ms: Record<string, any>, station: Station) => number;
-        } = {}
-    ): DescriptorColumn {
+    addTep(opts: {
+        isIndividual?: boolean;
+
+        dbName?: string;
+        apiName?: string;
+        columnPrefix: string;
+
+        make?: (ms: Record<string, any>, station: Station) => number;
+    }): DescriptorColumn {
         let msName = this.ms?.tradApiName ?? this.baseName;
         this.tep = new TepComponent({
-            dbName: opts.dbName ?? this.baseName,
-            apiName: opts.apiName ?? this.baseName,
             tradOnly: !!this.tradOnly,
             isIndividual: !!opts.isIndividual,
+            id: this.id,
+
+            dbName: opts.dbName ?? this.baseName,
+            apiName: opts.apiName ?? this.baseName,
+            columnPrefix: opts.columnPrefix,
+
             make: opts.make ?? ((ms) => ms[msName]),
         });
         return this;
