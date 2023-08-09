@@ -9,6 +9,7 @@
 
     export let stats: StatColumn<T>[];
     export let currentSort: { id: string; dir: SortDir };
+    export let rankStat: StatColumn<T> | null;
 
     let dispatch = createEventDispatcher();
 
@@ -41,7 +42,7 @@
         }
 
         function recalculateOffsets() {
-            offsetsAndWidths = elements.map(getOffsetAndWidth);
+            if (moving) offsetsAndWidths = elements.map(getOffsetAndWidth);
         }
 
         function calcNewPosition(): number {
@@ -175,6 +176,10 @@
 </script>
 
 <thead use:stickTableHead>
+    {#if rankStat}
+        <th class="{rankStat.color} empty" />
+    {/if}
+
     {#each stats as stat, i}
         {@const sort = stat.id == currentSort.id ? currentSort.dir : null}
         <th
@@ -204,6 +209,10 @@
         cursor: grab;
 
         color: var(--stat-text-color);
+    }
+
+    .empty {
+        cursor: inherit;
     }
 
     @media (max-width: 600px) {

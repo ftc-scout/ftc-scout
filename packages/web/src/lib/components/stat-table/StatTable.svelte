@@ -11,13 +11,14 @@
 
     export let stats: StatColumn<T>[];
     export let currentSort: { id: string; dir: SortDir };
+    export let rankStat: StatColumn<T> | null;
 </script>
 
 <table>
-    <StatHeader {stats} {currentSort} on:change_sort on:move_column />
+    <StatHeader {stats} {currentSort} {rankStat} on:change_sort on:move_column />
     <tbody>
         {#each data as dataRow}
-            <StatRow data={dataRow} {stats} {focusedTeam} />
+            <StatRow data={dataRow} {stats} {focusedTeam} {rankStat} />
         {/each}
     </tbody>
 </table>

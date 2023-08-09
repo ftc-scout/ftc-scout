@@ -12,7 +12,7 @@
     let stats: NonRankStatColumn<DataTy>[] = [
         new NonRankStatColumn({
             color: Color.White,
-            id: "Rank",
+            id: "eventRank",
             columnName: "Rank",
             dialogName: "Rank",
             titleName: "Rank",
@@ -71,5 +71,6 @@
     {focusedTeam}
     allStats={stats}
     defaultStats={stats}
-    defaultSort={{ id: "Rank", dir: SortDir.Asc }}
+    defaultSort={{ id: "eventRank", dir: SortDir.Asc }}
+    hideRankStats={["eventRank"]}
 />

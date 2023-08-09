@@ -6,7 +6,7 @@
     import { sortMixed } from "../../util/sorters";
 
     import { groupBySingle } from "@ftc-scout/common";
-    import type { NonRankStatColumn, StatData } from "./stat-table";
+    import { RankTy, type NonRankStatColumn, type StatData } from "./stat-table";
     import StatTableControls, { SortDir } from "./StatTableControls.svelte";
     import { writable } from "svelte/store";
 
@@ -21,6 +21,10 @@
 
     let shownStats = writable(defaultStats);
     let currentSort = writable(defaultSort);
+
+    export let rankTy = RankTy.NoFilter;
+    export let hideRankStats: string[] = [];
+    $: showRank = hideRankStats.indexOf($currentSort.id) == -1;
 
     $: allStatsRecord = groupBySingle(allStats, (s) => s.id);
 
@@ -81,6 +85,8 @@
     {shownStats}
     {currentSort}
     {focusedTeam}
+    {rankTy}
+    {showRank}
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
 />

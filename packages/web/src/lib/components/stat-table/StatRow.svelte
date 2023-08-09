@@ -7,9 +7,14 @@
     export let data: StatData<T>;
     export let stats: StatColumn<T>[];
     export let focusedTeam: number | null;
+    export let rankStat: StatColumn<T> | null;
 </script>
 
 <tr>
+    {#if rankStat}
+        <StatCell {data} stat={rankStat} {focusedTeam} />
+    {/if}
+
     {#each stats as stat}
         <StatCell {data} {stat} {focusedTeam} />
     {/each}

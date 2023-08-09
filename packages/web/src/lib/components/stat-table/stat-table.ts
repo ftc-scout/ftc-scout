@@ -101,3 +101,50 @@ export type StatData<T> = {
     filterSkipRank: number;
     data: T;
 };
+
+export const RankTy = {
+    NoFilter: "NoFilter",
+    Filter: "Filter",
+    NoFilterSkip: "NoFilterSkip",
+    FilterSkip: "FilterSkip",
+} as const;
+export type RankTy = (typeof RankTy)[keyof typeof RankTy];
+
+export const RANK_STATS = {
+    [RankTy.NoFilter]: new StatColumn<any>({
+        id: "noFilterRank",
+        columnName: "Rank",
+        dialogName: "Rank",
+        titleName: "No Filter Rank",
+        color: Color.White,
+        ty: StatType.Rank,
+        getValue: (d) => ({ ty: StatType.Rank, val: d.noFilterRank }),
+    }),
+    [RankTy.Filter]: new StatColumn<any>({
+        id: "filterRank",
+        columnName: "Rank",
+        dialogName: "Rank",
+        titleName: "Filter Rank",
+        color: Color.White,
+        ty: StatType.Rank,
+        getValue: (d) => ({ ty: StatType.Rank, val: d.filterRank }),
+    }),
+    [RankTy.NoFilterSkip]: new StatColumn<any>({
+        id: "noFilterSkipRank",
+        columnName: "Rank",
+        dialogName: "Rank",
+        titleName: "No Filter Skipping Rank",
+        color: Color.White,
+        ty: StatType.Rank,
+        getValue: (d) => ({ ty: StatType.Rank, val: d.noFilterSkipRank }),
+    }),
+    [RankTy.FilterSkip]: new StatColumn<any>({
+        id: "filterSkipRank",
+        columnName: "Rank",
+        dialogName: "Rank",
+        titleName: "Filter Skipping Rank",
+        color: Color.White,
+        ty: StatType.Rank,
+        getValue: (d) => ({ ty: StatType.Rank, val: d.filterSkipRank }),
+    }),
+};
