@@ -8,7 +8,6 @@
 
 <script lang="ts">
     import ViewStatsModal from "./view-stats/ViewStatsModal.svelte";
-
     import type { Readable } from "svelte/motion";
     import {
         RANK_STATS,

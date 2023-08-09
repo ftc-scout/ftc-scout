@@ -1,5 +1,3 @@
-// import { prettyPrintOrdinal } from "./pretty-print-ordinal";
-
 import { AwardType } from "../graphql/generated/graphql-operations";
 import { prettyPrintOrdinal } from "./number";
 
