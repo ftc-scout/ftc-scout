@@ -27,7 +27,7 @@
         {:else if value.ty == "record"}
             {value.wins}-{value.losses}-{value.ties}
         {:else if value.ty == "team"}
-            {value.number} - <em style="padding-left: var(--sm-gap);">{value.name}</em>
+            <span>{value.number} - <em style="padding-left: var(--sm-gap);">{value.name}</em></span>
         {/if}
     </div>
 </td>
@@ -48,6 +48,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
+        text-align: center;
     }
 
     .purple {

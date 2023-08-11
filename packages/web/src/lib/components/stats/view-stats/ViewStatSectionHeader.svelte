@@ -34,18 +34,16 @@
 <style>
     thead {
         display: grid;
-        grid-template-columns: 1fr repeat(var(--col-count), minmax(0, 75px));
-    }
-
-    @media (max-width: 700px) {
-        thead {
-            grid-template-columns: 1fr repeat(var(--col-count), minmax(0, 50px));
-        }
+        grid-template-columns:
+            minmax(var(--name-min-len), 1fr)
+            repeat(var(--col-count), var(--col-width));
     }
 
     th {
         padding: var(--md-pad);
         font-weight: bold;
+
+        white-space: nowrap;
     }
 
     .purple {

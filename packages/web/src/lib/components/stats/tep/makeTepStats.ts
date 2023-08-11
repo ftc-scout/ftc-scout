@@ -75,6 +75,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
     type T = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
 
     let key = `${season}-${remote}` as const;
+    let descriptor = DESCRIPTORS[season];
     if (!(season in statSetCache)) {
         let soloStats = [
             new NonRankStatColumn({
@@ -91,37 +92,117 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 }),
             }),
             new NonRankStatColumn({
-                color: Color.Green,
-                id: "record",
-                columnName: "Record",
-                dialogName: "Record",
-                titleName: "Record",
-                ty: StatType.Record,
+                color: Color.White,
+                id: "eventRank",
+                columnName: "Rank",
+                dialogName: "Ranking",
+                titleName: "Event Ranking",
+                ty: StatType.Rank,
+                getNonRankValue: (d: any) => ({ ty: "rank", val: d.stats.rank }),
+            }),
+            new NonRankStatColumn({
+                color: Color.White,
+                id: "rankingPoints",
+                columnName: "RP",
+                dialogName: "Ranking Points",
+                titleName: "Ranking Points",
+                ty: descriptor.rankings.rp == "Record" ? StatType.Float : StatType.Int,
                 getNonRankValue: (d: any) => ({
-                    ty: "record",
-                    wins: d.stats.wins,
-                    losses: d.stats.losses,
-                    ties: d.stats.ties,
+                    ty: descriptor.rankings.rp == "Record" ? StatType.Float : StatType.Int,
+                    val: d.stats.rp,
                 }),
             }),
+            new NonRankStatColumn({
+                color: Color.White,
+                id: "tb1",
+                columnName: "TBP",
+                dialogName: "Tie Breaker Points",
+                titleName: "Tie Breaker Points",
+                ty: StatType.Float,
+                getNonRankValue: (d: any) => ({ ty: "float", val: d.stats.tb1 }),
+            }),
+            ...(descriptor.rankings.tb == "LosingScore"
+                ? []
+                : [
+                      new NonRankStatColumn({
+                          color: Color.White,
+                          id: "tb2",
+                          columnName: "TBP2",
+                          dialogName: "Tie Breaker Points 2",
+                          titleName: "Tie Breaker Points 2",
+                          ty: StatType.Float,
+                          getNonRankValue: (d: any) => ({ ty: "float", val: d.stats.tb2 }),
+                      }),
+                  ]),
+            new NonRankStatColumn({
+                color: Color.Green,
+                id: "played",
+                columnName: "Played",
+                dialogName: "Matches Played",
+                titleName: "Matches Played",
+                ty: StatType.Int,
+                getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.qualMatchesPlayed }),
+            }),
+            ...(remote
+                ? []
+                : [
+                      new NonRankStatColumn({
+                          color: Color.Green,
+                          id: "wins",
+                          columnName: "Wins",
+                          dialogName: "Wins",
+                          titleName: "Wins",
+                          ty: StatType.Int,
+                          getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.wins }),
+                      }),
+                      new NonRankStatColumn({
+                          color: Color.Green,
+                          id: "losses",
+                          columnName: "Losses",
+                          dialogName: "Losses",
+                          titleName: "Losses",
+                          ty: StatType.Int,
+                          getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.losses }),
+                      }),
+                      new NonRankStatColumn({
+                          color: Color.Green,
+                          id: "ties",
+                          columnName: "Ties",
+                          dialogName: "Ties",
+                          titleName: "Ties",
+                          ty: StatType.Int,
+                          getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.ties }),
+                      }),
+                      new NonRankStatColumn({
+                          color: Color.Green,
+                          id: "eventRecord",
+                          columnName: "Record",
+                          dialogName: "Record",
+                          titleName: "Record",
+                          ty: StatType.Record,
+                          getNonRankValue: (d: any) => ({
+                              ty: "record",
+                              wins: d.stats.wins,
+                              losses: d.stats.losses,
+                              ties: d.stats.ties,
+                          }),
+                      }),
+                  ]),
         ];
 
         let soloSection = new StatSetSection(
             "Team's Event Performance",
-            [
-                { val: { id: "team", name: "Team" }, children: [] },
-                { val: { id: "record", name: "Record" }, children: [] },
-            ],
+            soloStats.map((s) => ({ val: { id: s.id, name: s.dialogName }, children: [] })),
             [{ id: "", name: "", color: Color.Purple, description: null }]
         );
 
-        let groupStats = DESCRIPTORS[season]
+        let groupStats = descriptor
             .tepColumns()
             .flatMap((t) => TEP_STAT_GROUPS.map((g) => t.getStatColumn(g)));
 
         let groupSection = new StatSetSection(
             "Match Scores",
-            filterMapTreeList(DESCRIPTORS[season].getTepTree(remote), (t) => ({
+            filterMapTreeList(descriptor.getTepTree(remote), (t) => ({
                 id: t.id,
                 name: t.dialogName,
             })),

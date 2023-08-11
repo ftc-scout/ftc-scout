@@ -84,9 +84,7 @@ export const Descriptor2020 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
-                remoteDisplayName: "Navigation Points",
                 getValue: (ms) => ms.autoNav2020_1 * 5,
-                getValueRemote: (ms) => ms.autoNav2020 * 5,
             })
     )
     .addColumn(
@@ -299,7 +297,7 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "egWobbleRingPoints" })
             .addMatchScore({ fromSelf: (self) => self.egWobbleRings * 5, dataTy: Int8DTy })
             .addScoreModal({
-                displayName: "Wobble Goal Points",
+                displayName: "Wobble Ring Points",
                 getTitle: (ms) => nOf(ms.egWobbleRings, "Ring"),
             })
             .addTep({ columnPrefix: "Endgame Wobble Rings" })
@@ -320,7 +318,7 @@ export const Descriptor2020 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "minorsCommittedPoints" })
             .addScoreModal({
-                displayName: "Majors Points",
+                displayName: "Minors Points",
                 getValue: (ms) => ms.minorsCommitted * -10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })
@@ -418,6 +416,8 @@ export const Descriptor2020 = new Descriptor({
 
     .addTree(
         [
+            { val: "totalPoints", children: [] },
+            { val: "totalPointsNp", children: [] },
             {
                 val: "autoPoints",
                 children: [
@@ -426,6 +426,7 @@ export const Descriptor2020 = new Descriptor({
                         children: [
                             { val: "autoNav1", children: [] },
                             { val: "autoNav2", children: [] },
+                            { val: "autoNavPointsIndividual", children: [] },
                         ],
                     },
                     {
@@ -471,10 +472,12 @@ export const Descriptor2020 = new Descriptor({
             },
         ],
         [
+            { val: "totalPoints", children: [] },
+            { val: "totalPointsNp", children: [] },
             {
                 val: "autoPoints",
                 children: [
-                    { val: "autoNav1", children: [] },
+                    { val: "autoNavPoints", children: [] },
                     {
                         val: "autoTowerPoints",
                         children: [

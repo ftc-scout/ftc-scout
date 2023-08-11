@@ -208,6 +208,7 @@ fragment FullTeamEventStats2021TradGroup on TeamEventStats2021TradGroup {
     autoFreight1Points
     autoFreight2Points
     autoFreight3Points
+    autoFreightStoragePoints
     autoBonusPoints
     autoBonusPointsIndividual
     dcAllianceHubPoints
@@ -240,6 +241,7 @@ fragment FullTeamEventStats2021RemoteGroup on TeamEventStats2021RemoteGroup {
     autoFreight1Points
     autoFreight2Points
     autoFreight3Points
+    autoFreightStoragePoints
     autoBonusPoints
     autoBonusPointsIndividual
     dcAllianceHubPoints
@@ -313,7 +315,11 @@ fragment FullTeamEventStats2020RemoteGroup on TeamEventStats2020RemoteGroup {
 }
 
 fragment FullTeamEventStats2019Group on TeamEventStats2019Group {
+    majorsCommittedPoints
+    minorsCommittedPoints
     penaltyPointsCommitted
+    majorsByOppPoints
+    minorsByOppPoints
     penaltyPointsByOpp
     autoNavPoints
     autoNavPointsIndividual

@@ -32,8 +32,17 @@
         cursor: pointer;
     }
 
-    tr:hover:not(:has(td.inner-hover:hover)) {
-        outline: 2px solid var(--neutral-team-color);
-        z-index: var(--focused-row-zi);
+    @supports selector(tr:has(td)) {
+        tr:hover:not(:has(td.inner-hover:hover)) {
+            outline: 2px solid var(--neutral-team-color);
+            z-index: var(--focused-row-zi);
+        }
+    }
+
+    @supports not selector(tr:has(td)) {
+        tr:hover {
+            outline: 2px solid var(--neutral-team-color);
+            z-index: var(--focused-row-zi);
+        }
     }
 </style>

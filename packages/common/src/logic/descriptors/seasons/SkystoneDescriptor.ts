@@ -188,12 +188,38 @@ export const Descriptor2019 = new Descriptor({
             })
     )
     .addColumn(
+        new DescriptorColumn({ name: "majorsCommittedPoints" })
+            .addScoreModal({
+                displayName: "Majors Points",
+                getValue: (ms) => ms.majorsCommitted * 20,
+                getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
+            })
+            .addTep({
+                make: (ms) => ms.majorsCommitted * 20,
+                columnPrefix: "Majors Committed",
+                dialogName: "Majors",
+            })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsCommittedPoints" })
+            .addScoreModal({
+                displayName: "Minors Points",
+                getValue: (ms) => ms.minorsCommitted * 5,
+                getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
+            })
+            .addTep({
+                make: (ms) => ms.minorsCommitted * 5,
+                columnPrefix: "Minors Committed",
+                dialogName: "Minors",
+            })
+    )
+    .addColumn(
         new DescriptorColumn({ name: "penaltyPointsCommitted" })
             .addMatchScore({
                 fromSelf: (self) => self.minorsCommitted * 5 + self.majorsCommitted * 20,
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Penalties Committed", dialogName: "Penalty Points Committed" })
+            .addTep({ columnPrefix: "Penalties Committed", dialogName: "Penalty Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "minorsByOpp" })
@@ -206,6 +232,24 @@ export const Descriptor2019 = new Descriptor({
             .finish()
     )
     .addColumn(
+        new DescriptorColumn({ name: "majorsByOppPoints" })
+            .addTep({
+                make: (ms) => ms.majorsByOpp * 20,
+                columnPrefix: "Opp Majors Committed",
+                dialogName: "Majors",
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsByOppPoints" })
+            .addTep({
+                make: (ms) => ms.minorsByOpp * 5,
+                columnPrefix: "Opp Minors Committed",
+                dialogName: "Minors",
+            })
+            .finish()
+    )
+    .addColumn(
         new DescriptorColumn({ name: "penaltyPointsByOpp" })
             .addMatchScore({
                 fromSelf: (self) => self.minorsByOpp * 5 + self.majorsByOpp * 20,
@@ -214,7 +258,7 @@ export const Descriptor2019 = new Descriptor({
             .addScoreModal({ displayName: "Penalties" })
             .addTep({
                 columnPrefix: "Opp Penalties Committed",
-                dialogName: "Opponent Penalty Points",
+                dialogName: "Opp Penalty Points",
             })
     )
     .addColumn(
@@ -389,6 +433,8 @@ export const Descriptor2019 = new Descriptor({
     )
 
     .addTree([
+        { val: "totalPoints", children: [] },
+        { val: "totalPointsNp", children: [] },
         {
             val: "autoPoints",
             children: [
@@ -407,6 +453,7 @@ export const Descriptor2019 = new Descriptor({
                     children: [
                         { val: "autoNav1", children: [] },
                         { val: "autoNav2", children: [] },
+                        { val: "autoNavPointsIndividual", children: [] },
                     ],
                 },
             ],
@@ -422,6 +469,7 @@ export const Descriptor2019 = new Descriptor({
                     ],
                 },
                 { val: "dcPlacementPoints", children: [] },
+                { val: "skyscraperBonusPoints", children: [] },
             ],
         },
         {
@@ -432,6 +480,7 @@ export const Descriptor2019 = new Descriptor({
                     children: [
                         { val: "capLevel1", children: [] },
                         { val: "capLevel2", children: [] },
+                        { val: "cappingPointsIndividual", children: [] },
                     ],
                 },
                 { val: "egFoundationMovedPoints", children: [] },
@@ -440,15 +489,25 @@ export const Descriptor2019 = new Descriptor({
                     children: [
                         { val: "egParked1", children: [] },
                         { val: "egParked2", children: [] },
+                        { val: "egParkPointsIndividual", children: [] },
                     ],
                 },
             ],
         },
         {
+            val: "penaltyPointsCommitted",
+            children: [
+                { val: "majorsCommittedPoints", children: [] },
+                { val: "minorsCommittedPoints", children: [] },
+            ],
+        },
+        {
             val: "penaltyPointsByOpp",
             children: [
-                { val: "majorsCommitted", children: [] },
-                { val: "minorsCommitted", children: [] },
+                { val: "majorsCommittedPoints", for: "sm", children: [] },
+                { val: "minorsCommittedPoints", for: "sm", children: [] },
+                { val: "majorsByOppPoints", for: "tep", children: [] },
+                { val: "minorsByOppPoints", for: "tep", children: [] },
             ],
         },
     ])

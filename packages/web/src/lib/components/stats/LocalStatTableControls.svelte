@@ -12,10 +12,10 @@
     export let stats: StatSet<T>;
     export let focusedTeam: number | null;
 
-    export let defaultStats: NonRankStatColumn<T>[];
+    export let defaultStats: string[];
     export let defaultSort: { id: string; dir: SortDir };
 
-    let shownStats = writable(defaultStats);
+    let shownStats = writable(defaultStats.map((s) => stats.getStat(s)));
     let currentSort = writable(defaultSort);
 
     export let rankTy = RankTy.NoFilter;

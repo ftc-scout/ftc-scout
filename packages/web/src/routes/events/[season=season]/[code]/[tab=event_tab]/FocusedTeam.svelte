@@ -19,7 +19,7 @@
     $: preloadData(href);
 
     $: stats = team.stats;
-    $: useNp = !DESCRIPTORS[season].pensSubtract || remote;
+    $: useNp = !(DESCRIPTORS[season].pensSubtract || remote);
     $: np = useNp ? "np" : "";
     $: npStat = useNp ? ("totalPointsNp" as const) : ("totalPoints" as const);
 </script>

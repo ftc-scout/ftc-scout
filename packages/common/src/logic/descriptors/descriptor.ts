@@ -9,26 +9,32 @@ type RankingsMethod = {
     tb: "AutoEndgameTot" | "AutoEndgameAvg" | "LosingScore";
 };
 
-export type Tree<T> = {
+export type Tree<T, F = never> = {
     val: T;
-    children: Tree<T>[];
+    for?: F;
+    children: Tree<T, F>[];
 };
 
-export function filterMapTree<T, U>(
-    t: Tree<T>,
-    mapper: (_: T) => U | undefined
+export function filterMapTree<T, F, U>(
+    t: Tree<T, F>,
+    mapper: (_: T) => U | undefined,
+    f: F | undefined = undefined
 ): Tree<U> | undefined {
     let val = mapper(t.val);
-    return val
+    return val && (t.for == undefined || t.for == f)
         ? {
               val,
-              children: t.children.map((e) => filterMapTree(e, mapper)).filter(notEmpty),
+              children: t.children.map((e) => filterMapTree(e, mapper, f)).filter(notEmpty),
           }
         : undefined;
 }
 
-export function filterMapTreeList<T, U>(ts: Tree<T>[], mapper: (_: T) => U | undefined): Tree<U>[] {
-    return ts.map((t) => filterMapTree(t, mapper)).filter(notEmpty);
+export function filterMapTreeList<T, F, U>(
+    ts: Tree<T, F>[],
+    mapper: (_: T) => U | undefined,
+    f: F | undefined = undefined
+): Tree<U>[] {
+    return ts.map((t) => filterMapTree(t, mapper, f)).filter(notEmpty);
 }
 
 export class Descriptor {
@@ -69,12 +75,19 @@ export class Descriptor {
         return this;
     }
 
-    addTree(trad: Tree<string>[], remote: Tree<string>[] = []): Descriptor {
-        this.scoreModalTree = filterMapTreeList(trad, (id) => this.columnsMap[id]?.scoreM);
-        this.scoreModalTreeRemote = filterMapTreeList(remote, (id) => this.columnsMap[id]?.scoreM);
+    addTree(
+        trad: Tree<string, "sm" | "tep">[],
+        remote: Tree<string, "sm" | "tep">[] = []
+    ): Descriptor {
+        this.scoreModalTree = filterMapTreeList(trad, (id) => this.columnsMap[id]?.scoreM, "sm");
+        this.scoreModalTreeRemote = filterMapTreeList(
+            remote,
+            (id) => this.columnsMap[id]?.scoreM,
+            "sm"
+        );
 
-        this.tepTree = filterMapTreeList(trad, (id) => this.columnsMap[id]?.tep);
-        this.tepTreeRemote = filterMapTreeList(remote, (id) => this.columnsMap[id]?.tep);
+        this.tepTree = filterMapTreeList(trad, (id) => this.columnsMap[id]?.tep, "tep");
+        this.tepTreeRemote = filterMapTreeList(remote, (id) => this.columnsMap[id]?.tep, "tep");
 
         return this;
     }

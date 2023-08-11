@@ -3,7 +3,7 @@
 
     import type { Tree } from "@ftc-scout/common";
     import type { StatSectionRow, StatSet, StatSetSection } from "../stat-table";
-    import ViewData from "./ViewCell.svelte";
+    import ViewCell from "./ViewCell.svelte";
     import ExpandButton from "../../ExpandButton.svelte";
 
     type T = $$Generic;
@@ -37,7 +37,7 @@
             {row.val.name}
         </td>
         {#each section.columns as column}
-            <ViewData {data} {stats} {section} row={row.val} {column} />
+            <ViewCell {data} {stats} {section} row={row.val} {column} />
         {/each}
     </tr>
 {/if}
@@ -49,17 +49,14 @@
 <style>
     tr {
         display: grid;
-        grid-template-columns: 6fr repeat(var(--col-count), minmax(var(--data-max), 75px));
-    }
-
-    @media (max-width: 700px) {
-        tr {
-            grid-template-columns: 6fr repeat(var(--col-count), minmax(var(--data-max), 50px));
-        }
+        grid-template-columns:
+            minmax(var(--name-min-len), 1fr)
+            repeat(var(--col-count), minmax(var(--data-max), var(--col-width)));
     }
 
     td {
         display: block;
+        white-space: nowrap;
     }
 
     .name {
@@ -67,6 +64,10 @@
 
         padding: var(--md-pad);
         padding-left: calc((var(--depth) * 2 + 3) * var(--md-gap));
+    }
+
+    :global(.no-children) .name {
+        padding-left: var(--md-pad);
     }
 
     .single-col .name,

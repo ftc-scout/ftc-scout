@@ -198,7 +198,6 @@ export const Descriptor2021 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
-                remoteDisplayName: "Navigation Points",
                 getValue: (ms) => autoNav2021Points(ms.autoNav2021_1),
                 getTitle: (ms) => formatAutoNav2021(ms.autoNav2021_1),
             })
@@ -226,13 +225,8 @@ export const Descriptor2021 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
-                remoteDisplayName: "Bonus Points",
                 getValue: (ms) => autoBonusPoints2021(ms.autoBonus1, ms.barcodeElement1),
-                getValueRemote: (ms) => autoBonusPoints2021(ms.autoBonus, ms.barcodeElement),
-                getTitle: (ms) =>
-                    "autoBonus1" in ms
-                        ? formatAutoBonusPoints2021(ms.autoBonus1, ms.barcodeElement1)
-                        : formatAutoBonusPoints2021(ms.autoBonus, ms.barcodeElement),
+                getTitle: (ms) => formatAutoBonusPoints2021(ms.autoBonus1, ms.barcodeElement1),
             })
     )
     .addColumn(
@@ -248,16 +242,10 @@ export const Descriptor2021 = new Descriptor({
             })
     )
     .addColumn(
-        new DescriptorColumn({ name: "autoStorageFreight" })
-            .addMatchScore({
-                fromApi: (api: Api) => api.autoStorageFreight,
-                dataTy: Int8DTy,
-            })
-            .addScoreModal({
-                displayName: "Storage",
-                getValue: (ms) => ms.autoStorageFreight * 2,
-                getTitle: (ms) => nOf(ms.autoStorageFreight, "Freight", "Freight"),
-            })
+        new DescriptorColumn({ name: "autoStorageFreight" }).addMatchScore({
+            fromApi: (api: Api) => api.autoStorageFreight,
+            dataTy: Int8DTy,
+        })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoFreight1" })
@@ -340,9 +328,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Robot 1",
                 remoteDisplayName: "Parking Points",
                 getValue: (ms) => egPark2021Points(ms.egPark1),
-                getValueRemote: (ms) => egPark2021Points(ms.egPark),
-                getTitle: (ms) =>
-                    "egPark1" in ms ? formatEgPark2021(ms.egPark1) : formatEgPark2021(ms.egPark),
+                getTitle: (ms) => formatEgPark2021(ms.egPark1),
             })
     )
     .addColumn(
@@ -377,8 +363,8 @@ export const Descriptor2021 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "autoCarouselPoints" })
             .addMatchScore({ fromSelf: (self) => self.autoCarousel * 10, dataTy: Int8DTy })
-            .addTep({ columnPrefix: "Auto Carousel" })
             .addScoreModal({ displayName: "Carousel Points" })
+            .addTep({ columnPrefix: "Auto Carousel" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoNavPoints" })
@@ -400,6 +386,7 @@ export const Descriptor2021 = new Descriptor({
                 getValue: (ms) =>
                     autoNav2021Points(ms.autoNav2021_1) + autoNav2021Points(ms.autoNav2021_2),
                 getValueRemote: (ms) => autoNav2021Points(ms.autoNav2021),
+                getTitle: (ms) => ("autoNav2021" in ms ? formatAutoNav2021(ms.autoNav2021) : ""),
             })
             .addTep({ columnPrefix: "Auto Nav" })
     )
@@ -457,6 +444,15 @@ export const Descriptor2021 = new Descriptor({
             .addTep({ make: (ms) => ms.autoFreight3 * 6, columnPrefix: "Auto Freight 3" })
     )
     .addColumn(
+        new DescriptorColumn({ name: "autoFreightStoragePoints" })
+            .addScoreModal({
+                displayName: "Storage",
+                getValue: (ms) => ms.autoStorageFreight * 2,
+                getTitle: (ms) => nOf(ms.autoStorageFreight, "Freight", "Freight"),
+            })
+            .addTep({ make: (ms) => ms.autoStorageFreight * 2, columnPrefix: "Auto Storage" })
+    )
+    .addColumn(
         new DescriptorColumn({ name: "autoBonusPoints" })
             .addMatchScore({
                 fromSelf: (self) => {
@@ -471,7 +467,13 @@ export const Descriptor2021 = new Descriptor({
                 },
                 dataTy: Int8DTy,
             })
-            .addScoreModal({ displayName: "Bonus Points" })
+            .addScoreModal({
+                displayName: "Bonus Points",
+                getTitle: (ms) =>
+                    "autoBonus" in ms
+                        ? formatAutoBonusPoints2021(ms.autoBonus, ms.barcodeElement)
+                        : "",
+            })
             .addTep({ columnPrefix: "Bonus" })
     )
     .addColumn(
@@ -579,7 +581,10 @@ export const Descriptor2021 = new Descriptor({
                 },
                 dataTy: Int8DTy,
             })
-            .addScoreModal({ displayName: "Parking Points" })
+            .addScoreModal({
+                displayName: "Parking Points",
+                getTitle: (ms) => ("egPark" in ms ? formatEgPark2021(ms.egPark) : ""),
+            })
             .addTep({ columnPrefix: "Endgame Park" })
     )
     .addColumn(
@@ -622,7 +627,7 @@ export const Descriptor2021 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "minorsCommittedPoints" })
             .addScoreModal({
-                displayName: "Majors Points",
+                displayName: "Minors Points",
                 getValue: (ms) => ms.minorsCommitted * -10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })
@@ -697,6 +702,8 @@ export const Descriptor2021 = new Descriptor({
 
     .addTree(
         [
+            { val: "totalPoints", children: [] },
+            { val: "totalPointsNp", children: [] },
             {
                 val: "autoPoints",
                 children: [
@@ -706,7 +713,7 @@ export const Descriptor2021 = new Descriptor({
                             { val: "autoFreight1Points", children: [] },
                             { val: "autoFreight2Points", children: [] },
                             { val: "autoFreight3Points", children: [] },
-                            { val: "autoStorageFreight", children: [] },
+                            { val: "autoFreightStoragePoints", children: [] },
                         ],
                     },
                     { val: "autoCarouselPoints", children: [] },
@@ -715,6 +722,7 @@ export const Descriptor2021 = new Descriptor({
                         children: [
                             { val: "autoNav1", children: [] },
                             { val: "autoNav2", children: [] },
+                            { val: "autoNavPointsIndividual", children: [] },
                         ],
                     },
                     {
@@ -722,6 +730,7 @@ export const Descriptor2021 = new Descriptor({
                         children: [
                             { val: "autoBonus1", children: [] },
                             { val: "autoBonus2", children: [] },
+                            { val: "autoBonusPointsIndividual", children: [] },
                         ],
                     },
                 ],
@@ -751,6 +760,7 @@ export const Descriptor2021 = new Descriptor({
                         children: [
                             { val: "egPark1", children: [] },
                             { val: "egPark2", children: [] },
+                            { val: "egParkPointsIndividual", children: [] },
                         ],
                     },
                     { val: "allianceBalancedPoints", children: [] },
@@ -767,6 +777,8 @@ export const Descriptor2021 = new Descriptor({
         ],
 
         [
+            { val: "totalPoints", children: [] },
+            { val: "totalPointsNp", children: [] },
             {
                 val: "autoPoints",
                 children: [
@@ -776,12 +788,12 @@ export const Descriptor2021 = new Descriptor({
                             { val: "autoFreight1Points", children: [] },
                             { val: "autoFreight2Points", children: [] },
                             { val: "autoFreight3Points", children: [] },
-                            { val: "autoStorageFreight", children: [] },
+                            { val: "autoFreightStoragePoints", children: [] },
                         ],
                     },
                     { val: "autoCarouselPoints", children: [] },
-                    { val: "autoNav1", children: [] },
-                    { val: "autoBonus1", children: [] },
+                    { val: "autoNavPoints", children: [] },
+                    { val: "autoBonusPoints", children: [] },
                 ],
             },
             {
@@ -803,7 +815,7 @@ export const Descriptor2021 = new Descriptor({
                 children: [
                     { val: "egDuckPoints", children: [] },
                     { val: "cappingPoints", children: [] },
-                    { val: "egPark1", children: [] },
+                    { val: "egParkPoints", children: [] },
                     { val: "allianceBalancedPoints", children: [] },
                 ],
             },

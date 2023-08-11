@@ -549,7 +549,7 @@ export const Descriptor2022 = new Descriptor({
 
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Penalties Committed", dialogName: "Penalty Points Committed" })
+            .addTep({ columnPrefix: "Penalties Committed", dialogName: "Penalty Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsByOppPoints" })
@@ -563,7 +563,7 @@ export const Descriptor2022 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "minorsByOppPoints" })
             .addTep({
-                make: (ms) => ms.minorsCommitted * 10,
+                make: (ms) => ms.minorsByOpp * 10,
                 columnPrefix: "Opp Minors Committed",
                 dialogName: "Minors",
             })
@@ -578,7 +578,7 @@ export const Descriptor2022 = new Descriptor({
             })
             .addTep({
                 columnPrefix: "Opp Penalties Committed",
-                dialogName: "Opponent Penalty Points",
+                dialogName: "Opp Penalty Points",
             })
             .addScoreModal({ displayName: "Penalties" })
     )
@@ -679,6 +679,8 @@ export const Descriptor2022 = new Descriptor({
     )
 
     .addTree([
+        { val: "totalPoints", children: [] },
+        { val: "totalPointsNp", children: [] },
         {
             val: "autoPoints",
             children: [
@@ -687,6 +689,7 @@ export const Descriptor2022 = new Descriptor({
                     children: [
                         { val: "autoNav1", children: [] },
                         { val: "autoNav2", children: [] },
+                        { val: "autoNavPointsIndividual", children: [] },
                     ],
                 },
                 {
@@ -719,6 +722,7 @@ export const Descriptor2022 = new Descriptor({
                     children: [
                         { val: "egNav1", children: [] },
                         { val: "egNav2", children: [] },
+                        { val: "egNavPointsIndividual", children: [] },
                     ],
                 },
                 {
@@ -732,10 +736,19 @@ export const Descriptor2022 = new Descriptor({
             ],
         },
         {
-            val: "penaltyPointsByOpp",
+            val: "penaltyPointsCommitted",
             children: [
                 { val: "majorsCommittedPoints", children: [] },
                 { val: "minorsCommittedPoints", children: [] },
+            ],
+        },
+        {
+            val: "penaltyPointsByOpp",
+            children: [
+                { val: "majorsCommittedPoints", for: "sm", children: [] },
+                { val: "minorsCommittedPoints", for: "sm", children: [] },
+                { val: "majorsByOppPoints", for: "tep", children: [] },
+                { val: "minorsByOppPoints", for: "tep", children: [] },
             ],
         },
     ])
