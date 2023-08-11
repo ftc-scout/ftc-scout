@@ -8,10 +8,11 @@
     type DataTy = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
 
     export let season: Season;
+    export let remote: boolean;
     export let data: DataTy[];
     export let focusedTeam: number | null;
 
-    $: stats = getTepStatSet(season);
+    $: stats = getTepStatSet(season, remote);
     // $: console.log(stats);
 
     // let stats: NonRankStatColumn<DataTy>[] = [

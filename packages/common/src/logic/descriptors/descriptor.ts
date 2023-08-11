@@ -14,11 +14,21 @@ export type Tree<T> = {
     children: Tree<T>[];
 };
 
-function mapTree<T, U>(t: Tree<T>, mapper: (_: T) => U): Tree<U> {
-    return {
-        val: mapper(t.val),
-        children: t.children.map((e) => mapTree(e, mapper)),
-    };
+export function filterMapTree<T, U>(
+    t: Tree<T>,
+    mapper: (_: T) => U | undefined
+): Tree<U> | undefined {
+    let val = mapper(t.val);
+    return val
+        ? {
+              val,
+              children: t.children.map((e) => filterMapTree(e, mapper)).filter(notEmpty),
+          }
+        : undefined;
+}
+
+export function filterMapTreeList<T, U>(ts: Tree<T>[], mapper: (_: T) => U | undefined): Tree<U>[] {
+    return ts.map((t) => filterMapTree(t, mapper)).filter(notEmpty);
 }
 
 export class Descriptor {
@@ -34,6 +44,9 @@ export class Descriptor {
 
     scoreModalTree: Tree<ScoreModalComponent>[] = [];
     scoreModalTreeRemote: Tree<ScoreModalComponent>[] = [];
+
+    tepTree: Tree<TepComponent>[] = [];
+    tepTreeRemote: Tree<TepComponent>[] = [];
 
     constructor(opts: {
         season: Season;
@@ -56,11 +69,13 @@ export class Descriptor {
         return this;
     }
 
-    addScoreModalTree(trad: Tree<string>[], remote: Tree<string>[] = []): Descriptor {
-        this.scoreModalTree = trad.map((e) => mapTree(e, (id) => this.columnsMap[id].scoreM!));
-        this.scoreModalTreeRemote = remote.map((e) =>
-            mapTree(e, (id) => this.columnsMap[id].scoreM!)
-        );
+    addTree(trad: Tree<string>[], remote: Tree<string>[] = []): Descriptor {
+        this.scoreModalTree = filterMapTreeList(trad, (id) => this.columnsMap[id]?.scoreM);
+        this.scoreModalTreeRemote = filterMapTreeList(remote, (id) => this.columnsMap[id]?.scoreM);
+
+        this.tepTree = filterMapTreeList(trad, (id) => this.columnsMap[id]?.tep);
+        this.tepTreeRemote = filterMapTreeList(remote, (id) => this.columnsMap[id]?.tep);
+
         return this;
     }
 
@@ -78,6 +93,10 @@ export class Descriptor {
 
     typeSuffix(remote: boolean): "Trad" | "Remote" | "" {
         return remote ? "Remote" : this.hasRemote ? "Trad" : "";
+    }
+
+    getTepTree(remote: boolean): Tree<TepComponent>[] {
+        return remote ? this.tepTreeRemote : this.tepTree;
     }
 }
 
@@ -151,6 +170,7 @@ export class TepComponent {
     dbName: string;
     apiName: string;
     columnPrefix: string;
+    dialogName: string;
 
     make: (ms: Record<string, string>, station: Station) => number;
 
@@ -162,6 +182,7 @@ export class TepComponent {
         dbName: string;
         apiName: string;
         columnPrefix: string;
+        dialogName: string;
 
         make: (ms: Record<string, any>, station: Station) => number;
     }) {
@@ -172,6 +193,7 @@ export class TepComponent {
         this.dbName = opts.dbName;
         this.apiName = opts.apiName;
         this.columnPrefix = opts.columnPrefix;
+        this.dialogName = opts.dialogName;
 
         this.make = opts.make;
     }
@@ -246,6 +268,7 @@ export class DescriptorColumn {
         dbName?: string;
         apiName?: string;
         columnPrefix: string;
+        dialogName?: string;
 
         make?: (ms: Record<string, any>, station: Station) => number;
     }): DescriptorColumn {
@@ -258,6 +281,7 @@ export class DescriptorColumn {
             dbName: opts.dbName ?? this.baseName,
             apiName: opts.apiName ?? this.baseName,
             columnPrefix: opts.columnPrefix,
+            dialogName: opts.dialogName ?? this.scoreM?.displayName ?? "<ERROR>",
 
             make: opts.make ?? ((ms) => ms[msName]),
         });

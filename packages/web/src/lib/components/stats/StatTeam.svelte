@@ -20,6 +20,7 @@
     on:click={(e) => {
         if (clickAction) {
             e.preventDefault();
+            e.stopPropagation();
             clickAction(number);
         }
     }}

@@ -374,8 +374,8 @@ export const Descriptor2022 = new Descriptor({
                           autoNav2022Points(self.autoNav2022_2),
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Auto Nav" })
             .addScoreModal({ displayName: "Navigation Points" })
+            .addTep({ columnPrefix: "Auto Nav" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoNavPointsIndividual" })
@@ -388,6 +388,7 @@ export const Descriptor2022 = new Descriptor({
                         ? autoNav2022Points(ms.autoNav2022)
                         : autoNav2022Points(ms.autoNav2022_2),
                 columnPrefix: "Auto Nav Individual",
+                dialogName: "Individual",
             })
             .finish()
     )
@@ -403,53 +404,53 @@ export const Descriptor2022 = new Descriptor({
 
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Auto Cone" })
             .addScoreModal({ displayName: "Cone Points" })
+            .addTep({ columnPrefix: "Auto Cone", dialogName: "Cone Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoTerminalPoints" })
-            .addTep({ make: (ms) => ms.autoTerminalCones * 1, columnPrefix: "Auto Terminal" })
             .addScoreModal({
                 displayName: "Terminal",
                 getValue: (ms) => ms.autoTerminalCones * 1,
                 getTitle: (ms) => nOf(ms.autoTerminalCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.autoTerminalCones * 1, columnPrefix: "Auto Terminal" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoGroundPoints" })
-            .addTep({ make: (ms) => ms.autoGroundCones * 2, columnPrefix: "Auto Ground" })
             .addScoreModal({
                 displayName: "Ground",
                 getValue: (ms) => ms.autoGroundCones * 2,
                 getTitle: (ms) => nOf(ms.autoGroundCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.autoGroundCones * 2, columnPrefix: "Auto Ground" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoLowPoints" })
-            .addTep({ make: (ms) => ms.autoLowCones * 3, columnPrefix: "Auto Low" })
             .addScoreModal({
                 displayName: "Low",
                 getValue: (ms) => ms.autoLowCones * 3,
                 getTitle: (ms) => nOf(ms.autoLowCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.autoLowCones * 3, columnPrefix: "Auto Low" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoMediumPoints" })
-            .addTep({ make: (ms) => ms.autoMediumCones * 4, columnPrefix: "Auto Medium" })
             .addScoreModal({
                 displayName: "Medium",
                 getValue: (ms) => ms.autoMediumCones * 4,
                 getTitle: (ms) => nOf(ms.autoMediumCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.autoMediumCones * 4, columnPrefix: "Auto Medium" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoHighPoints" })
-            .addTep({ make: (ms) => ms.autoHighCones * 5, columnPrefix: "Auto High" })
             .addScoreModal({
                 displayName: "High",
                 getValue: (ms) => ms.autoHighCones * 5,
                 getTitle: (ms) => nOf(ms.autoHighCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.autoHighCones * 5, columnPrefix: "Auto High" })
     )
     .addColumn(
         new DescriptorColumn({ name: "egNavPoints" })
@@ -457,8 +458,8 @@ export const Descriptor2022 = new Descriptor({
                 fromSelf: (self) => self.egNav1 * 2 + self.egNav2 * 2,
                 dataTy: Int8DTy,
             })
-            .addTep({ columnPrefix: "Endgame Nav" })
             .addScoreModal({ displayName: "Navigation Points" })
+            .addTep({ columnPrefix: "Endgame Nav" })
     )
     .addColumn(
         new DescriptorColumn({ name: "egNavPointsIndividual" })
@@ -471,6 +472,7 @@ export const Descriptor2022 = new Descriptor({
                         ? ms.egNav
                         : ms.egNav2) * 2,
                 columnPrefix: "Endgame Nav Individual",
+                dialogName: "Individual",
             })
             .finish()
     )
@@ -481,28 +483,28 @@ export const Descriptor2022 = new Descriptor({
 
                 dataTy: Int8DTy,
             })
-            .addTep({ columnPrefix: "Ownership" })
             .addScoreModal({ displayName: "Ownership Points" })
+            .addTep({ columnPrefix: "Ownership" })
     )
     .addColumn(
         new DescriptorColumn({ name: "coneOwnershipPoints" })
-            .addTep({ make: (ms) => ms.coneOwnedJunctions * 3, columnPrefix: "Regular Ownership" })
             .addScoreModal({
                 displayName: "Regular",
                 getValue: (ms) => ms.coneOwnedJunctions * 3,
                 getTitle: (ms) => nOf(ms.coneOwnedJunctions, "Junction"),
             })
+            .addTep({ make: (ms) => ms.coneOwnedJunctions * 3, columnPrefix: "Regular Ownership" })
     )
     .addColumn(
         new DescriptorColumn({ name: "beaconOwnershipPoints" })
-            .addTep({
-                make: (ms) => ms.beaconOwnedJunctions * 10,
-                columnPrefix: "Beacon Ownership",
-            })
             .addScoreModal({
                 displayName: "Beacon",
                 getValue: (ms) => ms.beaconOwnedJunctions * 10,
                 getTitle: (ms) => nOf(ms.beaconOwnedJunctions, "Beacon"),
+            })
+            .addTep({
+                make: (ms) => ms.beaconOwnedJunctions * 10,
+                columnPrefix: "Beacon Ownership",
             })
     )
     .addColumn(
@@ -511,25 +513,33 @@ export const Descriptor2022 = new Descriptor({
                 fromSelf: (self) => self.circuit * 20,
                 dataTy: Int8DTy,
             })
-            .addTep({ columnPrefix: "Circuit" })
             .addScoreModal({ displayName: "Circuit Points" })
+            .addTep({ columnPrefix: "Circuit" })
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsCommittedPoints" })
-            .addTep({ make: (ms) => ms.majorsCommitted * 30, columnPrefix: "Majors Committed" })
             .addScoreModal({
                 displayName: "Majors Points",
                 getValue: (ms) => ms.majorsCommitted * 30,
                 getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
             })
+            .addTep({
+                make: (ms) => ms.majorsCommitted * 30,
+                columnPrefix: "Majors Committed",
+                dialogName: "Majors",
+            })
     )
     .addColumn(
         new DescriptorColumn({ name: "minorsCommittedPoints" })
-            .addTep({ make: (ms) => ms.minorsCommitted * 10, columnPrefix: "Minors Committed" })
             .addScoreModal({
                 displayName: "Minors Points",
                 getValue: (ms) => ms.minorsCommitted * 10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
+            })
+            .addTep({
+                make: (ms) => ms.minorsCommitted * 10,
+                columnPrefix: "Minors Committed",
+                dialogName: "Minors",
             })
     )
     .addColumn(
@@ -539,16 +549,24 @@ export const Descriptor2022 = new Descriptor({
 
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Penalties Committed" })
+            .addTep({ columnPrefix: "Penalties Committed", dialogName: "Penalty Points Committed" })
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsByOppPoints" })
-            .addTep({ make: (ms) => ms.majorsByOpp * 30, columnPrefix: "Opp Majors Committed" })
+            .addTep({
+                make: (ms) => ms.majorsByOpp * 30,
+                columnPrefix: "Opp Majors Committed",
+                dialogName: "Majors",
+            })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "minorsByOppPoints" })
-            .addTep({ make: (ms) => ms.minorsCommitted * 10, columnPrefix: "Opp Minors Committed" })
+            .addTep({
+                make: (ms) => ms.minorsCommitted * 10,
+                columnPrefix: "Opp Minors Committed",
+                dialogName: "Minors",
+            })
             .finish()
     )
     .addColumn(
@@ -558,7 +576,10 @@ export const Descriptor2022 = new Descriptor({
 
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Opp Penalties Committed" })
+            .addTep({
+                columnPrefix: "Opp Penalties Committed",
+                dialogName: "Opponent Penalty Points",
+            })
             .addScoreModal({ displayName: "Penalties" })
     )
     .addColumn(
@@ -567,8 +588,8 @@ export const Descriptor2022 = new Descriptor({
                 fromSelf: (self) => self.autoNavPoints + self.autoConePoints,
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Auto" })
             .addScoreModal({ displayName: "Auto" })
+            .addTep({ columnPrefix: "Auto", dialogName: "Auto Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcPoints" })
@@ -582,53 +603,53 @@ export const Descriptor2022 = new Descriptor({
 
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Teleop" })
             .addScoreModal({ displayName: "Driver-Controlled" })
+            .addTep({ columnPrefix: "Teleop", dialogName: "Teleop Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcTerminalPoints" })
-            .addTep({ make: (ms) => ms.dcTerminalCones * 1, columnPrefix: "DC Terminal" })
             .addScoreModal({
                 displayName: "Terminal",
                 getValue: (ms) => ms.dcTerminalCones * 1,
                 getTitle: (ms) => nOf(ms.dcTerminalCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.dcTerminalCones * 1, columnPrefix: "DC Terminal" })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcGroundPoints" })
-            .addTep({ make: (ms) => ms.dcGroundCones * 2, columnPrefix: "DC Ground" })
             .addScoreModal({
                 displayName: "Ground",
                 getValue: (ms) => ms.dcGroundCones * 2,
                 getTitle: (ms) => nOf(ms.dcGroundCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.dcGroundCones * 2, columnPrefix: "DC Ground" })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcLowPoints" })
-            .addTep({ make: (ms) => ms.dcLowCones * 3, columnPrefix: "DC Low" })
             .addScoreModal({
                 displayName: "Low",
                 getValue: (ms) => ms.dcLowCones * 3,
                 getTitle: (ms) => nOf(ms.dcLowCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.dcLowCones * 3, columnPrefix: "DC Low" })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcMediumPoints" })
-            .addTep({ make: (ms) => ms.dcMediumCones * 4, columnPrefix: "DC Medium" })
             .addScoreModal({
                 displayName: "Medium",
                 getValue: (ms) => ms.dcMediumCones * 4,
                 getTitle: (ms) => nOf(ms.dcMediumCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.dcMediumCones * 4, columnPrefix: "DC Medium" })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcHighPoints" })
-            .addTep({ make: (ms) => ms.dcHighCones * 5, columnPrefix: "DC High" })
             .addScoreModal({
                 displayName: "High",
                 getValue: (ms) => ms.dcHighCones * 5,
                 getTitle: (ms) => nOf(ms.dcHighCones, "Cone"),
             })
+            .addTep({ make: (ms) => ms.dcHighCones * 5, columnPrefix: "DC High" })
     )
     .addColumn(
         new DescriptorColumn({ name: "egPoints" })
@@ -637,8 +658,8 @@ export const Descriptor2022 = new Descriptor({
 
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "Endgame" })
             .addScoreModal({ displayName: "Endgame" })
+            .addTep({ columnPrefix: "Endgame", dialogName: "Endgame Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "totalPointsNp" })
@@ -646,7 +667,7 @@ export const Descriptor2022 = new Descriptor({
                 fromSelf: (self) => self.autoPoints + self.dcPoints + self.egPoints,
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "np" })
+            .addTep({ columnPrefix: "np", dialogName: "Total Points NP" })
     )
     .addColumn(
         new DescriptorColumn({ name: "totalPoints" })
@@ -654,10 +675,10 @@ export const Descriptor2022 = new Descriptor({
                 fromSelf: (self) => self.totalPointsNp + self.penaltyPointsByOpp,
                 dataTy: Int16DTy,
             })
-            .addTep({ columnPrefix: "" })
+            .addTep({ columnPrefix: "", dialogName: "Total Points" })
     )
 
-    .addScoreModalTree([
+    .addTree([
         {
             val: "autoPoints",
             children: [

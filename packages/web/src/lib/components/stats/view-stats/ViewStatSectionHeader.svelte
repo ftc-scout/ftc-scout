@@ -10,12 +10,16 @@
 
     export let section: StatSetSection;
 
+    $: colCount = section.columns.length;
+    $: singleGroup = colCount == 1;
+    $: colspan = singleGroup ? 2 : 1;
+
     let tippy = createTippy({});
 </script>
 
 <thead>
-    <th class="name">{section.name}</th>
-    {#each section.columns as column}
+    <th class="name" style="grid-column: span {colspan}"> {section.name} </th>
+    {#each singleGroup ? [] : section.columns as column}
         <th class="{column.color} col" use:tippy={maybeTip(column.description, $tippyTheme)}>
             <div>
                 {column.name}
@@ -29,34 +33,27 @@
 
 <style>
     thead {
-        display: flex;
-        flex-direction: row;
-        width: 100%;
+        display: grid;
+        grid-template-columns: 1fr repeat(var(--col-count), minmax(0, 75px));
+    }
+
+    @media (max-width: 700px) {
+        thead {
+            grid-template-columns: 1fr repeat(var(--col-count), minmax(0, 50px));
+        }
     }
 
     th {
-        min-width: 75px;
         padding: var(--md-pad);
         font-weight: bold;
     }
 
-    @media (max-width: 700px) {
-        th {
-            min-width: 50px;
-        }
-    }
-
-    .name {
-        flex-grow: 1;
-    }
-
-    .col {
-        color: var(--stat-text-color);
-    }
     .purple {
+        color: var(--stat-text-color);
         background: var(--purple-stat-color);
     }
     .green {
+        color: var(--stat-text-color);
         background: var(--green-stat-color);
     }
 

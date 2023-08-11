@@ -1,4 +1,4 @@
-import { groupBySingle } from "@ftc-scout/common";
+import { groupBySingle, type Tree } from "@ftc-scout/common";
 import { titleCase } from "../../util/string";
 
 export const StatType = {
@@ -166,10 +166,10 @@ export type StatSectionRow = {
 
 export class StatSetSection {
     name: string;
-    rows: StatSectionRow[];
+    rows: Tree<StatSectionRow>[];
     columns: StatSectionColumn[];
 
-    constructor(name: string, rows: StatSectionRow[], columns: StatSectionColumn[]) {
+    constructor(name: string, rows: Tree<StatSectionRow>[], columns: StatSectionColumn[]) {
         this.name = name;
         this.rows = rows;
         this.columns = columns;

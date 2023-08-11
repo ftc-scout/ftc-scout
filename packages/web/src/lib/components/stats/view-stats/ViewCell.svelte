@@ -27,7 +27,7 @@
         {:else if value.ty == "record"}
             {value.wins}-{value.losses}-{value.ties}
         {:else if value.ty == "team"}
-            {value.number} - {value.name}
+            {value.number} - <em style="padding-left: var(--sm-gap);">{value.name}</em>
         {/if}
     </div>
 </td>

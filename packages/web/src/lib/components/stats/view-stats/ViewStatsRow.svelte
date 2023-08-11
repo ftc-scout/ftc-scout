@@ -1,21 +1,88 @@
 <script lang="ts">
+    import { slide } from "svelte/transition";
+
+    import type { Tree } from "@ftc-scout/common";
     import type { StatSectionRow, StatSet, StatSetSection } from "../stat-table";
     import ViewData from "./ViewCell.svelte";
+    import ExpandButton from "../../ExpandButton.svelte";
 
     type T = $$Generic;
 
     export let data: T;
     export let stats: StatSet<T>;
     export let section: StatSetSection;
-    export let row: StatSectionRow;
+    export let row: Tree<StatSectionRow>;
+
+    export let shown = true;
+    export let depth = 0;
+    let open = false;
 </script>
 
-<tr>
-    <td class="name">{row.name}</td>
-    {#each section.columns as column}
-        <ViewData {data} {stats} {section} {row} {column} />
-    {/each}
-</tr>
+{#if shown}
+    <tr
+        on:click={() => (open = !open)}
+        transition:slide={{ duration: 250 }}
+        class:header={depth == 0 && section.columns.length != 1}
+        class:single-col={section.columns.length == 1}
+    >
+        <td class="name" class:has-children={row.children.length} style:--depth={depth}>
+            {#if row.children.length}
+                <ExpandButton
+                    bind:open
+                    style="position: absolute; top:0; bottom: 0; left: calc({depth * 2 +
+                        1} * var(--md-gap))"
+                />
+            {/if}
+
+            {row.val.name}
+        </td>
+        {#each section.columns as column}
+            <ViewData {data} {stats} {section} row={row.val} {column} />
+        {/each}
+    </tr>
+{/if}
+
+{#each row.children as child}
+    <svelte:self {data} {stats} {section} row={child} shown={shown && open} depth={depth + 1} />
+{/each}
 
 <style>
+    tr {
+        display: grid;
+        grid-template-columns: 6fr repeat(var(--col-count), minmax(var(--data-max), 75px));
+    }
+
+    @media (max-width: 700px) {
+        tr {
+            grid-template-columns: 6fr repeat(var(--col-count), minmax(var(--data-max), 50px));
+        }
+    }
+
+    td {
+        display: block;
+    }
+
+    .name {
+        position: relative;
+
+        padding: var(--md-pad);
+        padding-left: calc((var(--depth) * 2 + 3) * var(--md-gap));
+    }
+
+    .single-col .name,
+    .header .name {
+        font-weight: bold;
+    }
+
+    .has-children {
+        cursor: pointer;
+    }
+
+    tr.single-col:nth-child(odd) {
+        background-color: var(--zebra-stripe-color);
+    }
+
+    .header {
+        background-color: var(--zebra-stripe-color);
+    }
 </style>
