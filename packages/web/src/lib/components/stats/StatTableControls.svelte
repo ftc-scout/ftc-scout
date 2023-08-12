@@ -7,6 +7,8 @@
 </script>
 
 <script lang="ts">
+    import { exportCSV } from "./csv";
+
     import { faEdit, faFileDownload, faFilter } from "@fortawesome/free-solid-svg-icons";
     import ViewStatsModal from "./view-stats/ViewStatsModal.svelte";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
@@ -32,6 +34,8 @@
 
     export let shownStats: Readable<NonRankStatColumn<T>[]>;
     export let currentSort: Readable<{ id: string; dir: SortDir }>;
+
+    export let csv: { filename: string; title: string };
 
     let dispatch = createEventDispatcher();
 
@@ -61,7 +65,17 @@
     </div>
 
     <div>
-        <Button icon={faFileDownload}>Export CSV</Button>
+        <Button
+            icon={faFileDownload}
+            disabled={$shownStats.length == 0
+                ? "Select statistics to export csv."
+                : data.length == 0
+                ? "Select data to export csv."
+                : null}
+            on:click={() => exportCSV(data, $shownStats, csv.filename, csv.title)}
+        >
+            Export CSV
+        </Button>
     </div>
 </div>
 

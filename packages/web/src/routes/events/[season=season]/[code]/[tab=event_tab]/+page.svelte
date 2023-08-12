@@ -102,7 +102,13 @@
             </TabContent>
 
             <TabContent name="rankings">
-                <Rankings {season} remote={event.remote} data={stats} {focusedTeam} />
+                <Rankings
+                    {season}
+                    remote={event.remote}
+                    eventName={event.name}
+                    data={stats}
+                    {focusedTeam}
+                />
             </TabContent>
 
             <TabContent name="teams">

@@ -9,6 +9,7 @@
 
     export let season: Season;
     export let remote: boolean;
+    export let eventName: string;
     export let data: DataTy[];
     export let focusedTeam: number | null;
 
@@ -25,6 +26,11 @@
         ...(remote ? [] : [totalPoints + "Opr"]),
         totalPoints + "Max",
     ];
+
+    $: underscoreEventName = eventName.replace(" ", "_");
+    $: filename = `${season}_${underscoreEventName}_Team_Stats`;
+    $: title = `${season} ${eventName} Team Stats`;
+    $: csv = { filename, title };
 </script>
 
 <LocalStatTableControls
@@ -38,4 +44,5 @@
         "rankingPoints",
         ...(descriptor.rankings.rp == "Record" ? ["record"] : ["totalPointsAvg", "totalPointsTot"]),
     ]}
+    {csv}
 />

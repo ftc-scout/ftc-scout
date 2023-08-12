@@ -22,6 +22,8 @@
     export let hideRankStats: string[] = [];
     $: showRank = hideRankStats.indexOf($currentSort.id) == -1;
 
+    export let csv: { filename: string; title: string };
+
     function changeSort(id: string) {
         let oldDir = $currentSort.id == id ? $currentSort.dir : null;
         let newDir = id == defaultSort.id ? cycleSortDirNoNull(oldDir) : cycleSortDir(oldDir);
@@ -89,6 +91,7 @@
     {focusedTeam}
     {rankTy}
     {showRank}
+    {csv}
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
     on:toggle-show-stat={(e) => toggleShowStat(e.detail)}
