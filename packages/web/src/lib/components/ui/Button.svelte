@@ -6,9 +6,10 @@
     export let style = "";
     export let fw = false;
     export let disabled: string | null = null;
+    export let title: string = "";
 </script>
 
-<button on:click {style} disabled={!!disabled} title={disabled}>
+<button on:click {style} disabled={!!disabled} title={disabled ?? title}>
     <Fa {icon} {fw} />
     <slot />
 </button>
@@ -16,11 +17,12 @@
 <style>
     button {
         font-size: inherit;
+        font-family: inherit;
         color: inherit;
 
         background: var(--form-bg-color);
 
-        padding: var(--md-pad) calc(var(--md-pad) * 2);
+        padding: calc(var(--md-pad) * 0.9) calc(var(--md-pad) * 2);
 
         border: none;
         border: 1px solid var(--sep-color);

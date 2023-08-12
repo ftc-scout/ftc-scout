@@ -43,6 +43,7 @@
         padding: var(--md-pad);
         font-weight: bold;
 
+        text-align: center;
         white-space: nowrap;
     }
 

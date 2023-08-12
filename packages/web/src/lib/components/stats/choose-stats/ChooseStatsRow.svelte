@@ -58,6 +58,7 @@
         row={child}
         shown={shown && open}
         depth={depth + 1}
+        on:choose-stat
     />
 {/each}
 

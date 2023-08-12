@@ -2,10 +2,11 @@ select {
     appearance: none;
 
     font-size: inherit;
+    font-family: inherit;
     color: inherit;
 
     background: var(--fg-color);
-    padding: calc(var(--md-pad) * 1.1) var(--md-pad);
+    padding: var(--md-pad);
 
     border: none;
     border-radius: 8px;
@@ -45,10 +46,11 @@ input:focus-visible {
 
 input {
     font-size: inherit;
+    font-family: inherit;
     color: inherit;
 
     background: var(--fg-color);
-    padding: calc(var(--md-pad) * 1.1) var(--md-pad);
+    padding: var(--md-pad);
 
     border: none;
     border-radius: 8px;

@@ -87,9 +87,11 @@
 
     .scroll-wrapper {
         padding: var(--lg-pad);
+        padding-top: 0;
 
         max-height: 100%;
-        overflow: auto;
+        overflow-y: auto;
+        overflow-x: auto;
     }
 
     .scroll-wrapper:focus-visible,

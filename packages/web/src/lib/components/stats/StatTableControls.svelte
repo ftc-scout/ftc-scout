@@ -23,6 +23,7 @@
     import StatTable from "./StatTable.svelte";
     import Button from "../ui/Button.svelte";
     import { createEventDispatcher } from "svelte";
+    import FilterModal from "./filter/FilterModal.svelte";
 
     type T = $$Generic;
 
@@ -48,6 +49,8 @@
     }
 
     let chooseStatsModalShown = false;
+
+    let filtersShown = false;
 </script>
 
 <ViewStatsModal bind:shown={viewStatsModalShown} {stats} data={viewStatsData?.data} />
@@ -57,11 +60,12 @@
     {stats}
     on:choose-stat={(e) => dispatch("toggle-show-stat", e.detail)}
 />
+<FilterModal bind:shown={filtersShown} {stats} />
 
 <div class="controls">
     <div>
         <Button icon={faEdit} on:click={() => (chooseStatsModalShown = true)}>Statistics</Button>
-        <Button icon={faFilter}>Filters</Button>
+        <Button icon={faFilter} on:click={() => (filtersShown = true)}>Filters</Button>
     </div>
 
     <div>
