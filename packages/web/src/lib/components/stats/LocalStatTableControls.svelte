@@ -32,6 +32,14 @@
         $shownStats = arrayMove($shownStats, from, to);
     }
 
+    function toggleShowStat(id: string) {
+        if ($shownStats.some((s) => s.id == id)) {
+            $shownStats = $shownStats.filter((s) => s.id != id);
+        } else {
+            $shownStats = [...$shownStats, stats.getStat(id)];
+        }
+    }
+
     function assignRanks(data: StatData<T>[], sorter: NonRankStatColumn<T>, preFilter: boolean) {
         const field = preFilter ? "noFilterRank" : "filterRank";
 
@@ -83,4 +91,5 @@
     {showRank}
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
+    on:toggle-show-stat={(e) => toggleShowStat(e.detail)}
 />

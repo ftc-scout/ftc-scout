@@ -14,12 +14,25 @@
     export let rankStat: StatColumn<T> | null;
 </script>
 
-<table>
-    <StatHeader {stats} {currentSort} {rankStat} on:change_sort on:move_column />
+<table class:no-data={stats.length == 0}>
+    {#if stats.length}
+        <StatHeader {stats} {currentSort} {rankStat} on:change_sort on:move_column />
+    {/if}
+
     <tbody>
-        {#each data as dataRow}
-            <StatRow data={dataRow} {stats} {focusedTeam} {rankStat} on:row_click />
-        {/each}
+        {#if stats.length}
+            {#each data as dataRow}
+                <StatRow data={dataRow} {stats} {focusedTeam} {rankStat} on:row_click />
+            {:else}
+                <tr class="no-data">
+                    <td> <b>No items match your current filters.</b> </td>
+                </tr>
+            {/each}
+        {:else}
+            <tr class="no-data">
+                <td> <b>Choose statistics.</b> </td>
+            </tr>
+        {/if}
     </tbody>
 </table>
 
@@ -63,6 +76,17 @@
 
     tbody > :global(:nth-child(even)) {
         background-color: var(--zebra-stripe-color);
-        mix-blend-mode: add;
+    }
+
+    .no-data {
+        display: table;
+        width: 100%;
+    }
+
+    .no-data b {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: var(--lg-pad);
     }
 </style>
