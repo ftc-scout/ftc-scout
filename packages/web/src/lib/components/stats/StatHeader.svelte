@@ -231,6 +231,15 @@
         background: var(--fg-color);
     }
 
+    .red {
+        background: var(--red-stat-color);
+    }
+    .blue {
+        background: var(--blue-stat-color);
+    }
+    .light-blue {
+        background: var(--light-blue-stat-color);
+    }
     .purple {
         background: var(--purple-stat-color);
     }

@@ -33,7 +33,7 @@
         min-width: 100%;
         width: min-content;
         max-width: 100%;
-        overflow: auto;
+        overflow-x: auto;
 
         position: relative;
     }

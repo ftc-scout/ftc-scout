@@ -46,6 +46,18 @@
         white-space: nowrap;
     }
 
+    .red {
+        color: var(--stat-text-color);
+        background: var(--red-stat-color);
+    }
+    .blue {
+        color: var(--stat-text-color);
+        background: var(--blue-stat-color);
+    }
+    .light-blue {
+        color: var(--stat-text-color);
+        background: var(--light-blue-stat-color);
+    }
     .purple {
         color: var(--stat-text-color);
         background: var(--purple-stat-color);

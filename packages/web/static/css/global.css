@@ -108,15 +108,19 @@ body {
 }
 
 body:not(.dark) {
-    --bg-color: #f2f2f2;
     --fg-color: #ffffff;
-    --hover-color: #f0f0f0;
-    --tab-hover-color: #fbfbfb;
+    --bg-color: #f2f2f2;
+
     --theme-color: #2c666e;
     --inline-theme-color: var(--theme-color);
 
+    --hover-color: #f0f0f0;
+    --tab-hover-color: #fbfbfb;
+
     --sep-color: lightgray;
     --sep-hover-color: rgb(200, 200, 200);
+
+    --zebra-stripe-color: rgb(245, 245, 245);
 
     --text-color: #000000;
     --secondary-text-color: #636466;
@@ -133,11 +137,20 @@ body:not(.dark) {
     --red-team-text-color: rgb(var(--red-team-color-vs));
     --blue-team-text-color: rgb(var(--blue-team-color-vs));
     --neutral-team-text-color: rgb(var(--neutral-team-color-vs));
-    --zebra-stripe-color: rgb(245, 245, 245);
 
-    --purple-stat-color: rgb(var(--neutral-team-color-vs));
-    --purple-stat-bg-color: rgba(var(--neutral-team-color-vs), var(--stat-transparency));
+    --red-stat-color-vs: var(--red-team-color-vs);
+    --blue-stat-color-vs: 25, 118, 210;
+    --light-blue-stat-color-vs: var(--blue-team-color-vs);
+    --purple-stat-color-vs: var(--neutral-team-color-vs);
     --green-stat-color-vs: 67, 160, 71;
+    --red-stat-color: rgb(var(--red-stat-color-vs));
+    --red-stat-bg-color: rgba(var(--red-stat-color-vs), var(--stat-transparency));
+    --blue-stat-color: rgb(var(--blue-stat-color-vs));
+    --blue-stat-bg-color: rgba(var(--blue-stat-color-vs), var(--stat-transparency));
+    --light-blue-stat-color: rgb(var(--light-blue-stat-color-vs));
+    --light-blue-stat-bg-color: rgba(var(--light-blue-stat-color-vs), var(--stat-transparency));
+    --purple-stat-color: rgb(var(--purple-stat-color-vs));
+    --purple-stat-bg-color: rgba(var(--purple-stat-color-vs), var(--stat-transparency));
     --green-stat-color: rgb(var(--green-stat-color-vs));
     --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
 
@@ -174,9 +187,19 @@ body.dark {
     --neutral-team-text-color: rgb(196, 79, 255);
     --zebra-stripe-color: #353535;
 
-    --purple-stat-color: rgb(var(--neutral-team-color-vs));
-    --purple-stat-bg-color: rgba(var(--neutral-team-color-vs), var(--stat-transparency));
+    --red-stat-color-vs: var(--red-team-color-vs);
+    --blue-stat-color-vs: var(--blue-team-color-vs);
+    --light-blue-stat-color-vs: 25, 118, 210;
+    --purple-stat-color-vs: var(--neutral-team-color-vs);
     --green-stat-color-vs: 46, 125, 50;
+    --red-stat-color: rgb(var(--red-stat-color-vs));
+    --red-stat-bg-color: rgba(var(--red-stat-color-vs), var(--stat-transparency));
+    --blue-stat-color: rgb(var(--blue-stat-color-vs));
+    --blue-stat-bg-color: rgba(var(--blue-stat-color-vs), var(--stat-transparency));
+    --light-blue-stat-color: rgb(var(--light-blue-stat-color-vs));
+    --light-blue-stat-bg-color: rgba(var(--light-blue-stat-color-vs), var(--stat-transparency));
+    --purple-stat-color: rgb(var(--purple-stat-color-vs));
+    --purple-stat-bg-color: rgba(var(--purple-stat-color-vs), var(--stat-transparency));
     --green-stat-color: rgb(var(--green-stat-color-vs));
     --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
 

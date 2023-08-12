@@ -18,8 +18,11 @@ export type StatValue =
 
 export const Color = {
     White: "white",
-    Purple: "purple",
+    Red: "red",
+    Blue: "blue",
+    LightBlue: "light-blue",
     Green: "green",
+    Purple: "purple",
 } as const;
 export type Color = (typeof Color)[keyof typeof Color];
 

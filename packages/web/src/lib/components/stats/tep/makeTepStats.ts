@@ -23,11 +23,11 @@ const TEP_STAT_GROUPS = [
 ];
 
 const GROUP_COLORS = {
-    [TepStatGroup.Tot]: Color.Purple,
+    [TepStatGroup.Tot]: Color.Red,
     [TepStatGroup.Avg]: Color.Purple,
     [TepStatGroup.Opr]: Color.Purple,
-    [TepStatGroup.Min]: Color.Purple,
-    [TepStatGroup.Max]: Color.Purple,
+    [TepStatGroup.Min]: Color.LightBlue,
+    [TepStatGroup.Max]: Color.Blue,
     [TepStatGroup.Dev]: Color.Green,
 };
 
@@ -101,7 +101,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 getNonRankValue: (d: any) => ({ ty: "rank", val: d.stats.rank }),
             }),
             new NonRankStatColumn({
-                color: Color.White,
+                color: Color.Red,
                 id: "rankingPoints",
                 columnName: "RP",
                 dialogName: "Ranking Points",
@@ -113,7 +113,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 }),
             }),
             new NonRankStatColumn({
-                color: Color.White,
+                color: Color.LightBlue,
                 id: "tb1",
                 columnName: "TBP",
                 dialogName: "Tie Breaker Points",
@@ -125,7 +125,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 ? []
                 : [
                       new NonRankStatColumn({
-                          color: Color.White,
+                          color: Color.Blue,
                           id: "tb2",
                           columnName: "TBP2",
                           dialogName: "Tie Breaker Points 2",

@@ -52,10 +52,18 @@
         font-size: var(--sm-font-size);
     }
 
+    .red {
+        background: var(--red-stat-bg-color);
+    }
+    .blue {
+        background: var(--blue-stat-bg-color);
+    }
+    .light-blue {
+        background: var(--light-blue-stat-bg-color);
+    }
     .purple {
         background: var(--purple-stat-bg-color);
     }
-
     .green {
         background: var(--green-stat-bg-color);
     }
