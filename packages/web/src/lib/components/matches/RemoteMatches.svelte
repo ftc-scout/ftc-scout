@@ -17,6 +17,7 @@
     export let eventCode: string;
     export let season: number;
     export let timeZone: string;
+    export let focusedTeam: number | null;
     export let zebraStripe: boolean;
 
     $: team = matches[0].teams[0];
@@ -31,7 +32,7 @@
 </script>
 
 <tr class:zebra-stripe={zebraStripe}>
-    <MatchTeam {team} {eventCode} {season} focusedTeam={null} winner={false} span={1} />
+    <MatchTeam {team} {eventCode} {season} {focusedTeam} winner={false} span={1} />
 
     {#if !notReported}
         {#each [1, 2, 3, 4, 5, 6] as n}

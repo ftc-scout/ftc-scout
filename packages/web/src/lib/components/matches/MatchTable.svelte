@@ -98,6 +98,7 @@
                         {eventCode}
                         {season}
                         {timeZone}
+                        {focusedTeam}
                         zebraStripe={i % 2 == 1}
                     />
                 {/each}
