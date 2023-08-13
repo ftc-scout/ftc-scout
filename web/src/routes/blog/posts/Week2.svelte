@@ -13,8 +13,8 @@
     </p>
 
     <p>
-        I can remember checking <a href="http://ftcstats.org">ftcstats.org</a> nearly every day to see if someone topped
-        our
+        I can remember checking <a href="http://ftcstats.org" target="_blank" rel="noreferrer">ftcstats.org</a> nearly
+        every day to see if someone topped our
         <a
             href="https://ftcscout.org/records/2021/teams?region=California+-+Los+Angeles&event-types=Traditional&end=2021-12-24"
         >

@@ -6,7 +6,7 @@
     export let href: string;
 </script>
 
-<a class="wrap" {href}>
+<a class="wrap" {href} target="_blank" rel="noreferrer">
     <img src={imgSrc} {alt} />
     <div class="info">
         <span>{name}</span>

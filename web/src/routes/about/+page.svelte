@@ -13,15 +13,16 @@
 
         <p>
             FTC<i>Scout</i> is a website that allows you to view teams, events, matches, and statistics for FTC in the
-            vein of <a href="https://theorangealliance.org/">The Orange Alliance</a>.
+            vein of <a href="https://theorangealliance.org/" target="_blank" rel="noreferrer">The Orange Alliance</a>.
         </p>
 
         <p>
             FTC<i>Scout</i> is the passion project of a group of programmers at team
             <a href="/teams/16321">16321 X Drive</a>. It was heavily inspired by the amazing websites like
-            <a href="https://theorangealliance.org/">The Orange Alliance</a>,
-            <a href="https://ftcscores.com/">FTCScores</a>, <a href="http://www.ftcstats.org/">FTC Stats</a>, and
-            <a href="https://ftc-events.firstinspires.org/">FTC Events</a>.
+            <a href="https://theorangealliance.org/" target="_blank" rel="noreferrer">The Orange Alliance</a>,
+            <a href="https://ftcscores.com/" target="_blank" rel="noreferrer">FTCScores</a>,
+            <a href="http://www.ftcstats.org/" target="_blank" rel="noreferrer">FTC Stats</a>, and
+            <a href="https://ftc-events.firstinspires.org/" target="_blank" rel="noreferrer">FTC Events</a>.
         </p>
 
         <h2>Why FTC<em class="h2big-text">Scout</em>?</h2>
@@ -64,8 +65,9 @@
                 Scout
             </em>
             receives exceptional
-            <a href="https://en.wikipedia.org/wiki/Google_Lighthouse"> Google Lighthouse </a> scores and A+ security ratings
-            from several auditors.
+            <a href="https://en.wikipedia.org/wiki/Google_Lighthouse" target="_blank" rel="noreferrer">
+                Google Lighthouse
+            </a> scores and A+ security ratings from several auditors.
         </p>
         <div class="image-wrap">
             <img
@@ -83,9 +85,9 @@
 
         <h2>Our Team</h2>
         <p>
-            FTC<em>Scout</em> was developed by programmers at <a href="/teams/16321">16321 X Drive</a> however it is
-            FOSS and you can contribute to it right now
-            <a href="https://github.com/16321-X-Drive/ftc-scout">on our Github</a>.
+            FTC<em>Scout</em> was developed by programmers at <a href="/teams/16321">16321 X Drive</a>, but it is FOSS
+            (Free and Open-Source Software) so you can contribute to it
+            <a href="https://github.com/16321-X-Drive/ftc-scout" target="_blank" rel="noreferrer">on our Github</a>.
         </p>
         <div class="contributors">
             <Contributor
@@ -104,10 +106,10 @@
             />
             <Contributor
                 name="Levi Gilbert-Adler"
-                role="Programmer"
+                role="Web Administrator"
                 imgSrc="/img/levi.png"
                 alt="A photo of Levi Gilbert-Adler"
-                href="https://github.com/Bobrobot1"
+                href="https://github.com/9021007"
             />
         </div>
     </Card>

@@ -5,6 +5,7 @@
     import Fa from "svelte-fa";
 
     export let icon: IconDefinition;
+    export let linktarget: string | null = null;
     export let href: string | null = null;
 
     $: topLevel = href?.split("/").find((s) => s != "");
@@ -19,6 +20,7 @@
 {#if href}
     <a
         class="wrap"
+        target={linktarget}
         {href}
         class:active
         sveltekit:prefetch={href?.startsWith("/") ? true : null}

@@ -15,8 +15,8 @@
 
         <p>The FTC<em>Scout</em> API provides access to all of the FTC<em>Scout</em>'s data and statistics.</p>
         <p>
-            The FTC<em>Scout</em> API uses <a href="https://graphql.org/">GraphQL</a> allowing you to access as much or as
-            little data as you need in the shape that is most convenient to you.
+            The FTC<em>Scout</em> API uses <a href="https://graphql.org/" target="_blank" rel="noreferrer">GraphQL</a> allowing
+            you to access as much or as little data as you need in the shape that is most convenient to you.
         </p>
         <p>
             The FTC<em>Scout</em> API can be queried at

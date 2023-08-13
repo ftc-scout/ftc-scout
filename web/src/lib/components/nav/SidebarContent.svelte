@@ -43,7 +43,7 @@
 
 <hr />
 
-<SidebarItem icon={faDiscord} href="https://discord.gg/XTZhD9RnKa">Discord</SidebarItem>
+<SidebarItem icon={faDiscord} href="https://discord.gg/XTZhD9RnKa" linktarget="_blank">Discord</SidebarItem>
 <SidebarItem icon={faGithub} href="https://github.com/16321-X-Drive">Github</SidebarItem>
 <SidebarItem icon={faEnvelope} href="mailto:{EMAIL}">Email</SidebarItem>
 

@@ -16,7 +16,11 @@
 
     <p>
         There’s a lot of truth in these words as OPR,
-        <a href="https://blog.thebluealliance.com/2017/10/05/the-math-behind-opr-an-introduction">
+        <a
+            href="https://blog.thebluealliance.com/2017/10/05/the-math-behind-opr-an-introduction"
+            target="_blank"
+            rel="noreferrer"
+        >
             Offensive Power Rating</a
         >
         is kind of a statistic we, FIRST, made up. It doesn’t completely measure how good a team is on its own. Especially
