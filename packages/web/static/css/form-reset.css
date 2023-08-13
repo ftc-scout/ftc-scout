@@ -58,3 +58,7 @@ input {
 
     cursor: pointer;
 }
+
+button {
+    color: inherit;
+}

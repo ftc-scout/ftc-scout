@@ -25,7 +25,7 @@
         .reduce((a, b) => (a ?? 0) + (b ?? 0), 0);
     $: notReported = matches.every((m) => !m.scores);
 
-    const tippy = createTippy({ placement: "bottom", delay: [750, 0] });
+    const tippy = createTippy({ placement: "bottom", delay: [750, 0], touch: false });
 
     let show: ShowMatchFn = getContext(SHOW_MATCH_SCORE);
 </script>

@@ -40,7 +40,7 @@
 
     $: winner = computeWinner(match.scores);
 
-    const tippy = createTippy({ placement: "left", delay: [750, 0] });
+    const tippy = createTippy({ placement: "left", delay: [750, 0], touch: false });
     $: tip = matchTimeTip(match, timeZone, $tippyTheme);
 
     let show: ShowMatchFn = getContext(SHOW_MATCH_SCORE);
