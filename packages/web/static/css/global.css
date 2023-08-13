@@ -133,7 +133,7 @@ body:not(.dark) {
     --form-bg-color: #efefef;
     --form-hover-bg-color: #e3e3e3;
     --form-click-bg-color: #d7d7d7;
-    --form-disabled-bg-color: #bfbfbf;
+    --form-disabled-opacity: 0.7;
 
     --team-color-transparency: 0.15;
     --red-team-color-vs: 244, 67, 54;
@@ -186,7 +186,7 @@ body.dark {
     --form-bg-color: #191919;
     --form-hover-bg-color: #232323;
     --form-click-bg-color: #2d2d2d;
-    --form-disabled-bg-color: #353535;
+    --form-disabled-opacity: 0.5;
 
     --team-color-transparency: 0.25;
     --red-team-color-vs: 204, 47, 47;

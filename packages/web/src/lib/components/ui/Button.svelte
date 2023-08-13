@@ -31,16 +31,16 @@
         cursor: pointer;
     }
 
-    button:hover {
+    button:hover:not(:disabled) {
         background: var(--form-hover-bg-color);
     }
 
-    button:active {
+    button:active:not(:disabled) {
         background: var(--form-click-bg-color);
     }
 
     button:disabled {
-        opacity: 0.5;
+        opacity: var(--form-disabled-opacity);
         cursor: not-allowed;
     }
 </style>
