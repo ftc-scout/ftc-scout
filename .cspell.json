@@ -26,6 +26,7 @@
         "timestamptz",
         "tmps",
         "typeorm",
+        "unsub",
         "xmark"
     ]
 }

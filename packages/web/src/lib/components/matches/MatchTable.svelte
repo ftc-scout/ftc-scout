@@ -58,18 +58,15 @@
 
     setContext(SHOW_MATCH_SCORE, show);
 
-    let modalMatchId = queryParam<[string, number] | null>(
-        "scores",
-        {
-            encode: (m: [string, number] | null) => (m ? `${m[0]}-${m[1]}` : undefined),
-            decode: (s: string | null) => {
-                if (s == null) return null;
-                let parts = s.split("-");
-                return [parts[0], +parts[1]];
-            },
+    let modalMatchId = queryParam<[string, number] | null>("scores", {
+        encode: (m) => (m ? `${m[0]}-${m[1]}` : null),
+        decode: (s) => {
+            if (s == null) return null;
+            let parts = s.split("-");
+            return [parts[0], +parts[1]];
         },
-        { pushHistory: false }
-    );
+        pushState: false,
+    });
     if ($modalMatchId?.[0] == event.code) {
         let m = matches.find((m) => $modalMatchId?.[1] == m.id);
         if (m) show(m);
