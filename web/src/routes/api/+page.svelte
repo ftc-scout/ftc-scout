@@ -5,27 +5,27 @@
 </script>
 
 <Head
-    title="Api | FTCScout"
-    description="The developer api for FTCScout providing access to all our statistics and data."
+    title="API | FTCScout"
+    description="The developer API for FTCScout providing access to all our statistics and data."
 />
 
 <WidthProvider width="1600px">
     <Card>
-        <h1>FTC<em>Scout</em> Api</h1>
+        <h1>FTC<em>Scout</em> API</h1>
 
-        <p>The FTC<em>Scout</em> Api provides access to all of the FTC<em>Scout</em>'s data and statistics.</p>
+        <p>The FTC<em>Scout</em> API provides access to all of the FTC<em>Scout</em>'s data and statistics.</p>
         <p>
-            The FTC<em>Scout</em> Api uses <a href="https://graphql.org/">GraphQL</a> allowing you to access as much or as
+            The FTC<em>Scout</em> API uses <a href="https://graphql.org/">GraphQL</a> allowing you to access as much or as
             little data as you need in the shape that is most convenient to you.
         </p>
         <p>
-            The FTC<em>Scout</em> Api can be queried at
+            The FTC<em>Scout</em> API can be queried at
             <a href="https://api.ftcscout.org/graphql">api.ftcscout.org/graphql</a>
             or you can try the playground at the same address
             <span class="maybe-hide"> or right here on FTC<em>Scout</em></span>.
         </p>
 
-        <iframe class="maybe-hide" src="https://api.ftcscout.org/graphql" title="FTCScout Api Playground" />
+        <iframe class="maybe-hide" src="https://api.ftcscout.org/graphql" title="FTCScout API Playground" />
     </Card>
 </WidthProvider>
 
