@@ -7,7 +7,6 @@
     export let scores: RemoteScoresTy;
     export let teamNumber: number;
     $: season = scores.season as Season;
-    $: console.log(DESCRIPTORS[season].scoreModalTreeRemote);
 </script>
 
 <table>

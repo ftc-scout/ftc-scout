@@ -7,8 +7,8 @@
 </script>
 
 <script lang="ts">
+    import type { FilterGroup } from "./filter/filter";
     import { exportCSV } from "./csv";
-
     import { faEdit, faFileDownload, faFilter } from "@fortawesome/free-solid-svg-icons";
     import ViewStatsModal from "./view-stats/ViewStatsModal.svelte";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
@@ -35,6 +35,7 @@
 
     export let shownStats: Readable<NonRankStatColumn<T>[]>;
     export let currentSort: Readable<{ id: string; dir: SortDir }>;
+    export let filter: FilterGroup | null;
 
     export let csv: { filename: string; title: string };
 
@@ -60,7 +61,7 @@
     {stats}
     on:choose-stat={(e) => dispatch("toggle-show-stat", e.detail)}
 />
-<FilterModal bind:shown={filtersShown} {stats} />
+<FilterModal bind:shown={filtersShown} root={filter} {stats} on:new-filter />
 
 <div class="controls">
     <div>

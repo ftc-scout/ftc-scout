@@ -23,7 +23,7 @@
     }
 
     function o(id: string | null, num: number | null) {
-        val = id != null ? { ty: "var", id } : { ty: "lit", lit: num ?? 0 };
+        val = id != null ? { ty: "var", id } : { ty: "lit", lit: num };
     }
 
     $: i(val);
@@ -33,7 +33,6 @@
     $: selectedStats = id ? [id] : [];
 
     function chooseStat(newId: string) {
-        console.log(newId);
         shown = false;
         id = id == newId ? null : newId;
     }
@@ -56,8 +55,9 @@
         }}
         value={id ? stats.getStat(id).columnName : ""}
     />
+    <!-- TODO columnName -->
 {:else}
-    <input type="number" />
+    <input type="number" bind:value={num} />
 {/if}
 
 <style>

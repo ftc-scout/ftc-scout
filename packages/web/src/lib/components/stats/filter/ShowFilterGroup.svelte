@@ -54,8 +54,6 @@
         }
         dispatch("change", e.detail);
     }
-
-    let groupTy = "and";
 </script>
 
 <li
@@ -66,7 +64,7 @@
     transition:slide|global={{ duration: 350 }}
 >
     <Select
-        bind:value={groupTy}
+        bind:value={group.ty}
         options={[
             { value: "and", name: "All" },
             { value: "or", name: "Any" },
@@ -90,7 +88,7 @@
         {#if child.ty == "group"}
             <svelte:self
                 {stats}
-                group={child.group}
+                bind:group={child.group}
                 depth={depth + 1}
                 on:remove={() => remove(i)}
                 on:change={change}
@@ -98,7 +96,7 @@
         {:else}
             <ShowFilterCond
                 {stats}
-                cond={child.cond}
+                bind:cond={child.cond}
                 depth={depth + 1}
                 on:remove={() => remove(i)}
                 on:change={change}

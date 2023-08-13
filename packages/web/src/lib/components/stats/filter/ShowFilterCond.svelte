@@ -1,8 +1,6 @@
 <script lang="ts">
-    import FilterLitInput from "./FilterLitInput.svelte";
-
+    import FilterValInput from "./FilterValInput.svelte";
     import { slide } from "svelte/transition";
-
     import { faXmark } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
     import { type FilterCondition, ALL_OPS } from "./filter";
@@ -17,18 +15,16 @@
     export let depth: number;
 
     let dispatch = createEventDispatcher();
-
-    let op = "=";
 </script>
 
 <li class="wrap" style:--depth={depth} transition:slide|global={{ duration: 350 }}>
-    <FilterLitInput bind:val={cond.lhs} {stats} varOnly />
+    <FilterValInput bind:val={cond.lhs} {stats} varOnly />
     <Select
-        bind:value={op}
+        bind:value={cond.op}
         options={ALL_OPS.map((o) => ({ value: o, name: o }))}
         style="width: min-content"
     />
-    <FilterLitInput bind:val={cond.rhs} {stats} />
+    <FilterValInput bind:val={cond.rhs} {stats} />
 
     <button title="Remove" on:click={() => dispatch("remove")}> <Fa icon={faXmark} fw /> </button>
 </li>

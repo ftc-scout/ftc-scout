@@ -19,21 +19,21 @@
         <StatHeader {stats} {currentSort} {rankStat} on:change_sort on:move_column />
     {/if}
 
-    <tbody>
-        {#if stats.length}
+    {#if !stats.length}
+        <tr class="no-data">
+            <td> <b>Choose statistics.</b> </td>
+        </tr>
+    {:else if !data.length}
+        <tr class="no-data">
+            <td> <b>No items match your current filters.</b> </td>
+        </tr>
+    {:else}
+        <tbody>
             {#each data as dataRow}
                 <StatRow data={dataRow} {stats} {focusedTeam} {rankStat} on:row_click />
-            {:else}
-                <tr class="no-data">
-                    <td> <b>No items match your current filters.</b> </td>
-                </tr>
             {/each}
-        {:else}
-            <tr class="no-data">
-                <td> <b>Choose statistics.</b> </td>
-            </tr>
-        {/if}
-    </tbody>
+        </tbody>
+    {/if}
 </table>
 
 <style>
@@ -79,14 +79,10 @@
     }
 
     .no-data {
-        display: table;
-        width: 100%;
-    }
-
-    .no-data b {
         display: flex;
         align-items: center;
         justify-content: center;
         padding: var(--lg-pad);
+        width: 100%;
     }
 </style>

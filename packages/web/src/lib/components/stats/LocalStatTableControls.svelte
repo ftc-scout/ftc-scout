@@ -1,4 +1,8 @@
 <script lang="ts">
+    import { applyFilter } from "./filter/applyFilters";
+
+    import type { FilterGroup } from "./filter/filter";
+
     import { arrayMove } from "../../util/array";
     import { cycleSortDir, cycleSortDirNoNull } from "./SortButton.svelte";
     import { sortMixed } from "../../util/sorters";
@@ -17,6 +21,7 @@
 
     let shownStats = writable(defaultStats.map((s) => stats.getStat(s)));
     let currentSort = writable(defaultSort);
+    let filter: FilterGroup | null = null;
 
     export let rankTy = RankTy.NoFilter;
     export let hideRankStats: string[] = [];
@@ -63,7 +68,12 @@
             (dir == SortDir.Asc ? 1 : -1);
     }
 
-    function sortAndRank(data: T[], sorter: NonRankStatColumn<T>, dir: SortDir): StatData<T>[] {
+    function sortAndRank(
+        data: T[],
+        sorter: NonRankStatColumn<T>,
+        dir: SortDir,
+        filter: FilterGroup | null
+    ): StatData<T>[] {
         let sorted = data
             .sort(statSortFn(stats.getStat(defaultSort.id), defaultSort.dir))
             .sort(statSortFn(sorter, dir))
@@ -74,13 +84,15 @@
                 noFilterSkipRank: 0,
                 data: s,
             }));
-
         assignRanks(sorted, sorter, true);
 
-        return sorted;
+        let filtered = applyFilter(sorted, stats, filter);
+        assignRanks(filtered, sorter, false);
+
+        return filtered;
     }
 
-    $: rankedData = sortAndRank(data, stats.getStat($currentSort.id), $currentSort.dir);
+    $: rankedData = sortAndRank(data, stats.getStat($currentSort.id), $currentSort.dir, filter);
 </script>
 
 <StatTableControls
@@ -88,6 +100,7 @@
     {stats}
     {shownStats}
     {currentSort}
+    {filter}
     {focusedTeam}
     {rankTy}
     {showRank}
@@ -95,4 +108,5 @@
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
     on:toggle-show-stat={(e) => toggleShowStat(e.detail)}
+    on:new-filter={(e) => (filter = e.detail)}
 />
