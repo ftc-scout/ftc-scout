@@ -27,6 +27,8 @@
         totalPoints + "Max",
     ];
 
+    $: saveId = `eventPageTep${season}${remote ? "Remote" : "Trad"}`;
+
     $: underscoreEventName = eventName.replace(" ", "_");
     $: filename = `${season}_${underscoreEventName}_Team_Stats`;
     $: title = `${season} ${eventName} Team Stats`;
@@ -34,6 +36,7 @@
 </script>
 
 <LocalStatTableControls
+    {saveId}
     {data}
     {focusedTeam}
     {stats}

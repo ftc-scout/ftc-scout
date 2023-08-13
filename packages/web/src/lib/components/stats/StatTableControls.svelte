@@ -12,7 +12,6 @@
     import { faEdit, faFileDownload, faFilter } from "@fortawesome/free-solid-svg-icons";
     import ViewStatsModal from "./view-stats/ViewStatsModal.svelte";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
-    import type { Readable } from "svelte/motion";
     import {
         RANK_STATS,
         StatSet,
@@ -33,8 +32,8 @@
     export let rankTy: RankTy;
     export let showRank: boolean;
 
-    export let shownStats: Readable<NonRankStatColumn<T>[]>;
-    export let currentSort: Readable<{ id: string; dir: SortDir }>;
+    export let shownStats: NonRankStatColumn<T>[];
+    export let currentSort: { id: string; dir: SortDir };
     export let filter: FilterGroup | null;
 
     export let csv: { filename: string; title: string };
@@ -57,7 +56,7 @@
 <ViewStatsModal bind:shown={viewStatsModalShown} {stats} data={viewStatsData?.data} />
 <ChooseStatsModal
     bind:shown={chooseStatsModalShown}
-    selectedStats={$shownStats.map((s) => s.id)}
+    selectedStats={shownStats.map((s) => s.id)}
     {stats}
     on:choose-stat={(e) => dispatch("toggle-show-stat", e.detail)}
 />
@@ -72,12 +71,12 @@
     <div>
         <Button
             icon={faFileDownload}
-            disabled={$shownStats.length == 0
+            disabled={shownStats.length == 0
                 ? "Select statistics to export csv."
                 : data.length == 0
                 ? "Select data to export csv."
                 : null}
-            on:click={() => exportCSV(data, $shownStats, csv.filename, csv.title)}
+            on:click={() => exportCSV(data, shownStats, csv.filename, csv.title)}
         >
             Export CSV
         </Button>
@@ -86,8 +85,8 @@
 
 <StatTable
     {data}
-    stats={$shownStats}
-    currentSort={$currentSort}
+    stats={shownStats}
+    {currentSort}
     {focusedTeam}
     rankStat={showRank ? RANK_STATS[rankTy] : null}
     on:change_sort

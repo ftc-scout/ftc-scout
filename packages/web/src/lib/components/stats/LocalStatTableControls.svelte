@@ -1,16 +1,42 @@
+<script lang="ts" context="module">
+    type State<T> = {
+        shownStats: Writable<NonRankStatColumn<T>[]>;
+        currentSort: Writable<{ id: string; dir: SortDir }>;
+        filter: Writable<FilterGroup | null>;
+    };
+    let savedState: Record<string, State<any>> = {};
+
+    function getSavedState<T>(
+        saveId: string,
+        stats: StatSet<T>,
+        defaultStats: string[],
+        defaultSort: { id: string; dir: SortDir }
+    ): State<T> {
+        if (!(saveId in savedState)) {
+            savedState[saveId] = {
+                shownStats: writable(defaultStats.map((s) => stats.getStat(s))),
+                currentSort: writable(defaultSort),
+                filter: writable(null),
+            };
+        }
+
+        return savedState[saveId];
+    }
+</script>
+
 <script lang="ts">
     import { applyFilter } from "./filter/applyFilters";
-
     import type { FilterGroup } from "./filter/filter";
-
     import { arrayMove } from "../../util/array";
     import { cycleSortDir, cycleSortDirNoNull } from "./SortButton.svelte";
     import { sortMixed } from "../../util/sorters";
     import { RankTy, type NonRankStatColumn, type StatData, StatSet } from "./stat-table";
     import StatTableControls, { SortDir } from "./StatTableControls.svelte";
-    import { writable } from "svelte/store";
+    import { writable, type Writable } from "svelte/store";
 
     type T = $$Generic;
+
+    export let saveId: string;
 
     export let data: T[];
     export let stats: StatSet<T>;
@@ -19,9 +45,12 @@
     export let defaultStats: string[];
     export let defaultSort: { id: string; dir: SortDir };
 
-    let shownStats = writable(defaultStats.map((s) => stats.getStat(s)));
-    let currentSort = writable(defaultSort);
-    let filter: FilterGroup | null = null;
+    let { shownStats, currentSort, filter } = getSavedState<T>(
+        saveId,
+        stats,
+        defaultStats,
+        defaultSort
+    );
 
     export let rankTy = RankTy.NoFilter;
     export let hideRankStats: string[] = [];
@@ -92,15 +121,15 @@
         return filtered;
     }
 
-    $: rankedData = sortAndRank(data, stats.getStat($currentSort.id), $currentSort.dir, filter);
+    $: rankedData = sortAndRank(data, stats.getStat($currentSort.id), $currentSort.dir, $filter);
 </script>
 
 <StatTableControls
     data={rankedData}
     {stats}
-    {shownStats}
-    {currentSort}
-    {filter}
+    shownStats={$shownStats}
+    currentSort={$currentSort}
+    filter={$filter}
     {focusedTeam}
     {rankTy}
     {showRank}
@@ -108,5 +137,5 @@
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
     on:toggle-show-stat={(e) => toggleShowStat(e.detail)}
-    on:new-filter={(e) => (filter = e.detail)}
+    on:new-filter={(e) => ($filter = e.detail)}
 />
