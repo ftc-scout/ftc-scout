@@ -11,6 +11,7 @@
         SEASON_RECORDS_ICON,
         TEAMS_ICON,
         BLOG_ICON,
+        STATUS_ICON,
     } from "$lib/icons";
     import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
     import { faGithub } from "@fortawesome/free-brands-svg-icons";
@@ -40,6 +41,7 @@
 <SidebarItem icon={ABOUT_ICON} href="/about">About</SidebarItem>
 <SidebarItem icon={PRIVACY_ICON} href="/privacy">Privacy Policy</SidebarItem>
 <SidebarItem icon={API_ICON} href="/api">API</SidebarItem>
+<SidebarItem icon={STATUS_ICON} href="https://uptime.9021007.xyz/status/ftcscout" newTab>Status</SidebarItem>
 
 <hr />
 

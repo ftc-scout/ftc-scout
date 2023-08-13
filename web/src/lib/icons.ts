@@ -4,6 +4,7 @@ import {
     faCalendarAlt,
     faCircleCheck,
     faCode,
+    faSignal,
     faGavel,
     faGlobeAmericas,
     faHashtag,
@@ -22,6 +23,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 export const WEBSITE_ICON = faLink;
+export const WEBSITE_LOGO = faBinoculars;
 export const DATE_ICON = faCalendarAlt;
 export const LOCATION_ICON = faLocationDot;
 export const SCHOOL_ICON = faSchool;
@@ -46,3 +48,4 @@ export const SEASON_RECORDS_ICON = faTrophy;
 export const OPR_ICON = faBolt;
 export const BLOG_ICON = faBinoculars;
 export const CONE_VIS_ICON = faBinoculars;
+export const STATUS_ICON = faSignal;
