@@ -73,7 +73,7 @@
         {stats}
         {section}
         row={child}
-        shown={shown && $openSections[id]}
+        shown={shown && !!$openSections[id]}
         depth={depth + 1}
         on:choose-stat
     />
