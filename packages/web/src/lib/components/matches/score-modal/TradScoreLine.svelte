@@ -3,6 +3,8 @@
     import type { TradScoresTy } from "../MatchScore.svelte";
     import ExpandButton from "../../ExpandButton.svelte";
     import { slide } from "svelte/transition";
+    import { SM_OPEN_SECTIONS } from "./ScoreModal.svelte";
+    import type { Season } from "@ftc-scout/common";
 
     export let scores: TradScoresTy;
     export let prop: ScoreModalComponent;
@@ -15,20 +17,21 @@
 
     $: p = sub ? "+" : "";
 
-    let showSub = false;
-    $: shownList = showSub ? children ?? [] : [];
+    $: id = prop.id;
+    $: openSections = SM_OPEN_SECTIONS[scores.season as Season];
+    $: shownList = $openSections[id] ? children ?? [] : [];
 </script>
 
 <tr
     class:heading
     class:sub
     class:has-subs={children.length}
-    on:click={() => (showSub = !showSub)}
+    on:click={() => ($openSections[id] = !$openSections[id])}
     transition:slide={{ duration: 250 }}
 >
     <td class="name">
         {#if children.length}
-            <ExpandButton bind:open={showSub} style="position:absolute; left: var(--md-gap)" />
+            <ExpandButton open={$openSections[id]} style="position:absolute; left: var(--md-gap)" />
         {/if}
         {prop.displayName}
     </td>

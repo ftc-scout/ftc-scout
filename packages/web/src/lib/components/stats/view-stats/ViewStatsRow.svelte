@@ -1,6 +1,19 @@
-<script lang="ts">
-    import { slide } from "svelte/transition";
+<script lang="ts" context="module">
+    type OpenMap = Writable<Record<string, boolean>>;
+    let allOpenSections: Record<string, OpenMap> = {};
 
+    function getOpenSections(id: string): OpenMap {
+        if (!(id in allOpenSections)) {
+            allOpenSections[id] = writable({});
+        }
+
+        return allOpenSections[id];
+    }
+</script>
+
+<script lang="ts">
+    import { writable, type Writable } from "svelte/store";
+    import { slide } from "svelte/transition";
     import type { Tree } from "@ftc-scout/common";
     import type { StatSectionRow, StatSet, StatSetSection } from "../stat-table";
     import ViewCell from "./ViewCell.svelte";
@@ -15,12 +28,14 @@
 
     export let shown = true;
     export let depth = 0;
-    let open = false;
+
+    $: openSections = getOpenSections(stats.id);
+    $: id = section.getRowId(row.val.id);
 </script>
 
 {#if shown}
     <tr
-        on:click={() => (open = !open)}
+        on:click={() => ($openSections[id] = !$openSections[id])}
         transition:slide={{ duration: 250 }}
         class:header={depth == 0 && section.columns.length != 1}
         class:single-col={section.columns.length == 1}
@@ -28,7 +43,7 @@
         <td class="name" class:has-children={row.children.length} style:--depth={depth}>
             {#if row.children.length}
                 <ExpandButton
-                    bind:open
+                    open={$openSections[id]}
                     style="position: absolute; top:0; bottom: 0; left: calc({depth * 2 +
                         1} * var(--md-gap))"
                 />
@@ -43,7 +58,14 @@
 {/if}
 
 {#each row.children as child}
-    <svelte:self {data} {stats} {section} row={child} shown={shown && open} depth={depth + 1} />
+    <svelte:self
+        {data}
+        {stats}
+        {section}
+        row={child}
+        shown={shown && !!$openSections[id]}
+        depth={depth + 1}
+    />
 {/each}
 
 <style>

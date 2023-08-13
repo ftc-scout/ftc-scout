@@ -214,7 +214,11 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
             }))
         );
 
-        statSetCache[key] = new StatSet([...soloStats, ...groupStats], [soloSection, groupSection]);
+        statSetCache[key] = new StatSet(
+            `tep${season}${remote ? "Remote" : "Trad"}`,
+            [...soloStats, ...groupStats],
+            [soloSection, groupSection]
+        );
     }
 
     return statSetCache[key]!;

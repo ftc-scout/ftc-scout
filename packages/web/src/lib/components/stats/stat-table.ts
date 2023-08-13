@@ -181,15 +181,21 @@ export class StatSetSection {
     getId(rowId: string, columnId: string) {
         return rowId + titleCase(columnId);
     }
+
+    getRowId(row: string) {
+        return row + this.columns.map((c) => c.id);
+    }
 }
 
 export class StatSet<T> {
+    id: string;
     allStats: NonRankStatColumn<T>[];
     sections: StatSetSection[];
 
     private allStatsRecord: Record<string, NonRankStatColumn<T>>;
 
-    constructor(allStats: NonRankStatColumn<T>[], sections: StatSetSection[]) {
+    constructor(id: string, allStats: NonRankStatColumn<T>[], sections: StatSetSection[]) {
+        this.id = id;
         this.allStats = allStats;
         this.sections = sections;
         this.allStatsRecord = groupBySingle(allStats, (s) => s.id);

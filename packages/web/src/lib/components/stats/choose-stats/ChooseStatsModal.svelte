@@ -1,6 +1,5 @@
 <script lang="ts">
     import ChooseStatsSection from "./ChooseStatsSection.svelte";
-
     import Modal from "../../Modal.svelte";
     import type { StatSet } from "../stat-table";
 

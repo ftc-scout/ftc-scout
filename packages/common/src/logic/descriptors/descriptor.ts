@@ -213,6 +213,7 @@ export class TepComponent {
 }
 
 export class ScoreModalComponent {
+    id: string;
     displayName: string;
     remoteDisplayName: string;
     getValue: (ms: any) => number;
@@ -222,6 +223,7 @@ export class ScoreModalComponent {
     children: string[];
 
     constructor(opts: {
+        id: string;
         displayName: string;
         remoteDisplayName: string;
         getValue: (ms: any) => number;
@@ -229,6 +231,7 @@ export class ScoreModalComponent {
         getTitle: (ms: any) => string;
         children: string[];
     }) {
+        this.id = opts.id;
         this.displayName = opts.displayName;
         this.remoteDisplayName = opts.remoteDisplayName;
         this.getValue = opts.getValue;
@@ -312,6 +315,7 @@ export class DescriptorColumn {
         let tradMsName = this.ms?.getApiName(false) ?? this.baseName;
         let remoteMsName = this.ms?.getApiName(true) ?? this.baseName;
         this.scoreM = new ScoreModalComponent({
+            id: this.id,
             displayName: opts.displayName,
             remoteDisplayName: opts.remoteDisplayName ?? opts.displayName,
             getValue: opts.getValue ?? ((ms) => ms[tradMsName]),
