@@ -40,7 +40,7 @@
     }
 
     button:disabled {
-        background: var(--form-disabled-bg-color);
+        opacity: 0.5;
         cursor: not-allowed;
     }
 </style>
