@@ -85,8 +85,11 @@
 
         <h2>Our Team</h2>
         <p>
-            FTC<em>Scout</em> was developed by programmers at <a href="/teams/16321">16321 X Drive</a>, but it is FOSS
-            (Free and Open-Source Software) so you can contribute to it
+            FTC<em>Scout</em> was developed by programmers at <a href="/teams/16321">16321 X Drive</a>, but it is FOSS (<a
+                href="https://en.wikipedia.org/wiki/Free_and_open-source_software"
+                target="_blank"
+                rel="noreferrer">Free and Open-Source Software</a
+            >) so you can contribute to it
             <a href="https://github.com/16321-X-Drive/ftc-scout" target="_blank" rel="noreferrer">on our Github</a>.
         </p>
         <div class="contributors">
