@@ -55,13 +55,13 @@
 
 <style>
     * {
-        line-height: 1.5rem;
+        line-height: 2rem;
     }
 
     p,
     p * {
         font-size: 16px;
-        margin-bottom: 0.75rem;
+        margin-bottom: 0.25rem;
     }
 
     @media (max-width: 800px) {
