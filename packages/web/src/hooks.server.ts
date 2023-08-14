@@ -5,7 +5,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     let theme = "system";
     try {
         let cookieVal = event.cookies.get(THEME_COOKIE_NAME);
-        theme = JSON.parse(cookieVal ?? "").rendered;
+        theme = JSON.parse(cookieVal ?? "").system;
     } catch {}
 
     let response = await resolve(event, {
