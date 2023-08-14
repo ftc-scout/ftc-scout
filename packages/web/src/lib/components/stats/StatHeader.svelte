@@ -216,11 +216,10 @@
     thead:global(.sticking) th::after {
         content: "";
         position: absolute;
-        --height: 500px;
-        top: calc(var(--height) * -1 + 2px);
         left: 0;
         right: 0;
-        height: var(--height);
+        top: -150px;
+        height: 150px;
     }
 
     .empty {
