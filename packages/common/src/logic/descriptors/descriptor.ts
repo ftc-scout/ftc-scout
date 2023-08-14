@@ -184,6 +184,7 @@ export class TepComponent {
     apiName: string;
     columnPrefix: string;
     dialogName: string;
+    fullName: string;
 
     make: (ms: Record<string, string>, station: Station) => number;
 
@@ -196,6 +197,7 @@ export class TepComponent {
         apiName: string;
         columnPrefix: string;
         dialogName: string;
+        fullName: string;
 
         make: (ms: Record<string, any>, station: Station) => number;
     }) {
@@ -207,6 +209,7 @@ export class TepComponent {
         this.apiName = opts.apiName;
         this.columnPrefix = opts.columnPrefix;
         this.dialogName = opts.dialogName;
+        this.fullName = opts.fullName;
 
         this.make = opts.make;
     }
@@ -285,6 +288,7 @@ export class DescriptorColumn {
         apiName?: string;
         columnPrefix: string;
         dialogName?: string;
+        fullName: string;
 
         make?: (ms: Record<string, any>, station: Station) => number;
     }): DescriptorColumn {
@@ -298,6 +302,7 @@ export class DescriptorColumn {
             apiName: opts.apiName ?? this.baseName,
             columnPrefix: opts.columnPrefix,
             dialogName: opts.dialogName ?? this.scoreM?.displayName ?? "<ERROR>",
+            fullName: opts.fullName,
 
             make: opts.make ?? ((ms) => ms[msName]),
         });

@@ -40,6 +40,15 @@ const GROUP_DATA_TYS = {
     [TepStatGroup.Dev]: StatType.Float,
 };
 
+const GROUP_NAMES = {
+    [TepStatGroup.Tot]: ["Total", ""],
+    [TepStatGroup.Avg]: ["Average", ""],
+    [TepStatGroup.Opr]: ["", "Opr"],
+    [TepStatGroup.Min]: ["Minimum", ""],
+    [TepStatGroup.Max]: ["Maximum", ""],
+    [TepStatGroup.Dev]: ["", "Standard Deviation"],
+};
+
 const GROUP_DESC = {
     [TepStatGroup.Tot]: "The sum of all points scored in the category.",
     [TepStatGroup.Avg]: "The average number of points scored in the category.",
@@ -63,7 +72,7 @@ TepComponent.prototype.getStatColumn = function (group: TepStatGroup) {
         id: th.id + titleCase(group),
         columnName: (th.columnPrefix + " " + group.toUpperCase()).trim(),
         dialogName: th.dialogName,
-        titleName: th.apiName, // TODO
+        titleName: `${GROUP_NAMES[group][0]} ${th.fullName} ${GROUP_NAMES[group][1]}`.trim(),
         ty: GROUP_DATA_TYS[group],
         getNonRankValue: (d) => ({ ty: GROUP_DATA_TYS[group], val: d.stats[group][th.apiName] }),
     });

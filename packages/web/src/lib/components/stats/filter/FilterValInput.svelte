@@ -60,7 +60,6 @@
             }}
             value={id ? stats.getStat(id).columnName : ""}
         />
-        <!-- TODO columnName -->
         <span class="icon"> <Fa icon={faEdit} /> </span>
     </div>
 {:else}
