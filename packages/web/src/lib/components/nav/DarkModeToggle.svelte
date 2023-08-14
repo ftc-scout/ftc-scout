@@ -1,5 +1,5 @@
 <script lang="ts" context="module">
-    function getPreference(): "light" | "dark" {
+    function getSystemColorScheme(): "light" | "dark" {
         return browser
             ? window.matchMedia("(prefers-color-scheme: dark)").matches
                 ? "dark"
@@ -7,10 +7,24 @@
             : "light";
     }
 
-    export let theme = persisted(THEME_COOKIE_NAME, {
-        preference: "system" as "system" | "light" | "dark",
-        rendered: getPreference(),
-    });
+    function loadThemePreference(): {
+        preference: "system" | "light" | "dark";
+        rendered: "light" | "dark";
+    } {
+        let cookie = browser ? parse(document.cookie)[THEME_COOKIE_NAME] : undefined;
+        let parsed = undefined;
+        try {
+            parsed = JSON.parse(cookie ?? "");
+        } catch {}
+        return (
+            parsed ?? {
+                preference: "system" as const,
+                rendered: getSystemColorScheme(),
+            }
+        );
+    }
+
+    export let theme = writable(loadThemePreference());
 
     export let tippyTheme: Readable<"light" | "dark"> = derived(theme, ($theme) =>
         $theme.rendered == "light" ? "dark" : "light"
@@ -18,13 +32,12 @@
 </script>
 
 <script lang="ts">
-    import { serialize } from "cookie";
-    import { derived, type Readable } from "svelte/store";
+    import { serialize, parse } from "cookie";
+    import { derived, writable, type Readable } from "svelte/store";
     import Fa from "svelte-fa";
     import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
     import { THEME_COOKIE_AGE, THEME_COOKIE_NAME } from "../../constants";
     import { browser } from "$app/environment";
-    import { persisted } from "svelte-local-storage-store";
 
     function handleThemeChange(newTheme: typeof $theme) {
         if (!browser) return;
@@ -38,15 +51,16 @@
         }
         document.body.classList.remove("system");
 
-        document.cookie = serialize(THEME_COOKIE_NAME, newTheme.preference, {
+        document.cookie = serialize(THEME_COOKIE_NAME, JSON.stringify(newTheme), {
             path: "/",
             maxAge: THEME_COOKIE_AGE,
+            httpOnly: false,
         });
     }
 
     function setTheme(next: "light" | "dark") {
         $theme = {
-            preference: getPreference() == next ? ("system" as const) : next,
+            preference: getSystemColorScheme() == next ? ("system" as const) : next,
             rendered: next,
         };
         handleThemeChange($theme);
