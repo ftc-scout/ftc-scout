@@ -48,6 +48,7 @@
         encode: (val) => (val == CURRENT_SEASON ? null : "" + val),
         decode: (val) => ALL_SEASONS.find((s) => "" + s == val) ?? CURRENT_SEASON,
         pushState: true,
+        killHash: true,
     });
 </script>
 
