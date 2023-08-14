@@ -58,7 +58,6 @@
             season. In addition you can use our highly capable filtering and sorting options to find
             even more information. For example here you can see the
             <a
-                sveltekit:prefetch
                 href={`/records/2021/teams?region=California&filter=%7B"all"%3A%5B%7B"lhs"%3A"Team"%2C"op"%3A"%3D"%2C"rhs"%3A16321%7D%5D%7D&sort=Auto+Points+OPR`}
             >
                 rankings of X Drive's Autonomous OPRs in California for the Freight Frenzy season.
@@ -75,8 +74,8 @@
             We designed FTC<em>Scout</em> with performance, security, and accessability in mind. FTC<em
                 >Scout</em
             >
-            pages load fast and with all data at the same time instead of popping in slowly. As a
-            result of optimizations, FTC<em> Scout </em>
+            pages load fast and with all data at the same time instead of popping in slowly. As a result
+            of optimizations, FTC<em> Scout </em>
             receives exceptional
             <a
                 href="https://en.wikipedia.org/wiki/Google_Lighthouse"
