@@ -9,7 +9,11 @@
         faHome,
         faInfoCircle,
         faTrophy,
+        faEnvelope,
+        faCow,
+        faSignal,
     } from "@fortawesome/free-solid-svg-icons";
+    // import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
     import SidebarItem from "./SidebarItem.svelte";
     import { sidebarOpen } from "./Sidebar.svelte";
     import Fa from "svelte-fa";
@@ -34,8 +38,20 @@
 <hr />
 
 <SidebarItem icon={faInfoCircle} name="About" link="/about" />
-<SidebarItem icon={faGavel} name="Teams" link="/privacy" />
+<SidebarItem icon={faGavel} name="Privacy" link="/privacy" />
+<SidebarItem
+    icon={faSignal}
+    name="Status"
+    link="https://uptime.9021007.xyz/status/ftcscout"
+    newTab
+/>
 <SidebarItem icon={faCode} name="API" link="/api" />
+
+<hr />
+
+<SidebarItem icon={faCow} name="Discord" link="/api" />
+<SidebarItem icon={faCow} name="GitHub" link="/api" />
+<SidebarItem icon={faEnvelope} name="Email" link="/api" />
 
 <style>
     hr {
