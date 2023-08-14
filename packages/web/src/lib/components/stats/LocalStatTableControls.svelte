@@ -3,6 +3,7 @@
         shownStats: Writable<NonRankStatColumn<T>[]>;
         currentSort: Writable<{ id: string; dir: SortDir }>;
         filter: Writable<FilterGroup | null>;
+        rankTy: Writable<RankTy>;
     };
     let savedState: Record<string, State<any>> = {};
 
@@ -17,6 +18,7 @@
                 shownStats: writable(defaultStats.map((s) => stats.getStat(s))),
                 currentSort: writable(defaultSort),
                 filter: writable(null),
+                rankTy: writable(RankTy.NoFilter),
             };
         }
 
@@ -45,16 +47,27 @@
     export let defaultStats: string[];
     export let defaultSort: { id: string; dir: SortDir };
 
-    let { shownStats, currentSort, filter } = getSavedState<T>(
+    let { shownStats, currentSort, filter, rankTy } = getSavedState<T>(
         saveId,
         stats,
         defaultStats,
         defaultSort
     );
 
-    export let rankTy = RankTy.NoFilter;
+    function calcIsDefaultStats(def: string[], curr: NonRankStatColumn<T>[]): boolean {
+        if (def.length != curr.length) return false;
+        for (let i = 0; i < def.length; i++) {
+            if (def[i] != curr[i].id) return false;
+        }
+        return true;
+    }
+
+    $: isDefaultStats = calcIsDefaultStats(defaultStats, $shownStats);
+
     export let hideRankStats: string[] = [];
-    $: showRank = hideRankStats.indexOf($currentSort.id) == -1;
+    $: rankingByEquiv = hideRankStats.indexOf($currentSort.id) != -1;
+    $: rowsDroppedByFilter = rankedData.length != data.length;
+    $: showRank = !rankingByEquiv || (rowsDroppedByFilter && $rankTy != RankTy.NoFilter);
 
     export let csv: { filename: string; title: string };
 
@@ -130,12 +143,14 @@
     shownStats={$shownStats}
     currentSort={$currentSort}
     filter={$filter}
+    {isDefaultStats}
     {focusedTeam}
-    {rankTy}
+    bind:rankTy={$rankTy}
     {showRank}
     {csv}
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
     on:toggle-show-stat={(e) => toggleShowStat(e.detail)}
     on:new-filter={(e) => ($filter = e.detail)}
+    on:reset-stats={() => ($shownStats = defaultStats.map((id) => stats.getStat(id)))}
 />

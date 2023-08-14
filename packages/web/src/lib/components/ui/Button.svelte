@@ -28,6 +28,7 @@
         border: 1px solid var(--sep-color);
         border-radius: var(--pill-border-radius);
 
+        white-space: nowrap;
         cursor: pointer;
     }
 
