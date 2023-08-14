@@ -10,13 +10,14 @@
         faInfoCircle,
         faTrophy,
         faEnvelope,
-        faCow,
         faSignal,
     } from "@fortawesome/free-solid-svg-icons";
-    // import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
+    import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
     import SidebarItem from "./SidebarItem.svelte";
     import { sidebarOpen } from "./Sidebar.svelte";
     import Fa from "svelte-fa";
+    import IconSidebarItem from "./IconSidebarItem.svelte";
+    import { EMAIL } from "../../constants";
 </script>
 
 <b>
@@ -39,19 +40,21 @@
 
 <SidebarItem icon={faInfoCircle} name="About" link="/about" />
 <SidebarItem icon={faGavel} name="Privacy" link="/privacy" />
-<SidebarItem
-    icon={faSignal}
-    name="Status"
-    link="https://uptime.9021007.xyz/status/ftcscout"
-    newTab
-/>
 <SidebarItem icon={faCode} name="API" link="/api" />
 
 <hr />
 
-<SidebarItem icon={faCow} name="Discord" link="/api" />
-<SidebarItem icon={faCow} name="GitHub" link="/api" />
-<SidebarItem icon={faEnvelope} name="Email" link="/api" />
+<div class="icons">
+    <IconSidebarItem icon={faGithub} name="Github" link="https://github.com/16321-X-Drive" />
+    <IconSidebarItem icon={faDiscord} name="Discord" link="https://discord.gg/XTZhD9RnKa" />
+    <IconSidebarItem icon={faEnvelope} name="Email" link="mailto:{EMAIL}" />
+    <IconSidebarItem
+        icon={faSignal}
+        name="Status"
+        link="https://uptime.9021007.xyz/status/ftcscout"
+        newTab
+    />
+</div>
 
 <style>
     hr {
@@ -77,5 +80,11 @@
     button {
         background: none;
         border: none;
+    }
+
+    .icons {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
     }
 </style>

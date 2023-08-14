@@ -21,6 +21,7 @@
     a {
         margin-bottom: var(--lg-gap);
         padding: var(--lg-pad);
+        font-size: 16px;
 
         border-radius: 8px;
 
