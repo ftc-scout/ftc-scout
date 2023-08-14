@@ -209,6 +209,18 @@
         cursor: grab;
 
         color: var(--stat-text-color);
+
+        position: relative;
+    }
+
+    thead:global(.sticking) th::after {
+        content: "";
+        position: absolute;
+        --height: 500px;
+        top: calc(var(--height) * -1 + 2px);
+        left: 0;
+        right: 0;
+        height: var(--height);
     }
 
     .empty {
@@ -230,20 +242,28 @@
         box-shadow: rgb(0 0 0 / 14%) 0px -4px 4px -2px inset;
         background: var(--fg-color);
     }
+    .white::after {
+        background: var(--fg-color);
+    }
 
-    .red {
+    .red,
+    .red::after {
         background: var(--red-stat-color);
     }
-    .blue {
+    .blue,
+    .blue::after {
         background: var(--blue-stat-color);
     }
-    .light-blue {
+    .light-blue,
+    .light-blue::after {
         background: var(--light-blue-stat-color);
     }
-    .purple {
+    .purple,
+    .purple::after {
         background: var(--purple-stat-color);
     }
-    .green {
+    .green,
+    .green::after {
         background: var(--green-stat-color);
     }
 </style>
