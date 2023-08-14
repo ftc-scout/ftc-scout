@@ -107,7 +107,7 @@ body {
     --stat-text-color: var(--team-text-color);
 }
 
-body:not(.dark) {
+body {
     --fg-color: #ffffff;
     --bg-color: #f2f2f2;
 
@@ -164,6 +164,10 @@ body:not(.dark) {
     color-scheme: light;
 }
 
+body .render-dark {
+    display: none;
+}
+
 body.dark {
     --bg-color: #161616;
     --fg-color: #2d2d2d;
@@ -216,6 +220,77 @@ body.dark {
     --grayed-out-text-color: #a0a0a0;
 
     color-scheme: dark;
+}
+
+body.dark .render-dark {
+    display: initial;
+}
+body.dark .render-light {
+    display: none;
+}
+
+/* Same as above. Remember to copy past */
+@media (prefers-color-scheme: dark) {
+    body:not(.light) {
+        --bg-color: #161616;
+        --fg-color: #2d2d2d;
+        --hover-color: #3a3a3a;
+        --tab-hover-color: #232323;
+        --theme-color: #1f4c52;
+        --inline-theme-color: #39848e;
+
+        --sep-color: #4a4e51;
+        --sep-hover-color: #595d61;
+
+        --text-color: #dfe2e6;
+        --secondary-text-color: #dcdfe2;
+        --theme-text-color: #ffffff;
+
+        --inverse-bg-color: #202020;
+        --inverse-text-color: var(--text-color);
+        --inverse-secondary-text-color: var(--secondary-text-color);
+
+        --form-bg-color: #191919;
+        --form-hover-bg-color: #232323;
+        --form-click-bg-color: #2d2d2d;
+        --form-disabled-opacity: 0.5;
+
+        --team-color-transparency: 0.25;
+        --red-team-color-vs: 204, 47, 47;
+        --blue-team-color-vs: 27, 87, 179;
+        --neutral-team-color-vs: 127, 0, 190;
+        --red-team-text-color: rgb(244, 67, 54);
+        --blue-team-text-color: rgb(33, 150, 243);
+        --neutral-team-text-color: rgb(196, 79, 255);
+        --zebra-stripe-color: #353535;
+
+        --red-stat-color-vs: var(--red-team-color-vs);
+        --blue-stat-color-vs: var(--blue-team-color-vs);
+        --light-blue-stat-color-vs: 25, 118, 210;
+        --purple-stat-color-vs: var(--neutral-team-color-vs);
+        --green-stat-color-vs: 46, 125, 50;
+        --red-stat-color: rgb(var(--red-stat-color-vs));
+        --red-stat-bg-color: rgba(var(--red-stat-color-vs), var(--stat-transparency));
+        --blue-stat-color: rgb(var(--blue-stat-color-vs));
+        --blue-stat-bg-color: rgba(var(--blue-stat-color-vs), var(--stat-transparency));
+        --light-blue-stat-color: rgb(var(--light-blue-stat-color-vs));
+        --light-blue-stat-bg-color: rgba(var(--light-blue-stat-color-vs), var(--stat-transparency));
+        --purple-stat-color: rgb(var(--purple-stat-color-vs));
+        --purple-stat-bg-color: rgba(var(--purple-stat-color-vs), var(--stat-transparency));
+        --green-stat-color: rgb(var(--green-stat-color-vs));
+        --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
+
+        --grayed-out-text-color: #a0a0a0;
+
+        color-scheme: dark;
+    }
+
+    body:not(.light) .render-dark {
+        display: initial;
+    }
+    body:not(.light) .render-light {
+        display: none;
+    }
 }
 
 /* --- Resets --- */

@@ -1,31 +1,77 @@
 <script lang="ts" context="module">
-    import { derived, writable, type Readable, type Writable } from "svelte/store";
-    import Fa from "svelte-fa";
-    import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
-    export let currentTheme: Writable<"light" | "dark"> = writable("light");
-    export let tippyTheme: Readable<"light" | "dark"> = derived(currentTheme, ($currentTheme) =>
-        $currentTheme == "light" ? "dark" : "light"
+    function getPreference(): "light" | "dark" {
+        return browser
+            ? window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light"
+            : "light";
+    }
+
+    export let theme = persisted(THEME_COOKIE_NAME, {
+        preference: "system" as "system" | "light" | "dark",
+        rendered: getPreference(),
+    });
+
+    export let tippyTheme: Readable<"light" | "dark"> = derived(theme, ($theme) =>
+        $theme.rendered == "light" ? "dark" : "light"
     );
 </script>
 
 <script lang="ts">
-    var currentIcon = faSun;
+    import { serialize } from "cookie";
+    import { derived, type Readable } from "svelte/store";
+    import Fa from "svelte-fa";
+    import { faMoon, faSun } from "@fortawesome/free-solid-svg-icons";
+    import { THEME_COOKIE_AGE, THEME_COOKIE_NAME } from "../../constants";
+    import { browser } from "$app/environment";
+    import { persisted } from "svelte-local-storage-store";
 
-    function toggle() {
-        $currentTheme = $currentTheme == "light" ? "dark" : "light";
-        currentIcon = $currentTheme == "light" ? faSun : faMoon;
+    function handleThemeChange(newTheme: typeof $theme) {
+        if (!browser) return;
 
-        if ($currentTheme == "light") {
+        if (newTheme.rendered == "light") {
+            document.body.classList.add("light");
             document.body.classList.remove("dark");
         } else {
+            document.body.classList.remove("light");
             document.body.classList.add("dark");
         }
+        document.body.classList.remove("system");
+
+        document.cookie = serialize(THEME_COOKIE_NAME, newTheme.preference, {
+            path: "/",
+            maxAge: THEME_COOKIE_AGE,
+        });
+    }
+
+    function setTheme(next: "light" | "dark") {
+        $theme = {
+            preference: getPreference() == next ? ("system" as const) : next,
+            rendered: next,
+        };
+        handleThemeChange($theme);
     }
 </script>
 
-<button on:click={toggle}>
-    <Fa icon={currentIcon} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
-</button>
+<form method="POST" action="/toggle-theme">
+    <button
+        class="render-light"
+        name="currTheme"
+        value="light"
+        on:click|preventDefault={() => setTheme("dark")}
+    >
+        <Fa icon={faSun} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
+    </button>
+
+    <button
+        class="render-dark"
+        name="currTheme"
+        value="dark"
+        on:click|preventDefault={() => setTheme("light")}
+    >
+        <Fa icon={faMoon} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
+    </button>
+</form>
 
 <style>
     button {
@@ -33,11 +79,7 @@
         border: none;
         background: none;
         color: var(--theme-text-color);
-    }
 
-    @media (max-width: 800px) {
-        span {
-            display: none;
-        }
+        cursor: pointer;
     }
 </style>
