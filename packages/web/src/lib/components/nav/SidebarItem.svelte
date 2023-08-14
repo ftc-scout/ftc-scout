@@ -7,11 +7,12 @@
     export let name: string;
     export let link: string;
     export let strict = false;
+    export let newTab: boolean | null = null;
 
     $: active = strict ? $page.url.pathname == link : $page.url.pathname.startsWith(link);
 </script>
 
-<a href={link} class:active>
+<a href={link} class:active target={newTab ? "_blank" : null} rel={newTab ? "noreferrer" : null}>
     <Fa {icon} fw size="1.25x" />
     {name}
 </a>

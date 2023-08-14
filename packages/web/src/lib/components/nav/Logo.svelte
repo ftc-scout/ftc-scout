@@ -1,4 +1,9 @@
-<a href="/">FTC<em>Scout</em></a>
+<script lang="ts">
+    import { faBinoculars } from "@fortawesome/free-solid-svg-icons";
+    import Fa from "svelte-fa";
+</script>
+
+<a href="/"><Fa icon={faBinoculars} fw size="1.25x" translateX="-0.15" />FTC<em>Scout</em></a>
 
 <style>
     a {
