@@ -45,7 +45,11 @@
 <hr />
 
 <div class="icons">
-    <IconSidebarItem icon={faGithub} name="Github" link="https://github.com/16321-X-Drive" />
+    <IconSidebarItem
+        icon={faGithub}
+        name="Github"
+        link="https://github.com/16321-X-Drive/ftc-scout"
+    />
     <IconSidebarItem icon={faDiscord} name="Discord" link="https://discord.gg/XTZhD9RnKa" />
     <IconSidebarItem icon={faEnvelope} name="Email" link="mailto:{EMAIL}" />
     <IconSidebarItem
