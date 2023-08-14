@@ -68,11 +68,11 @@
 
     @media (max-width: 600px) {
         a {
-            padding: var(--sm-pad) 0;
+            padding: var(--sm-pad);
         }
 
         a * {
-            width: 15ch;
+            width: 14ch;
         }
     }
 
