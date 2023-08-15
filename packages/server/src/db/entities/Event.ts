@@ -113,6 +113,59 @@ export class Event extends BaseEntity {
             FTCCMP1JEMI: "FIRST World Championship - Jemison Division",
             FTCCMP1EDIS: "FIRST World Championship - Edison Division",
             FTCCMP1OCHO: "FIRST World Championship - Ochoa Division",
+
+            // Old event division weren't named nicely. cspell:disable
+            "19MICMP2": "FIRST in Michigan FTC State Championship - Warren",
+            "19MICMP2MARIECURIE":
+                "FIRST in Michigan FTC State Championship - Warren - Marie Curie Division",
+            "19MICMP2WOODIEFLOWER":
+                "FIRST in Michigan FTC State Championship - Warren - Woodie Flowers Division",
+
+            "2019FLC1": "Florida FTC State Championship",
+            "2019FLC1LAWRENCE": "Florida FTC State Championship - Lawrence Division",
+            "2019FLC1SCOTT": "Florida FTC State Championship - Scott Division",
+
+            "2019GACMP": "Georgia State Championship",
+            "2019GACMPKILRAIN": "Georgia State Championship - Kilrain Division",
+            "2019GACMPPEMBERTON": "Georgia State Championship - Pemberton Division",
+
+            "2019IACMP1": "Iowa Championship",
+            "2019IACMP1BLACK": "Iowa Championship - Black Division",
+            "2019IACMP1GOLD": "Iowa Championship - Gold Division",
+
+            "2019MOC1": "Missouri State Championship",
+            "2019MOC1SDIVISION": "Missouri State Championship - S Division",
+            "2019MOC1TDIVISION": "Missouri State Championship - T Division",
+
+            "2019TXCCMP": "Central Texas FIRST Tech Challenge Regional Championship",
+            "2019TXCCMPKANE":
+                "Central Texas FIRST Tech Challenge Regional Championship - Kane Division",
+            "2019TXCCMPNAYLOR":
+                "Central Texas FIRST Tech Challenge Regional Championship - Naylor Division",
+
+            "63707970587.8573": "2019-2020 MN FTC Stratasys State Championship",
+            "63707970587.8573GALA":
+                "2019-2020 MN FTC Stratasys State Championship - Galaxy Division",
+            "63707970587.8573NANO": "2019-2020 MN FTC Stratasys State Championship - Nano Division",
+
+            "63713064000.6815": ",MD-DC SKYSTONE Championship",
+            "63713064000.6815COLL": "MD-DC SKYSTONE Championship - Collins Aerospace Division",
+            "63713064000.6815KAHL": "MD-DC SKYSTONE Championship - Kahlert Division",
+
+            AZFTCCP: "Arizona FIRST Tech Challenge Championship",
+            AZFTCCPGRANDCANYON: "Arizona FIRST Tech Challenge Championship - Grand Canyon Division",
+            AZFTCCPSAGUARO: "Arizona FIRST Tech Challenge Championship - Saguaro Division",
+
+            LACHAMP: "Los Angeles Championship Monrovia, CA",
+            LACHAMPGALILEO: "Los Angeles Championship Monrovia, CA - Galileo Division",
+            LACHAMPODYSSEY: "Los Angeles Championship Monrovia, CA - Odyssey Division",
+            NTXCH01: "North Texas FTC Regional Championship",
+            NTXCH01RUBY: "North Texas FTC Regional Championship - Ruby Division",
+            NTXCH01SAPPHIRE: "North Texas FTC Regional Championship - Sapphire Division",
+            PACHAMP1: "Pennsylvania FTC Championship",
+            PACHAMP1ALLEGHENY: "Pennsylvania FTC Championship - Allegheny Division",
+            PACHAMP1POCONO: "Pennsylvania FTC Championship - Pocono Division",
+            // cspell:enable
         };
 
         return Event.create({

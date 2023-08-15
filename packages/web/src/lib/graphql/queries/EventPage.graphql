@@ -29,5 +29,10 @@ query EventPage($season: Int!, $code: String!) {
                 name
             }
         }
+        relatedEvents {
+            season
+            code
+            name
+        }
     }
 }

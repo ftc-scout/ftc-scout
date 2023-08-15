@@ -1,4 +1,6 @@
 <script lang="ts">
+    import RelatedEvents from "./RelatedEvents.svelte";
+
     import { DESCRIPTORS, Season, notEmpty } from "@ftc-scout/common";
     import ErrorPage from "$lib/components/ErrorPage.svelte";
     import Loading from "$lib/components/Loading.svelte";
@@ -81,6 +83,8 @@
 
             <DataFromFirst />
         </Card>
+
+        <RelatedEvents relatedEvents={event.relatedEvents} thisEventName={event.name} {season} />
 
         <TabbedCard
             tabs={[

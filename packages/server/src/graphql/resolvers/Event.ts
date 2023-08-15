@@ -25,6 +25,8 @@ import { TeamEventParticipationGQL } from "./TeamEventParticipation";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
 import { LocationGQL } from "../objs/Location";
 import { DateTime } from "luxon";
+import { DATA_SOURCE } from "../../db/data-source";
+import { Brackets } from "typeorm";
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Event",
@@ -72,6 +74,26 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             ...BoolTy,
             resolve: (e) =>
                 DateTime.fromISO(e.end as any, { zone: e.timezone ?? undefined }) < DateTime.now(),
+        },
+
+        relatedEvents: {
+            type: list(nn(EventGQL)),
+            resolve: (e) =>
+                DATA_SOURCE.getRepository(Event)
+                    .createQueryBuilder("e")
+                    .where("e.season = :season", { season: e.season })
+                    .andWhere("e.code <> :code", { code: e.code })
+                    .andWhere(
+                        new Brackets((qb) => {
+                            if (e.divisionCode) {
+                                qb.orWhere("e.code = :divCode", {
+                                    divCode: e.divisionCode,
+                                }).orWhere("e.divisionCode = :divCode");
+                            }
+                            qb.orWhere("e.divisionCode = :code");
+                        })
+                    )
+                    .getMany(),
         },
 
         awards: {
