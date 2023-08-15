@@ -11,6 +11,7 @@
         faTrophy,
         faEnvelope,
         faSignal,
+        faChartPie,
     } from "@fortawesome/free-solid-svg-icons";
     import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
     import SidebarItem from "./SidebarItem.svelte";
@@ -31,6 +32,7 @@
 <SidebarItem icon={faCalendarAlt} name="Events" link="/events" />
 <SidebarItem icon={faHashtag} name="Teams" link="/teams" />
 <SidebarItem icon={faTrophy} name="Season Records" link="/records" />
+<SidebarItem icon={faChartPie} name="Statistics" link="/stats" />
 
 <hr />
 
