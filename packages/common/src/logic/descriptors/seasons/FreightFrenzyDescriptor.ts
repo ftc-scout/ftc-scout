@@ -7,7 +7,7 @@ import { nOf } from "../../../utils/format/n-of";
 import { Season } from "../../Season";
 import { Station } from "../../Station";
 import { Descriptor, DescriptorColumn } from "../descriptor";
-import { BoolDTy, EnumDTy, Int16DTy, Int8DTy } from "../types";
+import { BoolDTy, EnumDTy, Int16DTy } from "../types";
 
 export const BarcodeElement2021 = {
     Duck: "Duck",
@@ -244,61 +244,70 @@ export const Descriptor2021 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "autoStorageFreight" }).addMatchScore({
             fromApi: (api: Api) => api.autoStorageFreight,
-            dataTy: Int8DTy,
+            dataTy: Int16DTy,
         })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoFreight1" })
-            .addMatchScore({ fromApi: (api: Api) => api.autoFreight1, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.autoFreight1, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoFreight2" })
             .addMatchScore({
                 fromApi: (api: Api) => api.autoFreight2,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoFreight3" })
-            .addMatchScore({ fromApi: (api: Api) => api.autoFreight3, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.autoFreight3, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcStorageFreight" })
             .addMatchScore({
                 fromApi: (api: Api) => api.driverControlledStorageFreight,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcFreight1" })
-            .addMatchScore({ fromApi: (api: Api) => api.driverControlledFreight1, dataTy: Int8DTy })
+            .addMatchScore({
+                fromApi: (api: Api) => api.driverControlledFreight1,
+                dataTy: Int16DTy,
+            })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcFreight2" })
-            .addMatchScore({ fromApi: (api: Api) => api.driverControlledFreight2, dataTy: Int8DTy })
+            .addMatchScore({
+                fromApi: (api: Api) => api.driverControlledFreight2,
+                dataTy: Int16DTy,
+            })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcFreight3" })
-            .addMatchScore({ fromApi: (api: Api) => api.driverControlledFreight3, dataTy: Int8DTy })
+            .addMatchScore({
+                fromApi: (api: Api) => api.driverControlledFreight3,
+                dataTy: Int16DTy,
+            })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "sharedFreight", tradOnly: true })
             .addMatchScore({
                 fromApi: (api: Api) => ("sharedFreight" in api ? api.sharedFreight : null),
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "egDucks" })
-            .addMatchScore({ fromApi: (api: Api) => api.endgameDelivered, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.endgameDelivered, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
@@ -347,22 +356,22 @@ export const Descriptor2021 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "capped" }).addMatchScore({
             fromApi: (api: Api) => api.capped,
-            dataTy: Int8DTy,
+            dataTy: Int16DTy,
         })
     )
     .addColumn(
         new DescriptorColumn({ name: "minorsCommitted" })
-            .addMatchScore({ fromApi: (api: Api) => api.minorPenalties, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.minorPenalties, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsCommitted" })
-            .addMatchScore({ fromApi: (api: Api) => api.majorPenalties, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.majorPenalties, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoCarouselPoints" })
-            .addMatchScore({ fromSelf: (self) => self.autoCarousel * 10, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.autoCarousel * 10, dataTy: Int16DTy })
             .addScoreModal({ displayName: "Carousel Points" })
             .addTep({ columnPrefix: "Auto Carousel", fullName: "Auto Carousel Points" })
     )
@@ -379,7 +388,7 @@ export const Descriptor2021 = new Descriptor({
                         return autoNav2021Points(self.autoNav2021);
                     }
                 },
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({
                 displayName: "Navigation Points",
@@ -412,7 +421,7 @@ export const Descriptor2021 = new Descriptor({
                 fromSelf: (self) =>
                     self.autoStorageFreight * 2 +
                     (self.autoFreight1 + self.autoFreight2 + self.autoFreight3) * 6,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({ displayName: "Freight Points" })
             .addTep({ columnPrefix: "Auto Freight", fullName: "Auto Freight Points" })
@@ -482,7 +491,7 @@ export const Descriptor2021 = new Descriptor({
                         return autoBonusPoints2021(self.autoBonus, self.barcodeElement);
                     }
                 },
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({
                 displayName: "Bonus Points",
@@ -513,7 +522,7 @@ export const Descriptor2021 = new Descriptor({
         new DescriptorColumn({ name: "dcAllianceHubPoints" })
             .addMatchScore({
                 fromSelf: (self) => self.dcFreight1 * 2 + self.dcFreight2 * 4 + self.dcFreight3 * 6,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({ displayName: "Alliance Hub Points" })
             .addTep({ columnPrefix: "Hub", fullName: "Alliance Hub Points" })
@@ -561,7 +570,7 @@ export const Descriptor2021 = new Descriptor({
         new DescriptorColumn({ name: "dcSharedHubPoints", tradOnly: true })
             .addMatchScore({
                 fromSelf: (self) => ("sharedFreight" in self ? self.sharedFreight * 4 : 0),
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({
                 displayName: "Shared Hub Points",
@@ -571,7 +580,7 @@ export const Descriptor2021 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "dcStoragePoints" })
-            .addMatchScore({ fromSelf: (self) => self.dcStorageFreight, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.dcStorageFreight, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Storage Points",
                 getTitle: (ms) => nOf(ms.dcStorageFreight, "Freight", "Freight"),
@@ -580,7 +589,7 @@ export const Descriptor2021 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "egDuckPoints" })
-            .addMatchScore({ fromSelf: (self) => self.egDucks * 6, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.egDucks * 6, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Delivery Points",
                 getTitle: (ms) => nOf(ms.egDucks, "Duck"),
@@ -589,13 +598,13 @@ export const Descriptor2021 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "allianceBalancedPoints" })
-            .addMatchScore({ fromSelf: (self) => self.allianceBalanced * 10, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.allianceBalanced * 10, dataTy: Int16DTy })
             .addScoreModal({ displayName: "Balanced Points" })
             .addTep({ columnPrefix: "Hub Balanced", fullName: "Alliance Hub Balanced Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "sharedUnbalancedPoints", tradOnly: true })
-            .addMatchScore({ fromSelf: (self) => self.sharedUnbalanced * 20, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.sharedUnbalanced * 20, dataTy: Int16DTy })
             .addScoreModal({ displayName: "Tipped Points" })
             .addTep({ columnPrefix: "Shared Tipped", fullName: "Shared Hub Tipped Points" })
     )
@@ -609,7 +618,7 @@ export const Descriptor2021 = new Descriptor({
                         return egPark2021Points(self.egPark);
                     }
                 },
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({
                 displayName: "Parking Points",
@@ -635,7 +644,7 @@ export const Descriptor2021 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "cappingPoints" })
-            .addMatchScore({ fromSelf: (self) => self.capped * 15, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.capped * 15, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Capping Points",
                 getTitle: (ms) => nOf(ms.capped, "TSE Capped", "TSEs Capped"),

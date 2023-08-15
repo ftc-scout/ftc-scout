@@ -4,7 +4,7 @@ import { nOf } from "../../../utils/format/n-of";
 import { Season } from "../../Season";
 import { Station } from "../../Station";
 import { Descriptor, DescriptorColumn } from "../descriptor";
-import { BoolDTy, EnumDTy, Int16DTy, Int8DTy } from "../types";
+import { BoolDTy, EnumDTy, Int16DTy } from "../types";
 
 export const WobbleEndPosition2020 = {
     None: "None",
@@ -104,38 +104,38 @@ export const Descriptor2020 = new Descriptor({
             .addMatchScore({
                 fromApi: (api: Api) =>
                     +api.autoPowerShotLeft + +api.autoPowerShotCenter + +api.autoPowerShotRight,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoTowerLow" })
-            .addMatchScore({ fromApi: (api: Api) => api.autoTowerLow, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.autoTowerLow, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoTowerMid" })
-            .addMatchScore({ fromApi: (api: Api) => api.autoTowerMid, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.autoTowerMid, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "autoTowerHigh" })
-            .addMatchScore({ fromApi: (api: Api) => api.autoTowerHigh, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.autoTowerHigh, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcTowerLow" })
-            .addMatchScore({ fromApi: (api: Api) => api.dcTowerLow, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.dcTowerLow, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcTowerMid" })
-            .addMatchScore({ fromApi: (api: Api) => api.dcTowerMid, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.dcTowerMid, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "dcTowerHigh" })
-            .addMatchScore({ fromApi: (api: Api) => api.dcTowerHigh, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.dcTowerHigh, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
@@ -166,7 +166,7 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "egWobbleRings" })
             .addMatchScore({
                 fromApi: (api: Api) => api.wobbleRings1 + api.wobbleRings2,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .finish()
     )
@@ -175,18 +175,18 @@ export const Descriptor2020 = new Descriptor({
             .addMatchScore({
                 fromApi: (api: Api) =>
                     +api.endPowerShotLeft + +api.endPowerShotCenter + +api.endPowerShotRight,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "minorsCommitted" })
-            .addMatchScore({ fromApi: (api: Api) => api.minorPenalties, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.minorPenalties, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsCommitted" })
-            .addMatchScore({ fromApi: (api: Api) => api.majorPenalties, dataTy: Int8DTy })
+            .addMatchScore({ fromApi: (api: Api) => api.majorPenalties, dataTy: Int16DTy })
             .finish()
     )
     .addColumn(
@@ -196,7 +196,7 @@ export const Descriptor2020 = new Descriptor({
                     "autoNav2020" in self
                         ? self.autoNav2020 * 5
                         : self.autoNav2020_1 * 5 + self.autoNav2020_2 * 5,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({ displayName: "Navigation Points" })
             .addTep({ columnPrefix: "Auto Nav", fullName: "Auto Navigation Points" })
@@ -222,7 +222,7 @@ export const Descriptor2020 = new Descriptor({
             .addMatchScore({
                 fromSelf: (self) =>
                     self.autoTowerLow * 3 + self.autoTowerMid * 6 + self.autoTowerHigh * 12,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({ displayName: "Tower Points" })
             .addTep({ columnPrefix: "Auto Tower", fullName: "Auto Tower Points" })
@@ -270,7 +270,7 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "autoWobblePoints" })
             .addMatchScore({
                 fromSelf: (self) => self.autoWobble1 * 15 + self.autoWobble2 * 15,
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({
                 displayName: "Wobble Goal Points",
@@ -280,7 +280,7 @@ export const Descriptor2020 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "autoPowershotPoints" })
-            .addMatchScore({ fromSelf: (self) => self.autoPowershots * 15, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.autoPowershots * 15, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Powershot Points",
                 getTitle: (ms) => nOf(ms.autoPowershots, "Powershot"),
@@ -292,14 +292,14 @@ export const Descriptor2020 = new Descriptor({
             .addMatchScore({
                 fromSelf: (self) =>
                     wobbleEndPosPoints(self.wobbleEndPos1) + wobbleEndPosPoints(self.wobbleEndPos2),
-                dataTy: Int8DTy,
+                dataTy: Int16DTy,
             })
             .addScoreModal({ displayName: "Wobble Goal Points" })
             .addTep({ columnPrefix: "Endgame Wobble", fullName: "Endgame Wobble Goal Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "egPowershotPoints" })
-            .addMatchScore({ fromSelf: (self) => self.egPowershots * 15, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.egPowershots * 15, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Powershot Points",
                 getTitle: (ms) => nOf(ms.egPowershots, "Powershot"),
@@ -308,7 +308,7 @@ export const Descriptor2020 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "egWobbleRingPoints" })
-            .addMatchScore({ fromSelf: (self) => self.egWobbleRings * 5, dataTy: Int8DTy })
+            .addMatchScore({ fromSelf: (self) => self.egWobbleRings * 5, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Wobble Ring Points",
                 getTitle: (ms) => nOf(ms.egWobbleRings, "Ring"),

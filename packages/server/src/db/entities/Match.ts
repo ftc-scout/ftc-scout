@@ -55,7 +55,7 @@ export class Match extends BaseEntity {
     @Column("enum", { enum: TournamentLevel, enumName: "tournament_level_enum" })
     tournamentLevel!: TournamentLevel;
 
-    @Column("int8")
+    @Column("smallint")
     series!: number;
 
     get matchNum(): number {

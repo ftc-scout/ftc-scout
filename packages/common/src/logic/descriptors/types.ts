@@ -35,11 +35,6 @@ export function nullTy<T extends GraphQLNullableType>(ty: Wr<GraphQLNonNull<T>>)
     return wr(ty.type.ofType);
 }
 
-export const Int8DTy: DescriptorDataType = {
-    typeorm: { type: "int8" },
-    gql: GraphQLInt,
-};
-
 export const Int16DTy: DescriptorDataType = {
     typeorm: { type: "smallint" },
     gql: GraphQLInt,
