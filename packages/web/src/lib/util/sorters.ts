@@ -58,6 +58,7 @@ function awardRank(type: AwardType): number {
         AwardType.Finalist,
         AwardType.DivisionWinner,
         AwardType.DivisionFinalist,
+        AwardType.ConferenceFinalist,
         AwardType.Think,
         AwardType.Connect,
         AwardType.Innovate,

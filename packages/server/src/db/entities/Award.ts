@@ -46,8 +46,11 @@ export class Award extends BaseEntity {
     @PrimaryColumn("enum", { enum: AwardType, enumName: "award_type_enum" })
     type!: AwardType;
 
-    @PrimaryColumn("int8")
+    @PrimaryColumn("smallint")
     placement!: number;
+
+    @Column("varchar", { nullable: true })
+    divisionName!: string | null;
 
     @Column("varchar", { nullable: true })
     personName!: string | null;
@@ -63,6 +66,12 @@ export class Award extends BaseEntity {
             return null;
         }
 
+        let divisionName = api.name.includes("Division")
+            ? api.name.split("Division")[0].trim()
+            : api.name.includes("Conference")
+            ? api.name.split("Conference")[0].trim()
+            : null;
+
         let awardCode = awardCodeFromFtcApi(api);
         if (awardCode != null) {
             return Award.create({
@@ -71,6 +80,7 @@ export class Award extends BaseEntity {
                 teamNumber: api.teamNumber,
                 type: awardCode[0],
                 placement: awardCode[1],
+                divisionName,
                 personName: api.person?.trim() ?? null,
             } satisfies DeepPartial<Award>);
         } else {

@@ -16,6 +16,7 @@ export const AwardGQL: GraphQLObjectType = new GraphQLObjectType({
         season: IntTy,
         eventCode: StrTy,
         teamNumber: IntTy,
+        divisionName: nullTy(StrTy),
         personName: nullTy(StrTy),
         type: { type: nn(AwardTypeGQL) },
         placement: IntTy,

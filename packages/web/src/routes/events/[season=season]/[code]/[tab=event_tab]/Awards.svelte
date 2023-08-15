@@ -1,6 +1,6 @@
 <script lang="ts">
     import { browser } from "$app/environment";
-    import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
+    import type { AwardType, EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import { awardIsNotRanked, prettyPrintAwardCategory } from "$lib/printers/award";
     import { sortAwardPlacement, sortAwardTypes } from "$lib/util/sorters";
     import { CURRENT_SEASON, type Season } from "@ftc-scout/common";
@@ -14,47 +14,68 @@
     export let eventCode: string;
     export let focusedTeam: number | null;
 
-    $: types = [...new Set(awards.map((a) => a.type))].sort(sortAwardTypes);
+    function handleAwards(awards: Award[]) {
+        let types = awards.map((a) => JSON.stringify([a.type, a.divisionName]));
+        let unique: [AwardType, string | null][] = [...new Set(types)].map((s) => JSON.parse(s));
+        return unique
+            .sort((a, b) => (a[1] ?? "").localeCompare(b[1] ?? ""))
+            .sort((a, b) => sortAwardTypes(a[0], b[0]));
+    }
+
+    $: typeDivisions = handleAwards(awards);
 
     let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as ((_: number) => void) | undefined;
 </script>
 
-{#each types as type}
-    {@const awardsOfType = awards.filter((a) => a.type == type).sort(sortAwardPlacement)}
+<div>
+    {#each typeDivisions as [type, divisionName]}
+        {@const awardsOfType = awards
+            .filter((a) => a.type == type && a.divisionName == divisionName)
+            .sort(sortAwardPlacement)}
 
-    <section>
-        <h3>{prettyPrintAwardCategory(type)}</h3>
+        <section>
+            <h3>
+                {divisionName ?? ""}
+                {prettyPrintAwardCategory(type)}
+            </h3>
 
-        <svelte:element this={awardIsNotRanked(type) ? "ul" : "ol"}>
-            {#each awardsOfType as award}
-                <li>
-                    <a
-                        href="/teams/{award.team.number}{season == CURRENT_SEASON
-                            ? ''
-                            : `?season=${season}`}#{eventCode}"
-                        class:selected={focusedTeam == award.team.number}
-                        role={browser && clickAction ? "button" : "link"}
-                        on:click={(e) => {
-                            if (clickAction) {
-                                e.preventDefault();
-                                clickAction(award.team.number);
-                            }
-                        }}
-                    >
-                        {#if award.personName == null}
-                            {award.team.number} - <em>{award.team.name}</em>
-                        {:else}
-                            {award.personName} ({award.team.number} -
-                            <em>{award.team.name}</em>)
-                        {/if}
-                    </a>
-                </li>
-            {/each}
-        </svelte:element>
-    </section>
-{/each}
+            <svelte:element this={awardIsNotRanked(type) ? "ul" : "ol"}>
+                {#each awardsOfType as award}
+                    <li>
+                        <a
+                            href="/teams/{award.team.number}{season == CURRENT_SEASON
+                                ? ''
+                                : `?season=${season}`}#{eventCode}"
+                            class:selected={focusedTeam == award.team.number}
+                            role={browser && clickAction ? "button" : "link"}
+                            on:click={(e) => {
+                                if (clickAction) {
+                                    e.preventDefault();
+                                    clickAction(award.team.number);
+                                }
+                            }}
+                        >
+                            {#if award.personName == null}
+                                {award.team.number} - <em>{award.team.name}</em>
+                            {:else}
+                                {award.personName} ({award.team.number} -
+                                <em>{award.team.name}</em>)
+                            {/if}
+                        </a>
+                    </li>
+                {/each}
+            </svelte:element>
+        </section>
+    {/each}
+</div>
 
 <style>
+    div {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--md-gap) var(--xl-gap);
+    }
+
     section {
         margin-bottom: var(--lg-gap);
     }
@@ -64,7 +85,9 @@
     }
 
     h3 {
-        color: var(--inline-theme-color);
+        background: var(--hover-color);
+        padding: var(--sm-pad) var(--md-pad);
+        border-radius: 6px;
         margin-bottom: var(--sm-gap);
     }
 
@@ -96,5 +119,21 @@
     a.selected {
         background-color: var(--neutral-team-color);
         color: var(--team-text-color);
+    }
+
+    @media (max-width: 850px) {
+        div {
+            gap: var(--md-gap) var(--lg-gap);
+        }
+    }
+
+    @media (max-width: 600px) {
+        div {
+            grid-template-columns: 1fr;
+        }
+
+        h3 {
+            text-align: center;
+        }
     }
 </style>
