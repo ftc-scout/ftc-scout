@@ -39,7 +39,7 @@
 <hr />
 
 <SidebarItem icon={faInfoCircle} name="About" link="/about" />
-<SidebarItem icon={faGavel} name="Privacy" link="/privacy" />
+<SidebarItem icon={faGavel} name="Privacy Policy" link="/privacy" />
 <SidebarItem icon={faCode} name="API" link="/api" />
 
 <hr />

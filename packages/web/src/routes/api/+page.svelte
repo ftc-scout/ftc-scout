@@ -63,6 +63,7 @@
         width: 100%;
         max-width: 1600px;
         height: 70vh;
+        background-color: rgb(23, 43, 58);
 
         margin: auto;
     }

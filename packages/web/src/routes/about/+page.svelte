@@ -42,7 +42,7 @@
 
         <h3>More Data</h3>
         <p>
-            FTC<em>Scout</em> provides more advanced statistics than any other FTC website on the internet.
+            FTC<em>Scout</em> provides more advanced statistics than any other FTC website on the Internet.
         </p>
 
         <p>
