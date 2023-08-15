@@ -32,7 +32,7 @@
                     href={id}
                 >
                     <Fa {icon} scale="0.75x" />
-                    <span> {name} </span>
+                    <span class="maybe-hide"> {name} </span>
                 </a>
             {/each}
         </div>
@@ -104,5 +104,11 @@
 
     .flat-top {
         border-top-left-radius: 0;
+    }
+
+    @media (max-width: 650px) {
+        .tab:not(.selected) .maybe-hide {
+            display: none;
+        }
     }
 </style>

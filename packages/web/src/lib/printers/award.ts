@@ -22,6 +22,7 @@ export function prettyPrintAwardCategory(type: AwardType): string {
         case AwardType.Finalist:
         case AwardType.DivisionFinalist:
         case AwardType.DivisionWinner:
+        case AwardType.ConferenceFinalist:
         case AwardType.TopRanked:
             return prettyPrintAwardName(type);
         default:
@@ -46,6 +47,8 @@ export function prettyPrintAwardName(type: AwardType): string {
             return "Dean's List Winner";
         case AwardType.Design:
             return "Design Award";
+        case AwardType.ConferenceFinalist:
+            return "Conference Finalist Alliance";
         case AwardType.DivisionFinalist:
             return "Division Finalist Alliance";
         case AwardType.DivisionWinner:
@@ -70,7 +73,7 @@ export function prettyPrintAwardName(type: AwardType): string {
             return "Top Ranked";
         default:
             console.error(`Unknown award ${type}`);
-            return "Unknown Award1";
+            return "Unknown Award";
     }
 }
 
@@ -80,6 +83,7 @@ export function prettyPrintAwardPlacement(type: AwardType, placement: number): s
         case AwardType.DeansListSemiFinalist:
         case AwardType.DeansListWinner:
             return prettyPrintAwardName(type);
+        case AwardType.ConferenceFinalist:
         case AwardType.DivisionFinalist:
         case AwardType.DivisionWinner:
         case AwardType.Winner:
@@ -102,6 +106,7 @@ export function prettyPrintAwardPlacementParts(
         case AwardType.DeansListSemiFinalist:
         case AwardType.DeansListWinner:
             return [prettyPrintAwardName(type), `(${name})`];
+        case AwardType.ConferenceFinalist:
         case AwardType.DivisionFinalist:
         case AwardType.DivisionWinner:
         case AwardType.Winner:
@@ -114,8 +119,9 @@ export function prettyPrintAwardPlacementParts(
     }
 }
 
-export function awardHasName(type: AwardType): boolean {
+export function awardIsNotRanked(type: AwardType): boolean {
     return (
+        type == AwardType.JudgesChoice ||
         type == AwardType.DeansListFinalist ||
         type == AwardType.DeansListSemiFinalist ||
         type == AwardType.DeansListWinner

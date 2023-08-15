@@ -17,5 +17,17 @@ query EventPage($season: Int!, $code: String!) {
                 ...FullStats
             }
         }
+        awards {
+            season
+            eventCode
+            type
+            placement
+            personName
+            teamNumber
+            team {
+                number
+                name
+            }
+        }
     }
 }

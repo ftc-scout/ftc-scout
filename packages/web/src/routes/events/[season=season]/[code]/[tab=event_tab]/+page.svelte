@@ -29,6 +29,7 @@
     import FocusedTeam from "./FocusedTeam.svelte";
     import Teams from "./Teams.svelte";
     import Rankings from "./Rankings.svelte";
+    import Awards from "./Awards.svelte";
 
     export let data;
 
@@ -85,7 +86,7 @@
             tabs={[
                 [faBolt, "Matches", "matches", !!event.matches.length],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
-                [faMedal, "Awards", "awards", false],
+                [faMedal, "Awards", "awards", !!event.awards.length],
                 [faHashtag, "Teams", "teams", !!event.teams.length],
             ]}
             bind:selectedTab
@@ -109,6 +110,10 @@
                     data={stats}
                     {focusedTeam}
                 />
+            </TabContent>
+
+            <TabContent name="awards">
+                <Awards awards={event.awards} {season} eventCode={event.code} {focusedTeam} />
             </TabContent>
 
             <TabContent name="teams">

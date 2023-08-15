@@ -1,4 +1,4 @@
-import type { FullMatchFragment } from "../graphql/generated/graphql-operations";
+import { AwardType, type FullMatchFragment } from "../graphql/generated/graphql-operations";
 
 type E = { event: { start: any } };
 export function eventSorter(a: E, b: E): number {
@@ -40,4 +40,35 @@ export function sortMixed(a: number | string | null, b: number | string | null):
     } else {
         return "" + a < "" + b ? -1 : 1;
     }
+}
+
+export function sortAwardPlacement(a: { placement: number }, b: { placement: number }) {
+    return a.placement - b.placement;
+}
+
+export function sortAwardTypes(a: AwardType, b: AwardType) {
+    return awardRank(a) - awardRank(b);
+}
+
+function awardRank(type: AwardType): number {
+    return [
+        AwardType.Inspire,
+        AwardType.TopRanked,
+        AwardType.Winner,
+        AwardType.Finalist,
+        AwardType.DivisionWinner,
+        AwardType.DivisionFinalist,
+        AwardType.Think,
+        AwardType.Connect,
+        AwardType.Innovate,
+        AwardType.Design,
+        AwardType.Motivate,
+        AwardType.Control,
+        AwardType.Promote,
+        AwardType.Compass,
+        AwardType.JudgesChoice,
+        AwardType.DeansListWinner,
+        AwardType.DeansListFinalist,
+        AwardType.DeansListSemiFinalist,
+    ].indexOf(type);
 }
