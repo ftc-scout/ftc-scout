@@ -121,6 +121,9 @@ body {
     --sep-hover-color: rgb(200, 200, 200);
 
     --zebra-stripe-color: rgb(245, 245, 245);
+    --zebra-stripe-opacity: rgba(0, 0, 0, 0.0396);
+
+    --fade-shadow: rgba(0, 0, 0, 0.2);
 
     --text-color: #000000;
     --secondary-text-color: #636466;
@@ -199,7 +202,11 @@ body.dark {
     --red-team-text-color: rgb(244, 67, 54);
     --blue-team-text-color: rgb(33, 150, 243);
     --neutral-team-text-color: rgb(196, 79, 255);
+
     --zebra-stripe-color: #353535;
+    --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
+
+    --fade-shadow: rgba(255, 255, 255, 0.15);
 
     --red-stat-color-vs: var(--red-team-color-vs);
     --blue-stat-color-vs: var(--blue-team-color-vs);
@@ -262,7 +269,11 @@ body.dark .render-light {
         --red-team-text-color: rgb(244, 67, 54);
         --blue-team-text-color: rgb(33, 150, 243);
         --neutral-team-text-color: rgb(196, 79, 255);
+
         --zebra-stripe-color: #353535;
+        --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
+
+        --fade-shadow: rgba(255, 255, 255, 0.15);
 
         --red-stat-color-vs: var(--red-team-color-vs);
         --blue-stat-color-vs: var(--blue-team-color-vs);

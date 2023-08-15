@@ -49,6 +49,19 @@
         overflow-x: auto;
 
         position: relative;
+
+        /* Adapted from: https://lea.verou.me/2012/04/background-attachment-local/ */
+        --fade-len: 120px;
+        --shadow-len: 25px;
+        background: linear-gradient(to right, var(--fg-color) 30%, rgba(255, 255, 255, 0)),
+            linear-gradient(to left, var(--fg-color), rgba(255, 255, 255, 0)) 100% 0,
+            linear-gradient(to right, var(--fade-shadow), var(--fg-color)),
+            linear-gradient(to left, var(--fade-shadow), var(--fg-color)) 100% 0;
+        background-repeat: no-repeat;
+        background-color: var(--fg-color);
+        background-size: var(--fade-len) 100%, var(--fade-len) 100%, var(--shadow-len) 100%,
+            var(--shadow-len) 100%;
+        background-attachment: local, local, scroll, scroll;
     }
 
     table :global(thead) {
@@ -75,7 +88,7 @@
     }
 
     tbody > :global(:nth-child(even)) {
-        background-color: var(--zebra-stripe-color);
+        background-color: var(--zebra-stripe-opacity);
     }
 
     .no-data {
