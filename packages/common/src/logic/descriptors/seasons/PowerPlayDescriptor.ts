@@ -306,7 +306,7 @@ export const Descriptor2022 = new Descriptor({
                 fromApi: (api: Api) => api.egNavigated2,
                 dataTy: BoolDTy,
             })
-            .addScoreModal({ displayName: "Robot 1", getValue: (ms) => ms.egNav2 * 2 })
+            .addScoreModal({ displayName: "Robot 2", getValue: (ms) => ms.egNav2 * 2 })
     )
     .addColumn(
         new DescriptorColumn({ name: "coneOwnedJunctions" })
