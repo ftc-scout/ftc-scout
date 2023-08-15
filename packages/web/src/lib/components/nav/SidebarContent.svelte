@@ -18,7 +18,7 @@
     import { sidebarOpen } from "./Sidebar.svelte";
     import Fa from "svelte-fa";
     import IconSidebarItem from "./IconSidebarItem.svelte";
-    import { EMAIL } from "../../constants";
+    import { EMAIL, DISCORD, STATUS, GITHUB } from "../../constants";
 </script>
 
 <b>
@@ -47,19 +47,10 @@
 <hr />
 
 <div class="icons">
-    <IconSidebarItem
-        icon={faGithub}
-        name="Github"
-        link="https://github.com/16321-X-Drive/ftc-scout"
-    />
-    <IconSidebarItem icon={faDiscord} name="Discord" link="https://discord.gg/XTZhD9RnKa" />
+    <IconSidebarItem icon={faGithub} name="Github" link={GITHUB} />
+    <IconSidebarItem icon={faDiscord} name="Discord" link={DISCORD} />
     <IconSidebarItem icon={faEnvelope} name="Email" link="mailto:{EMAIL}" />
-    <IconSidebarItem
-        icon={faSignal}
-        name="Status"
-        link="https://uptime.9021007.xyz/status/ftcscout"
-        newTab
-    />
+    <IconSidebarItem icon={faSignal} name="Status" link={STATUS} newTab />
 </div>
 
 <style>

@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import Fa from "svelte-fa";
     import { faBomb } from "@fortawesome/free-solid-svg-icons";
+    import { EMAIL } from "../constants";
 
     export let status: number | null = null;
     export let message: string | null = null;
@@ -22,14 +23,14 @@
             <p>Not Found: {$page.url.pathname}</p>
             <p style="font-size: 18px;">
                 The page you are looking for doesn't exist. If we linked you here, reach out at <a
-                    href="mailto:contact@ftcscout.org">contact@ftcscout.org</a
+                    href="mailto:{EMAIL}">{EMAIL}</a
                 >.
             </p>
         {:else}
             <p>{computedMessage}</p>
             <p style="font-size: 18px;">
                 There appears to be an error. If the issue persists, reach out at <a
-                    href="mailto:contact@ftcscout.org">contact@ftcscout.org</a
+                    href="mailto:{EMAIL}">{EMAIL}</a
                 >.
             </p>
         {/if}
