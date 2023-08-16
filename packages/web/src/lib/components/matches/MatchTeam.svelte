@@ -79,7 +79,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
 
-        padding: var(--sm-pad);
+        padding: var(--sm-pad) var(--md-pad);
 
         cursor: pointer;
 
