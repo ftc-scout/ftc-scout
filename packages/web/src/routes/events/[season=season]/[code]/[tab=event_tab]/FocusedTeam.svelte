@@ -7,7 +7,9 @@
     import { fly } from "svelte/transition";
     import { prettyPrintFloat, prettyPrintOrdinal } from "$lib/printers/number";
 
-    export let team: NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
+    type Team = Omit<NonNullable<EventPageQuery["eventByCode"]>["teams"][number], "__typename">;
+
+    export let team: Team;
     export let remote: boolean;
 
     $: season = team.season as Season;

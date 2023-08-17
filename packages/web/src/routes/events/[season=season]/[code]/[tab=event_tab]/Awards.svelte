@@ -87,7 +87,7 @@
         background: var(--hover-color);
         padding: var(--sm-pad) var(--md-pad);
         border-radius: 6px;
-        margin-bottom: var(--sm-gap);
+        margin-bottom: var(--md-gap);
     }
 
     li {

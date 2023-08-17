@@ -47,7 +47,9 @@
     $: browser && goto(selectedTab, { replaceState: true });
 
     let focusedTeam: number | null = null;
-    $: focusedTeamData = event.teams.find((t) => t.teamNumber == focusedTeam)!;
+    $: focusedTeamData =
+        event.teams.find((t) => t.teamNumber == focusedTeam) ??
+        event.awards.find((a) => a.teamNumber == focusedTeam)!;
     setContext(
         TEAM_CLICK_ACTION_CONTEXT,
         (t: number) => (focusedTeam = focusedTeam == t ? null : t)
@@ -60,7 +62,7 @@
             (Try searching for events on <a href="/events">the events page</a>)
         </ErrorPage>
 
-        {#if focusedTeam}
+        {#if focusedTeam && focusedTeamData}
             <FocusedTeam team={focusedTeamData} remote={event.remote} />
         {/if}
 
