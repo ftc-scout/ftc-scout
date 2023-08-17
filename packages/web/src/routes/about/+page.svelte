@@ -3,6 +3,7 @@
     // import Head from "$lib/components/nav/Head.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
     import Contributor from "./Contributor.svelte";
+    import { EMAIL, DISCORD, STATUS, GITHUB } from "../../lib/constants";
 </script>
 
 <!-- <Head title="About | FTCScout" description="About FTCScout, a way to track and scout FIRST Tech Challenge." /> -->
@@ -107,9 +108,7 @@
                 target="_blank"
                 rel="noreferrer">Free and Open-Source Software</a
             >) so you can contribute to it
-            <a href="https://github.com/16321-X-Drive/ftc-scout" target="_blank" rel="noreferrer"
-                >on our Github</a
-            >.
+            <a href={GITHUB} target="_blank" rel="noreferrer">on our Github</a>.
         </p>
         <div class="contributors">
             <Contributor

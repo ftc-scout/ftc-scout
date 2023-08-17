@@ -9,4 +9,4 @@ export const THEME_COOKIE_AGE = 60 * 60 * 24 * 356 * 10;
 export const EMAIL = "contact@ftcscout.org";
 export const DISCORD = "https://discord.gg/XTZhD9RnKa";
 export const STATUS = "https://uptime.9021007.xyz/status/ftcscout";
-export const GITHUB = "https://github.com/16321-X-Drive/ftc-scout";
+export const GITHUB = "https://github.com/ftc-scout/ftc-scout";

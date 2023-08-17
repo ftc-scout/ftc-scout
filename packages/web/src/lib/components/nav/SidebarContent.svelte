@@ -48,8 +48,8 @@
 <hr />
 
 <div class="icons">
-    <IconSidebarItem icon={faGithub} name="Github" link={GITHUB} />
-    <IconSidebarItem icon={faDiscord} name="Discord" link={DISCORD} />
+    <IconSidebarItem icon={faGithub} name="Github" link={GITHUB} newTab />
+    <IconSidebarItem icon={faDiscord} name="Discord" link={DISCORD} newTab />
     <IconSidebarItem icon={faEnvelope} name="Email" link="mailto:{EMAIL}" />
     <IconSidebarItem icon={faSignal} name="Status" link={STATUS} newTab />
 </div>
