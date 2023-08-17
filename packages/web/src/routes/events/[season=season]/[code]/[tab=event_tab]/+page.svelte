@@ -73,7 +73,9 @@
 
             {#if event.website}
                 <InfoIconRow icon={faLink}>
-                    <a href={event.website}> {prettyPrintURL(event.website)} </a>
+                    <a href={event.website} target="_blank" rel="noreferrer">
+                        {prettyPrintURL(event.website)}
+                    </a>
                 </InfoIconRow>
             {/if}
 
