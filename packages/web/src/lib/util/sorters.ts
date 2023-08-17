@@ -38,7 +38,7 @@ export function sortMixed(a: number | string | null, b: number | string | null):
     if (typeof a == "number" && typeof b == "number") {
         return a < b ? -1 : 1;
     } else {
-        return "" + a < "" + b ? -1 : 1;
+        return ("" + a).localeCompare("" + b);
     }
 }
 
@@ -72,4 +72,8 @@ function awardRank(type: AwardType): number {
         AwardType.DeansListFinalist,
         AwardType.DeansListSemiFinalist,
     ].indexOf(type);
+}
+
+export function sortString(a: string, b: string): number {
+    return a.localeCompare(b);
 }

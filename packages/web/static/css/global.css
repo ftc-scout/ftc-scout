@@ -93,6 +93,8 @@
 /* --- Colors --- */
 
 body {
+    --theme-color: rgb(var(--theme-color-vs));
+
     --modal-bg-color: rgba(0, 0, 0, 0.4);
 
     --red-team-color: rgb(var(--red-team-color-vs));
@@ -111,7 +113,8 @@ body {
     --fg-color: #ffffff;
     --bg-color: #f2f2f2;
 
-    --theme-color: #2c666e;
+    --theme-color-vs: 44, 102, 110;
+    --theme-color-opacity: 0.75;
     --inline-theme-color: var(--theme-color);
 
     --hover-color: #f0f0f0;
@@ -164,6 +167,8 @@ body {
 
     --grayed-out-text-color: gray;
 
+    --thick-border-width: 2px;
+
     color-scheme: light;
 }
 
@@ -176,7 +181,9 @@ body.dark {
     --fg-color: #2d2d2d;
     --hover-color: #3a3a3a;
     --tab-hover-color: #232323;
-    --theme-color: #1f4c52;
+
+    --theme-color-vs: 31, 76, 82;
+    --theme-color-opacity: 0.3;
     --inline-theme-color: #39848e;
 
     --sep-color: #4a4e51;
@@ -228,6 +235,8 @@ body.dark {
 
     --grayed-out-text-color: #a0a0a0;
 
+    --thick-border-width: 1px;
+
     color-scheme: dark;
 }
 
@@ -245,7 +254,8 @@ body.dark .render-light {
         --fg-color: #2d2d2d;
         --hover-color: #3a3a3a;
         --tab-hover-color: #232323;
-        --theme-color: #1f4c52;
+        --theme-color-vs: 31, 76, 82;
+        --theme-color-opacity: 0.3;
         --inline-theme-color: #39848e;
 
         --sep-color: #4a4e51;
@@ -296,6 +306,8 @@ body.dark .render-light {
         --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
 
         --grayed-out-text-color: #a0a0a0;
+
+        --thick-border-width: 1px;
 
         color-scheme: dark;
     }

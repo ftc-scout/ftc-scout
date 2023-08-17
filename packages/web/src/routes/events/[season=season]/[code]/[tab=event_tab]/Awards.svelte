@@ -71,13 +71,12 @@
 
 <style>
     div {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: var(--md-gap) var(--xl-gap);
+        column-count: 2;
     }
 
     section {
         margin-bottom: var(--lg-gap);
+        break-inside: avoid;
     }
 
     section:last-child {
@@ -129,7 +128,7 @@
 
     @media (max-width: 600px) {
         div {
-            grid-template-columns: 1fr;
+            column-count: 1;
         }
 
         h3 {

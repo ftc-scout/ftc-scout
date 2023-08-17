@@ -1,0 +1,18 @@
+query EventSearch($season: Int!) {
+    eventSearch(season: $season, competitionEvents: true) {
+        season
+        code
+        name
+        remote
+        start
+        end
+        type
+        regionCode
+        location {
+            city
+            state
+            country
+        }
+        hasMatches
+    }
+}

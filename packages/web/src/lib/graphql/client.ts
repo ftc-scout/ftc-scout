@@ -60,6 +60,11 @@ export function getClient(
                 },
             },
             Award: { keyFields: ["season", "eventCode", "type", "placement", "teamNumber"] },
+            Location: {
+                merge(existing, incoming, { mergeObjects }) {
+                    return mergeObjects(existing, incoming);
+                },
+            },
         },
     });
 

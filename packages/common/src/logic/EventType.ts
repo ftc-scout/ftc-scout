@@ -22,3 +22,14 @@ export function eventTypeFromFtcApi(str: string): EventType | null {
 }
 
 export type EventType = (typeof EventType)[keyof typeof EventType];
+
+export const COMPETITION_EVENT_TYPES = [
+    EventType.Scrimmage,
+    EventType.LeagueMeet,
+    EventType.Qualifier,
+    EventType.LeagueTournament,
+    EventType.Championship,
+    EventType.FIRSTChampionship,
+    EventType.SuperQualifier,
+    EventType.OffSeason,
+];

@@ -66,6 +66,7 @@
         #content {
             padding-left: 0;
             padding-right: 0;
+            scrollbar-gutter: initial;
         }
     }
 

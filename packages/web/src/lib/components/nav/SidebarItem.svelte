@@ -2,6 +2,7 @@
     import { page } from "$app/stores";
     import type { IconDefinition } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
+    import { sidebarOpen } from "./Sidebar.svelte";
 
     export let icon: IconDefinition;
     export let name: string;
@@ -12,7 +13,13 @@
     $: active = strict ? $page.url.pathname == link : $page.url.pathname.startsWith(link);
 </script>
 
-<a href={link} class:active target={newTab ? "_blank" : null} rel={newTab ? "noreferrer" : null}>
+<a
+    href={link}
+    class:active
+    target={newTab ? "_blank" : null}
+    rel={newTab ? "noreferrer" : null}
+    on:click={() => ($sidebarOpen = false)}
+>
     <Fa {icon} fw size="1.25x" />
     {name}
 </a>

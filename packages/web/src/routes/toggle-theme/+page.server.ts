@@ -1,5 +1,5 @@
 import { redirect, type Actions } from "@sveltejs/kit";
-import { THEME_COOKIE_AGE, THEME_COOKIE_NAME } from "../../lib/constants";
+import { THEME_COOKIE_AGE, THEME_COOKIE_NAME } from "$lib/constants";
 
 export const actions: Actions = {
     default: async ({ cookies, request }) => {

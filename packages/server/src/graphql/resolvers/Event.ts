@@ -6,6 +6,7 @@ import { Event } from "../../db/entities/Event";
 import { Award } from "../../db/entities/Award";
 import {
     BoolTy,
+    COMPETITION_EVENT_TYPES,
     DateTimeTy,
     DateTy,
     IntTy,
@@ -136,6 +137,28 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                 (keys) => TeamMatchParticipation.find({ where: keys })
             ),
         },
+        hasMatches: {
+            ...BoolTy,
+            resolve: async (
+                e //("hasMatches" in e ? e.hasMatches : false),
+            ) =>
+                "hasMatches" in e
+                    ? e.hasMatches
+                    : (
+                          await DATA_SOURCE.getRepository(Event)
+                              .createQueryBuilder("e")
+                              .distinctOn(["code"])
+                              .addSelect("coalesce(m.has_been_played, false)", "has_matches")
+                              .leftJoin(
+                                  Match,
+                                  "m",
+                                  "e.season = m.event_season AND e.code = m.event_code"
+                              )
+                              .where("season = :season", { season: e.season })
+                              .andWhere("code = :code", { code: e.code })
+                              .getRawOne()
+                      ).has_matches,
+        },
         matches: {
             type: list(nn(MatchGQL)),
             resolve: dataLoaderResolverList<
@@ -167,5 +190,34 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             (_, a) => a,
             (keys) => Event.find({ where: keys })
         ),
+    },
+
+    eventSearch: {
+        type: list(nn(EventGQL)),
+        args: { season: IntTy, competitionEvents: BoolTy },
+        resolve: async (
+            _,
+            { season, competitionEvents }: { season: Season; competitionEvents: boolean }
+        ) => {
+            let q = DATA_SOURCE.getRepository(Event)
+                .createQueryBuilder("e")
+                .distinctOn(["code"])
+                .addSelect("coalesce(m.has_been_played, false)", "has_matches")
+                .where("season = :season", { season });
+
+            if (competitionEvents) {
+                q.andWhere("type IN (:...types)", { types: COMPETITION_EVENT_TYPES });
+            }
+
+            let { entities, raw } = await q
+                .leftJoin(Match, "m", "e.season = m.event_season AND e.code = m.event_code")
+                .getRawAndEntities();
+
+            for (let i = 0; i < entities.length; i++) {
+                (entities[i] as any).hasMatches = raw[i].has_matches;
+            }
+
+            return entities;
+        },
     },
 };
