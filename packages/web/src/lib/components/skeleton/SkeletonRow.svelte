@@ -32,15 +32,16 @@
         background: linear-gradient(
                 to right,
                 rgba(255, 255, 255, 0),
-                rgba(255, 255, 255, 0.25) 50%,
+                rgba(var(--fg-color-vs), 0.25) 50%,
                 rgba(255, 255, 255, 0) 80%
             ),
-            #eeeeee;
+            var(--bg-color);
         background-repeat: repeat-y;
         background-size: 10em 200px;
         background-position: 0 0;
         animation: shine 2.5s infinite;
         display: block;
+        border-radius: 4px;
     }
 
     @keyframes shine {

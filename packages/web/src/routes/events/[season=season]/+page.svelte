@@ -60,7 +60,13 @@
 
 <WidthProvider>
     <Loading store={$eventsStore} checkExists={() => true}>
-        <SkeletonRow slot="loading" rows={40} header={true} />
+        <div slot="loading">
+            <SkeletonRow rows={5} header={true} />
+            <SkeletonRow rows={6} header={true} />
+            <SkeletonRow rows={5} header={true} />
+            <SkeletonRow rows={5} header={true} />
+            <SkeletonRow rows={5} header={true} />
+        </div>
 
         <Card vis={false}>
             {#each grouped as [week, es]}
