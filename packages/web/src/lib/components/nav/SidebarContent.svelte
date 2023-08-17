@@ -19,6 +19,7 @@
     import Fa from "svelte-fa";
     import IconSidebarItem from "./IconSidebarItem.svelte";
     import { EMAIL, DISCORD, STATUS, GITHUB } from "../../constants";
+    import { CURRENT_SEASON } from "@ftc-scout/common";
 </script>
 
 <b>
@@ -29,7 +30,7 @@
 </b>
 
 <SidebarItem icon={faHome} name="Home" link="/" strict />
-<SidebarItem icon={faCalendarAlt} name="Events" link="/events" />
+<SidebarItem icon={faCalendarAlt} name="Events" link="/events/{CURRENT_SEASON}" />
 <SidebarItem icon={faHashtag} name="Teams" link="/teams" />
 <SidebarItem icon={faTrophy} name="Season Records" link="/records" />
 <SidebarItem icon={faChartPie} name="Statistics" link="/stats" />
