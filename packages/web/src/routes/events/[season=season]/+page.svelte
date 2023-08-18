@@ -1,7 +1,14 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
-    import { DESCRIPTORS, EventTypeOption, RegionOption, type Season } from "@ftc-scout/common";
+    import {
+        DESCRIPTORS,
+        EventTypeOption,
+        RegionOption,
+        type FuzzyResult,
+        type Season,
+        fuzzySearch,
+    } from "@ftc-scout/common";
     import Card from "$lib/components/Card.svelte";
     import Loading from "$lib/components/Loading.svelte";
     import SkeletonRow from "$lib/components/skeleton/SkeletonRow.svelte";
@@ -19,6 +26,7 @@
     import { DATE_EC_DC } from "../../../lib/util/search-params/date";
     import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
+    import { STRING_EC_DC } from "../../../lib/util/search-params/string";
 
     export let data;
     $: eventsStore = data.events;
@@ -40,15 +48,15 @@
 
     $: firstMonday = calcFirstMonday(sortedEvents);
 
-    function groupEvents(es: typeof events) {
+    function groupEvents(es: FuzzyResult<(typeof events)[number]>[]) {
         if (es.length == 0) return [];
 
-        let weeks: [number, typeof events][] = [];
+        let weeks: [number, FuzzyResult<(typeof events)[number]>[]][] = [];
         let currWeekNum = 0;
         let currWeek = [];
 
         for (let e of es) {
-            let start = new Date(e.start);
+            let start = new Date(e.document.start);
             let daysSinceFirstMonday = daysBetween(firstMonday, start);
             let weekNum = Math.floor(daysSinceFirstMonday / 7);
 
@@ -78,6 +86,7 @@
     let eventTy = queryParam<EventTypeOption>("event-types", EVENT_TY_EC_DC);
     let start = queryParam("start", DATE_EC_DC);
     let end = queryParam("end", DATE_EC_DC);
+    let searchText = queryParam<string>("search", STRING_EC_DC);
 
     function eventMatches(
         r: RegionOption,
@@ -93,7 +102,8 @@
     }
 
     $: filteredEvents = sortedEvents.filter(eventMatches($region, $eventTy, $start, $end));
-    $: grouped = groupEvents(filteredEvents);
+    $: searchedEvents = fuzzySearch(filteredEvents, $searchText, Infinity, "name");
+    $: grouped = groupEvents(searchedEvents);
 </script>
 
 <WidthProvider width={"850px"}>
@@ -105,6 +115,7 @@
             bind:eventType={$eventTy}
             bind:start={$start}
             bind:end={$end}
+            bind:searchText={$searchText}
         />
     </Card>
 </WidthProvider>

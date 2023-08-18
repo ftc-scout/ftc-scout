@@ -3,6 +3,7 @@
 
     export let date: Date | null;
     export let id: string | null = null;
+    export let name: string | null = null;
 
     const i = (x: Date | null) => (dateStr = x ? dateToStr(x) : null);
     const o = (x: string | null) => (date = x ? dateFromStr(x) : null);
@@ -19,14 +20,7 @@
     $: maxStr = dateToStr(max);
 </script>
 
-<input
-    type="date"
-    name="start"
-    id={id ? `start-${id}` : null}
-    min={minStr}
-    max={maxStr}
-    bind:value={dateStr}
-/>
+<input type="date" {id} {name} min={minStr} max={maxStr} bind:value={dateStr} />
 
 <style>
     input {

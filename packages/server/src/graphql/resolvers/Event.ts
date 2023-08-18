@@ -13,6 +13,7 @@ import {
     RegionOption,
     Season,
     StrTy,
+    fuzzySearch,
     getEventTypes,
     getRegionCodes,
     groupBy,
@@ -201,6 +202,11 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             season: IntTy,
             region: { type: RegionOptionGQL },
             type: { type: EventTypeOptionGQL },
+            hasMatches: nullTy(BoolTy),
+            start: nullTy(DateTy),
+            end: nullTy(DateTy),
+            limit: nullTy(IntTy),
+            searchText: nullTy(StrTy),
         },
         resolve: async (
             _,
@@ -208,7 +214,21 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 season,
                 region,
                 type,
-            }: { season: Season; region: RegionOption | null; type: EventTypeOption | null }
+                hasMatches,
+                start,
+                end,
+                limit,
+                searchText,
+            }: {
+                season: Season;
+                region: RegionOption | null;
+                type: EventTypeOption | null;
+                hasMatches: boolean | null;
+                start: Date | null;
+                end: Date | null;
+                limit: number | null;
+                searchText: string | null;
+            }
         ) => {
             let q = DATA_SOURCE.getRepository(Event)
                 .createQueryBuilder("e")
@@ -224,12 +244,33 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 q.andWhere("type IN (:...types)", { types: getEventTypes(type) });
             }
 
+            if (start) {
+                q.andWhere("start >= :start", { start });
+            }
+
+            if (end) {
+                q.andWhere("end <= :end", { end });
+            }
+
+            if (limit && (!searchText || searchText.trim() == "")) {
+                q.limit(limit);
+            }
+
             let { entities, raw } = await q
                 .leftJoin(Match, "m", "e.season = m.event_season AND e.code = m.event_code")
                 .getRawAndEntities();
 
             for (let i = 0; i < entities.length; i++) {
                 (entities[i] as any).hasMatches = raw[i].has_matches;
+            }
+
+            if (hasMatches != null) {
+                entities = entities.filter((e) => (e as any).hasMatches == hasMatches);
+            }
+
+            if (searchText && searchText.trim() != "") {
+                let res = fuzzySearch(entities, searchText, limit ?? undefined, "name", true);
+                entities = res.map((d) => d.document);
             }
 
             return entities;

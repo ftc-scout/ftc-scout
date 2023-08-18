@@ -3,35 +3,34 @@
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import { prettyPrintEventTypeLong, prettyPrintEventTypeShort } from "$lib/printers/eventType";
     import { prettyPrintRegionCode } from "$lib/printers/regionCode";
+    import { highlight, type FuzzyResult } from "@ftc-scout/common";
 
-    export let event: NonNullable<EventSearchQuery["eventSearch"]>[number];
-    $: href = `/events/${event.season}/${event.code}/matches`;
+    export let event: FuzzyResult<NonNullable<EventSearchQuery["eventSearch"]>[number]>;
+    $: e = event.document;
+    $: href = `/events/${e.season}/${e.code}/matches`;
 
-    $: matchesTitle = event.hasMatches ? "" : " · No matches";
-    $: dateTitle = prettyPrintDateRangeString(event.start, event.end);
-    $: title = `${event.name} · ${dateTitle}${matchesTitle}`;
+    $: matchesTitle = e.hasMatches ? "" : " · No matches";
+    $: dateTitle = prettyPrintDateRangeString(e.start, e.end);
+    $: title = `${e.name} · ${dateTitle}${matchesTitle}`;
 </script>
 
 <li>
     <div>
-        <a {href} class:no-matches={!event.hasMatches} {title}>
-            {event.name}
+        <a {href} class:no-matches={!e.hasMatches} {title}>
+            {@html highlight(e.name, event.highlights)}
         </a>
     </div>
 
     <span
         class="ty"
-        class:remote={event.remote}
-        title="{event.remote ? 'Remote ' : ''}{prettyPrintEventTypeLong(event.type)}"
+        class:remote={e.remote}
+        title="{e.remote ? 'Remote ' : ''}{prettyPrintEventTypeLong(e.type)}"
     >
-        {prettyPrintEventTypeShort(event.type)}
+        {prettyPrintEventTypeShort(e.type)}
     </span>
-    {#if event.regionCode}
-        <span
-            class="rg"
-            title="{event.location.city}, {event.location.state}, {event.location.country}"
-        >
-            {prettyPrintRegionCode(event.regionCode)}
+    {#if e.regionCode}
+        <span class="rg" title="{e.location.city}, {e.location.state}, {e.location.country}">
+            {prettyPrintRegionCode(e.regionCode)}
         </span>
     {/if}
 </li>

@@ -5,12 +5,14 @@
     import EventTypeSelect from "../../../lib/components/ui/form/EventTypeSelect.svelte";
     import DateRange from "../../../lib/components/ui/form/DateRange.svelte";
     import SeasonSelect from "../../../lib/components/ui/form/SeasonSelect.svelte";
+    import SearchInput from "../../../lib/components/ui/form/SearchInput.svelte";
 
     export let season: Season;
     export let region: RegionOption;
     export let eventType: EventTypeOption;
     export let start: Date | null;
     export let end: Date | null;
+    export let searchText: string;
 </script>
 
 <Form id="season-search" style="col">
@@ -33,6 +35,11 @@
         Date Range
         <DateRange bind:start bind:end {season} />
     </div>
+
+    <label for="search-select">
+        Search
+        <SearchInput bind:value={searchText} name="search" id="search-select" />
+    </label>
 
     <noscript> <input type="submit" /> </noscript>
 </Form>
