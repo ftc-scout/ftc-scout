@@ -24,6 +24,8 @@ export const Descriptor2019 = new Descriptor({
         rp: "Record",
         tb: "LosingScore",
     },
+    firstDate: new Date("2019-05-10"),
+    lastDate: new Date("2020-05-02"),
 })
     .addColumn(
         new DescriptorColumn({ name: "autoNav1" })

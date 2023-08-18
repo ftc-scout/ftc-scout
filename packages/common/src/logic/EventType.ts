@@ -23,6 +23,27 @@ export function eventTypeFromFtcApi(str: string): EventType | null {
 
 export type EventType = (typeof EventType)[keyof typeof EventType];
 
+export const EventTypeOption = {
+    All: "All",
+    Competition: "Competition",
+    NonCompetition: "NonCompetition",
+    ...EventType,
+} as const;
+export type EventTypeOption = (typeof EventTypeOption)[keyof typeof EventTypeOption];
+
+export function getEventTypes(option: EventTypeOption): EventType[] {
+    switch (option) {
+        case EventTypeOption.All:
+            return Object.values(EventType);
+        case EventTypeOption.Competition:
+            return COMPETITION_EVENT_TYPES;
+        case EventTypeOption.NonCompetition:
+            return NON_COMPETITION_EVENT_TYPES;
+        default:
+            return [option];
+    }
+}
+
 export const COMPETITION_EVENT_TYPES = [
     EventType.Scrimmage,
     EventType.LeagueMeet,
@@ -32,4 +53,14 @@ export const COMPETITION_EVENT_TYPES = [
     EventType.FIRSTChampionship,
     EventType.SuperQualifier,
     EventType.OffSeason,
+];
+
+export const NON_COMPETITION_EVENT_TYPES = [
+    EventType.Kickoff,
+    EventType.Workshop,
+    EventType.DemoExhibition,
+    EventType.VolunteerSignup,
+    EventType.PracticeDay,
+    EventType.InnovationChallenge,
+    EventType.Other,
 ];

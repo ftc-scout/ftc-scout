@@ -23,6 +23,7 @@
         bind:value={cond.op}
         options={ALL_OPS.map((o) => ({ value: o, name: o }))}
         style="width: min-content"
+        nonForm
     />
     <FilterValInput bind:val={cond.rhs} {stats} />
 

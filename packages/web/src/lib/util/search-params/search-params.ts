@@ -5,7 +5,7 @@ import { writable, type Updater, type Writable, get } from "svelte/store";
 
 // Inspired by github.com/paoloricciuti/sveltekit-search-params
 
-type Opts<T> = {
+export type QueryParamOpts<T> = {
     encode?: (_: T) => string | null;
     decode?: (_: string | null) => T;
     pushState?: boolean;
@@ -21,7 +21,12 @@ function defaultDecode<T>(s: string | null): T {
 
 export function queryParam<T>(
     name: string,
-    { encode = defaultEncode, decode = defaultDecode, pushState = false, killHash = false }: Opts<T>
+    {
+        encode = defaultEncode,
+        decode = defaultDecode,
+        pushState = false,
+        killHash = false,
+    }: QueryParamOpts<T>
 ): Writable<T> {
     let valStore = writable<T>(decode(null));
 
@@ -44,6 +49,8 @@ export function queryParam<T>(
                     replaceState: !pushState,
                 });
             }
+
+            valStore.set(val);
         };
 
         let param = $page.url.searchParams.get(name) ?? null;

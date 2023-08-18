@@ -63,6 +63,8 @@ export const Descriptor2020 = new Descriptor({
         rp: "TotalPoints",
         tb: "AutoEndgameTot",
     },
+    firstDate: new Date("2020-10-18"),
+    lastDate: new Date("2021-09-11"),
 })
     .addColumn(
         new DescriptorColumn({ name: "autoWobble1" })

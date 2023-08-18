@@ -70,6 +70,7 @@
             { value: "or", name: "Any" },
         ]}
         style="width: min-content"
+        nonForm
     />
 
     <div class="buttons">

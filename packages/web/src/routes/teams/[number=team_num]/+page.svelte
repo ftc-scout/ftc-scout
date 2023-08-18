@@ -33,7 +33,7 @@
     import SeasonSelect from "$lib/components/ui/form/SeasonSelect.svelte";
     import Form from "$lib/components/ui/form/Form.svelte";
     import type { Writable } from "svelte/store";
-    import { queryParam } from "$lib/components/search-params/search-params";
+    import { queryParam } from "$lib/util/search-params/search-params";
 
     const toSeason = (n: number) => n as Season;
 
@@ -69,9 +69,9 @@
 
             {#if team.website}
                 <InfoIconRow icon={faLink}>
-                    <a href={team.website} target="_blank" rel="noreferrer"
-                        >{prettyPrintURL(team.website)}</a
-                    >
+                    <a href={team.website} target="_blank" rel="noreferrer">
+                        {prettyPrintURL(team.website)}
+                    </a>
                 </InfoIconRow>
             {/if}
 
@@ -86,7 +86,7 @@
 
         <Card vis={false}>
             <Form id="season" noscriptSubmit>
-                <SeasonSelect bind:season={$season} />
+                <SeasonSelect bind:season={$season} nonForm />
             </Form>
         </Card>
 
@@ -132,9 +132,7 @@
                         {$season == CURRENT_SEASON ? "has not yet played" : "did not compete"} in any
                         {DESCRIPTORS[$season].seasonName} events.
                     </b>
-                    <p class="no-events-help">
-                        Try choosing a different season from the dropdown menu.
-                    </p>
+                    <p>Try choosing a different season from the dropdown menu.</p>
                 </div>
             </Card>
         {/each}

@@ -1,5 +1,5 @@
 query EventSearch($season: Int!) {
-    eventSearch(season: $season, competitionEvents: true) {
+    eventSearch(season: $season) {
         season
         code
         name

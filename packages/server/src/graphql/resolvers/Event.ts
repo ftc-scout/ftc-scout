@@ -1,17 +1,20 @@
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
 import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
-import { EventTypeGQL } from "./enums";
+import { EventTypeGQL, EventTypeOptionGQL, RegionOptionGQL } from "./enums";
 import { AwardGQL, teamAwareAwardLoader } from "./Award";
 import { Event } from "../../db/entities/Event";
 import { Award } from "../../db/entities/Award";
 import {
     BoolTy,
-    COMPETITION_EVENT_TYPES,
     DateTimeTy,
     DateTy,
+    EventTypeOption,
     IntTy,
+    RegionOption,
     Season,
     StrTy,
+    getEventTypes,
+    getRegionCodes,
     groupBy,
     list,
     listTy,
@@ -194,10 +197,18 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
     eventSearch: {
         type: list(nn(EventGQL)),
-        args: { season: IntTy, competitionEvents: BoolTy },
+        args: {
+            season: IntTy,
+            region: { type: RegionOptionGQL },
+            type: { type: EventTypeOptionGQL },
+        },
         resolve: async (
             _,
-            { season, competitionEvents }: { season: Season; competitionEvents: boolean }
+            {
+                season,
+                region,
+                type,
+            }: { season: Season; region: RegionOption | null; type: EventTypeOption | null }
         ) => {
             let q = DATA_SOURCE.getRepository(Event)
                 .createQueryBuilder("e")
@@ -205,8 +216,12 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 .addSelect("coalesce(m.has_been_played, false)", "has_matches")
                 .where("season = :season", { season });
 
-            if (competitionEvents) {
-                q.andWhere("type IN (:...types)", { types: COMPETITION_EVENT_TYPES });
+            if (region && region != RegionOption.All) {
+                q.andWhere("region_code IN (:...regions)", { regions: getRegionCodes(region) });
+            }
+
+            if (type && type != EventTypeOption.All) {
+                q.andWhere("type IN (:...types)", { types: getEventTypes(type) });
             }
 
             let { entities, raw } = await q

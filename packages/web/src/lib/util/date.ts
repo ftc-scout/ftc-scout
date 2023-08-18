@@ -16,3 +16,17 @@ export function daysBetween(startDate: Date, endDate: Date): number {
         (treatAsUTC(endDate).valueOf() - treatAsUTC(startDate).valueOf()) / millisecondsPerDay
     );
 }
+
+export function dateFromStr(date: string): Date {
+    let [y, m, d] = date.split("-");
+    return new Date(+y, +m - 1, +d);
+}
+
+export function dateToStr(date: Date | null): string | null {
+    if (date == null) return null;
+
+    let y = date.getFullYear().toString().padStart(4, "0");
+    let m = (date.getMonth() + 1).toString().padStart(2, "0");
+    let d = date.getDate().toString().padStart(2, "0");
+    return `${y}-${m}-${d}`;
+}

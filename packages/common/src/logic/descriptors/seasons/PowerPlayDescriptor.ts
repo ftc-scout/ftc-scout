@@ -147,6 +147,8 @@ export const Descriptor2022 = new Descriptor({
         rp: "Record",
         tb: "AutoEndgameAvg",
     },
+    firstDate: new Date("2022-09-10"),
+    lastDate: new Date("2023-09-05"),
 })
     .addColumn(
         new DescriptorColumn({ name: "autoNav1" })

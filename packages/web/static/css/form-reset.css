@@ -5,7 +5,7 @@ select {
     font-family: inherit;
     color: inherit;
 
-    background: var(--fg-color);
+    background: var(--form-bg-color);
     padding: var(--md-pad);
 
     border: none;
@@ -30,8 +30,12 @@ input:hover {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.2s;
 
-    background-color: var(--hover-color);
-    border-color: var(--sep-hover-color);
+    background-color: var(--form-hover-bg-color);
+}
+
+select:active,
+input:active {
+    background-color: var(--form-click-bg-color);
 }
 
 select:focus,
@@ -50,7 +54,7 @@ input {
     font-family: inherit;
     color: inherit;
 
-    background: var(--fg-color);
+    background: var(--form-bg-color);
     padding: var(--md-pad);
 
     border: none;
@@ -60,6 +64,22 @@ input {
     cursor: pointer;
 }
 
+input[type="date"] {
+    padding-top: calc(var(--md-pad) - 1px);
+    padding-bottom: calc(var(--md-pad) - 1px);
+}
+
 button {
     color: inherit;
+}
+
+select.non-form,
+input.non-form {
+    background-color: var(--fg-color);
+}
+
+select.non-form:hover,
+input.non-form:hover {
+    background-color: var(--hover-color);
+    border-color: var(--sep-hover-color);
 }

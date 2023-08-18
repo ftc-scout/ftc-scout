@@ -3,6 +3,8 @@
     import Select from "./Select.svelte";
 
     export let season: Season;
+    export let nonForm = false;
+    export let id: string | null = null;
 
     const i = (x: Season) => (seasonStr = "" + x);
     const o = (x: string) => (season = +x as Season);
@@ -20,5 +22,7 @@
         value: d.season + "",
         name: d.seasonNameWithYear,
     }))}
+    {nonForm}
+    {id}
     on:change
 />

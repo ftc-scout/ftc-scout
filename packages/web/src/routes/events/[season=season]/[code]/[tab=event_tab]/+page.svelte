@@ -32,6 +32,7 @@
     import Teams from "./Teams.svelte";
     import Rankings from "./Rankings.svelte";
     import Awards from "./Awards.svelte";
+    import { isNonCompetition } from "../../../../../lib/util/event-type";
 
     export let data;
 
@@ -101,8 +102,12 @@
         >
             <Card slot="empty">
                 <div class="empty">
-                    <b>No information has been published about this event.</b>
-                    <p>Please check back later.</p>
+                    {#if isNonCompetition(event.type)}
+                        <p>This event is not competition; no matches will be played.</p>
+                    {:else}
+                        <b>No information has been published about this event.</b>
+                        <p>Please check back later.</p>
+                    {/if}
                 </div>
             </Card>
 

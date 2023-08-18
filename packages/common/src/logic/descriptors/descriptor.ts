@@ -45,6 +45,9 @@ export class Descriptor {
     pensSubtract: boolean;
     rankings: RankingsMethod;
 
+    firstDate: Date;
+    lastDate: Date;
+
     columns: DescriptorColumn[] = [];
     columnsMap: Record<string, DescriptorColumn> = {};
 
@@ -60,6 +63,8 @@ export class Descriptor {
         hasRemote: boolean;
         pensSubtract: boolean;
         rankings: RankingsMethod;
+        firstDate: Date;
+        lastDate: Date;
     }) {
         this.season = opts.season;
         this.seasonName = opts.seasonName;
@@ -67,6 +72,8 @@ export class Descriptor {
         this.hasRemote = opts.hasRemote;
         this.pensSubtract = opts.pensSubtract;
         this.rankings = opts.rankings;
+        this.firstDate = opts.firstDate;
+        this.lastDate = opts.lastDate;
     }
 
     addColumn(col: DescriptorColumn): Descriptor {

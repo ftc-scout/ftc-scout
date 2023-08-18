@@ -7,6 +7,7 @@ export * from "./logic/EventType";
 export * from "./logic/TournamentLevel";
 export * from "./logic/Alliance";
 export * from "./logic/Station";
+export * from "./logic/RegionOption";
 export * from "./logic/descriptors/descriptor";
 export * from "./logic/descriptors/descriptor-list";
 export * from "./logic/stats/calculate-team-event-stats";

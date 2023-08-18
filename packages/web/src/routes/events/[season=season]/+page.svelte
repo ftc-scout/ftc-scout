@@ -1,7 +1,7 @@
 <script lang="ts">
     import { page } from "$app/stores";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
-    import { DESCRIPTORS, type Season } from "@ftc-scout/common";
+    import { DESCRIPTORS, EventTypeOption, RegionOption, type Season } from "@ftc-scout/common";
     import Card from "$lib/components/Card.svelte";
     import Loading from "$lib/components/Loading.svelte";
     import SkeletonRow from "$lib/components/skeleton/SkeletonRow.svelte";
@@ -10,22 +10,38 @@
     import { sortString } from "$lib/util/sorters";
     import { prettyPrintDateRange } from "$lib/printers/dateRange";
     import SingleEvent from "./SingleEvent.svelte";
+    import Options from "./Options.svelte";
+    import { queryParam } from "$lib/util/search-params/search-params";
+    import { REGION_EC_DC } from "../../../lib/util/search-params/region";
+    import { regionMatches } from "../../../lib/util/regions";
+    import { EVENT_TY_EC_DC } from "../../../lib/util/search-params/event-ty";
+    import { eventTyMatches } from "../../../lib/util/event-type";
+    import { DATE_EC_DC } from "../../../lib/util/search-params/date";
+    import { browser } from "$app/environment";
+    import { goto } from "$app/navigation";
 
     export let data;
     $: eventsStore = data.events;
     $: events = $eventsStore?.data.eventSearch ?? [];
-    $: season = +$page.params.season as Season;
 
-    function groupEvents(es: typeof events) {
-        es = [...es]
-            .sort((a, b) => sortString(a.name, b.name))
-            .sort((a, b) => new Date(a.start).valueOf() - new Date(b.start).valueOf());
+    $: sortedEvents = [...events]
+        .sort((a, b) => sortString(a.name, b.name))
+        .sort((a, b) => new Date(a.start).valueOf() - new Date(b.start).valueOf());
+
+    function calcFirstMonday(es: typeof events): Date {
+        if (es.length == 0) return new Date();
 
         let firstDate = new Date(es[0].start);
         let minDow = firstDate.getDay();
         let mondayZero = mod(minDow - 1, 7);
         let mondayAdjust = (mondayZero - 7) % 7;
-        let firstMonday = addDays(firstDate, mondayAdjust);
+        return addDays(firstDate, mondayAdjust);
+    }
+
+    $: firstMonday = calcFirstMonday(sortedEvents);
+
+    function groupEvents(es: typeof events) {
+        if (es.length == 0) return [];
 
         let weeks: [number, typeof events][] = [];
         let currWeekNum = 0;
@@ -37,7 +53,7 @@
             let weekNum = Math.floor(daysSinceFirstMonday / 7);
 
             if (weekNum > currWeekNum) {
-                weeks.push([currWeekNum, currWeek]);
+                if (currWeek.length) weeks.push([currWeekNum, currWeek]);
                 currWeekNum = weekNum;
                 currWeek = [];
             }
@@ -46,15 +62,50 @@
         }
         weeks.push([currWeekNum, currWeek]);
 
-        return [firstMonday, weeks] as const;
+        return weeks;
     }
 
-    $: [firstMonday, grouped] = events.length ? groupEvents(events) : [new Date(), []];
+    function gotoSubPage(season: Season) {
+        if (browser && $page.route.id == "/events/[season=season]") {
+            goto(`/events/${season}`, { replaceState: true });
+        }
+    }
+
+    let season = +$page.params.season as Season;
+    $: gotoSubPage(season);
+
+    let region = queryParam<RegionOption>("regions", REGION_EC_DC);
+    let eventTy = queryParam<EventTypeOption>("event-types", EVENT_TY_EC_DC);
+    let start = queryParam("start", DATE_EC_DC);
+    let end = queryParam("end", DATE_EC_DC);
+
+    function eventMatches(
+        r: RegionOption,
+        ty: EventTypeOption,
+        st: Date | null,
+        end: Date | null
+    ): (_: (typeof events)[number]) => boolean {
+        return (e) =>
+            regionMatches(r, e.regionCode ?? "") &&
+            eventTyMatches(ty, e.type) &&
+            (!st || new Date(e.start) >= st) &&
+            (!end || new Date(e.end) <= end);
+    }
+
+    $: filteredEvents = sortedEvents.filter(eventMatches($region, $eventTy, $start, $end));
+    $: grouped = groupEvents(filteredEvents);
 </script>
 
 <WidthProvider width={"850px"}>
     <Card>
         <h1>{DESCRIPTORS[season].seasonName} Events</h1>
+        <Options
+            bind:season
+            bind:region={$region}
+            bind:eventType={$eventTy}
+            bind:start={$start}
+            bind:end={$end}
+        />
     </Card>
 </WidthProvider>
 
@@ -85,12 +136,21 @@
                         {/each}
                     </ul>
                 </section>
+            {:else}
+                <div class="no-events">
+                    <b> No matching events. </b>
+                    <p class="no-events-help">Try modifying your filters.</p>
+                </div>
             {/each}
         </Card>
     </Loading>
 </WidthProvider>
 
 <style>
+    h1 {
+        margin-bottom: var(--lg-gap);
+    }
+
     section {
         background: var(--fg-color);
         border-radius: 8px;
@@ -146,5 +206,19 @@
         ul::after {
             content: none;
         }
+    }
+
+    .no-events {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--md-gap);
+
+        background: var(--fg-color);
+        border: 1px solid var(--sep-color);
+        border-radius: 8px;
+        padding: var(--md-pad);
+
+        width: 100%;
     }
 </style>

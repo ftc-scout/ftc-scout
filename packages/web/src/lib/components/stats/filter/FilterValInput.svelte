@@ -59,12 +59,13 @@
                 }
             }}
             value={id ? stats.getStat(id).columnName : ""}
+            class="non-form"
         />
         <span class="icon"> <Fa icon={faEdit} /> </span>
     </div>
 {:else}
     <div class="input-wrap separate">
-        <input type="number" bind:value={num} />
+        <input type="number" bind:value={num} class="non-form" />
         <button class="icon" on:click={() => (shown = true)}> <Fa icon={faEdit} /> </button>
     </div>
 {/if}

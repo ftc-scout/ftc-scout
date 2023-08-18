@@ -18,7 +18,7 @@
     import { page } from "$app/stores";
     import ScoreModal from "./score-modal/ScoreModal.svelte";
     import { setContext } from "svelte";
-    import { queryParam } from "../search-params/search-params";
+    import { queryParam } from "../../util/search-params/search-params";
 
     export let matches: FullMatchFragment[];
     export let event: {
