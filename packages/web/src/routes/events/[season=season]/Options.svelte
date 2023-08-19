@@ -16,20 +16,22 @@
 </script>
 
 <Form id="season-search" style="col">
-    <label for="season-select">
-        Season
-        <SeasonSelect bind:season id="season-select" />
-    </label>
+    <div class="row">
+        <label for="season-select">
+            Season
+            <SeasonSelect bind:season id="season-select" />
+        </label>
 
-    <label for="region-select">
-        Regions
-        <RegionSelect bind:region name="regions" id="region-select" />
-    </label>
+        <label for="region-select">
+            Regions
+            <RegionSelect bind:region name="regions" id="region-select" />
+        </label>
 
-    <label for="event-types-select">
-        Event Types
-        <EventTypeSelect bind:eventType name="event-types" id="event-types-select" />
-    </label>
+        <label for="event-types-select">
+            Event Types
+            <EventTypeSelect bind:eventType name="event-types" id="event-types-select" />
+        </label>
+    </div>
 
     <div>
         Date Range
@@ -51,6 +53,19 @@
         flex-direction: column;
         gap: var(--sm-gap);
         width: 100%;
+    }
+
+    .row {
+        display: flex;
+        flex-direction: row;
+        gap: var(--vl-gap);
+    }
+
+    @media (max-width: 800px) {
+        .row {
+            flex-direction: column;
+            gap: var(--md-gap);
+        }
     }
 
     noscript {

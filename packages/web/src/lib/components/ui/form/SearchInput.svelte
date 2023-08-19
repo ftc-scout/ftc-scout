@@ -55,7 +55,9 @@
         display: none;
     }
 
-    input:focus:not(:placeholder-shown) + button {
+    input:focus:not(:placeholder-shown) + button,
+    input:hover:not(:placeholder-shown) + button,
+    input:not(:placeholder-shown) + button:hover {
         display: block;
     }
 
