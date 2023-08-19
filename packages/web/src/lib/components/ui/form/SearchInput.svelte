@@ -15,7 +15,7 @@
 
     <input type="search" autocomplete="off" {placeholder} {name} {id} bind:value />
 
-    <button on:click={() => (value = "")}>
+    <button on:mousedown|preventDefault on:click={() => (value = "")}>
         <Fa icon={faXmark} />
     </button>
 </div>
@@ -57,7 +57,8 @@
 
     input:focus:not(:placeholder-shown) + button,
     input:hover:not(:placeholder-shown) + button,
-    input:not(:placeholder-shown) + button:hover {
+    input:not(:placeholder-shown) + button:hover,
+    input:not(:placeholder-shown) + button:focus-visible {
         display: block;
     }
 
