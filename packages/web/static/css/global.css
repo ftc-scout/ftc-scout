@@ -96,8 +96,6 @@ body {
     --fg-color: rgb(var(--fg-color-vs));
     --theme-color: rgb(var(--theme-color-vs));
 
-    --modal-bg-color: rgba(0, 0, 0, 0.4);
-
     --red-team-color: rgb(var(--red-team-color-vs));
     --red-team-bg-color: rgba(var(--red-team-color-vs), var(--team-color-transparency));
     --blue-team-color: rgb(var(--blue-team-color-vs));
@@ -113,6 +111,8 @@ body {
 body {
     --fg-color-vs: 255, 255, 255;
     --bg-color: #f2f2f2;
+
+    --modal-bg-color: rgba(0, 0, 0, 0.4);
 
     --theme-color-vs: 44, 102, 110;
     --theme-color-opacity: 0.75;
@@ -180,6 +180,9 @@ body .render-dark {
 body.dark {
     --bg-color: #161616;
     --fg-color-vs: 45, 45, 45;
+
+    --modal-bg-color: rgba(78, 78, 78, 0.8);
+
     --hover-color: #3a3a3a;
     --tab-hover-color: #232323;
 
@@ -253,6 +256,9 @@ body.dark .render-light {
     body:not(.light) {
         --bg-color: #161616;
         --fg-color-vs: 45, 45, 45;
+
+        --modal-bg-color: rgba(78, 78, 78, 0.8);
+
         --hover-color: #3a3a3a;
         --tab-hover-color: #232323;
         --theme-color-vs: 31, 76, 82;
