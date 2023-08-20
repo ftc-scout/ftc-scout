@@ -19,7 +19,7 @@
     import { afterNavigate, goto, preloadData } from "$app/navigation";
     import { focusWithinOut, watchForFocus } from "../../../util/directives";
 
-    let searchText = "florida";
+    let searchText = "";
     let shown = false;
 
     let resultsLoading = false;
