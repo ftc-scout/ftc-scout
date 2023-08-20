@@ -70,7 +70,7 @@
         value="light"
         on:click|preventDefault={() => setTheme("dark")}
     >
-        <Fa icon={faSun} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
+        <Fa icon={faMoon} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
     </button>
 
     <button
@@ -79,7 +79,7 @@
         value="dark"
         on:click|preventDefault={() => setTheme("light")}
     >
-        <Fa icon={faMoon} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
+        <Fa icon={faSun} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
     </button>
 </form>
 
