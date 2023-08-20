@@ -75,7 +75,9 @@
 
     function gotoSubPage(season: Season) {
         if (browser && $page.route.id == "/events/[season=season]") {
-            goto(`/events/${season}`, { replaceState: true });
+            let params = $page.url.searchParams.toString();
+            if (params != "") params = "?" + params;
+            goto(`/events/${season}${params}`, { replaceState: true });
         }
     }
 
