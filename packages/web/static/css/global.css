@@ -131,6 +131,7 @@ body {
 
     --text-color: #000000;
     --secondary-text-color: #636466;
+    --grayed-out-text-color: gray;
     --theme-text-color: #ffffff;
 
     --inverse-bg-color: #212121;
@@ -166,8 +167,6 @@ body {
     --green-stat-color: rgb(var(--green-stat-color-vs));
     --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
 
-    --grayed-out-text-color: gray;
-
     --thick-border-width: 2px;
 
     color-scheme: light;
@@ -178,23 +177,29 @@ body .render-dark {
 }
 
 body.dark {
-    --bg-color: #161616;
     --fg-color-vs: 45, 45, 45;
+    --bg-color: #161616;
 
     --modal-bg-color: rgba(78, 78, 78, 0.8);
-
-    --hover-color: #3a3a3a;
-    --tab-hover-color: #232323;
 
     --theme-color-vs: 31, 76, 82;
     --theme-color-opacity: 0.3;
     --inline-theme-color: #39848e;
 
+    --hover-color: #3a3a3a;
+    --tab-hover-color: #232323;
+
     --sep-color: #4a4e51;
     --sep-hover-color: #595d61;
 
+    --zebra-stripe-color: #353535;
+    --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
+
+    --fade-shadow: rgba(255, 255, 255, 0.15);
+
     --text-color: #dfe2e6;
     --secondary-text-color: #dcdfe2;
+    --grayed-out-text-color: #a0a0a0;
     --theme-text-color: #ffffff;
 
     --inverse-bg-color: #202020;
@@ -207,7 +212,6 @@ body.dark {
     --form-disabled-opacity: 0.5;
 
     --team-color-transparency: 0.25;
-
     --red-team-color-vs: 175, 29, 29;
     --red-team-bg-color: rgba(204, 47, 47, var(--team-color-transparency));
     --blue-team-color-vs: 27, 87, 179;
@@ -215,11 +219,6 @@ body.dark {
     --red-team-text-color: rgb(255, 83, 71);
     --blue-team-text-color: rgb(33, 150, 243);
     --neutral-team-text-color: rgb(196, 79, 255);
-
-    --zebra-stripe-color: #353535;
-    --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
-
-    --fade-shadow: rgba(255, 255, 255, 0.15);
 
     --red-stat-color-vs: 204, 47, 47;
     --blue-stat-color-vs: var(--blue-team-color-vs);
@@ -237,8 +236,6 @@ body.dark {
     --green-stat-color: rgb(var(--green-stat-color-vs));
     --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
 
-    --grayed-out-text-color: #a0a0a0;
-
     --thick-border-width: 1px;
 
     color-scheme: dark;
@@ -254,22 +251,29 @@ body.dark .render-light {
 /* Same as above. Remember to copy past */
 @media (prefers-color-scheme: dark) {
     body:not(.light) {
-        --bg-color: #161616;
         --fg-color-vs: 45, 45, 45;
+        --bg-color: #161616;
 
         --modal-bg-color: rgba(78, 78, 78, 0.8);
 
-        --hover-color: #3a3a3a;
-        --tab-hover-color: #232323;
         --theme-color-vs: 31, 76, 82;
         --theme-color-opacity: 0.3;
         --inline-theme-color: #39848e;
 
+        --hover-color: #3a3a3a;
+        --tab-hover-color: #232323;
+
         --sep-color: #4a4e51;
         --sep-hover-color: #595d61;
 
+        --zebra-stripe-color: #353535;
+        --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
+
+        --fade-shadow: rgba(255, 255, 255, 0.15);
+
         --text-color: #dfe2e6;
         --secondary-text-color: #dcdfe2;
+        --grayed-out-text-color: #a0a0a0;
         --theme-text-color: #ffffff;
 
         --inverse-bg-color: #202020;
@@ -282,7 +286,6 @@ body.dark .render-light {
         --form-disabled-opacity: 0.5;
 
         --team-color-transparency: 0.25;
-
         --red-team-color-vs: 175, 29, 29;
         --red-team-bg-color: rgba(204, 47, 47, var(--team-color-transparency));
         --blue-team-color-vs: 27, 87, 179;
@@ -290,11 +293,6 @@ body.dark .render-light {
         --red-team-text-color: rgb(255, 83, 71);
         --blue-team-text-color: rgb(33, 150, 243);
         --neutral-team-text-color: rgb(196, 79, 255);
-
-        --zebra-stripe-color: #353535;
-        --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
-
-        --fade-shadow: rgba(255, 255, 255, 0.15);
 
         --red-stat-color-vs: 204, 47, 47;
         --blue-stat-color-vs: var(--blue-team-color-vs);
@@ -311,8 +309,6 @@ body.dark .render-light {
         --purple-stat-bg-color: rgba(var(--purple-stat-color-vs), var(--stat-transparency));
         --green-stat-color: rgb(var(--green-stat-color-vs));
         --green-stat-bg-color: rgba(var(--green-stat-color-vs), var(--stat-transparency));
-
-        --grayed-out-text-color: #a0a0a0;
 
         --thick-border-width: 1px;
 
