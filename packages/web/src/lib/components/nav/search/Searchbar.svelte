@@ -161,10 +161,6 @@
         transition: width 0.3s ease 0s;
 
         background: var(--fg-color);
-        transition-property: background-color;
-        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-        transition-duration: 0.3s;
-
         padding: 0 var(--sm-pad) 0 var(--lg-pad);
 
         border: 1px solid var(--sep-color);
