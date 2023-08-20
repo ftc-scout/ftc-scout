@@ -90,11 +90,11 @@
 
     .red {
         background: var(--red-team-bg-color);
-        color: var(--red-team-color);
+        color: var(--red-team-text-color);
     }
     .blue {
         background: var(--blue-team-bg-color);
-        color: var(--blue-team-color);
+        color: var(--blue-team-text-color);
     }
 
     .zero {
