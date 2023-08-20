@@ -1,125 +1,127 @@
 function isSepChar(c: string | undefined): boolean {
-    return c == " " || c == "-" || c == "." || c == undefined;
+    return c == " " || c == "-" || c == "." || c == "_" || c == undefined;
 }
 
-function calcSkipWordMap(str: string): number[] {
-    let map: number[] = [];
-
-    let lastLoc = 0;
-    let previousIsSep = false;
-
-    for (let i = 1; i <= str.length; i++) {
-        let isSep = isSepChar(str[str.length - i]);
-        map[i] = lastLoc;
-        if (previousIsSep && !isSep) lastLoc = i - 1;
-        previousIsSep = isSep;
-    }
-
-    return map;
-}
+const notAllowedCost = Infinity;
+const baseDeleteCost = 5000;
+const baseMoveCost = 1000;
+const nominalCost = 10;
+const haystackLenCost = 0.001;
 
 function calcShortestDistance(
     haystack: string,
     needle: string,
-    distMatrix?: number[],
-    pathMatrix?: number[]
+    scoreCutoff: number = Infinity,
+    distMatrix: number[] = [],
+    pathMatrix: number[] = []
 ): number {
-    const notAllowedCost = Infinity;
-    const baseDeleteCost = 50;
-    const baseMoveCost = 10;
-    const prefixCost = 1;
-
     if (needle == "") return 0;
     if (haystack == "") return needle.length * baseDeleteCost;
 
     let hLen = haystack.length;
+    let rowLen = hLen + 1;
     let nLen = needle.length;
-    // matrix[hi + ni * hLen]
+    // matrix[hi + ni * rowLen]
 
-    distMatrix ??= [];
-    pathMatrix ??= [];
+    // If the needle is empty pay nothing for what is left in the haystack.
+    for (let hi = 0; hi <= hLen; hi++) distMatrix[hi + nLen * rowLen] = 0;
 
-    for (let hi = 0; hi <= hLen; hi++) distMatrix[hi] = 0;
-    for (let ni = 0; ni <= nLen; ni++) distMatrix[ni * hLen] = ni * baseDeleteCost;
+    // If the haystack is empty pay to delete each character of the needle.
+    for (let ni = 0; ni <= nLen; ni++)
+        distMatrix[hLen + ni * rowLen] = (nLen - ni) * baseDeleteCost;
 
-    let skipWordMap = calcSkipWordMap(haystack);
+    for (let ni = nLen - 1; ni >= 0; ni--) {
+        let nc = needle[ni];
+        let ncSep = isSepChar(nc);
 
-    for (let hi = 1; hi <= hLen; hi++) {
-        for (let ni = 1; ni <= nLen; ni++) {
-            let nc = needle[nLen - ni];
-            let hc = haystack[hLen - hi];
+        // Pay less to delete whitespace
+        let deleteCost = isSepChar(nc) ? nominalCost : baseDeleteCost;
 
-            // We don't pay to shift in the start of the string
-            let shiftCost = ni == nLen ? 0 : baseMoveCost;
-            // pay extra to cross a word boundary in only the haystack and not the needle
-            shiftCost *= isSepChar(hc) && !isSepChar(nc) ? 2 : 1;
+        // Don't pay to move at the start
+        let moveCost = ni == 0 ? 0 : baseMoveCost;
 
-            // Pay less to delete whitespace
-            let deleteCost = isSepChar(nc) ? baseMoveCost : baseDeleteCost;
+        let previousIsSep = true;
+        let wordStartIdx = hLen;
 
-            // Consider all whitespace equal
-            let charsEqual = nc == hc || (isSepChar(nc) && isSepChar(hc));
+        let bestScore = Infinity;
 
-            let canPrefix = hc == nc && skipWordMap[hi] > 1;
-            // TODO:
-            // for (let pd = 1; canPrefix; pd++) {
-            //     let pnc = needle[nLen - ni - pd];
-            //     let phc = haystack[hLen - hi - pd];
-            //     canPrefix &&= pnc == phc;
+        for (let hi = hLen - 1; hi >= 0; hi--) {
+            let hc = haystack[hi];
+            let hcSep = isSepChar(hc);
 
-            //     if (isSepChar(pnc) && isSepChar(phc)) break;
-            // }
+            let sameChar = nc == hc;
+            let bothSep = hcSep && ncSep;
+            let canPrefix = wordStartIdx != hLen && sameChar && !ncSep;
+            for (let d = 1; canPrefix; d++) {
+                let pnc = needle[ni - d];
+                let phc = haystack[hi - d];
 
-            let deleteNC = distMatrix[hi + (ni - 1) * hLen] + deleteCost;
-            let useNC = charsEqual ? distMatrix[hi - 1 + (ni - 1) * hLen] : notAllowedCost;
-            let skipChar = distMatrix[hi - 1 + ni * hLen] + shiftCost;
-            let skipWord =
-                isSepChar(hc) || isSepChar(nc)
-                    ? distMatrix[skipWordMap[hi] + ni * hLen]
+                if (isSepChar(phc)) break;
+                canPrefix &&= pnc == phc;
+            }
+
+            let deleteOpt = distMatrix[hi + (ni + 1) * rowLen] + deleteCost;
+            let useOpt =
+                sameChar || bothSep ? distMatrix[hi + 1 + (ni + 1) * rowLen] : notAllowedCost;
+            let skipCharOpt = distMatrix[hi + 1 + ni * rowLen] + moveCost;
+            let skipWordOpt =
+                ncSep || hcSep
+                    ? distMatrix[wordStartIdx + ni * rowLen] + nominalCost
                     : notAllowedCost;
-            let prefix = canPrefix
-                ? distMatrix[skipWordMap[hi] - 1 + (ni - 1) * hLen] + prefixCost
+            let prefixOpt = canPrefix
+                ? distMatrix[wordStartIdx + 1 + (ni + 1) * rowLen] + nominalCost
                 : notAllowedCost;
 
-            // Set to min value
-            let min = Math.min(deleteNC, useNC, skipChar, skipWord, prefix);
-            distMatrix[hi + ni * hLen] = min;
-            if (deleteNC == min) {
-                // Delete
-                pathMatrix[hi + ni * hLen] = hi + (ni - 1) * hLen;
-            } else if (useNC == min) {
-                // Use
-                pathMatrix[hi + ni * hLen] = hi - 1 + (ni - 1) * hLen;
-            } else if (skipChar == min) {
-                // Skip char
-                pathMatrix[hi + ni * hLen] = hi - 1 + ni * hLen;
-            } else if (skipWord == min) {
-                // Skip word
-                pathMatrix[hi + ni * hLen] = skipWordMap[hi] + ni * hLen;
-            } else {
-                // Skip prefix
-                pathMatrix[hi + ni * hLen] = skipWordMap[hi] - 1 + (ni - 1) * hLen;
+            let thisIdx = hi + ni * rowLen;
+            let min = Math.min(deleteOpt, useOpt, skipCharOpt, skipWordOpt, prefixOpt);
+            distMatrix[thisIdx] = min;
+            bestScore = Math.min(bestScore, min);
+
+            switch (min) {
+                case deleteOpt:
+                    pathMatrix[thisIdx] = hi + (ni + 1) * rowLen;
+                    break;
+                case useOpt:
+                    pathMatrix[thisIdx] = hi + 1 + (ni + 1) * rowLen;
+                    break;
+                case skipCharOpt:
+                    pathMatrix[thisIdx] = hi + 1 + ni * rowLen;
+                    break;
+                case skipWordOpt:
+                    pathMatrix[thisIdx] = wordStartIdx + ni * rowLen;
+                    break;
+                case prefixOpt:
+                    pathMatrix[thisIdx] = wordStartIdx + 1 + (ni + 1) * rowLen;
+                    break;
             }
+
+            // Update word boundary
+            if (!previousIsSep && hcSep) wordStartIdx = hi;
+            previousIsSep = hcSep;
+        }
+
+        if (bestScore > scoreCutoff) {
+            return scoreCutoff + 1;
         }
     }
 
-    return distMatrix[hLen + nLen * hLen];
+    return distMatrix[0] + haystack.length * haystackLenCost;
 }
 
 function calcHighlights(pathMatrix: number[], hLen: number, nLen: number): number[] {
     if (isNaN(hLen) || isNaN(nLen)) return [];
 
-    let hi = hLen;
-    let ni = nLen;
+    let rowLen = hLen + 1;
+    let hi = 0;
+    let ni = 0;
     let positions: number[] = [];
 
-    while (hi != 0 && ni != 0) {
-        let next = pathMatrix[hi + ni * hLen];
-        let nHi = next % hLen;
-        let nNi = Math.floor(next / hLen);
+    while (hi != hLen && ni != nLen) {
+        let next = pathMatrix[hi + ni * rowLen];
+        let nHi = next % rowLen;
+        let nNi = Math.floor(next / rowLen);
 
-        if (nHi <= hi - 1 && nNi == ni - 1) positions.push(hLen - hi);
-        if (hi == nHi && ni == nNi) return positions;
+        if (nHi >= hi + 1 && nNi == ni + 1) positions.push(hi);
 
         hi = nHi;
         ni = nNi;
@@ -137,34 +139,47 @@ export interface FuzzyResult<T> {
 export function getFuzzyDistance(
     haystack: string,
     needle: string,
-    distMatrix?: number[],
-    pathMatrix?: number[]
+    scoreCutoff: number = Infinity,
+    distMatrix: number[] = [],
+    pathMatrix: number[] = []
 ): FuzzyResult<string> {
     haystack = haystack.toLowerCase().trim();
     needle = needle.toLowerCase().trim();
 
     pathMatrix ??= [];
 
-    let distance = calcShortestDistance(haystack, needle, distMatrix, pathMatrix);
-    let highlights = calcHighlights(pathMatrix, haystack.length, needle.length);
+    let distance = calcShortestDistance(haystack, needle, scoreCutoff, distMatrix, pathMatrix);
+    let highlights =
+        distance > scoreCutoff ? [] : calcHighlights(pathMatrix, haystack.length, needle.length);
 
     return { document: haystack, distance, highlights };
 }
 
 function insert<T>(results: FuzzyResult<T>[], newR: FuzzyResult<T>) {
     let low = 0;
-    let high = results.length - 1;
+    let high = results.length;
 
     while (low < high) {
         let mid = Math.floor((low + high) / 2);
         if (newR.distance > results[mid].distance) {
             low = mid + 1;
         } else {
-            high = mid - 1;
+            high = mid;
         }
     }
 
     results.splice(low, 0, newR);
+}
+
+export function calcCutoff(
+    dist: number,
+    needleLen: number = 10,
+    needleSepChars: number = 2
+): number {
+    return Math.min(
+        dist * 2 + (needleSepChars + 1) * nominalCost + haystackLenCost * 10,
+        baseDeleteCost * Math.max(Math.min(5, Math.ceil(needleLen / 2)), needleLen / 4)
+    );
 }
 
 export function fuzzySearch<T>(
@@ -174,7 +189,7 @@ export function fuzzySearch<T>(
     key?: keyof T,
     sort: boolean = false
 ): FuzzyResult<T>[] {
-    needle = needle.slice(0, 25);
+    needle = needle.slice(0, 50);
 
     if (needle == "") {
         return documents
@@ -187,24 +202,25 @@ export function fuzzySearch<T>(
 
     maxResults ??= Infinity;
 
+    let needleSepChars = needle.split("").filter(isSepChar).length;
     let scoreCutoff = Infinity;
     let sortedResults: FuzzyResult<T>[] = [];
 
     for (let i = 0; i < documents.length; i++) {
         let haystack = key ? documents[i][key] : documents[i];
-        let res = getFuzzyDistance(haystack + "", needle, distMatrix, pathMatrix);
+        let res = getFuzzyDistance(haystack + "", needle, scoreCutoff, distMatrix, pathMatrix);
 
         let dist = res.distance;
-        let newCutoff = Math.min(dist * 2, 250);
+        let newCutoff = calcCutoff(dist, needle.length, needleSepChars);
         if (newCutoff < scoreCutoff) {
             scoreCutoff = newCutoff;
-            sortedResults = sortedResults.filter((r) => r.distance < scoreCutoff);
+            sortedResults = sortedResults.filter((r) => r.distance <= scoreCutoff);
         }
 
         let lastDist = sortedResults[sortedResults.length - 1]?.distance ?? Infinity;
 
         if (dist > scoreCutoff) continue;
-        if (dist > lastDist && sortedResults.length < maxResults) continue;
+        if (dist > lastDist && sortedResults.length >= maxResults) continue;
 
         let documentRes = { ...res, document: documents[i] };
         if (sort) {

@@ -7,7 +7,7 @@
         type TeamsSearchTeamFragment,
         type EventsSearchEventFragment,
     } from "../../../graphql/generated/graphql-operations";
-    import { CURRENT_SEASON, fuzzySearch, type FuzzyResult } from "@ftc-scout/common";
+    import { CURRENT_SEASON, fuzzySearch, type FuzzyResult, calcCutoff } from "@ftc-scout/common";
     import { getClient } from "../../../graphql/client";
     import { getDataSync } from "../../../graphql/getData";
     import { browser } from "$app/environment";
@@ -89,7 +89,7 @@
 
     $: bestEvent = Math.min(...events.map((e) => e.distance));
     $: bestTeam = Math.min(...teams.map((t) => t.distance));
-    $: cutoff = Math.min(Math.min(bestEvent, bestTeam) * 2, 250);
+    $: cutoff = calcCutoff(Math.min(bestEvent, bestTeam), needle.length);
 
     $: filteredEvents = events.filter((e) => e.distance <= cutoff);
     $: filteredTeams = teams.filter((t) => t.distance <= cutoff);
