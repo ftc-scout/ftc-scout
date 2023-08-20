@@ -30,7 +30,7 @@
 
     export let data;
     $: eventsStore = data.events;
-    $: events = $eventsStore?.data.eventSearch ?? [];
+    $: events = $eventsStore?.data.eventsSearch ?? [];
 
     $: sortedEvents = [...events]
         .sort((a, b) => sortString(a.name, b.name))

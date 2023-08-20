@@ -1,0 +1,20 @@
+query EventsSearch($season: Int!) {
+    eventsSearch(season: $season) {
+        ...EventsSearchEvent
+    }
+}
+
+query TeamsSearch {
+    teamsSearch {
+        ...TeamsSearchTeam
+    }
+}
+
+query CombinedSearch($season: Int!) {
+    eventsSearch(season: $season) {
+        ...EventsSearchEvent
+    }
+    teamsSearch {
+        ...TeamsSearchTeam
+    }
+}

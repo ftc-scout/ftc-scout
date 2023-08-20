@@ -1,3 +1,5 @@
+import type { Writable } from "svelte/store";
+
 export function clickOutside(node: any) {
     const handleClick = (event: any) => {
         if (node && !node.contains(event.target) && !event.defaultPrevented) {
@@ -48,6 +50,47 @@ export function stickTableHead(node: HTMLElement) {
             content?.removeEventListener("scroll", listener);
             node.style.removeProperty("transform");
             node.classList.remove("sticking");
+        },
+    };
+}
+
+export function watchForFocus(node: HTMLElement, args: { store: Writable<number>; myNum: number }) {
+    let { store, myNum } = args;
+
+    let destroySub = store.subscribe((n) => {
+        if (myNum == n) {
+            node.focus();
+        }
+    });
+
+    function focusIn() {
+        store.set(myNum);
+    }
+
+    node.addEventListener("focusin", focusIn);
+
+    return {
+        destroy() {
+            destroySub();
+            node.removeEventListener("focusin", focusIn);
+        },
+    };
+}
+
+export function focusWithinOut(node: HTMLElement, callback: () => void) {
+    function focusOut(e: FocusEvent) {
+        let currTarget = e.currentTarget as HTMLElement | null;
+        let relTarget = e.relatedTarget as Node | null;
+        if (!currTarget?.contains(relTarget)) {
+            callback();
+        }
+    }
+
+    node.addEventListener("focusout", focusOut);
+
+    return {
+        destroy() {
+            node.removeEventListener("focusout", focusOut);
         },
     };
 }

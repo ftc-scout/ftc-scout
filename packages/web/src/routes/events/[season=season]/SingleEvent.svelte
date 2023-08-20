@@ -1,11 +1,11 @@
 <script lang="ts">
-    import type { EventSearchQuery } from "$lib/graphql/generated/graphql-operations";
+    import type { EventsSearchEventFragment } from "$lib/graphql/generated/graphql-operations";
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import { prettyPrintEventTypeLong, prettyPrintEventTypeShort } from "$lib/printers/eventType";
     import { prettyPrintRegionCode } from "$lib/printers/regionCode";
     import { highlight, type FuzzyResult } from "@ftc-scout/common";
 
-    export let event: FuzzyResult<NonNullable<EventSearchQuery["eventSearch"]>[number]>;
+    export let event: FuzzyResult<NonNullable<EventsSearchEventFragment>>;
     $: e = event.document;
     $: href = `/events/${e.season}/${e.code}/matches`;
 

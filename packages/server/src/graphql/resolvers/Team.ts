@@ -1,6 +1,18 @@
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
 import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
-import { DateTimeTy, IntTy, StrTy, groupBy, list, listTy, nn, nullTy } from "@ftc-scout/common";
+import {
+    DateTimeTy,
+    IntTy,
+    RegionOption,
+    StrTy,
+    fuzzySearch,
+    getRegionCodes,
+    groupBy,
+    list,
+    listTy,
+    nn,
+    nullTy,
+} from "@ftc-scout/common";
 import { Team } from "../../db/entities/Team";
 import { In } from "typeorm";
 import { AwardGQL, teamAwareAwardLoader } from "./Award";
@@ -11,6 +23,9 @@ import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation
 import { LocationGQL } from "../objs/Location";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
 import { TeamEventParticipationGQL } from "./TeamEventParticipation";
+import { RegionOptionGQL } from "./enums";
+import { DATA_SOURCE } from "../../db/data-source";
+import { Event } from "../../db/entities/Event";
 
 export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Team",
@@ -101,5 +116,47 @@ export const TeamQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             (keys) => Team.find({ where: { name: In(keys) } }),
             (k, r) => k == r.name
         ),
+    },
+
+    teamsSearch: {
+        type: list(nn(TeamGQL)),
+        args: {
+            region: { type: RegionOptionGQL },
+            limit: nullTy(IntTy),
+            searchText: nullTy(StrTy),
+        },
+        resolve: async (
+            _,
+            {
+                region,
+                limit,
+                searchText,
+            }: {
+                region: RegionOption | null;
+                limit: number | null;
+                searchText: string | null;
+            }
+        ) => {
+            let q = DATA_SOURCE.getRepository(Team).createQueryBuilder("t").distinctOn(["number"]);
+
+            if (region && region != RegionOption.All) {
+                q.andWhere("e.region_code IN (:...regions)", { regions: getRegionCodes(region) })
+                    .leftJoin(TeamMatchParticipation, "m", "t.number = m.team_number")
+                    .leftJoin(Event, "e", "e.season = m.season AND e.code = m.event_code");
+            }
+
+            if (limit && (!searchText || searchText.trim() == "")) {
+                q.limit(limit);
+            }
+
+            let entities = await q.getMany();
+
+            if (searchText && searchText.trim() != "") {
+                let res = fuzzySearch(entities, searchText, limit ?? undefined, "name", true);
+                entities = res.map((d) => d.document);
+            }
+
+            return entities;
+        },
     },
 };

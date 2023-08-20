@@ -7,13 +7,15 @@ import {
     InMemoryCache,
 } from "@apollo/client/core";
 import { IS_DEV } from "../constants";
+import { browser } from "$app/environment";
 
 let client: ApolloClient<NormalizedCacheObject> | null = null;
 
 export function getClient(
-    fetch: NonNullable<HttpOptions["fetch"]>
+    fetch?: NonNullable<HttpOptions["fetch"]>
 ): ApolloClient<NormalizedCacheObject> {
     if (client) return client;
+    if (!fetch) throw "First call to get client must provide fetch";
 
     let link = new HttpLink({
         uri: env.PUBLIC_SERVER_ORIGIN!,
@@ -68,11 +70,16 @@ export function getClient(
         },
     });
 
-    client = new ApolloClient({
+    let newClient = new ApolloClient({
         connectToDevTools: IS_DEV,
         link,
         cache,
     });
 
-    return client;
+    // Don't cache the client on the server
+    if (browser) {
+        client = newClient;
+    }
+
+    return newClient;
 }

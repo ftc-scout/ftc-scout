@@ -7,7 +7,7 @@ import type {
 } from "@apollo/client";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
-import { writable, type Readable, type Writable } from "svelte/store";
+import { writable, type Readable, type Writable, readable } from "svelte/store";
 
 let firstPage = true;
 export async function getData<Data = any, Variables extends OperationVariables = object>(
@@ -39,6 +39,29 @@ export async function getData<Data = any, Variables extends OperationVariables =
     }
 
     firstPage = false;
+
+    return result;
+}
+
+export function getDataSync<Data = any, Variables extends OperationVariables = object>(
+    client: ApolloClient<NormalizedCacheObject> | null,
+    query: DocumentNode | TypedDocumentNode<Data, Variables>,
+    variables: Variables
+): Readable<ApolloQueryResult<Data> | null> {
+    if (!client) return readable(null);
+
+    let queryResult = client.query({
+        query,
+        variables,
+        // No caching if on server
+        ...(!browser && { fetchPolicy: "no-cache" }),
+    });
+
+    let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
+
+    queryResult.then((r) => {
+        result.set(r);
+    });
 
     return result;
 }

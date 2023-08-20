@@ -2,6 +2,7 @@
     import DarkModeToggle from "./DarkModeToggle.svelte";
     import Hamburger from "./Hamburger.svelte";
     import Logo from "./Logo.svelte";
+    import Searchbar from "./search/Searchbar.svelte";
 </script>
 
 <nav>
@@ -10,7 +11,10 @@
         <Logo />
     </div>
 
-    <DarkModeToggle />
+    <div class="right">
+        <Searchbar />
+        <DarkModeToggle />
+    </div>
 </nav>
 
 <style>
@@ -34,5 +38,11 @@
     .left {
         display: flex;
         align-items: center;
+    }
+
+    .right {
+        display: flex;
+        align-items: center;
+        gap: calc(var(--lg-gap) * 1.75);
     }
 </style>

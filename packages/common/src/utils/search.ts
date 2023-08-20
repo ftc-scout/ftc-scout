@@ -1,5 +1,5 @@
 function isSepChar(c: string | undefined): boolean {
-    return c == " " || c == "-" || c == undefined;
+    return c == " " || c == "-" || c == "." || c == undefined;
 }
 
 function calcSkipWordMap(str: string): number[] {
@@ -52,19 +52,34 @@ function calcShortestDistance(
             // We don't pay to shift in the start of the string
             let shiftCost = ni == nLen ? 0 : baseMoveCost;
             // pay extra to cross a word boundary in only the haystack and not the needle
-            shiftCost *= isSepChar(hc) && !isSepChar(nc) ? 3 : 1;
+            shiftCost *= isSepChar(hc) && !isSepChar(nc) ? 2 : 1;
 
-            let deleteNC = distMatrix[hi + (ni - 1) * hLen] + baseDeleteCost;
-            let useNC = nc == hc ? distMatrix[hi - 1 + (ni - 1) * hLen] : notAllowedCost;
+            // Pay less to delete whitespace
+            let deleteCost = isSepChar(nc) ? baseMoveCost : baseDeleteCost;
+
+            // Consider all whitespace equal
+            let charsEqual = nc == hc || (isSepChar(nc) && isSepChar(hc));
+
+            let canPrefix = hc == nc && skipWordMap[hi] > 1;
+            // TODO:
+            // for (let pd = 1; canPrefix; pd++) {
+            //     let pnc = needle[nLen - ni - pd];
+            //     let phc = haystack[hLen - hi - pd];
+            //     canPrefix &&= pnc == phc;
+
+            //     if (isSepChar(pnc) && isSepChar(phc)) break;
+            // }
+
+            let deleteNC = distMatrix[hi + (ni - 1) * hLen] + deleteCost;
+            let useNC = charsEqual ? distMatrix[hi - 1 + (ni - 1) * hLen] : notAllowedCost;
             let skipChar = distMatrix[hi - 1 + ni * hLen] + shiftCost;
             let skipWord =
                 isSepChar(hc) || isSepChar(nc)
                     ? distMatrix[skipWordMap[hi] + ni * hLen]
                     : notAllowedCost;
-            let prefix =
-                hc == nc && skipWordMap[hi] > 1
-                    ? distMatrix[skipWordMap[hi] - 1 + (ni - 1) * hLen] + prefixCost
-                    : notAllowedCost;
+            let prefix = canPrefix
+                ? distMatrix[skipWordMap[hi] - 1 + (ni - 1) * hLen] + prefixCost
+                : notAllowedCost;
 
             // Set to min value
             let min = Math.min(deleteNC, useNC, skipChar, skipWord, prefix);
@@ -159,8 +174,12 @@ export function fuzzySearch<T>(
     key?: keyof T,
     sort: boolean = false
 ): FuzzyResult<T>[] {
+    needle = needle.slice(0, 25);
+
     if (needle == "") {
-        return documents.map((document) => ({ document, distance: 0, highlights: [] }));
+        return documents
+            .slice(0, maxResults)
+            .map((document) => ({ document, distance: 0, highlights: [] }));
     }
 
     let distMatrix: number[] = [];

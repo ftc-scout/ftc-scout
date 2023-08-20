@@ -1,0 +1,28 @@
+fragment EventsSearchEvent on Event {
+    __typename
+    season
+    code
+    name
+    remote
+    start
+    end
+    type
+    regionCode
+    location {
+        city
+        state
+        country
+    }
+    hasMatches
+}
+
+fragment TeamsSearchTeam on Team {
+    __typename
+    number
+    name
+    location {
+        city
+        state
+        country
+    }
+}

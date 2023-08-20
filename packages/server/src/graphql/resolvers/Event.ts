@@ -196,7 +196,7 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
         ),
     },
 
-    eventSearch: {
+    eventsSearch: {
         type: list(nn(EventGQL)),
         args: {
             season: IntTy,

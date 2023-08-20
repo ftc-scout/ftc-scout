@@ -36,6 +36,10 @@ export function isNonCompetition(ty: EventType): boolean {
     return (NON_COMPETITION_EVENT_TYPES as string[]).indexOf(ty) != -1;
 }
 
+export function isCompetition(ty: EventType): boolean {
+    return (COMPETITION_EVENT_TYPES as string[]).indexOf(ty) != -1;
+}
+
 export const EVENT_TY_GROUPS: EventTypeOption[][] = [
     [EventTypeOption.All, EventTypeOption.Competition, EventTypeOption.NonCompetition],
     COMPETITION_EVENT_TYPES,

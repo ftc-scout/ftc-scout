@@ -19,7 +19,7 @@ export class ApiReq extends BaseEntity {
 
 // Log uses of our api that aren't the frontend.
 export function apiLoggerMiddleware(req: Request, _: Response, next: NextFunction) {
-    if (!(FRONTEND_CODE in req.headers)) {
+    if (!(FRONTEND_CODE in req.headers) && req.body?.["operationName"] != "IntrospectionQuery") {
         ApiReq.save({ req: req.body, headers: req.rawHeaders as any });
     }
     next();
