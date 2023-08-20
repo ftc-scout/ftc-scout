@@ -3,6 +3,7 @@
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import Card from "$lib/components/Card.svelte";
     import { longestCommonPrefix } from "$lib/util/string";
+    import { sortString } from "$lib/util/sorters";
 
     type RelatedEvent = NonNullable<EventPageQuery["eventByCode"]>["relatedEvents"][number];
 
@@ -12,6 +13,7 @@
 
     $: allEventNames = [thisEventName, ...relatedEvents.map((e) => e.name)];
     $: mainEventName = longestCommonPrefix(allEventNames);
+    $: sorted = [...relatedEvents].sort((a, b) => sortString(a.code, b.code));
 
     function mapName(name: string): string {
         let sliced = name.slice(mainEventName.length).trim().replace(/\-\s*/, "");
@@ -22,7 +24,7 @@
 {#if relatedEvents.length}
     <Card vis={false}>
         <ul class:many={relatedEvents.length > 2}>
-            {#each relatedEvents as relatedEvent}
+            {#each sorted as relatedEvent}
                 <li>
                     <a href="/events/{season}/{relatedEvent.code}/matches">
                         {mapName(relatedEvent.name)}
