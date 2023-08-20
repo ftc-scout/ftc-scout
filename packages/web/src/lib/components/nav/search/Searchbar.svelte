@@ -152,7 +152,7 @@
     </div>
 </form>
 
-<button class="search" on:click={show}>
+<button class="search-btn" on:click={show}>
     <Fa icon={faSearch} size="1.25x" />
 </button>
 
@@ -190,7 +190,7 @@
         transition: width 300ms 0s cubic-bezier(0.4, 0, 0.2, 1);
 
         border-radius: 4px;
-        padding: calc(var(--md-pad) * 1.25);
+        padding: calc(var(--navbar-size) / 6);
         padding-right: 0;
         border: none;
         border-radius: 0;
@@ -307,12 +307,12 @@
         }
     }
 
-    .search {
+    .search-btn {
         display: none;
 
         background: none;
         border: none;
-        font-size: inherit;
+        /* font-size: var(--lg-font-size); */
         font-family: inherit;
         color: var(--theme-text-color);
         cursor: pointer;
@@ -335,7 +335,7 @@
             display: none;
         }
 
-        .search {
+        .search-btn {
             display: block;
         }
     }
