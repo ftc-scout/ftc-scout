@@ -77,27 +77,32 @@
 
     $: browser && searchText != "" && loadData();
 
-    $: needle = searchText.slice(0, 25);
-    $: events =
-        searchText != "" && relevantEvents.length
-            ? fuzzySearch(relevantEvents, needle, 5, "name", true).slice(0, 10)
-            : [];
-    $: teams =
-        searchText != "" && relevantTeams
-            ? fuzzySearch(relevantTeams, needle, 5, "name", true).slice(0, 10)
-            : [];
+    function search(needle: string) {
+        if (needle == "") return [];
+        if (needle.match(/^\d+$/)) {
+            return relevantTeams
+                .filter((t) => (t.number + "").startsWith(needle))
+                .sort((a, b) => a.number - b.number)
+                .slice(0, 10)
+                .map((t) => ({ document: t, distance: 0, highlights: [] }));
+        }
 
-    $: bestEvent = Math.min(...events.map((e) => e.distance));
-    $: bestTeam = Math.min(...teams.map((t) => t.distance));
-    $: cutoff = calcCutoff(Math.min(bestEvent, bestTeam), needle.length);
+        let events = fuzzySearch(relevantEvents, needle, 5, "name", true).slice(0, 10);
+        let teams = fuzzySearch(relevantTeams, needle, 5, "name", true).slice(0, 10);
 
-    $: filteredEvents = events.filter((e) => e.distance <= cutoff);
-    $: filteredTeams = teams.filter((t) => t.distance <= cutoff);
+        let bestEvent = Math.min(...events.map((e) => e.distance));
+        let bestTeam = Math.min(...teams.map((t) => t.distance));
+        let cutoff = calcCutoff(Math.min(bestEvent, bestTeam), needle.length);
 
-    $: searchResults =
-        bestTeam <= bestEvent
+        let filteredEvents = events.filter((e) => e.distance <= cutoff);
+        let filteredTeams = teams.filter((t) => t.distance <= cutoff);
+
+        return bestTeam <= bestEvent
             ? [...filteredTeams, ...filteredEvents]
             : [...filteredEvents, ...filteredTeams];
+    }
+
+    $: searchResults = search(searchText.trim().slice(0, 50));
 
     $: searchResults, $focusNum, preload();
 
@@ -138,6 +143,7 @@
                     <li>
                         <SearchRes
                             {res}
+                            {searchText}
                             {focusNum}
                             {index}
                             on:keydown={key}

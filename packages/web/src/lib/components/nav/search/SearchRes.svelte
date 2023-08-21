@@ -11,6 +11,7 @@
     import type { Writable } from "svelte/store";
 
     export let res: FuzzyResult<EventsSearchEventFragment | TeamsSearchTeamFragment>;
+    export let searchText: string;
     export let focusNum: Writable<number>;
     export let index: number;
 
@@ -35,7 +36,14 @@
             {@const topLoc =
                 doc.location.country == "USA" ? doc.location.state : doc.location.country}
 
-            <span class="name">{doc.number} <em>{@html name}</em></span>
+            <span class="name">
+                {#if (doc.number + "").startsWith(searchText)}
+                    <b>{searchText}</b>{(doc.number + "").slice(searchText.length)}
+                {:else}
+                    {doc.number}
+                {/if}
+                <em>{@html name}</em>
+            </span>
             <i class="extra">{doc.location.city}, {topLoc}</i>
         {/if}
     </span>

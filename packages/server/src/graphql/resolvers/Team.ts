@@ -151,9 +151,16 @@ export const TeamQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
             let entities = await q.getMany();
 
-            if (searchText && searchText.trim() != "") {
-                let res = fuzzySearch(entities, searchText, limit ?? undefined, "name", true);
-                entities = res.map((d) => d.document);
+            if (searchText) searchText = searchText.trim();
+            if (searchText && searchText != "") {
+                if (searchText.match(/^\d+$/)) {
+                    entities = entities
+                        .filter((e) => (e.number + "").startsWith(searchText!))
+                        .sort((a, b) => a.number - b.number);
+                } else {
+                    let res = fuzzySearch(entities, searchText, limit ?? undefined, "name", true);
+                    entities = res.map((d) => d.document);
+                }
             }
 
             return entities;
