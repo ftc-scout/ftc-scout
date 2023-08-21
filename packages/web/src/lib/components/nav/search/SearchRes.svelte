@@ -42,7 +42,7 @@
                 {:else}
                     {doc.number}
                 {/if}
-                <em>{@html name}</em>
+                - <em>{@html name}</em>
             </span>
             <i class="extra">{doc.location.city}, {topLoc}</i>
         {/if}
