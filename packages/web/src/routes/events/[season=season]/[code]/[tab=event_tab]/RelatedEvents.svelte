@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type { Season } from "@ftc-scout/common";
+    import { longestCommonPrefix, type Season } from "@ftc-scout/common";
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import Card from "$lib/components/Card.svelte";
-    import { longestCommonPrefix } from "$lib/util/string";
     import { sortString } from "$lib/util/sorters";
 
     type RelatedEvent = NonNullable<EventPageQuery["eventByCode"]>["relatedEvents"][number];

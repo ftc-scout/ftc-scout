@@ -1,5 +1,5 @@
 import { ExportToCsv } from "export-to-csv";
-import type { StatColumn, StatData } from "./stat-table";
+import type { StatColumn, StatData } from "@ftc-scout/common";
 
 export function exportCSV<T>(
     data: StatData<T>[],

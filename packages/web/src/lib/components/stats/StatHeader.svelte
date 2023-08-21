@@ -1,9 +1,9 @@
 <script lang="ts">
-    import type { SortDir } from "./StatTableControls.svelte";
+    import type { SortDir } from "@ftc-scout/common";
     import { createEventDispatcher } from "svelte";
     import { stickTableHead } from "../../util/directives";
     import SortButton from "./SortButton.svelte";
-    import type { StatColumn } from "./stat-table";
+    import type { StatColumn } from "@ftc-scout/common";
 
     type T = $$Generic;
 

@@ -1,5 +1,12 @@
-import { groupBySingle, type Tree } from "@ftc-scout/common";
-import { titleCase } from "../../util/string";
+import { groupBySingle } from "../../utils/filter";
+import { titleCase } from "../../utils/string";
+import { Tree } from "../descriptors/descriptor";
+
+export const SortDir = {
+    Asc: "Asc",
+    Desc: "Desc",
+} as const;
+export type SortDir = (typeof SortDir)[keyof typeof SortDir];
 
 export const StatType = {
     Int: "int",
@@ -84,11 +91,14 @@ export class NonRankStatColumn<T> extends StatColumn<T> {
         return StatColumn.distill(this.getNonRankValue(d));
     }
 
+    sqlExpr: string;
+
     constructor(opts: {
         id: string;
         columnName: string;
         dialogName: string;
         titleName: string;
+        sqlExpr: string;
 
         color: Color;
 
@@ -97,6 +107,7 @@ export class NonRankStatColumn<T> extends StatColumn<T> {
     }) {
         super({ ...opts, getValue: (d) => opts.getNonRankValue(d.data) });
         this.getNonRankValue = opts.getNonRankValue;
+        this.sqlExpr = opts.sqlExpr;
     }
 }
 

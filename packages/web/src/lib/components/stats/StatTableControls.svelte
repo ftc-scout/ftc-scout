@@ -1,17 +1,16 @@
-<script lang="ts" context="module">
-    export const SortDir = {
-        Asc: "Asc",
-        Desc: "Desc",
-    } as const;
-    export type SortDir = (typeof SortDir)[keyof typeof SortDir];
-</script>
-
 <script lang="ts">
-    import type { FilterGroup } from "./filter/filter";
+    import {
+        NonRankStatColumn,
+        RankTy,
+        type StatData,
+        StatSet,
+        RANK_STATS,
+        SortDir,
+        type FilterGroup,
+    } from "@ftc-scout/common";
     import { faEdit, faFilter, faXmark } from "@fortawesome/free-solid-svg-icons";
     import ViewStatsModal from "./view-stats/ViewStatsModal.svelte";
     import ChooseStatsModal from "./choose-stats/ChooseStatsModal.svelte";
-    import { RANK_STATS, StatSet, RankTy, type StatData, NonRankStatColumn } from "./stat-table";
     import StatTable from "./StatTable.svelte";
     import Button from "../ui/Button.svelte";
     import { createEventDispatcher } from "svelte";

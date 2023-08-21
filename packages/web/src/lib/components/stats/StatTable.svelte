@@ -1,8 +1,7 @@
 <script lang="ts">
-    import type { SortDir } from "./StatTableControls.svelte";
+    import type { SortDir, StatColumn, StatData } from "@ftc-scout/common";
     import StatHeader from "./StatHeader.svelte";
     import StatRow from "./StatRow.svelte";
-    import type { StatColumn, StatData } from "./stat-table";
 
     type T = $$Generic;
 

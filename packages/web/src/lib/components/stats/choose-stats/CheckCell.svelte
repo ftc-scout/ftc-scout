@@ -1,7 +1,7 @@
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
     import Checkbox from "../../ui/Checkbox.svelte";
-    import type { StatSectionColumn } from "../stat-table";
+    import type { StatSectionColumn } from "@ftc-scout/common";
 
     type T = $$Generic;
 

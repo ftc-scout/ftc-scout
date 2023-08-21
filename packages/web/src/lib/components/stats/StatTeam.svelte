@@ -2,7 +2,7 @@
     import { browser } from "$app/environment";
     import { getContext } from "svelte";
     import { TEAM_CLICK_ACTION_CONTEXT } from "../matches/MatchTeam.svelte";
-    import type { StatValue } from "./stat-table";
+    import type { StatValue } from "@ftc-scout/common";
 
     export let val: Extract<StatValue, { ty: "team" }>;
     export let focusedTeam: number | null;

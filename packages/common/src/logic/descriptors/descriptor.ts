@@ -3,6 +3,14 @@ import { GraphQLOutputType } from "graphql";
 import { Season } from "../Season";
 import { notEmpty } from "../../utils/filter";
 import { Station } from "../Station";
+import { NonRankStatColumn } from "../stats/stat-table";
+import {
+    TEP_GROUP_COLORS,
+    TEP_GROUP_DATA_TYS,
+    TEP_GROUP_NAMES,
+    TepStatGroup,
+} from "../stats/make-tep-stats";
+import { titleCase } from "../../utils/string";
 
 type RankingsMethod = {
     rp: "TotalPoints" | "Record";
@@ -219,6 +227,23 @@ export class TepComponent {
         this.fullName = opts.fullName;
 
         this.make = opts.make;
+    }
+
+    getStatColumn(group: TepStatGroup) {
+        return new NonRankStatColumn({
+            color: TEP_GROUP_COLORS[group],
+            id: this.id + titleCase(group),
+            columnName: (this.columnPrefix + " " + group.toUpperCase()).trim(),
+            dialogName: this.dialogName,
+            titleName:
+                `${TEP_GROUP_NAMES[group][0]} ${this.fullName} ${TEP_GROUP_NAMES[group][1]}`.trim(),
+            sqlExpr: `${group}${titleCase(this.dbName)}`,
+            ty: TEP_GROUP_DATA_TYS[group],
+            getNonRankValue: (d: any) => ({
+                ty: TEP_GROUP_DATA_TYS[group],
+                val: d.stats[group][this.apiName],
+            }),
+        });
     }
 }
 

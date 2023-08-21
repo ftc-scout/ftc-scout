@@ -1,7 +1,7 @@
 <script lang="ts">
     import ViewStatsSection from "./ViewStatsSection.svelte";
     import Modal from "../../Modal.svelte";
-    import type { StatSet } from "../stat-table";
+    import type { StatSet } from "@ftc-scout/common";
 
     type T = $$Generic;
 

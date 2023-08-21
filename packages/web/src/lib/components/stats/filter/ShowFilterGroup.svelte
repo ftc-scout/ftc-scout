@@ -1,6 +1,5 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
-
     import Fa from "svelte-fa";
     import { faFolderPlus, faPlus, faXmark } from "@fortawesome/free-solid-svg-icons";
     import Select from "../../ui/form/Select.svelte";
@@ -9,8 +8,8 @@
         emptyGroup,
         type FilterGroup,
         countChildrenForSidebar,
-    } from "./filter";
-    import type { StatSet } from "../stat-table";
+    } from "@ftc-scout/common";
+    import type { StatSet } from "@ftc-scout/common";
     import ShowFilterCond from "./ShowFilterCond.svelte";
     import { createEventDispatcher } from "svelte";
 

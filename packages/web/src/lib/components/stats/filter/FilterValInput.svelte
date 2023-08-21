@@ -1,10 +1,7 @@
 <script lang="ts">
     import Fa from "svelte-fa";
-
     import { faEdit } from "@fortawesome/free-solid-svg-icons";
-
-    import type { FilterVal } from "./filter";
-    import type { StatSet } from "../stat-table";
+    import type { StatSet, FilterVal } from "@ftc-scout/common";
     import ChooseStatsModal from "../choose-stats/ChooseStatsModal.svelte";
 
     type T = $$Generic;

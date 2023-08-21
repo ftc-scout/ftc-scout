@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { NonRankStatColumn, StatData } from "./stat-table";
+    import type { NonRankStatColumn, StatData } from "@ftc-scout/common";
     import { exportCSV } from "./csv";
     import { faFileDownload } from "@fortawesome/free-solid-svg-icons";
     import Button from "../ui/Button.svelte";

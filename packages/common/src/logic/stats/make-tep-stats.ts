@@ -1,7 +1,7 @@
-import { DESCRIPTORS, Season, TepComponent, filterMapTreeList } from "@ftc-scout/common";
-import { Color, NonRankStatColumn, StatSet, StatSetSection, StatType } from "../stat-table";
-import { titleCase } from "../../../util/string";
-import type { EventPageQuery } from "../../../graphql/generated/graphql-operations";
+import { Season } from "../Season";
+import { filterMapTreeList } from "../descriptors/descriptor";
+import { DESCRIPTORS } from "../descriptors/descriptor-list";
+import { Color, NonRankStatColumn, StatSet, StatSetSection, StatType } from "./stat-table";
 
 export const TepStatGroup = {
     Tot: "tot",
@@ -13,7 +13,7 @@ export const TepStatGroup = {
 } as const;
 export type TepStatGroup = (typeof TepStatGroup)[keyof typeof TepStatGroup];
 
-const TEP_STAT_GROUPS = [
+export const TEP_STAT_GROUPS = [
     TepStatGroup.Tot,
     TepStatGroup.Avg,
     TepStatGroup.Opr,
@@ -22,7 +22,7 @@ const TEP_STAT_GROUPS = [
     TepStatGroup.Dev,
 ];
 
-const GROUP_COLORS = {
+export const TEP_GROUP_COLORS = {
     [TepStatGroup.Tot]: Color.Red,
     [TepStatGroup.Avg]: Color.Purple,
     [TepStatGroup.Opr]: Color.Purple,
@@ -31,7 +31,7 @@ const GROUP_COLORS = {
     [TepStatGroup.Dev]: Color.Green,
 };
 
-const GROUP_DATA_TYS = {
+export const TEP_GROUP_DATA_TYS = {
     [TepStatGroup.Tot]: StatType.Int,
     [TepStatGroup.Avg]: StatType.Float,
     [TepStatGroup.Opr]: StatType.Float,
@@ -40,7 +40,7 @@ const GROUP_DATA_TYS = {
     [TepStatGroup.Dev]: StatType.Float,
 };
 
-const GROUP_NAMES = {
+export const TEP_GROUP_NAMES = {
     [TepStatGroup.Tot]: ["Total", ""],
     [TepStatGroup.Avg]: ["Average", ""],
     [TepStatGroup.Opr]: ["", "Opr"],
@@ -49,7 +49,7 @@ const GROUP_NAMES = {
     [TepStatGroup.Dev]: ["", "Standard Deviation"],
 };
 
-const GROUP_DESC = {
+export const TEP_GROUP_DESC = {
     [TepStatGroup.Tot]: "The sum of all points scored in the category.",
     [TepStatGroup.Avg]: "The average number of points scored in the category.",
     [TepStatGroup.Opr]: "Offensive Power Rating.",
@@ -58,31 +58,9 @@ const GROUP_DESC = {
     [TepStatGroup.Dev]: "The standard deviation of scores in the category.",
 };
 
-declare module "@ftc-scout/common" {
-    interface TepComponent {
-        getStatColumn(group: TepStatGroup): NonRankStatColumn<any>;
-    }
-}
-
-TepComponent.prototype.getStatColumn = function (group: TepStatGroup) {
-    let th = this! as TepComponent;
-
-    return new NonRankStatColumn({
-        color: GROUP_COLORS[group],
-        id: th.id + titleCase(group),
-        columnName: (th.columnPrefix + " " + group.toUpperCase()).trim(),
-        dialogName: th.dialogName,
-        titleName: `${GROUP_NAMES[group][0]} ${th.fullName} ${GROUP_NAMES[group][1]}`.trim(),
-        ty: GROUP_DATA_TYS[group],
-        getNonRankValue: (d) => ({ ty: GROUP_DATA_TYS[group], val: d.stats[group][th.apiName] }),
-    });
-};
-
 let statSetCache: Partial<Record<`${Season}-${boolean}`, StatSet<any>>> = {};
 
 export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
-    type T = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
-
     let key = `${season}-${remote}` as const;
     let descriptor = DESCRIPTORS[season];
     if (!(season in statSetCache)) {
@@ -93,8 +71,9 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 columnName: "Team",
                 dialogName: "Team",
                 titleName: "Team",
+                sqlExpr: "teamNumber",
                 ty: StatType.Team,
-                getNonRankValue: (d: T) => ({
+                getNonRankValue: (d: any) => ({
                     ty: "team",
                     name: d.team.name,
                     number: d.team.number,
@@ -106,6 +85,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 columnName: "Rank",
                 dialogName: "Ranking",
                 titleName: "Event Ranking",
+                sqlExpr: "rank",
                 ty: StatType.Rank,
                 getNonRankValue: (d: any) => ({ ty: "rank", val: d.stats.rank }),
             }),
@@ -115,6 +95,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 columnName: "RP",
                 dialogName: "Ranking Points",
                 titleName: "Ranking Points",
+                sqlExpr: "rp",
                 ty: descriptor.rankings.rp == "Record" ? StatType.Float : StatType.Int,
                 getNonRankValue: (d: any) => ({
                     ty: descriptor.rankings.rp == "Record" ? StatType.Float : StatType.Int,
@@ -127,6 +108,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 columnName: "TBP",
                 dialogName: "Tie Breaker Points",
                 titleName: "Tie Breaker Points",
+                sqlExpr: "tb1",
                 ty: StatType.Float,
                 getNonRankValue: (d: any) => ({ ty: "float", val: d.stats.tb1 }),
             }),
@@ -139,6 +121,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           columnName: "TBP2",
                           dialogName: "Tie Breaker Points 2",
                           titleName: "Tie Breaker Points 2",
+                          sqlExpr: "tb2",
                           ty: StatType.Float,
                           getNonRankValue: (d: any) => ({ ty: "float", val: d.stats.tb2 }),
                       }),
@@ -149,6 +132,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 columnName: "Played",
                 dialogName: "Matches Played",
                 titleName: "Matches Played",
+                sqlExpr: "qualMatchesPlayed",
                 ty: StatType.Int,
                 getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.qualMatchesPlayed }),
             }),
@@ -161,6 +145,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           columnName: "Wins",
                           dialogName: "Wins",
                           titleName: "Wins",
+                          sqlExpr: "wins",
                           ty: StatType.Int,
                           getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.wins }),
                       }),
@@ -170,6 +155,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           columnName: "Losses",
                           dialogName: "Losses",
                           titleName: "Losses",
+                          sqlExpr: "losses",
                           ty: StatType.Int,
                           getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.losses }),
                       }),
@@ -179,6 +165,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           columnName: "Ties",
                           dialogName: "Ties",
                           titleName: "Ties",
+                          sqlExpr: "ties",
                           ty: StatType.Int,
                           getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.ties }),
                       }),
@@ -188,6 +175,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           columnName: "Record",
                           dialogName: "Record",
                           titleName: "Record",
+                          sqlExpr: "(wins * 2 + ties / NULLIF(qual_matches_played, 0))",
                           ty: StatType.Record,
                           getNonRankValue: (d: any) => ({
                               ty: "record",
@@ -218,8 +206,8 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
             TEP_STAT_GROUPS.map((g) => ({
                 id: g,
                 name: g.toUpperCase(),
-                color: GROUP_COLORS[g],
-                description: GROUP_DESC[g],
+                color: TEP_GROUP_COLORS[g],
+                description: TEP_GROUP_DESC[g],
             }))
         );
 

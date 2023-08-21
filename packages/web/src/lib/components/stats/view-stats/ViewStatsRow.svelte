@@ -15,7 +15,7 @@
     import { writable, type Writable } from "svelte/store";
     import { slide } from "svelte/transition";
     import type { Tree } from "@ftc-scout/common";
-    import type { StatSectionRow, StatSet, StatSetSection } from "../stat-table";
+    import type { StatSectionRow, StatSet, StatSetSection } from "@ftc-scout/common";
     import ViewCell from "./ViewCell.svelte";
     import ExpandButton from "../../ExpandButton.svelte";
 

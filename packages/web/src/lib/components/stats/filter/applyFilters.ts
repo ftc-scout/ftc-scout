@@ -1,11 +1,11 @@
-import type { StatData, StatSet } from "../stat-table";
+import type { StatData, StatSet } from "@ftc-scout/common";
 import {
     FilterOp,
     type Filter,
     type FilterCondition,
     type FilterGroup,
     type FilterVal,
-} from "./filter";
+} from "@ftc-scout/common";
 
 export function applyFilter<T>(
     data: StatData<T>[],

@@ -11,10 +11,9 @@ import {
 import { GraphQLDateTime, GraphQLDate } from "graphql-scalars";
 
 type Wr<T> = { type: T };
-function wr<T>(t: T): Wr<T> {
+export function wr<T>(t: T): Wr<T> {
     return { type: t };
 }
-
 export function nn<T extends GraphQLNullableType>(ty: T): GraphQLNonNull<T> {
     return new GraphQLNonNull(ty) as GraphQLNonNull<T>;
 }

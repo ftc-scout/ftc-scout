@@ -4,7 +4,7 @@
     import { createTippy } from "svelte-tippy";
     import Fa from "svelte-fa";
     import { faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
-    import type { StatSetSection } from "../stat-table";
+    import type { StatSetSection } from "@ftc-scout/common";
 
     type T = $$Generic;
 

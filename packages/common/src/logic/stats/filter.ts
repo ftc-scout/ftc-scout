@@ -1,4 +1,4 @@
-import { notEmpty } from "@ftc-scout/common";
+import { notEmpty } from "../../utils/filter";
 
 export type Filter =
     | { ty: "group"; id?: number; group: FilterGroup }
@@ -11,12 +11,12 @@ export function getFilterId() {
 
 export type FilterVal = { ty: "lit"; lit: number | null } | { ty: "var"; id: string };
 export const FilterOp = {
-    Eq: "=",
-    Neq: "≠",
-    Gt: ">",
-    Gte: "≥",
-    Lt: "<",
-    Lte: "≤",
+    Eq: "Eq",
+    Neq: "Neq",
+    Gt: "Gt",
+    Gte: "Gte",
+    Lt: "Lt",
+    Lte: "Lte",
 } as const;
 export type FilterOp = (typeof FilterOp)[keyof typeof FilterOp];
 export const ALL_OPS = [
@@ -28,14 +28,29 @@ export const ALL_OPS = [
     FilterOp.Lte,
 ];
 
+export const FILTER_OP_SYMBOLS = {
+    [FilterOp.Eq]: "=",
+    [FilterOp.Neq]: "≠",
+    [FilterOp.Gt]: ">",
+    [FilterOp.Gte]: "≥",
+    [FilterOp.Lt]: "<",
+    [FilterOp.Lte]: "≤",
+} as const;
+
 export type FilterCondition = {
     lhs: FilterVal;
     op: FilterOp;
     rhs: FilterVal;
 };
 
+export const FilterGroupTy = {
+    And: "and",
+    Or: "or",
+} as const;
+export type FilterGroupTy = (typeof FilterGroupTy)[keyof typeof FilterGroupTy];
+
 export type FilterGroup = {
-    ty: "and" | "or";
+    ty: FilterGroupTy;
     children: Filter[];
 };
 
@@ -53,7 +68,7 @@ export function emptyCondition(): Filter {
         id: getFilterId(),
         cond: {
             lhs: { ty: "lit", lit: null },
-            op: "=",
+            op: FilterOp.Eq,
             rhs: { ty: "lit", lit: null },
         },
     };

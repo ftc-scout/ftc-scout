@@ -1,7 +1,7 @@
 <script lang="ts">
     import { prettyPrintFloat, prettyPrintOrdinal } from "../../printers/number";
     import StatTeam from "./StatTeam.svelte";
-    import type { StatColumn, StatData } from "./stat-table";
+    import type { StatColumn, StatData } from "@ftc-scout/common";
 
     type T = $$Generic;
 

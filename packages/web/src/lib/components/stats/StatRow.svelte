@@ -1,6 +1,6 @@
 <script lang="ts">
     import StatCell from "./StatCell.svelte";
-    import type { StatColumn, StatData } from "./stat-table";
+    import type { StatColumn, StatData } from "@ftc-scout/common";
     import { createEventDispatcher } from "svelte";
 
     type T = $$Generic;

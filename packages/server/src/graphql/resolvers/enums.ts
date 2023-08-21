@@ -3,7 +3,10 @@ import {
     AllianceRole,
     EventType,
     EventTypeOption,
+    FilterGroupTy,
+    FilterOp,
     RegionOption,
+    SortDir,
     Station,
     TournamentLevel,
     makeGQLEnum,
@@ -18,3 +21,6 @@ export const EventTypeOptionGQL = makeGQLEnum(EventTypeOption, "EventTypeOption"
 export const RegionOptionGQL = makeGQLEnum(RegionOption, "RegionOption");
 export const TournamentLevelGQL = makeGQLEnum(TournamentLevel, "TournamentLevel");
 export const AwardTypeGQL = makeGQLEnum(AwardType, "AwardType");
+export const SortDirGQL = makeGQLEnum(SortDir, "SortDir");
+export const FilterOpGQL = makeGQLEnum(FilterOp, "FilterOp");
+export const FilterGroupTyGQL = makeGQLEnum(FilterGroupTy, "FilterGroupTy");

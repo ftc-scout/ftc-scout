@@ -16,7 +16,7 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
     import type { Tree } from "@ftc-scout/common";
-    import type { StatSectionRow, StatSet, StatSetSection } from "../stat-table";
+    import type { StatSectionRow, StatSet, StatSetSection } from "@ftc-scout/common";
     import ExpandButton from "../../ExpandButton.svelte";
     import CheckCell from "./CheckCell.svelte";
 

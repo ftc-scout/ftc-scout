@@ -1,9 +1,7 @@
 <script lang="ts">
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
-    import { DESCRIPTORS, type Season } from "@ftc-scout/common";
+    import { DESCRIPTORS, getTepStatSet, SortDir, type Season } from "@ftc-scout/common";
     import LocalStatTableControls from "$lib/components/stats/LocalStatTableControls.svelte";
-    import { SortDir } from "$lib/components/stats/StatTableControls.svelte";
-    import { getTepStatSet } from "$lib/components/stats/tep/makeTepStats";
 
     type DataTy = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
 

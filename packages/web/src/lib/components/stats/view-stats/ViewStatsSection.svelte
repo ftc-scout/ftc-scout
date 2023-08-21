@@ -1,5 +1,5 @@
 <script lang="ts">
-    import type { StatSet, StatSetSection } from "../stat-table";
+    import type { StatSet, StatSetSection } from "@ftc-scout/common";
     import ViewStatSectionHeader from "./ViewStatSectionHeader.svelte";
     import ViewStatsRow from "./ViewStatsRow.svelte";
 

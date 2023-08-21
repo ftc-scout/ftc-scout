@@ -28,12 +28,18 @@
 
 <script lang="ts">
     import { applyFilter } from "./filter/applyFilters";
-    import type { FilterGroup } from "./filter/filter";
     import { arrayMove } from "../../util/array";
     import { cycleSortDir, cycleSortDirNoNull } from "./SortButton.svelte";
     import { sortMixed } from "../../util/sorters";
-    import { RankTy, type NonRankStatColumn, type StatData, StatSet } from "./stat-table";
-    import StatTableControls, { SortDir } from "./StatTableControls.svelte";
+    import {
+        RankTy,
+        type NonRankStatColumn,
+        type StatData,
+        StatSet,
+        SortDir,
+        type FilterGroup,
+    } from "@ftc-scout/common";
+    import StatTableControls from "./StatTableControls.svelte";
     import { writable, type Writable } from "svelte/store";
 
     type T = $$Generic;

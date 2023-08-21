@@ -24,8 +24,8 @@
 
 <script lang="ts">
     import { faSort, faSortAsc, faSortDesc } from "@fortawesome/free-solid-svg-icons";
+    import { SortDir } from "@ftc-scout/common";
     import Fa from "svelte-fa";
-    import { SortDir } from "./StatTableControls.svelte";
 
     export let sort: SortDir | null = null;
     export let name: string;

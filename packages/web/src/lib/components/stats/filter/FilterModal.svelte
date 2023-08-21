@@ -1,7 +1,6 @@
 <script lang="ts">
-    import { emptyFiler, type FilterGroup, trimFilterGroup } from "./filter";
     import Modal from "../../Modal.svelte";
-    import type { StatSet } from "../stat-table";
+    import { emptyFiler, trimFilterGroup, type FilterGroup, type StatSet } from "@ftc-scout/common";
     import ShowFilterGroup from "./ShowFilterGroup.svelte";
     import { createEventDispatcher } from "svelte";
 

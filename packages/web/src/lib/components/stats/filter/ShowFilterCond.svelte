@@ -3,8 +3,12 @@
     import { slide } from "svelte/transition";
     import { faXmark } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
-    import { type FilterCondition, ALL_OPS } from "./filter";
-    import type { StatSet } from "../stat-table";
+    import {
+        type StatSet,
+        type FilterCondition,
+        ALL_OPS,
+        FILTER_OP_SYMBOLS,
+    } from "@ftc-scout/common";
     import Select from "../../ui/form/Select.svelte";
     import { createEventDispatcher } from "svelte";
 
@@ -21,7 +25,7 @@
     <FilterValInput bind:val={cond.lhs} {stats} varOnly />
     <Select
         bind:value={cond.op}
-        options={ALL_OPS.map((o) => ({ value: o, name: o }))}
+        options={ALL_OPS.map((o) => ({ value: o, name: FILTER_OP_SYMBOLS[o] }))}
         style="width: min-content"
         nonForm
     />

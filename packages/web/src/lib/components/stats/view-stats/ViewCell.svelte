@@ -1,6 +1,11 @@
 <script lang="ts">
     import { prettyPrintFloat, prettyPrintOrdinal } from "../../../printers/number";
-    import type { StatSectionColumn, StatSectionRow, StatSet, StatSetSection } from "../stat-table";
+    import type {
+        StatSectionColumn,
+        StatSectionRow,
+        StatSet,
+        StatSetSection,
+    } from "@ftc-scout/common";
 
     type T = $$Generic;
 
