@@ -87,7 +87,7 @@
         font-weight: bold;
         text-align: center;
         background: var(--neutral-team-bg-color);
-        color: var(--neutral-team-color);
+        color: var(--neutral-team-text-color);
     }
 
     .zero {
