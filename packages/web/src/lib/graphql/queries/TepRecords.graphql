@@ -1,0 +1,24 @@
+query TepRecords($season: Int!, $skip: Int!, $take: Int!) {
+    tepRecords(season: $season, skip: $skip, take: $take) {
+        data {
+            data {
+                season
+                eventCode
+                teamNumber
+                team {
+                    number
+                    name
+                }
+                stats {
+                    ...FullStats
+                }
+            }
+            filterRank
+            filterSkipRank
+            noFilterRank
+            noFilterSkipRank
+        }
+        offset
+        count
+    }
+}

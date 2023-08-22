@@ -119,32 +119,39 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 )
                 .addSelect(`${rankerSql}`, "ranker");
 
+            let countQ = Tep.createQueryBuilder("tep");
+
             if (joinEvent) {
                 contextAddedQ.leftJoin(
                     "event",
                     "e",
                     "tep.season = e.season AND tep.event_code = e.code"
                 );
+                countQ.leftJoin("event", "e", "tep.season = e.season AND tep.event_code = e.code");
             }
 
             if (chosenRegion != RegionOption.All) {
                 contextAddedQ.andWhere("region_code IN (:...regions)", {
                     regions: getRegionCodes(chosenRegion),
                 });
+                countQ.andWhere("region_code IN (:...regions)", {
+                    regions: getRegionCodes(chosenRegion),
+                });
             }
 
             if (start) {
                 contextAddedQ.andWhere(`"start" >= :start`, { start });
+                countQ.andWhere(`"start" >= :start`, { start });
             }
 
             if (end) {
                 contextAddedQ.andWhere(`"end" <= :start`, { end });
+                countQ.andWhere(`"end" <= :start`, { end });
             }
 
-            if (filter) {
-                let sql = filterGQLToSql(filter, statSet, (s) => name(ns, s));
-                contextAddedQ.addSelect(sql, "is_in");
-            }
+            let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
+            contextAddedQ.addSelect(filterSql, "is_in");
+            let count = await countQ.andWhere(filterSql).getCount();
 
             let rankedQ = DATA_SOURCE.createQueryBuilder()
                 .from("context_added", "context_added")
@@ -194,13 +201,13 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
             let data = finalQ.map((r) => ({
                 data: entities.find((e) => e.eventCode == r.tep_ec && e.teamNumber == r.tep_tn)!,
-                noFilterRank: r.no_filter_rank,
-                filterRank: r.filter_rank,
-                noFilterSkipRank: r.no_filter_skip_rank,
-                filterSkipRank: r.filter_skip_rank,
+                noFilterRank: +r.no_filter_rank,
+                filterRank: +r.filter_rank,
+                noFilterSkipRank: +r.no_filter_skip_rank,
+                filterSkipRank: +r.filter_skip_rank,
             }));
 
-            return { data, offset: skip, count: 0 };
+            return { data, offset: skip, count };
         },
     },
 };

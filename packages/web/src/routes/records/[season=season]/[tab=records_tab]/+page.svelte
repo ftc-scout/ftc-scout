@@ -1,3 +1,7 @@
+<script lang="ts" context="module">
+    export let PAGE_SIZE = 50;
+</script>
+
 <script lang="ts">
     import Card from "$lib/components/Card.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
@@ -13,6 +17,10 @@
 
     let selectedTab = $page.params.tab;
     $: browser && goto(selectedTab, { replaceState: true });
+
+    export let data;
+    $: tepStore = data.tepData;
+    $: teps = $tepStore;
 </script>
 
 <WidthProvider width={"850px"}>
@@ -29,7 +37,9 @@
         ]}
         bind:selectedTab
     >
-        <TabContent name="teams">Teams</TabContent>
+        <TabContent name="teams">
+            {JSON.stringify(teps, null, 2)}
+        </TabContent>
 
         <TabContent name="matches">Matches</TabContent>
     </TabbedCard>
