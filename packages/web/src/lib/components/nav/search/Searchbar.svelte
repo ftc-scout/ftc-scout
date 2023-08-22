@@ -77,18 +77,18 @@
 
     $: browser && searchText != "" && loadData();
 
-    function search(needle: string) {
+    function search(needle: string, es: typeof relevantEvents, ts: typeof relevantTeams) {
         if (needle == "") return [];
         if (needle.match(/^\d+$/)) {
-            return relevantTeams
+            return ts
                 .filter((t) => (t.number + "").startsWith(needle))
                 .sort((a, b) => a.number - b.number)
                 .slice(0, 10)
                 .map((t) => ({ document: t, distance: 0, highlights: [] }));
         }
 
-        let events = fuzzySearch(relevantEvents, needle, 5, "name", true).slice(0, 10);
-        let teams = fuzzySearch(relevantTeams, needle, 5, "name", true).slice(0, 10);
+        let events = fuzzySearch(es, needle, 5, "name", true).slice(0, 10);
+        let teams = fuzzySearch(ts, needle, 5, "name", true).slice(0, 10);
 
         let bestEvent = Math.min(...events.map((e) => e.distance));
         let bestTeam = Math.min(...teams.map((t) => t.distance));
@@ -102,7 +102,7 @@
             : [...filteredEvents, ...filteredTeams];
     }
 
-    $: searchResults = search(searchText.trim().slice(0, 50));
+    $: searchResults = search(searchText.trim().slice(0, 50), relevantEvents, relevantTeams);
 
     $: searchResults, $focusNum, preload();
 

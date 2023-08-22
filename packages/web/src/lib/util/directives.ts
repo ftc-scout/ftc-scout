@@ -57,10 +57,13 @@ export function stickTableHead(node: HTMLElement) {
 export function watchForFocus(node: HTMLElement, args: { store: Writable<number>; myNum: number }) {
     let { store, myNum } = args;
 
+    let firstFire = true;
     let destroySub = store.subscribe((n) => {
-        if (myNum == n) {
+        if (myNum == n && !firstFire) {
             node.focus();
         }
+        // Don't trigger focus on our first read because it is just the start of the subscription
+        firstFire = false;
     });
 
     function focusIn() {
