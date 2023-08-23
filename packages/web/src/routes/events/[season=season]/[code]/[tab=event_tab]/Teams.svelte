@@ -8,7 +8,9 @@
     export let teams: NonNullable<EventPageQuery["eventByCode"]>["teams"];
     export let focusedTeam: number | null;
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as ((_: number) => void) | undefined;
+    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+        | ((num: number, name: string) => void)
+        | undefined;
 </script>
 
 <ul>
@@ -23,7 +25,7 @@
                 on:click={(e) => {
                     if (clickAction) {
                         e.preventDefault();
-                        clickAction(team.teamNumber);
+                        clickAction(team.teamNumber, team.team.name);
                     }
                 }}
             >

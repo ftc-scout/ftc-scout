@@ -19,13 +19,17 @@
     {/if}
 
     {#if !stats.length}
-        <tr class="no-data">
-            <td> <b>Choose statistics.</b> </td>
-        </tr>
+        <tbody>
+            <tr class="no-data">
+                <td colspan="999"> <b>Choose statistics.</b> </td>
+            </tr>
+        </tbody>
     {:else if !data.length}
-        <tr class="no-data">
-            <td> <b>No items match your current filters.</b> </td>
-        </tr>
+        <tbody>
+            <tr class="no-data">
+                <td colspan="999"> <b>No items match your current filters.</b> </td>
+            </tr>
+        </tbody>
     {:else}
         <tbody>
             {#each data as dataRow}
@@ -90,7 +94,7 @@
         background-color: var(--zebra-stripe-opacity);
     }
 
-    .no-data {
+    .no-data b {
         display: flex;
         align-items: center;
         justify-content: center;

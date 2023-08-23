@@ -24,7 +24,9 @@
 
     $: typeDivisions = handleAwards(awards);
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as ((_: number) => void) | undefined;
+    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+        | ((num: number, name: string) => void)
+        | undefined;
 </script>
 
 <div>
@@ -51,7 +53,7 @@
                             on:click={(e) => {
                                 if (clickAction) {
                                     e.preventDefault();
-                                    clickAction(award.team.number);
+                                    clickAction(award.team.number, award.team.name);
                                 }
                             }}
                         >

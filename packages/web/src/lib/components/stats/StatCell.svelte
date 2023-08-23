@@ -18,7 +18,7 @@
     <StatTeam {val} {focusedTeam} />
 {:else}
     <td class="{stat.color} {val?.ty ?? 'na'}" title={stat.titleName}>
-        {#if val.ty == "rank"}
+        {#if val.ty == "rank" && val.val}
             {prettyPrintOrdinal(val.val)}
         {:else if val.ty == "float"}
             {prettyPrintFloat(val.val)}

@@ -12,16 +12,39 @@
     import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
     import { DESCRIPTORS, type Season } from "@ftc-scout/common";
+    import Tep from "./Tep.svelte";
+    import type { PageData } from "./$types";
+    import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
+    import { setContext } from "svelte";
+    import FocusedTeam from "../../../../lib/components/stats/FocusedTeam.svelte";
 
     $: season = +$page.params.season as Season;
 
     let selectedTab = $page.params.tab;
-    $: browser && goto(selectedTab, { replaceState: true });
+    $: browser && selectedTab != $page.params.tab && goto(selectedTab, { replaceState: true });
 
-    export let data;
-    $: tepStore = data.tepData;
-    $: teps = $tepStore;
+    export let data: PageData;
+    $: tepData = data.tepData;
+
+    let focusedTeam: number | null = null;
+    let focusedTeamName: string | null;
+    setContext(TEAM_CLICK_ACTION_CONTEXT, (t: number, name: string) => {
+        if (focusedTeam == t) {
+            focusedTeam = null;
+            focusedTeamName = null;
+        } else {
+            focusedTeam = t;
+            focusedTeamName = name;
+        }
+    });
 </script>
+
+{#if focusedTeam && focusedTeamName}
+    <FocusedTeam
+        team={{ season, team: { number: focusedTeam, name: focusedTeamName } }}
+        remote={false}
+    />
+{/if}
 
 <WidthProvider width={"850px"}>
     <Card>
@@ -38,7 +61,7 @@
         bind:selectedTab
     >
         <TabContent name="teams">
-            {JSON.stringify(teps, null, 2)}
+            <Tep {tepData} {focusedTeam} />
         </TabContent>
 
         <TabContent name="matches">Matches</TabContent>

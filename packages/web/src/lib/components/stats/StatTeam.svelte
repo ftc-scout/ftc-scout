@@ -10,7 +10,9 @@
     $: name = val.name;
     $: href = `/teams/${number}`;
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as ((_: number) => void) | undefined;
+    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+        | ((num: number, name: string) => void)
+        | undefined;
 </script>
 
 <td
@@ -21,7 +23,7 @@
         if (clickAction) {
             e.preventDefault();
             e.stopPropagation();
-            clickAction(number);
+            clickAction(number, name);
         }
     }}
 >

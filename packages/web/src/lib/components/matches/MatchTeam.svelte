@@ -30,7 +30,9 @@
         (!onField && !dq && !noShow ? " (Not on Field)" : "") +
         (surrogate ? " (Surrogate)" : "");
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as ((_: number) => void) | undefined;
+    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+        | ((num: number, name: string) => void)
+        | undefined;
 </script>
 
 <td
@@ -50,7 +52,7 @@
         on:click={(e) => {
             if (clickAction) {
                 e.preventDefault();
-                clickAction(number);
+                clickAction(number, name);
             }
         }}
     >

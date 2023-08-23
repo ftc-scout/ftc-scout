@@ -1,7 +1,7 @@
 import { dateFromStr, dateToStr } from "../date";
-import type { QueryParamOpts } from "./search-params";
+import type { EcDc } from "./search-params";
 
-export const DATE_EC_DC: QueryParamOpts<Date | null> = {
+export const DATE_EC_DC: EcDc<Date | null> = {
     encode: (e) => (e ? dateToStr(e) : null),
     decode: (s) => {
         if (!s) return null;

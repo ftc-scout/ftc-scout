@@ -1,7 +1,7 @@
 import { RegionOption } from "@ftc-scout/common";
-import type { QueryParamOpts } from "./search-params";
+import type { EcDc } from "./search-params";
 
-export const REGION_EC_DC: QueryParamOpts<RegionOption> = {
+export const REGION_EC_DC: EcDc<RegionOption> = {
     encode: (r) => (r == RegionOption.All ? null : r),
     decode: (s) => {
         if (s == null) return RegionOption.All;

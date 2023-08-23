@@ -1,7 +1,7 @@
 import { EventTypeOption } from "@ftc-scout/common";
-import type { QueryParamOpts } from "./search-params";
+import type { EcDc } from "./search-params";
 
-export const EVENT_TY_EC_DC: QueryParamOpts<EventTypeOption> = {
+export const EVENT_TY_EC_DC: EcDc<EventTypeOption> = {
     encode: (e) => (e == EventTypeOption.Competition ? null : e),
     decode: (s) => {
         if (s == null) return EventTypeOption.Competition;

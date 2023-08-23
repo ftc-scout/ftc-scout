@@ -9,6 +9,7 @@ import {
     getRegionCodes,
     getTepStatSet,
     listTy,
+    nn,
     nullTy,
     wr,
 } from "@ftc-scout/common";
@@ -24,7 +25,7 @@ function RecordGqlTy(wrapped: GraphQLObjectType, namePrefix: string): GraphQLObj
     let rowTy = new GraphQLObjectType({
         name: `${namePrefix}RecordRow`,
         fields: {
-            data: { type: wrapped },
+            data: { type: nn(wrapped) },
             noFilterRank: IntTy,
             filterRank: IntTy,
             noFilterSkipRank: IntTy,
@@ -35,14 +36,14 @@ function RecordGqlTy(wrapped: GraphQLObjectType, namePrefix: string): GraphQLObj
     return new GraphQLObjectType({
         name: `${namePrefix}Records`,
         fields: {
-            data: listTy(wr(rowTy)),
+            data: listTy(wr(nn(rowTy))),
             offset: IntTy,
             count: IntTy,
         },
     });
 }
 
-const TepRecordsGql = wr(RecordGqlTy(TeamEventParticipationGQL, "Tep"));
+const TepRecordsGql = wr(nn(RecordGqlTy(TeamEventParticipationGQL, "Tep")));
 
 function name(ns: NamingStrategyInterface, exp: string): string {
     return exp.match(/^\w+$/) ? ns.columnName(exp, undefined, []) : exp;
@@ -97,10 +98,12 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
             // Sort Field
             let defaultRankerSqlName = descriptor.pensSubtract
-                ? "oprTotalPointsNp"
-                : "oprTotalPoints";
+                ? "oprTotalPoints"
+                : "oprTotalPointsNp";
             let rankerExp = statSet.getStat(sortBy ?? "")?.sqlExpr ?? defaultRankerSqlName;
             let rankerSql = name(ns, rankerExp);
+
+            let defaultSortSql = name(ns, defaultRankerSqlName) + " DESC NULLS LAST";
 
             // Sort Direction
             let sortDirSql = sortDir ?? SortDir.Desc;
@@ -108,18 +111,27 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             // Region
             let chosenRegion = region ?? RegionOption.All;
 
+            // Filter
+            let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
+
             let joinEvent = chosenRegion != RegionOption.All || start != null || end != null;
 
             let contextAddedQ = Tep.createQueryBuilder("tep")
                 .select("tep.event_code", "tep_ec")
                 .addSelect("tep.team_number", "tep_tn")
                 .addSelect(
-                    `ROW_NUMBER() OVER (PARTITION BY "team_number" ORDER BY ${rankerSql} ${sortDirSql} NULLS LAST)`,
+                    `ROW_NUMBER() OVER (PARTITION BY "team_number" ORDER BY ${rankerSql} ${sortDirSql} NULLS LAST, ${defaultSortSql})`,
                     "ranking"
                 )
-                .addSelect(`${rankerSql}`, "ranker");
+                .addSelect(
+                    `ROW_NUMBER() OVER (PARTITION BY "team_number", ${filterSql} ORDER BY ${rankerSql} ${sortDirSql} NULLS LAST, ${defaultSortSql})`,
+                    "filter_ranking"
+                )
+                .addSelect(`${rankerSql}`, "ranker")
+                .addSelect(name(ns, defaultRankerSqlName))
+                .andWhere("has_stats");
 
-            let countQ = Tep.createQueryBuilder("tep");
+            let countQ = Tep.createQueryBuilder("tep").where("has_stats");
 
             if (joinEvent) {
                 contextAddedQ.leftJoin(
@@ -149,30 +161,35 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 countQ.andWhere(`"end" <= :start`, { end });
             }
 
-            let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
             contextAddedQ.addSelect(filterSql, "is_in");
+
             let count = await countQ.andWhere(filterSql).getCount();
+
+            if (skip >= count) {
+                return { data: [], offset: skip, count };
+            }
 
             let rankedQ = DATA_SOURCE.createQueryBuilder()
                 .from("context_added", "context_added")
                 .addSelect("*")
                 .addSelect(
-                    `RANK() over (order by ranking, ranker ${sortDirSql} NULLS LAST)`,
+                    `RANK() over (order by ranking, ranker ${sortDirSql} NULLS LAST, ${defaultSortSql})`,
                     "no_filter_skip_rank"
                 )
                 .addSelect(
-                    `RANK() over (partition by is_in order by ranking, ranker ${sortDirSql} NULLS LAST)`,
+                    `RANK() over (partition by is_in order by filter_ranking, ranker ${sortDirSql} NULLS LAST, ${defaultSortSql})`,
                     "filter_skip_rank"
                 )
                 .addSelect(
-                    `RANK() over (order by ranker ${sortDirSql} NULLS LAST)`,
+                    `RANK() over (order by ranker ${sortDirSql} NULLS LAST, ${defaultSortSql})`,
                     "no_filter_rank"
                 )
                 .addSelect(
-                    `RANK() over (partition by is_in order by ranker ${sortDirSql} NULLS LAST)`,
+                    `RANK() over (partition by is_in order by ranker ${sortDirSql} NULLS LAST, ${defaultSortSql})`,
                     "filter_rank"
                 )
-                .orderBy("ranker", sortDir == SortDir.Asc ? "ASC" : "DESC", "NULLS LAST");
+                .orderBy("ranker", sortDir == SortDir.Asc ? "ASC" : "DESC", "NULLS LAST")
+                .addOrderBy(name(ns, defaultRankerSqlName), "DESC", "NULLS LAST");
 
             let finalQ = await DATA_SOURCE.createQueryBuilder()
                 .addCommonTableExpression(contextAddedQ, "context_added")
@@ -180,7 +197,10 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 .from("ranked", "ranked")
                 .addSelect("filter_rank")
                 .addSelect("no_filter_rank")
-                .addSelect("CASE WHEN ranking = 1 THEN filter_skip_rank END", "filter_skip_rank")
+                .addSelect(
+                    "CASE WHEN filter_ranking = 1 THEN filter_skip_rank END",
+                    "filter_skip_rank"
+                )
                 .addSelect(
                     "CASE WHEN ranking = 1 THEN no_filter_skip_rank END",
                     "no_filter_skip_rank"

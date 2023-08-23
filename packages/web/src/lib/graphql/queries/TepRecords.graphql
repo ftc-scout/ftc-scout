@@ -1,5 +1,19 @@
-query TepRecords($season: Int!, $skip: Int!, $take: Int!) {
-    tepRecords(season: $season, skip: $skip, take: $take) {
+query TepRecords(
+    $season: Int!
+    $skip: Int!
+    $take: Int!
+    $sortBy: String!
+    $sortDir: SortDir!
+    $filter: Filter
+) {
+    tepRecords(
+        season: $season
+        skip: $skip
+        take: $take
+        sortBy: $sortBy
+        sortDir: $sortDir
+        filter: $filter
+    ) {
         data {
             data {
                 season

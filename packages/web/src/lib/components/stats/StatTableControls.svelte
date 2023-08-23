@@ -25,6 +25,7 @@
     export let focusedTeam: number | null;
     export let rankTy: RankTy;
     export let showRank: boolean;
+    export let includeSkipRankTys: boolean = false;
 
     export let shownStats: NonRankStatColumn<T>[];
     export let currentSort: { id: string; dir: SortDir };
@@ -46,6 +47,29 @@
 
     let chooseStatsModalShown = false;
     let filtersShown = false;
+
+    let skip: "skip" | "keep" = "skip";
+    let rankAfterFilters: "yes" | "no" = "yes";
+
+    function computeRankTy(s: "skip" | "keep", f: "yes" | "no") {
+        if (s == "skip" && f == "yes") {
+            rankTy = RankTy.FilterSkip;
+        } else if (s == "skip" && f == "no") {
+            rankTy = RankTy.NoFilterSkip;
+        } else if (s == "keep" && f == "yes") {
+            rankTy = RankTy.Filter;
+        } else {
+            rankTy = RankTy.NoFilter;
+        }
+    }
+
+    function updateRankComponents(t: RankTy) {
+        skip = t == RankTy.FilterSkip || t == RankTy.NoFilterSkip ? "skip" : "keep";
+        rankAfterFilters = t == RankTy.Filter || t == RankTy.FilterSkip ? "yes" : "no";
+    }
+
+    $: updateRankComponents(rankTy);
+    $: computeRankTy(skip, rankAfterFilters);
 </script>
 
 <ViewStatsModal bind:shown={viewStatsModalShown} {stats} data={viewStatsData?.data} />
@@ -64,17 +88,26 @@
     {/if}
 
     <Button icon={faFilter} on:click={() => (filtersShown = true)}>Filters</Button>
+
     {#if filter != null}
         <Button icon={faXmark} on:click={() => dispatch("new-filter", null)}>Clear Filters</Button>
         <Select
-            bind:value={rankTy}
+            bind:value={rankAfterFilters}
             options={[
-                { value: RankTy.NoFilter, name: "Rank Before Filters" },
-                { value: RankTy.Filter, name: "Rank After Filters" },
+                { value: "no", name: "Pre Filter Rank" },
+                { value: "yes", name: "Post Filter Rank" },
             ]}
         />
     {/if}
-
+    {#if includeSkipRankTys}
+        <Select
+            bind:value={skip}
+            options={[
+                { value: "skip", name: "Rank Best Results" },
+                { value: "keep", name: "Rank All Results" },
+            ]}
+        />
+    {/if}
     <div>
         <ExportCsv {data} {shownStats} {csv} />
     </div>

@@ -9,7 +9,7 @@
 
     type Team = Omit<NonNullable<EventPageQuery["eventByCode"]>["teams"][number], "__typename">;
 
-    export let team: Team;
+    export let team: Pick<Team, "team" | "stats" | "season"> & { eventCode?: string };
     export let remote: boolean;
 
     $: season = team.season as Season;
@@ -17,7 +17,9 @@
     $: number = team.team.number;
     $: name = team.team.name;
 
-    $: href = `/teams/${number}${season == CURRENT_SEASON ? "" : `?season=${season}`}#${code}`;
+    $: seasonPart = season == CURRENT_SEASON ? "" : `?season=${season}`;
+    $: codePart = code ? "#" + code : "";
+    $: href = `/teams/${number}${seasonPart}${codePart}`;
     $: preloadData(href);
 
     $: stats = team.stats;

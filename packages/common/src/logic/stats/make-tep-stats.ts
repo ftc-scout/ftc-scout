@@ -147,7 +147,8 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Wins",
                           sqlExpr: "wins",
                           ty: StatType.Int,
-                          getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.wins }),
+                          getNonRankValue: (d: any) =>
+                              "wins" in d.stats ? { ty: "int", val: d.stats.wins } : null,
                       }),
                       new NonRankStatColumn({
                           color: Color.Green,
@@ -157,7 +158,8 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Losses",
                           sqlExpr: "losses",
                           ty: StatType.Int,
-                          getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.losses }),
+                          getNonRankValue: (d: any) =>
+                              "losses" in d.stats ? { ty: "int", val: d.stats.losses } : null,
                       }),
                       new NonRankStatColumn({
                           color: Color.Green,
@@ -167,7 +169,8 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Ties",
                           sqlExpr: "ties",
                           ty: StatType.Int,
-                          getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.ties }),
+                          getNonRankValue: (d: any) =>
+                              "ties" in d.stats ? { ty: "int", val: d.stats.ties } : null,
                       }),
                       new NonRankStatColumn({
                           color: Color.Green,
@@ -177,12 +180,15 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Record",
                           sqlExpr: "(wins * 2 + ties / NULLIF(qual_matches_played, 0))",
                           ty: StatType.Record,
-                          getNonRankValue: (d: any) => ({
-                              ty: "record",
-                              wins: d.stats.wins,
-                              losses: d.stats.losses,
-                              ties: d.stats.ties,
-                          }),
+                          getNonRankValue: (d: any) =>
+                              "wins" in d.stats
+                                  ? {
+                                        ty: "record",
+                                        wins: d.stats.wins,
+                                        losses: d.stats.losses,
+                                        ties: d.stats.ties,
+                                    }
+                                  : null,
                       }),
                   ]),
         ];
