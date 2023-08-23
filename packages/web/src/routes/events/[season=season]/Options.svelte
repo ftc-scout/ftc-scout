@@ -1,11 +1,11 @@
 <script lang="ts">
     import Form from "$lib/components/ui/form/Form.svelte";
     import type { EventTypeOption, RegionOption, Season } from "@ftc-scout/common";
-    import RegionSelect from "../../../lib/components/ui/form/RegionSelect.svelte";
-    import EventTypeSelect from "../../../lib/components/ui/form/EventTypeSelect.svelte";
-    import DateRange from "../../../lib/components/ui/form/DateRange.svelte";
-    import SeasonSelect from "../../../lib/components/ui/form/SeasonSelect.svelte";
-    import SearchInput from "../../../lib/components/ui/form/SearchInput.svelte";
+    import RegionSelect from "$lib/components/ui/form/RegionSelect.svelte";
+    import EventTypeSelect from "$lib/components/ui/form/EventTypeSelect.svelte";
+    import DateRange from "$lib/components/ui/form/DateRange.svelte";
+    import SeasonSelect from "$lib/components/ui/form/SeasonSelect.svelte";
+    import SearchInput from "$lib/components/ui/form/SearchInput.svelte";
 
     export let season: Season;
     export let region: RegionOption;

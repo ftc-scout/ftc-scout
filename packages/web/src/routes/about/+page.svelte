@@ -3,7 +3,7 @@
     // import Head from "$lib/components/nav/Head.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
     import Contributor from "./Contributor.svelte";
-    import { EMAIL, DISCORD, STATUS, GITHUB } from "../../lib/constants";
+    import { EMAIL, DISCORD, STATUS, GITHUB } from "$lib/constants";
 </script>
 
 <!-- <Head title="About | FTCScout" description="About FTCScout, a way to track and scout FIRST Tech Challenge." /> -->

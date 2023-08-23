@@ -30,8 +30,8 @@
     import { DATE_EC_DC } from "$lib/util/search-params/date";
     import DateRange from "$lib/components/ui/form/DateRange.svelte";
     import { REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
-    import RemoteSelect from "../../../../lib/components/ui/form/RemoteSelect.svelte";
-    import { PAGE_EC_DC } from "../../../../lib/util/search-params/int";
+    import RemoteSelect from "$lib/components/ui/form/RemoteSelect.svelte";
+    import { PAGE_EC_DC } from "$lib/util/search-params/int";
 
     function go(tab: string, season: Season) {
         let tabChanged = tab != $page.params.tab;

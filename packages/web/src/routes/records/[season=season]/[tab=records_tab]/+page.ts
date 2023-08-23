@@ -10,12 +10,12 @@ import {
 } from "$lib/graphql/generated/graphql-operations";
 import { PAGE_EC_DC } from "$lib/util/search-params/int";
 import { PAGE_SIZE } from "./+page.svelte";
-import { FILTER_EC_DC, SORT_DIR_EC_DC, STAT_EC_DC } from "../../../../lib/util/search-params/stats";
-import { filterGroupToGql } from "../../../../lib/components/stats/filter/filterToGql";
-import { REGION_EC_DC } from "../../../../lib/util/search-params/region";
-import { REMOTE_EC_DC } from "../../../../lib/util/search-params/event-ty";
-import { DATE_EC_DC } from "../../../../lib/util/search-params/date";
-import { dateToStr } from "../../../../lib/util/date";
+import { FILTER_EC_DC, SORT_DIR_EC_DC, STAT_EC_DC } from "$lib/util/search-params/stats";
+import { filterGroupToGql } from "$lib/components/stats/filter/filterToGql";
+import { REGION_EC_DC } from "$lib/util/search-params/region";
+import { REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
+import { DATE_EC_DC } from "$lib/util/search-params/date";
+import { dateToStr } from "$lib/util/date";
 
 export const load: PageLoad = ({ fetch, params, url }) => {
     let season = +params.season as Season;

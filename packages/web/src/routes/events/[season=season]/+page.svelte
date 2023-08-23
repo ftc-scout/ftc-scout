@@ -19,14 +19,14 @@
     import SingleEvent from "./SingleEvent.svelte";
     import Options from "./Options.svelte";
     import { queryParam } from "$lib/util/search-params/search-params";
-    import { REGION_EC_DC } from "../../../lib/util/search-params/region";
-    import { regionMatches } from "../../../lib/util/regions";
-    import { EVENT_TY_EC_DC } from "../../../lib/util/search-params/event-ty";
-    import { eventTyMatches } from "../../../lib/util/event-type";
-    import { DATE_EC_DC } from "../../../lib/util/search-params/date";
+    import { REGION_EC_DC } from "$lib/util/search-params/region";
+    import { regionMatches } from "$lib/util/regions";
+    import { EVENT_TY_EC_DC } from "$lib/util/search-params/event-ty";
+    import { eventTyMatches } from "$lib/util/event-type";
+    import { DATE_EC_DC } from "$lib/util/search-params/date";
     import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
-    import { STRING_EC_DC } from "../../../lib/util/search-params/string";
+    import { STRING_EC_DC } from "$lib/util/search-params/string";
 
     export let data;
     $: eventsStore = data.events;

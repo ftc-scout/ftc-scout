@@ -28,11 +28,11 @@
     import { browser } from "$app/environment";
     import { setContext } from "svelte";
     import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
-    import FocusedTeam from "../../../../../lib/components/stats/FocusedTeam.svelte";
+    import FocusedTeam from "$lib/components/stats/FocusedTeam.svelte";
     import Teams from "./Teams.svelte";
     import Rankings from "./Rankings.svelte";
     import Awards from "./Awards.svelte";
-    import { isNonCompetition } from "../../../../../lib/util/event-type";
+    import { isNonCompetition } from "$lib/util/event-type";
 
     export let data;
 
