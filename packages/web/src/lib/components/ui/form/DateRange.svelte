@@ -13,9 +13,16 @@
 </script>
 
 <div>
-    <DateInput bind:date={start} {min} {max} id={id ? `start-${id}` : null} name="start" />
+    <DateInput
+        bind:date={start}
+        {min}
+        {max}
+        id={id ? `start-${id}` : null}
+        name="start"
+        on:change
+    />
     to
-    <DateInput bind:date={end} {min} {max} id={id ? `end-${id}` : null} name="end" />
+    <DateInput bind:date={end} {min} {max} id={id ? `end-${id}` : null} name="end" on:change />
 </div>
 
 <style>

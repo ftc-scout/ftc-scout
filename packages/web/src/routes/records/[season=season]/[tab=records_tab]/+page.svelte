@@ -20,12 +20,18 @@
     import Form from "$lib/components/ui/form/Form.svelte";
     import SeasonSelect from "$lib/components/ui/form/SeasonSelect.svelte";
     import RegionSelect from "$lib/components/ui/form/RegionSelect.svelte";
-    import { queryParam, queryParamUrlKeeping } from "$lib/util/search-params/search-params";
+    import {
+        commitQueryParamBatch,
+        queryParam,
+        queryParamUrlKeeping,
+        startQueryParamBatch,
+    } from "$lib/util/search-params/search-params";
     import { REGION_EC_DC } from "$lib/util/search-params/region";
     import { DATE_EC_DC } from "$lib/util/search-params/date";
     import DateRange from "$lib/components/ui/form/DateRange.svelte";
     import { REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
     import RemoteSelect from "../../../../lib/components/ui/form/RemoteSelect.svelte";
+    import { PAGE_EC_DC } from "../../../../lib/util/search-params/int";
 
     function go(tab: string, season: Season) {
         let tabChanged = tab != $page.params.tab;
@@ -73,6 +79,17 @@
     let start = queryParam("start", DATE_EC_DC);
     let end = queryParam("end", DATE_EC_DC);
     let remote = queryParam("remote", REMOTE_EC_DC);
+    let pageNum = queryParam("page", PAGE_EC_DC);
+
+    function change() {
+        startQueryParamBatch();
+        $region = $region;
+        $start = $start;
+        $end = $end;
+        $remote = $remote;
+        $pageNum = 1;
+        commitQueryParamBatch();
+    }
 </script>
 
 {#if focusedTeam && focusedTeamName}
@@ -99,20 +116,25 @@
 
                 <label for="region-select">
                     Regions
-                    <RegionSelect bind:region={$region} name="regions" id="region-select" />
+                    <RegionSelect
+                        bind:region={$region}
+                        name="regions"
+                        id="region-select"
+                        on:change={change}
+                    />
                 </label>
 
                 {#if DESCRIPTORS[season].hasRemote}
                     <label for="remote-select">
                         Events
-                        <RemoteSelect bind:remote={$remote} id="remote-select" />
+                        <RemoteSelect bind:remote={$remote} id="remote-select" on:change={change} />
                     </label>
                 {/if}
             </div>
 
             <div>
                 Date Range
-                <DateRange bind:start={$start} bind:end={$end} {season} />
+                <DateRange bind:start={$start} bind:end={$end} {season} on:change={change} />
             </div>
 
             <noscript> <input type="submit" /> </noscript>

@@ -20,7 +20,7 @@
     $: maxStr = dateToStr(max);
 </script>
 
-<input type="date" {id} {name} min={minStr} max={maxStr} bind:value={dateStr} />
+<input type="date" {id} {name} min={minStr} max={maxStr} bind:value={dateStr} on:change />
 
 <style>
     input {
