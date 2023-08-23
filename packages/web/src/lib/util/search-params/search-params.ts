@@ -82,7 +82,9 @@ export function queryParam<T>(
         };
 
         let param = $page.url.searchParams.get(name) ?? null;
-        valStore.set(decode(param));
+        let decoded = decode(param);
+        valStore.set(decoded);
+        setRef.set(decoded);
     });
 
     return {
@@ -187,4 +189,16 @@ export function queryParamUrl<T>(
         let queryStr = newQuery.toString();
         return queryStr != "" ? "?" + queryStr : "";
     });
+}
+
+export function queryParamUrlKeeping(names: string[]): string {
+    let oldQuery = new URLSearchParams(get(page).url.searchParams);
+    let newQuery = new URLSearchParams(get(page).url.searchParams);
+    for (let key of oldQuery.keys()) {
+        if (names.indexOf(key) == -1) {
+            newQuery.delete(key);
+        }
+    }
+    let queryStr = newQuery.toString();
+    return queryStr != "" ? "?" + queryStr : "";
 }

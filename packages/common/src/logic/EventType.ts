@@ -64,3 +64,10 @@ export const NON_COMPETITION_EVENT_TYPES = [
     EventType.InnovationChallenge,
     EventType.Other,
 ];
+
+export const RemoteOption = {
+    All: "All",
+    Trad: "Trad",
+    Remote: "Remote",
+} as const;
+export type RemoteOption = (typeof RemoteOption)[keyof typeof RemoteOption];

@@ -136,8 +136,12 @@ function filterValToSQL(
     if (val.lit) {
         return val.lit + "";
     } else if (val.var) {
-        let sql = stats.getStat(val.var)?.sqlExpr ?? null;
-        return sql ? name(sql) : "0";
+        if (stats.getStat(val.var).ty == "event") {
+            return "null";
+        } else {
+            let sql = stats.getStat(val.var)?.sqlExpr ?? null;
+            return sql ? name(sql) : "0";
+        }
     } else {
         return "0";
     }

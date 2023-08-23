@@ -84,6 +84,9 @@
     .name {
         position: relative;
 
+        display: flex;
+        align-items: center;
+
         padding: var(--md-pad);
         padding-left: calc((var(--depth) * 2 + 3) * var(--md-gap));
     }

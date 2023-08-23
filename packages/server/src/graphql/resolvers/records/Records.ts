@@ -3,6 +3,7 @@ import {
     DateTy,
     IntTy,
     RegionOption,
+    RemoteOption,
     Season,
     SortDir,
     StrTy,
@@ -18,7 +19,7 @@ import { TeamEventParticipationGQL } from "../TeamEventParticipation";
 import { TeamEventParticipation } from "../../../db/entities/dyn/team-event-participation";
 import { DATA_SOURCE } from "../../../db/data-source";
 import { NamingStrategyInterface } from "typeorm";
-import { RegionOptionGQL, SortDirGQL } from "../enums";
+import { RegionOptionGQL, RemoteOptionGQL, SortDirGQL } from "../enums";
 import { FilterGQL, TyFilterGQL, filterGQLToSql } from "./filter-gql";
 
 function RecordGqlTy(wrapped: GraphQLObjectType, namePrefix: string): GraphQLObjectType {
@@ -58,6 +59,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             sortDir: { type: SortDirGQL },
             filter: { type: FilterGQL },
             region: { type: RegionOptionGQL },
+            remote: { type: RemoteOptionGQL },
             start: nullTy(DateTy),
             end: nullTy(DateTy),
             skip: IntTy,
@@ -71,6 +73,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 sortDir,
                 filter,
                 region,
+                remote,
                 start,
                 end,
                 skip,
@@ -81,6 +84,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 sortDir: SortDir | null;
                 filter: TyFilterGQL;
                 region: RegionOption | null;
+                remote: RemoteOption | null;
                 start: Date | null;
                 end: Date | null;
                 skip: number;
@@ -114,7 +118,12 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             // Filter
             let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
 
-            let joinEvent = chosenRegion != RegionOption.All || start != null || end != null;
+            let joinEvent =
+                chosenRegion != RegionOption.All ||
+                start != null ||
+                end != null ||
+                remote != RemoteOption.All ||
+                sortBy == "event";
 
             let contextAddedQ = Tep.createQueryBuilder("tep")
                 .select("tep.event_code", "tep_ec")
@@ -151,14 +160,22 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 });
             }
 
+            if (remote == RemoteOption.Trad) {
+                contextAddedQ.andWhere("NOT remote");
+                countQ.andWhere("NOT remote");
+            } else if (remote == RemoteOption.Remote) {
+                contextAddedQ.andWhere("remote");
+                countQ.andWhere("remote");
+            }
+
             if (start) {
                 contextAddedQ.andWhere(`"start" >= :start`, { start });
                 countQ.andWhere(`"start" >= :start`, { start });
             }
 
             if (end) {
-                contextAddedQ.andWhere(`"end" <= :start`, { end });
-                countQ.andWhere(`"end" <= :start`, { end });
+                contextAddedQ.andWhere(`"end" <= :end`, { end });
+                countQ.andWhere(`"end" <= :end`, { end });
             }
 
             contextAddedQ.addSelect(filterSql, "is_in");

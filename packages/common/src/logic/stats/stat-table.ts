@@ -11,9 +11,10 @@ export type SortDir = (typeof SortDir)[keyof typeof SortDir];
 export const StatType = {
     Int: "int",
     Float: "float",
-    Team: "team",
     Rank: "rank",
     Record: "record",
+    Team: "team",
+    Event: "event",
 } as const;
 export type StatType = (typeof StatType)[keyof typeof StatType];
 export type StatValue =
@@ -21,6 +22,7 @@ export type StatValue =
     | { ty: "float"; val: number }
     | { ty: "rank"; val: number }
     | { ty: "team"; number: number; name: string }
+    | { ty: "event"; season: number; code: string; name: string; start: string; end: string }
     | { ty: "record"; wins: number; losses: number; ties: number };
 
 export const Color = {
@@ -53,6 +55,8 @@ export class StatColumn<T> {
             return val.val;
         } else if (val.ty == "team") {
             return val.number;
+        } else if (val.ty == "event") {
+            return val.start;
         } else {
             let num = val.wins + val.ties / 2;
             let denom = val.wins + val.losses + val.ties;

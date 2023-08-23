@@ -193,9 +193,38 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                   ]),
         ];
 
+        let eventStats = [
+            new NonRankStatColumn({
+                id: "event",
+                columnName: "Event",
+                titleName: "Event",
+                dialogName: "Event",
+                sqlExpr: "start",
+                color: Color.White,
+                ty: StatType.Event,
+                getNonRankValue: (d: any) =>
+                    "event" in d
+                        ? {
+                              ty: "event",
+                              season: d.event.season,
+                              code: d.event.code,
+                              name: d.event.name,
+                              start: d.event.start,
+                              end: d.event.end,
+                          }
+                        : null,
+            }),
+        ];
+
         let soloSection = new StatSetSection(
             "Team's Event Performance",
             soloStats.map((s) => ({ val: { id: s.id, name: s.dialogName }, children: [] })),
+            [{ id: "", name: "", color: Color.Purple, description: null }]
+        );
+
+        let eventSection = new StatSetSection(
+            "Event",
+            [{ val: { id: "event", name: "Event" }, children: [] }],
             [{ id: "", name: "", color: Color.Purple, description: null }]
         );
 
@@ -219,8 +248,8 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
 
         statSetCache[key] = new StatSet(
             `tep${season}${remote ? "Remote" : "Trad"}`,
-            [...soloStats, ...groupStats],
-            [soloSection, groupSection]
+            [...soloStats, ...groupStats, ...eventStats],
+            [soloSection, groupSection, eventSection]
         );
     }
 

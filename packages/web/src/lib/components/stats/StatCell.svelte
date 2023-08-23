@@ -1,5 +1,6 @@
 <script lang="ts">
     import { prettyPrintFloat, prettyPrintOrdinal } from "../../printers/number";
+    import StatEvent from "./StatEvent.svelte";
     import StatTeam from "./StatTeam.svelte";
     import type { StatColumn, StatData } from "@ftc-scout/common";
 
@@ -9,13 +10,16 @@
     export let stat: StatColumn<T>;
     export let focusedTeam: number | null;
 
+    $: eventCode = "eventCode" in (data.data as any) ? (data.data as any).eventCode : null;
     $: val = stat.getValue(data);
 </script>
 
 {#if val == null}
     <td class="{stat.color} na" title={stat.titleName}> N/A </td>
 {:else if val.ty == "team"}
-    <StatTeam {val} {focusedTeam} />
+    <StatTeam {val} {eventCode} {focusedTeam} />
+{:else if val.ty == "event"}
+    <StatEvent {val} />
 {:else}
     <td class="{stat.color} {val?.ty ?? 'na'}" title={stat.titleName}>
         {#if val.ty == "rank" && val.val}

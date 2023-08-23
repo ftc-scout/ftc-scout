@@ -5,6 +5,10 @@ query TepRecords(
     $sortBy: String!
     $sortDir: SortDir!
     $filter: Filter
+    $region: RegionOption
+    $remote: RemoteOption
+    $start: Date
+    $end: Date
 ) {
     tepRecords(
         season: $season
@@ -13,6 +17,10 @@ query TepRecords(
         sortBy: $sortBy
         sortDir: $sortDir
         filter: $filter
+        region: $region
+        remote: $remote
+        start: $start
+        end: $end
     ) {
         data {
             data {
@@ -22,6 +30,13 @@ query TepRecords(
                 team {
                     number
                     name
+                }
+                event {
+                    season
+                    code
+                    name
+                    start
+                    end
                 }
                 stats {
                     ...FullStats

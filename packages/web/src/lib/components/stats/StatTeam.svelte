@@ -5,13 +5,14 @@
     import type { StatValue } from "@ftc-scout/common";
 
     export let val: Extract<StatValue, { ty: "team" }>;
+    export let eventCode: string | null = null;
     export let focusedTeam: number | null;
     $: number = val.number;
     $: name = val.name;
     $: href = `/teams/${number}`;
 
     let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
-        | ((num: number, name: string) => void)
+        | ((num: number, name: string, eventCode: string | null) => void)
         | undefined;
 </script>
 
@@ -23,7 +24,7 @@
         if (clickAction) {
             e.preventDefault();
             e.stopPropagation();
-            clickAction(number, name);
+            clickAction(number, name, eventCode);
         }
     }}
 >

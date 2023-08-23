@@ -15,12 +15,13 @@
     } from "../../util/search-params/search-params";
     import { arrayMove } from "../../util/array";
     import { cycleSortDir, cycleSortDirNoNull } from "./SortButton.svelte";
-    import type {
-        NonRankStatColumn,
-        StatData,
-        StatSet,
-        SortDir,
-        FilterGroup,
+    import {
+        type NonRankStatColumn,
+        type StatData,
+        type StatSet,
+        type SortDir,
+        type FilterGroup,
+        RankTy,
     } from "@ftc-scout/common";
     import StatTableControls from "./StatTableControls.svelte";
     import PageChooser from "../PageChooser.svelte";
@@ -34,12 +35,12 @@
     export let defaultStats: string[];
     export let defaultSort: { id: string; dir: SortDir };
 
-    let shownStats = queryParam("shown", STATS_EC_DC(stats, defaultStats));
-    let currentSort = queryParams({
+    $: shownStats = queryParam("shown", STATS_EC_DC(stats, defaultStats));
+    $: currentSort = queryParams({
         id: { ...STAT_EC_DC(stats, defaultSort.id), urlName: "sort" },
         dir: { ...SORT_DIR_EC_DC, urlName: "sort-dir" },
     });
-    let filter = queryParam("filter", FILTER_EC_DC(stats));
+    $: filter = queryParam("filter", FILTER_EC_DC(stats));
     let rankTy = queryParam("rank-ty", RANK_TY_EC_DC);
 
     let page = queryParam("page", PAGE_EC_DC);
@@ -83,6 +84,8 @@
         startQueryParamBatch();
         $filter = f;
         $page = 1;
+        if (f == null && $rankTy == RankTy.FilterSkip) $rankTy = RankTy.NoFilterSkip;
+        if (f == null && $rankTy == RankTy.Filter) $rankTy = RankTy.NoFilter;
         commitQueryParamBatch();
     }
 </script>

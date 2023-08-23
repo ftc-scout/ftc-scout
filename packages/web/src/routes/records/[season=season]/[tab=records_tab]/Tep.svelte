@@ -24,6 +24,7 @@
         "egPointsOpr",
         totalPoints + "Avg",
         "eventRank",
+        "event",
         "eventRecord",
     ];
     $: defaultSort = { id: totalPoints + "Opr", dir: SortDir.Desc };

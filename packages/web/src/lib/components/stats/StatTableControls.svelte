@@ -48,24 +48,20 @@
     let chooseStatsModalShown = false;
     let filtersShown = false;
 
-    let skip: "skip" | "keep" = "skip";
-    let rankAfterFilters: "yes" | "no" = "yes";
-
-    function computeRankTy(s: "skip" | "keep", f: "yes" | "no") {
-        if (s == "skip" && f == "yes") {
-            rankTy = RankTy.FilterSkip;
-        } else if (s == "skip" && f == "no") {
-            rankTy = RankTy.NoFilterSkip;
-        } else if (s == "keep" && f == "yes") {
-            rankTy = RankTy.Filter;
-        } else {
-            rankTy = RankTy.NoFilter;
-        }
-    }
+    let skip: "skip" | "keep";
+    let rankAfterFilters: "yes" | "no";
 
     function updateRankComponents(t: RankTy) {
         skip = t == RankTy.FilterSkip || t == RankTy.NoFilterSkip ? "skip" : "keep";
         rankAfterFilters = t == RankTy.Filter || t == RankTy.FilterSkip ? "yes" : "no";
+    }
+
+    function computeRankTy(s: "skip" | "keep", f: "yes" | "no") {
+        if (f == "yes") {
+            rankTy = s == "skip" ? RankTy.FilterSkip : RankTy.Filter;
+        } else {
+            rankTy = s == "skip" ? RankTy.NoFilterSkip : RankTy.NoFilter;
+        }
     }
 
     $: updateRankComponents(rankTy);

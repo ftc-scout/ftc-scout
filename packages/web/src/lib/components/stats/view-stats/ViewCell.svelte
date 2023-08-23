@@ -33,6 +33,8 @@
             {value.wins}-{value.losses}-{value.ties}
         {:else if value.ty == "team"}
             <span>{value.number} - <em style="padding-left: var(--sm-gap);">{value.name}</em></span>
+        {:else if value.ty == "event"}
+            {value.name}
         {/if}
     </div>
 </td>
