@@ -142,7 +142,7 @@
 <style>
     h1,
     h2 {
-        margin-top: var(--md-gap);
+        margin-top: var(--sm-gap);
         margin-bottom: var(--lg-gap);
     }
 
