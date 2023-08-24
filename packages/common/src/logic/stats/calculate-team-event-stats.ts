@@ -153,13 +153,15 @@ function calculateRemoteMatchesPlayed(matches: FrontendMatch[], teps: Record<num
     }
 }
 
-const tot = (arr: number[]) => arr.reduce((a, b) => a + b, 0);
-const avg = (arr: number[]) => (arr.length == 0 ? 0 : tot(arr) / arr.length);
-const min = (arr: number[]) => (arr.length == 0 ? 0 : Math.min(...arr));
-const max = (arr: number[]) => (arr.length == 0 ? 0 : Math.max(...arr));
+const tot = (arr: number[]) => (arr.length == 0 ? null : arr.reduce((a, b) => a + b, 0));
+const avg = (arr: number[]) => (arr.length == 0 ? null : tot(arr)! / arr.length);
+const min = (arr: number[]) => (arr.length == 0 ? null : Math.min(...arr));
+const max = (arr: number[]) => (arr.length == 0 ? null : Math.max(...arr));
 const dev = (arr: number[]) => {
-    let a = avg(arr);
-    let diffAvg = avg(arr.map((n) => (a - n) * (a - n)));
+    if (arr.length == 0) return null;
+
+    let a = avg(arr)!;
+    let diffAvg = avg(arr.map((n) => (a - n) * (a - n)))!;
     return Math.sqrt(diffAvg);
 };
 

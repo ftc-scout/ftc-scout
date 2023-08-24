@@ -140,9 +140,11 @@ export const TeamQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             let q = DATA_SOURCE.getRepository(Team).createQueryBuilder("t").distinctOn(["number"]);
 
             if (region && region != RegionOption.All) {
-                q.andWhere("e.region_code IN (:...regions)", { regions: getRegionCodes(region) })
-                    .leftJoin(TeamMatchParticipation, "m", "t.number = m.team_number")
-                    .leftJoin(Event, "e", "e.season = m.season AND e.code = m.event_code");
+                q.leftJoin(TeamMatchParticipation, "m", "t.number = m.team_number")
+                    .leftJoin(Event, "e", "e.season = m.season AND e.code = m.event_code")
+                    .andWhere("e.region_code IN (:...regions)", {
+                        regions: getRegionCodes(region),
+                    });
             }
 
             if (limit && (!searchText || searchText.trim() == "")) {

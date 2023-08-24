@@ -99,7 +99,7 @@ function getAggregateStatColumns(descriptor: Descriptor): EntitySchema<any> {
     let columns: Record<string, EntitySchemaColumnOptions> = {};
 
     descriptor.tepColumns().forEach((c) => {
-        columns[c.dbName] = { type: "float" };
+        columns[c.dbName] = { type: "float", nullable: true };
     });
 
     return new EntitySchema({
