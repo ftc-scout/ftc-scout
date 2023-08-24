@@ -76,7 +76,7 @@
 
         <Card>
             <ul>
-                {#each search.slice(0, take) as { document, highlights }}
+                {#each search.slice(0, take) as { document, highlights } (document.number)}
                     {@const href = `/teams/${document.number}`}
                     {@const team = document}
 
@@ -87,6 +87,11 @@
                             <em class="location"> <Location {...team.location} link={false} /> </em>
                         </a>
                     </li>
+                {:else}
+                    <div class="no-teams">
+                        <b> No matching Teams. </b>
+                        <p>Try modifying your filters.</p>
+                    </div>
                 {/each}
 
                 <InfiniteScroll threshold={200} on:loadMore={() => (take += 100)} {elementScroll} />
@@ -174,5 +179,15 @@
     .location {
         font-size: var(--md-font-size);
         color: var(--secondary-text-color);
+    }
+
+    .no-teams {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--md-gap);
+        grid-column: span 2;
+
+        width: 100%;
     }
 </style>

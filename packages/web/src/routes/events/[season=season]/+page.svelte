@@ -27,6 +27,7 @@
     import { browser } from "$app/environment";
     import { goto } from "$app/navigation";
     import { STRING_EC_DC } from "$lib/util/search-params/string";
+    import InfiniteScroll from "svelte-infinite-scroll";
 
     export let data;
     $: eventsStore = data.events;
@@ -103,6 +104,17 @@
             (!end || new Date(e.end) <= end);
     }
 
+    let elementScroll = (browser ? document.getElementById("content") : null)!;
+    let take = 10;
+    $: {
+        $searchText;
+        $region;
+        $eventTy;
+        $start;
+        $end;
+        take = 10;
+    }
+
     $: filteredEvents = sortedEvents.filter(eventMatches($region, $eventTy, $start, $end));
     $: searchedEvents = fuzzySearch(filteredEvents, $searchText, Infinity, "name");
     $: grouped = groupEvents(searchedEvents);
@@ -133,7 +145,7 @@
         </div>
 
         <Card vis={false}>
-            {#each grouped as [week, es]}
+            {#each grouped.slice(0, take) as [week, es] (week)}
                 {@const start = addDays(firstMonday, 7 * week)}
                 {@const end = addDays(firstMonday, 7 * week + 6)}
 
@@ -155,6 +167,8 @@
                     <p class="no-events-help">Try modifying your filters.</p>
                 </div>
             {/each}
+
+            <InfiniteScroll threshold={500} on:loadMore={() => (take += 3)} {elementScroll} />
         </Card>
     </Loading>
 </WidthProvider>
