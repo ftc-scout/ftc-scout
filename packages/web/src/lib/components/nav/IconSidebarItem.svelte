@@ -10,7 +10,7 @@
 </script>
 
 <a href={link} title={name} target={newTab ? "_blank" : null} rel={newTab ? "noreferrer" : null}>
-    <Fa {icon} size="1.5x" />
+    <Fa {icon} size="1.25x" fw />
 </a>
 
 <style>
@@ -19,6 +19,13 @@
         border-radius: var(--pill-border-radius);
         color: var(--secondary-text-color);
         font-size: 16px;
+
+        border: 2px solid var(--sep-color);
+
+        aspect-ratio: 1/1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     a:hover {
