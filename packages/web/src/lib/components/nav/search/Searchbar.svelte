@@ -115,7 +115,7 @@
     class:has-text={searchText != ""}
     class:shown
 >
-    <Fa icon={faSearch} />
+    <span class="input-icon"><Fa icon={faSearch} /></span>
     <input
         bind:value={searchText}
         on:focusin={loadData}
@@ -130,7 +130,7 @@
     <!-- Submit the form on enter -->
     <input type="submit" style="display: none" />
 
-    <button on:click|preventDefault|stopPropagation={() => (searchText = "")}>
+    <button on:click|preventDefault|stopPropagation={() => (searchText = "")} class="input-icon">
         <Fa icon={faXmark} />
     </button>
 
@@ -159,15 +159,18 @@
 </form>
 
 <button class="search-btn" on:click={show}>
-    <Fa icon={faSearch} size="1.25x" />
+    <Fa icon={faSearch} size="1.5x" />
 </button>
 
 <style>
     form {
-        transition: width 0.3s ease 0s;
+        display: flex;
+        align-items: center;
+        padding: 0 var(--lg-pad);
 
         background: var(--fg-color);
-        padding: 0 var(--sm-pad) 0 var(--lg-pad);
+
+        transition: width 0.3s ease 0s;
 
         border: 1px solid var(--sep-color);
         outline-offset: -1px;
@@ -314,10 +317,11 @@
 
         background: none;
         border: none;
-        /* font-size: var(--lg-font-size); */
         font-family: inherit;
         color: var(--theme-text-color);
         cursor: pointer;
+
+        margin-right: var(--sm-gap);
     }
 
     @media (max-width: 860px) {
@@ -327,10 +331,16 @@
             right: var(--md-gap);
         }
 
+        .input-icon {
+            font-size: var(--lg-font-size);
+        }
+
         input {
-            --expanded-width: calc(100% - 55px);
-            width: calc(100% - 55px);
+            /* --expanded-width: calc(100% - 60px); */
+            /* width: var(--expanded-width); */
             transition-property: none;
+
+            font-size: var(--lg-font-size);
         }
 
         form:not(.shown) {

@@ -10,7 +10,6 @@
         faInfoCircle,
         faTrophy,
         faEnvelope,
-        faSignal,
         faServer,
     } from "@fortawesome/free-solid-svg-icons";
     import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
