@@ -198,7 +198,7 @@ body.dark {
     --fade-shadow: rgba(255, 255, 255, 0.15);
 
     --text-color: #dfe2e6;
-    --secondary-text-color: #dcdfe2;
+    --secondary-text-color: #b7b7b8;
     --grayed-out-text-color: #a0a0a0;
     --theme-text-color: #ffffff;
 
@@ -279,7 +279,7 @@ body.dark .render-light {
         --fade-shadow: rgba(255, 255, 255, 0.15);
 
         --text-color: #dfe2e6;
-        --secondary-text-color: #dcdfe2;
+        --secondary-text-color: #b7b7b8;
         --grayed-out-text-color: #a0a0a0;
         --theme-text-color: #ffffff;
 
