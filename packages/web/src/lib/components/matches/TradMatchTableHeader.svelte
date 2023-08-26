@@ -1,10 +1,10 @@
 <thead>
     <tr>
-        <td class="s">
+        <th class="s">
             <div>Match</div>
             <div>Score</div>
-        </td><td class="r">Red Alliance</td>
-        <td class="b">Blue Alliance</td>
+        </th><th class="r">Red Alliance</th>
+        <th class="b">Blue Alliance</th>
     </tr>
 </thead>
 
@@ -24,7 +24,7 @@
         }
     }
 
-    td {
+    th {
         display: block;
         font-weight: bold;
         text-align: center;

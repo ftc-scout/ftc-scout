@@ -1,13 +1,13 @@
 <thead>
     <tr>
-        <td class="team">Team</td>
-        <td>Q-1</td>
-        <td>Q-2</td>
-        <td>Q-3</td>
-        <td>Q-4</td>
-        <td>Q-5</td>
-        <td>Q-6</td>
-        <td class="total">Total</td>
+        <th class="team">Team</th>
+        <th>Q-1</th>
+        <th>Q-2</th>
+        <th>Q-3</th>
+        <th>Q-4</th>
+        <th>Q-5</th>
+        <th>Q-6</th>
+        <th class="total">Total</th>
     </tr>
 </thead>
 
@@ -44,7 +44,7 @@
         border-left: 2px solid var(--sep-color);
     }
 
-    td {
+    th {
         display: flex;
         align-items: center;
         justify-content: center;
