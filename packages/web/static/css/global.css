@@ -241,6 +241,13 @@ body.dark {
     color-scheme: dark;
 }
 
+body.dark :where(a.norm-link:link) {
+    color: #9e9eff;
+}
+body.dark :where(a.norm-link:visited) {
+    color: #d0adf0;
+}
+
 body.dark .render-dark {
     display: initial;
 }
@@ -313,6 +320,13 @@ body.dark .render-light {
         --thick-border-width: 1px;
 
         color-scheme: dark;
+    }
+
+    body:not(.light) :where(a.norm-link:link) {
+        color: #9e9eff;
+    }
+    body:not(.light) :where(a.norm-link:visited) {
+        color: #d0adf0;
     }
 
     body:not(.light) .render-dark {

@@ -14,7 +14,7 @@
 </script>
 
 {#if link}
-    <a {href}>
+    <a {href} class="norm-link">
         {computedVenue.trim()}
         {city.trim()}, {state.trim()}, {country.trim()}
     </a>

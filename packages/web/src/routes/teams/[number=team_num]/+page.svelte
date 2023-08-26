@@ -69,7 +69,7 @@
 
             {#if team.website}
                 <InfoIconRow icon={faLink}>
-                    <a href={team.website} target="_blank" rel="noreferrer">
+                    <a href={team.website} target="_blank" rel="noreferrer" class="norm-link">
                         {prettyPrintURL(team.website)}
                     </a>
                 </InfoIconRow>
