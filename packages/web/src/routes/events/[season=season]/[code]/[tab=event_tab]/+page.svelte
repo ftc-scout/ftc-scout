@@ -45,7 +45,7 @@
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} with code ${$page.params.code}`;
 
     let selectedTab = $page.params.tab;
-    $: browser && goto(selectedTab, { replaceState: true });
+    $: browser && goto(selectedTab + "?" + $page.url.searchParams, { replaceState: true });
 
     let focusedTeam: number | null = null;
     $: focusedTeamData =
