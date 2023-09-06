@@ -144,7 +144,7 @@
             <SkeletonRow rows={5} header={true} />
         </div>
 
-        <Card vis={false}>
+        <Card>
             {#each grouped.slice(0, take) as [week, es] (week)}
                 {@const start = addDays(firstMonday, 7 * week)}
                 {@const end = addDays(firstMonday, 7 * week + 6)}
@@ -168,7 +168,7 @@
                 </div>
             {/each}
 
-            <InfiniteScroll threshold={500} on:loadMore={() => (take += 3)} {elementScroll} />
+            <InfiniteScroll threshold={500} on:loadMore={() => (take += 10)} {elementScroll} />
         </Card>
     </Loading>
 </WidthProvider>
@@ -179,9 +179,7 @@
         margin-bottom: var(--lg-gap);
     }
 
-    section {
-        background: var(--fg-color);
-        border-radius: 8px;
+    section:not(:last-child) {
         margin-bottom: var(--vl-gap);
     }
 
@@ -191,11 +189,11 @@
         align-items: center;
 
         font-size: var(--lg-font-size);
-        background: rgba(var(--theme-color-vs), var(--theme-color-opacity));
-        color: var(--theme-text-color);
+        background: var(--zebra-stripe-color);
 
-        padding: var(--md-pad);
-        border-radius: 8px 8px 0 0;
+        padding: var(--md-gap);
+        margin-bottom: var(--md-gap);
+        border-radius: 8px;
     }
 
     .date-range {
@@ -206,33 +204,12 @@
 
     ul {
         column-count: 2;
-        column-gap: 0;
-
-        padding: var(--sm-pad) 0;
-        border: var(--thick-border-width) solid var(--sep-color);
-        border-top: none;
-        border-radius: 0 0 8px 8px;
-
-        position: relative;
-    }
-
-    ul::after {
-        content: "";
-        position: absolute;
-        left: calc(50% - 1px);
-        top: 0;
-        bottom: 0;
-
-        border-right: var(--thick-border-width) solid var(--sep-color);
+        column-gap: var(--lg-gap);
     }
 
     @media (max-width: 900px) {
         ul {
             column-count: 1;
-        }
-
-        ul::after {
-            content: none;
         }
     }
 

@@ -43,9 +43,6 @@
         align-items: center;
         justify-content: space-between;
         gap: var(--md-gap);
-
-        margin-left: calc(var(--md-gap) / 2);
-        margin-right: var(--md-gap);
     }
 
     div {
