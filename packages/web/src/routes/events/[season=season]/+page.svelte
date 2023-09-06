@@ -189,7 +189,7 @@
         align-items: center;
 
         font-size: var(--lg-font-size);
-        background: var(--zebra-stripe-color);
+        background: var(--hover-color);
 
         padding: var(--md-gap);
         margin-bottom: var(--md-gap);
