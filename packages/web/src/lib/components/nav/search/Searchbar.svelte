@@ -72,6 +72,16 @@
         setTimeout(() => document.getElementById("searchbar")?.focus(), 5);
     }
 
+    function docKey(e: KeyboardEvent) {
+        if (e.key !== "/" || e.ctrlKey || e.metaKey) return;
+        let tagname = e?.target && "tagName" in e?.target ? e.target.tagName + "" : "";
+        if (/^(?:input|textarea|select|button)$/i.test(tagname)) return;
+
+        e.preventDefault();
+        shown = true;
+        document.getElementById("searchbar")?.focus();
+    }
+
     $: relevantEvents = ($results?.data?.eventsSearch ?? []).filter((e) => isCompetition(e.type));
     $: relevantTeams = $results?.data?.teamsSearch ?? [];
 
@@ -109,6 +119,8 @@
     afterNavigate(() => (searchText = ""));
 </script>
 
+<svelte:document on:keyup={docKey} />
+
 <form
     on:submit|preventDefault={submit}
     use:focusWithinOut={() => (shown = false)}
@@ -122,7 +134,7 @@
         on:keydown={key}
         use:watchForFocus={{ store: focusNum, myNum: -1 }}
         id="searchbar"
-        placeholder="Search for teams and events."
+        placeholder="Search for teams and events"
         type="search"
         autocomplete="off"
     />
@@ -130,6 +142,7 @@
     <!-- Submit the form on enter -->
     <input type="submit" style="display: none" />
 
+    <span class="shortcut">/</span>
     <button on:click|preventDefault|stopPropagation={() => (searchText = "")} class="input-icon">
         <Fa icon={faXmark} />
     </button>
@@ -190,7 +203,7 @@
     }
 
     input {
-        width: 270px;
+        width: 260px;
         --expanded-width: 600px;
         transition: width 300ms 0s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -297,6 +310,17 @@
         opacity: 1;
         display: inline;
         animation: fade-in 0.3s;
+    }
+
+    .shortcut {
+        color: gray;
+        outline: 1px solid gray;
+        border-radius: 4px;
+        padding: 1px var(--sm-pad);
+    }
+
+    form:focus-within .shortcut {
+        display: none;
     }
 
     input[type="search"]::-webkit-search-decoration,
