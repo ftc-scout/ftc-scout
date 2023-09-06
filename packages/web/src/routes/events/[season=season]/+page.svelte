@@ -219,11 +219,6 @@
         align-items: center;
         gap: var(--md-gap);
 
-        background: var(--fg-color);
-        border: 1px solid var(--sep-color);
-        border-radius: 8px;
-        padding: var(--md-pad);
-
         width: 100%;
     }
 </style>
