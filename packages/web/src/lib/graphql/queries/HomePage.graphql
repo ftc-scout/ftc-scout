@@ -1,0 +1,27 @@
+query HomePage($season: Int!) {
+    activeTeamsCount(season: $season)
+    matchesPlayedCount(season: $season)
+    eventsOnDate {
+        season
+        code
+        name
+        location {
+            venue
+            city
+            state
+            country
+        }
+    }
+    tradWorldRecord(season: $season) {
+        ...FullMatch
+        event {
+            season
+            code
+            started
+            published
+            timezone
+            remote
+            name
+        }
+    }
+}

@@ -85,6 +85,9 @@ export class Event extends BaseEntity {
     @Column("date")
     end!: Date;
 
+    @Column()
+    modifiedRules!: boolean;
+
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
@@ -168,6 +171,12 @@ export class Event extends BaseEntity {
             // cspell:enable
         };
 
+        const MODIFIED_RULES = [
+            // cspell:disable
+            "USTXCECCS",
+            // cspell:enable
+        ];
+
         return Event.create({
             season,
             code: api.code,
@@ -192,6 +201,7 @@ export class Event extends BaseEntity {
             timezone: api.timezone,
             start: new Date(api.dateStart),
             end: new Date(api.dateEnd),
+            modifiedRules: MODIFIED_RULES.indexOf(api.code) != -1,
         } satisfies DeepPartial<Event>);
     }
 }

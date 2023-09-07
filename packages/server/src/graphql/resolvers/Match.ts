@@ -3,7 +3,7 @@ import { dataLoaderResolverSingle, keyListToWhereClause } from "../utils";
 import { BoolTy, DateTimeTy, IntTy, StrTy, list, nn, nullTy } from "@ftc-scout/common";
 import { Match } from "../../db/entities/Match";
 import { Event } from "../../db/entities/Event";
-import { EventTypeGQL, TournamentLevelGQL } from "./enums";
+import { TournamentLevelGQL } from "./enums";
 import { Season } from "@ftc-scout/common";
 import { MatchScoresUnionGQL } from "../dyn/dyn-types-schema";
 import { frontendMSFromDB } from "../dyn/match-score";
@@ -11,6 +11,7 @@ import { DATA_SOURCE } from "../../db/data-source";
 import graphqlFields from "graphql-fields";
 import { FindOptionsWhere } from "typeorm";
 import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
+import { EventGQL } from "./Event";
 
 export const MatchGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Match",
@@ -40,7 +41,7 @@ export const MatchGQL: GraphQLObjectType = new GraphQLObjectType({
         teams: { type: list(nn(TeamMatchParticipationGQL)) },
 
         event: {
-            type: nn(EventTypeGQL),
+            type: nn(EventGQL),
             resolve: dataLoaderResolverSingle<Match, Event, { season: Season; code: string }>(
                 (m) => ({ season: m.eventSeason, code: m.eventCode }),
                 (keys) => Event.find({ where: keys })

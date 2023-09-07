@@ -2,6 +2,7 @@ import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { TeamQueries } from "./resolvers/Team";
 import { EventQueries } from "./resolvers/Event";
 import { RecordQueries } from "./resolvers/records/Records";
+import { HomeQueries } from "./resolvers/Home";
 
 const query = new GraphQLObjectType({
     name: "Query",
@@ -9,6 +10,7 @@ const query = new GraphQLObjectType({
         ...TeamQueries,
         ...EventQueries,
         ...RecordQueries,
+        ...HomeQueries,
     },
 });
 
