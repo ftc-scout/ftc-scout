@@ -17,7 +17,7 @@
     a {
         padding: var(--md-pad);
         border-radius: var(--pill-border-radius);
-        color: var(--secondary-text-color);
+        color: var(--sidebar-text-color);
         font-size: 16px;
 
         border: 2px solid var(--sep-color);

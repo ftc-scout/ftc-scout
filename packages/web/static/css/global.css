@@ -133,6 +133,7 @@ body {
     --secondary-text-color: #636466;
     --grayed-out-text-color: gray;
     --theme-text-color: #ffffff;
+    --sidebar-text-color: var(--secondary-text-color);
 
     --inverse-bg-color: #212121;
     --inverse-text-color: #ffffff;
@@ -201,6 +202,7 @@ body.dark {
     --secondary-text-color: #b7b7b8;
     --grayed-out-text-color: #a0a0a0;
     --theme-text-color: #ffffff;
+    --sidebar-text-color: var(--text-color);
 
     --inverse-bg-color: #202020;
     --inverse-text-color: var(--text-color);
@@ -282,6 +284,7 @@ body.dark .render-light {
         --secondary-text-color: #b7b7b8;
         --grayed-out-text-color: #a0a0a0;
         --theme-text-color: #ffffff;
+        --sidebar-text-color: var(--text-color);
 
         --inverse-bg-color: #202020;
         --inverse-text-color: var(--text-color);

@@ -32,7 +32,7 @@
 
         border-radius: 8px;
 
-        color: var(--secondary-text-color);
+        color: var(--sidebar-text-color);
 
         display: flex;
         flex-direction: row;
