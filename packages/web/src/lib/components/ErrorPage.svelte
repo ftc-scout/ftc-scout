@@ -1,8 +1,9 @@
 <script lang="ts">
     import { page } from "$app/stores";
-    import Fa from "svelte-fa";
-    import { faBomb } from "@fortawesome/free-solid-svg-icons";
     import { EMAIL } from "../constants";
+    import Card from "./Card.svelte";
+    import Head from "./Head.svelte";
+    import WidthProvider from "./WidthProvider.svelte";
 
     export let status: number | null = null;
     export let message: string | null = null;
@@ -11,50 +12,59 @@
     $: computedMessage = message ?? $page?.error?.message;
 </script>
 
-<svelte:head>
-    <title>FTCScout</title>
-</svelte:head>
+<Head title="FTCScout" />
 
-<div class="outer">
-    <div class="inner">
-        <Fa icon={faBomb} size="10x" />
-        <h1>{computedStatus}</h1>
-        {#if computedStatus == 404 && computedMessage == "Not Found"}
-            <p>Not Found: {$page.url.pathname}</p>
-            <p style="font-size: 18px;">
-                The page you are looking for doesn't exist. If we linked you here, reach out at <a
-                    href="mailto:{EMAIL}">{EMAIL}</a
-                >.
-            </p>
-        {:else}
-            <p>{computedMessage}</p>
-            <p style="font-size: 18px;">
-                There appears to be an error. If the issue persists, reach out at <a
-                    href="mailto:{EMAIL}">{EMAIL}</a
-                >.
-            </p>
-        {/if}
-        <p class="help"><slot /></p>
-    </div>
-</div>
+<WidthProvider width="800px">
+    <Card vis={false}>
+        <div class="inner">
+            <h1>{computedStatus}</h1>
+
+            {#if computedStatus == 404 && computedMessage == "Not Found"}
+                <p class="top">Not Found: {$page.url.pathname}</p>
+                <p class="bottom">
+                    The page you are looking for doesn't exist. If we linked you here, reach out at
+                    <a href="mailto:{EMAIL}">{EMAIL}</a>.
+                </p>
+            {:else if computedStatus == 404}
+                <p class="top">{computedMessage}</p>
+            {:else}
+                <p class="top">{computedMessage}</p>
+                <p class="bottom">
+                    There appears to be an error. If the issue persists, reach out at
+                    <a href="mailto:{EMAIL}">{EMAIL}</a>.
+                </p>
+            {/if}
+
+            <p class="help"><slot /></p>
+        </div>
+    </Card>
+</WidthProvider>
 
 <style>
     h1 {
-        font-weight: normal;
-        font-size: calc(var(--xl-font-size) * 2);
-        margin: 0;
-        margin-right: var(--vl-gap);
+        font-weight: 600;
+        font-size: calc(var(--xl-font-size) * 5);
     }
 
     p {
+        text-align: center;
+    }
+
+    .top {
         font-size: calc(var(--xl-font-size));
-        margin: 0;
-        margin-bottom: 5px;
+        margin-bottom: var(--vl-gap);
+        font-weight: 600;
+    }
+
+    .bottom {
+        font-size: var(--lg-font-size);
+        color: var(--secondary-text-color);
+        margin-bottom: var(--vl-gap);
     }
 
     .help {
-        margin-top: var(--vl-gap);
         font-size: var(--lg-font-size);
+        color: var(--secondary-text-color);
     }
 
     .inner {
@@ -62,13 +72,6 @@
         justify-content: center;
         align-items: center;
         flex-direction: column;
-    }
-
-    .outer {
-        display: flex;
-        width: 100%;
-        height: calc(66vh - var(--navbar-size));
-        align-items: center;
-        justify-content: center;
+        margin-top: 10vh;
     }
 </style>
