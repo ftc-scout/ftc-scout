@@ -31,7 +31,7 @@
 <SidebarItem icon={faHome} name="Home" link="/" strict />
 <SidebarItem icon={faCalendarAlt} name="Events" link="/events/{CURRENT_SEASON}" />
 <SidebarItem icon={faHashtag} name="Teams" link="/teams" />
-<SidebarItem icon={faTrophy} name="Season Records" link="/records" />
+<SidebarItem icon={faTrophy} name="Season Records" link="/records/{CURRENT_SEASON}/teams" />
 
 <hr />
 
