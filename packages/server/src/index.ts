@@ -12,6 +12,7 @@ import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-p
 import { expressMiddleware } from "@apollo/server/express4";
 import { GQL_SCHEMA } from "./graphql/schema";
 import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
+import { setupBannerRoutes } from "./banner";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -38,6 +39,8 @@ async function main() {
     await apolloServer.start();
 
     app.use("/graphql", apiLoggerMiddleware, expressMiddleware(apolloServer));
+
+    setupBannerRoutes(app);
 
     app.listen(SERVER_PORT, () => {
         console.log(`Server started and listening on port ${SERVER_PORT}.`);

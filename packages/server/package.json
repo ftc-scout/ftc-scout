@@ -14,6 +14,7 @@
         "@apollo/server": "^4.7.5",
         "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
         "@ftc-scout/common": "^0.0.1",
+        "canvas": "^2.11.2",
         "compression": "^1.7.4",
         "cors": "^2.8.5",
         "dataloader": "^2.2.2",
