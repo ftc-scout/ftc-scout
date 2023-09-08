@@ -33,6 +33,7 @@
     import Rankings from "./Rankings.svelte";
     import Awards from "./Awards.svelte";
     import { isNonCompetition } from "$lib/util/event-type";
+    import Head from "$lib/components/Head.svelte";
 
     export let data;
 
@@ -42,7 +43,7 @@
     $: stats = event?.teams?.filter((t) => notEmpty(t.stats)) ?? [];
 
     $: season = +$page.params.season as Season;
-    $: errorMessage = `No ${DESCRIPTORS[season].seasonName} with code ${$page.params.code}`;
+    $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
     let selectedTab = $page.params.tab;
     $: browser && goto(selectedTab + "?" + $page.url.searchParams, { replaceState: true });
@@ -56,6 +57,16 @@
         (t: number) => (focusedTeam = focusedTeam == t ? null : t)
     );
 </script>
+
+<Head
+    title={!!event ? `${event.name} | FTCScout` : "Event Page | FtcScout"}
+    description={!!event
+        ? `Matches, awards, and statistics for the ${new Date(event.start).getFullYear()} ${
+              event.name
+          }.`
+        : "Matches, awards, and statistics for an event."}
+    image="https://api.ftcscout.org/banners/events/{$page.params.season}/{$page.params.code}"
+/>
 
 <WidthProvider>
     <Loading store={$eventStore} checkExists={(e) => !!e.eventByCode}>

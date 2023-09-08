@@ -34,6 +34,7 @@
     import Form from "$lib/components/ui/form/Form.svelte";
     import type { Writable } from "svelte/store";
     import { queryParam } from "$lib/util/search-params/search-params";
+    import Head from "$lib/components/Head.svelte";
 
     const toSeason = (n: number) => n as Season;
 
@@ -51,6 +52,14 @@
         killHash: true,
     });
 </script>
+
+<Head
+    title={!!team ? `${team.number} ${team.name} | FTCScout` : "Team Page | FtcScout"}
+    description={!!team
+        ? `Information and matches for team ${team.number} ${team.name}.`
+        : `Information and matches for team ${$page.params.number}`}
+    image="https://api.ftcscout.org/banners/teams/{$page.params.number}"
+/>
 
 <WidthProvider>
     <Loading store={$teamStore} checkExists={(t) => !!t.teamByNumber}>

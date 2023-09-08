@@ -13,6 +13,7 @@
     import Location from "../../lib/components/Location.svelte";
     import InfiniteScroll from "svelte-infinite-scroll";
     import { browser } from "$app/environment";
+    import Head from "$lib/components/Head.svelte";
 
     export let data;
     $: teamsStore = data.teams;
@@ -49,6 +50,8 @@
             : s;
     }
 </script>
+
+<Head title="Teams | FTCScout" description="Find and search for FTC teams." />
 
 <WidthProvider>
     <Card>

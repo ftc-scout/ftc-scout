@@ -28,6 +28,7 @@
     import { goto } from "$app/navigation";
     import { STRING_EC_DC } from "$lib/util/search-params/string";
     import InfiniteScroll from "svelte-infinite-scroll";
+    import Head from "$lib/components/Head.svelte";
 
     export let data;
     $: eventsStore = data.events;
@@ -119,6 +120,11 @@
     $: searchedEvents = fuzzySearch(filteredEvents, $searchText, Infinity, "name");
     $: grouped = groupEvents(searchedEvents);
 </script>
+
+<Head
+    title="Events | FTCScout"
+    description="Find and search for FTC events in the {$page.params.season} season."
+/>
 
 <WidthProvider width={"850px"}>
     <Card>

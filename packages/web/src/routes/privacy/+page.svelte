@@ -1,13 +1,10 @@
-<script>
+<script lang="ts">
     import Card from "$lib/components/Card.svelte";
-    // import Head from "$lib/components/nav/Head.svelte";
+    import Head from "$lib/components/Head.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
 </script>
 
-<!-- <Head
-    title="Privacy Policy | FTCScout"
-    description="The Privacy Policy for FTCScout, a new way to track and scout FIRST Tech Challenge."
-/> -->
+<Head title="Privacy Policy | FTCScout" description="The Privacy Policy for FTCScout." />
 
 <WidthProvider width={"1000px"}>
     <Card>

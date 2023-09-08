@@ -16,7 +16,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
     });
 
     if (!browser && !get(eventData)?.data?.eventByCode)
-        throw error(404, `No ${DESCRIPTORS[season].seasonName} with code ${params.code}`);
+        throw error(404, `No ${DESCRIPTORS[season].seasonName} event with code ${params.code}`);
 
     return {
         event: eventData,

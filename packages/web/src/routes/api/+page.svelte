@@ -1,13 +1,13 @@
-<script>
+<script lang="ts">
     import Card from "$lib/components/Card.svelte";
-    // import Head from "$lib/components/nav/Head.svelte";
+    import Head from "$lib/components/Head.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
 </script>
 
-<!-- <Head
-    title="API | FTCScout"
-    description="The developer API for FTCScout providing access to all our statistics and data."
-/> -->
+<Head
+    title="Api | FTCScout"
+    description="The developer api for FTCScout providing access to all our statistics and data."
+/>
 
 <WidthProvider width="1600px">
     <Card>

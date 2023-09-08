@@ -32,6 +32,7 @@
     import { REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
     import RemoteSelect from "$lib/components/ui/form/RemoteSelect.svelte";
     import { PAGE_EC_DC } from "$lib/util/search-params/int";
+    import Head from "$lib/components/Head.svelte";
 
     function go(tab: string, season: Season) {
         let tabChanged = tab != $page.params.tab;
@@ -91,6 +92,11 @@
         commitQueryParamBatch();
     }
 </script>
+
+<Head
+    title={`${season} ${$page.params.tab == "teams" ? "Team" : "Match"} Records | FTCScout`}
+    description="Records and high scores for the {$page.params.season} season."
+/>
 
 {#if focusedTeam && focusedTeamName}
     <FocusedTeam

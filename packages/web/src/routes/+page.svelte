@@ -8,6 +8,7 @@
     import { faBolt, faHashtag } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
     import { CURRENT_SEASON } from "@ftc-scout/common";
+    import Head from "$lib/components/Head.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -18,6 +19,8 @@
 
     $: wr = $homeStore?.data.tradWorldRecord;
 </script>
+
+<Head title="FTCScout" />
 
 <WidthProvider>
     <Card vis={false}>
