@@ -29,7 +29,7 @@
                     }
                 }}
             >
-                {team.team.number} - {team.team.name}
+                {team.team.number} - <em>{team.team.name}</em>
             </a>
         </li>
     {/each}
