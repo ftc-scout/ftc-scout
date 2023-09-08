@@ -43,7 +43,7 @@ async function main() {
     setupBannerRoutes(app);
 
     app.listen(SERVER_PORT, () => {
-        console.log(`Server started and listening on port ${SERVER_PORT}.`);
+        console.info(`Server started and listening on port ${SERVER_PORT}.`);
     });
 
     if (SYNC_API) {

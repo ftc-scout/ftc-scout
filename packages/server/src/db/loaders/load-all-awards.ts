@@ -15,8 +15,8 @@ export async function loadAllAwards(season: Season, loadType: LoadType) {
 
     const chunkSize = 25;
     for (let i = 0; i < events.length; i += chunkSize) {
-        console.log(`Starting chunk starting at ${i}.`);
-        console.log("Fetching from api.");
+        console.info(`Starting chunk starting at ${i}.`);
+        console.info("Fetching from api.");
 
         let chunk = events.slice(i, i + chunkSize);
         let apiAwards = await Promise.all(chunk.map((e) => getEventAwards(season, e.code)));

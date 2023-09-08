@@ -105,7 +105,7 @@ export class Event extends BaseEntity {
             api.venue == null ||
             api.address == null
         ) {
-            console.log(api, type);
+            console.error(api, type);
             throw `Rejecting api event ${season} ${api.code}.`;
         }
 
