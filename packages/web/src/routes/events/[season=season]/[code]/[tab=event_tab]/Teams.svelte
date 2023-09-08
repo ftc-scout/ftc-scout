@@ -1,6 +1,6 @@
 <script lang="ts">
     import { getContext } from "svelte";
-    import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
+    import { TEAM_CLICK_ACTION_CTX } from "$lib/components/matches/MatchTeam.svelte";
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import { CURRENT_SEASON } from "@ftc-scout/common";
     import { browser } from "$app/environment";
@@ -8,7 +8,7 @@
     export let teams: NonNullable<EventPageQuery["eventByCode"]>["teams"];
     export let focusedTeam: number | null;
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+    let clickAction = getContext(TEAM_CLICK_ACTION_CTX) as
         | ((num: number, name: string) => void)
         | undefined;
 </script>

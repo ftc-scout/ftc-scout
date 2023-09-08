@@ -1,5 +1,6 @@
 <script lang="ts" context="module">
-    export const TEAM_CLICK_ACTION_CONTEXT = {};
+    export const TEAM_CLICK_ACTION_CTX = {};
+    export const SHOW_REMOTE_FOCUS_CTX = {};
 </script>
 
 <script lang="ts">
@@ -23,6 +24,8 @@
     $: noShow = team.noShow;
     $: onField = team.onField;
 
+    $: showRemoteFocus = getContext<boolean>(SHOW_REMOTE_FOCUS_CTX) ?? true;
+
     $: title =
         `${number} ${name}` +
         (noShow ? " (No Show)" : "") +
@@ -30,7 +33,7 @@
         (!onField && !dq && !noShow ? " (Not on Field)" : "") +
         (surrogate ? " (Surrogate)" : "");
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+    let clickAction = getContext(TEAM_CLICK_ACTION_CTX) as
         | ((num: number, name: string) => void)
         | undefined;
 </script>
@@ -41,7 +44,7 @@
     class:blue={team.alliance == Alliance.Blue}
     class:solo={team.alliance == Alliance.Solo}
     class:not-on-field={!onField}
-    class:focused={focusedTeam == number}
+    class:focused={focusedTeam == number && (showRemoteFocus || team.alliance != Alliance.Solo)}
     class:winner
     {title}
 >

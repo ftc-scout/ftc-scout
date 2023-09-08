@@ -1,7 +1,7 @@
 <script lang="ts">
     import { browser } from "$app/environment";
     import { getContext } from "svelte";
-    import { TEAM_CLICK_ACTION_CONTEXT } from "../matches/MatchTeam.svelte";
+    import { TEAM_CLICK_ACTION_CTX } from "../matches/MatchTeam.svelte";
     import type { StatValue } from "@ftc-scout/common";
 
     export let val: Extract<StatValue, { ty: "team" }>;
@@ -11,7 +11,7 @@
     $: name = val.name;
     $: href = `/teams/${number}`;
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+    let clickAction = getContext(TEAM_CLICK_ACTION_CTX) as
         | ((num: number, name: string, eventCode: string | null) => void)
         | undefined;
 </script>

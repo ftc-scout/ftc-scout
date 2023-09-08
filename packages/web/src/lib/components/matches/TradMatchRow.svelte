@@ -1,9 +1,5 @@
 <script lang="ts">
-    import {
-        Alliance,
-        Station,
-        type FullMatchFragment,
-    } from "../../graphql/generated/graphql-operations";
+    import { Alliance, type FullMatchFragment } from "../../graphql/generated/graphql-operations";
     import { sortTeams } from "../../util/sorters";
     import MatchScore, { computeWinner } from "./MatchScore.svelte";
     import MatchTeam from "./MatchTeam.svelte";
@@ -20,16 +16,10 @@
     $: redTeams = teams.filter((t) => t.alliance == Alliance.Red);
     $: blueTeams = teams.filter((t) => t.alliance == Alliance.Blue);
 
-    $: reds = [
-        redTeams.find((t) => t.station == Station.One) ?? (Alliance.Red as const),
-        redTeams.find((t) => t.station == Station.Two) ?? (Alliance.Red as const),
-        ...(redTeams.filter((t) => t.station == Station.NotOnField) ?? []),
-    ].sort(sortTeams);
-    $: blues = [
-        blueTeams.find((t) => t.station == Station.One) ?? (Alliance.Blue as const),
-        blueTeams.find((t) => t.station == Station.Two) ?? (Alliance.Blue as const),
-        ...(blueTeams.filter((t) => t.station == Station.NotOnField) ?? []),
-    ].sort(sortTeams);
+    $: redExtras = Array(Math.max(2 - redTeams.length, 0)).fill(Alliance.Red);
+    $: reds = [...redTeams, ...redExtras].sort(sortTeams);
+    $: blueExtras = Array(Math.max(2 - blueTeams.length, 0)).fill(Alliance.Blue);
+    $: blues = [...blueTeams, ...blueExtras].sort(sortTeams);
 
     $: winner = computeWinner(match.scores);
 </script>

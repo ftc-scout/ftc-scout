@@ -14,7 +14,7 @@
     import { DESCRIPTORS, type Season } from "@ftc-scout/common";
     import Tep from "./Tep.svelte";
     import type { PageData } from "./$types";
-    import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
+    import { TEAM_CLICK_ACTION_CTX } from "$lib/components/matches/MatchTeam.svelte";
     import { setContext } from "svelte";
     import FocusedTeam from "$lib/components/stats/FocusedTeam.svelte";
     import Form from "$lib/components/ui/form/Form.svelte";
@@ -64,7 +64,7 @@
     let focusedTeam: number | null = null;
     let focusedTeamName: string | null;
     let focusedTeamEvent: string | null;
-    setContext(TEAM_CLICK_ACTION_CONTEXT, (t: number, name: string, event?: string) => {
+    setContext(TEAM_CLICK_ACTION_CTX, (t: number, name: string, event?: string) => {
         if (focusedTeam == t) {
             focusedTeam = null;
             focusedTeamName = null;

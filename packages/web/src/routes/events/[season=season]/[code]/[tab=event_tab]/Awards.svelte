@@ -4,7 +4,7 @@
     import { awardIsNotRanked, prettyPrintAwardCategory } from "$lib/printers/award";
     import { sortAwardPlacement, sortAwardTypes } from "$lib/util/sorters";
     import { CURRENT_SEASON, type Season } from "@ftc-scout/common";
-    import { TEAM_CLICK_ACTION_CONTEXT } from "$lib/components/matches/MatchTeam.svelte";
+    import { TEAM_CLICK_ACTION_CTX } from "$lib/components/matches/MatchTeam.svelte";
     import { getContext } from "svelte";
 
     type Award = NonNullable<EventPageQuery["eventByCode"]>["awards"][number];
@@ -24,7 +24,7 @@
 
     $: typeDivisions = handleAwards(awards);
 
-    let clickAction = getContext(TEAM_CLICK_ACTION_CONTEXT) as
+    let clickAction = getContext(TEAM_CLICK_ACTION_CTX) as
         | ((num: number, name: string) => void)
         | undefined;
 </script>

@@ -35,6 +35,8 @@
     import type { Writable } from "svelte/store";
     import { queryParam } from "$lib/util/search-params/search-params";
     import Head from "$lib/components/Head.svelte";
+    import { setContext } from "svelte";
+    import { SHOW_REMOTE_FOCUS_CTX } from "$lib/components/matches/MatchTeam.svelte";
 
     const toSeason = (n: number) => n as Season;
 
@@ -51,6 +53,8 @@
         pushState: true,
         killHash: true,
     });
+
+    setContext(SHOW_REMOTE_FOCUS_CTX, false);
 </script>
 
 <Head

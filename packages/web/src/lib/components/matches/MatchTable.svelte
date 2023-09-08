@@ -89,7 +89,7 @@
     <tbody>
         {#if matches.some((m) => !!m.scores)}
             {#if event.remote}
-                {#each Object.values(soloMatches) as matches, i}
+                {#each Object.values(soloMatches).filter( (ms) => ms.some((m) => m.scores) ) as matches, i}
                     <RemoteMatches
                         {matches}
                         {eventCode}

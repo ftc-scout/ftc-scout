@@ -21,7 +21,7 @@ function allianceRoleVal<C extends "Red" | "Blue">(a: T | C): number {
         case "SecondPick":
             return 2;
         default:
-            return 0;
+            return 3;
     }
 }
 
