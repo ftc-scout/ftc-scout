@@ -145,6 +145,18 @@
         height: calc(var(--lg-font-size) * 3);
     }
 
+    @media (max-width: 800px) {
+        .info-box {
+            font-size: calc(var(--md-font-size) * 1.1);
+        }
+
+        .info-box .icon {
+            font-size: var(--lg-font-size);
+            width: calc(var(--md-font-size) * 3);
+            height: calc(var(--md-font-size) * 3);
+        }
+    }
+
     .info-box .count {
         display: flex;
         align-items: end;
