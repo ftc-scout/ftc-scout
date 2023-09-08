@@ -169,13 +169,15 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             }
 
             if (start) {
-                contextAddedQ.andWhere(`"start" >= :start`, { start });
-                countQ.andWhere(`"start" >= :start`, { start });
+                contextAddedQ.andWhere(`"start" >= :start`, {
+                    start: start.toISOString().split("T")[0],
+                });
+                countQ.andWhere(`"start" >= :start`, { start: start.toISOString().split("T")[0] });
             }
 
             if (end) {
-                contextAddedQ.andWhere(`"end" <= :end`, { end });
-                countQ.andWhere(`"end" <= :end`, { end });
+                contextAddedQ.andWhere(`"end" <= :end`, { end: end.toISOString().split("T")[0] });
+                countQ.andWhere(`"end" <= :end`, { end: end.toISOString().split("T")[0] });
             }
 
             contextAddedQ.addSelect(filterSql, "is_in");

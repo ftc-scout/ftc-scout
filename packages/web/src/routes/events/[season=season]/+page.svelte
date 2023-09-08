@@ -13,7 +13,7 @@
     import Loading from "$lib/components/Loading.svelte";
     import SkeletonRow from "$lib/components/skeleton/SkeletonRow.svelte";
     import { mod } from "$lib/util/number";
-    import { addDays, daysBetween } from "$lib/util/date";
+    import { addDays, dateToStr, daysBetween } from "$lib/util/date";
     import { sortString } from "$lib/util/sorters";
     import { prettyPrintDateRange } from "$lib/printers/dateRange";
     import SingleEvent from "./SingleEvent.svelte";
@@ -98,11 +98,13 @@
         st: Date | null,
         end: Date | null
     ): (_: (typeof events)[number]) => boolean {
+        let stStr = dateToStr(st);
+        let endStr = dateToStr(end);
         return (e) =>
             regionMatches(r, e.regionCode ?? "") &&
             eventTyMatches(ty, e.type) &&
-            (!st || new Date(e.start) >= st) &&
-            (!end || new Date(e.end) <= end);
+            (!stStr || e.start >= stStr) &&
+            (!endStr || e.end <= endStr);
     }
 
     let elementScroll = (browser ? document.getElementById("content") : null)!;

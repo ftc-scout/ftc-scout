@@ -245,11 +245,11 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             }
 
             if (start) {
-                q.andWhere('"start" >= :start', { start });
+                q.andWhere('"start" >= :start', { start: start.toISOString().split("T")[0] });
             }
 
             if (end) {
-                q.andWhere('"end" <= :end', { end });
+                q.andWhere('"end" <= :end', { end: end.toISOString().split("T")[0] });
             }
 
             if (limit && (!searchText || searchText.trim() == "")) {
