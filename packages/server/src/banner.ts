@@ -123,7 +123,7 @@ export async function eventBanner(season: Season, code: string, res: core.Respon
     }
 
     let dateStr = DateTime.fromISO(eventData.start as any, {
-        zone: eventData.timezone ?? undefined,
+        zone: eventData.timezone,
     }).toLocaleString({
         day: "numeric",
         month: "long",

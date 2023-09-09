@@ -56,7 +56,7 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
         website: nullTy(StrTy),
         livestreamURL: nullTy(StrTy),
         webcasts: listTy(StrTy),
-        timezone: nullTy(StrTy),
+        timezone: StrTy,
         start: DateTy,
         end: DateTy,
         createdAt: DateTimeTy,
@@ -64,21 +64,17 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
 
         started: {
             ...BoolTy,
-            resolve: (e) =>
-                DateTime.fromISO(e.start as any, { zone: e.timezone ?? undefined }) <
-                DateTime.now(),
+            resolve: (e) => DateTime.fromISO(e.start as any, { zone: e.timezone }) < DateTime.now(),
         },
         ongoing: {
             ...BoolTy,
             resolve: (e) =>
-                DateTime.fromISO(e.start as any, { zone: e.timezone ?? undefined }) <
-                    DateTime.now() &&
-                DateTime.now() < DateTime.fromISO(e.end as any, { zone: e.timezone ?? undefined }),
+                DateTime.fromISO(e.start as any, { zone: e.timezone }) < DateTime.now() &&
+                DateTime.now() < DateTime.fromISO(e.end as any, { zone: e.timezone }),
         },
         finished: {
             ...BoolTy,
-            resolve: (e) =>
-                DateTime.fromISO(e.end as any, { zone: e.timezone ?? undefined }) < DateTime.now(),
+            resolve: (e) => DateTime.fromISO(e.end as any, { zone: e.timezone }) < DateTime.now(),
         },
 
         relatedEvents: {

@@ -80,7 +80,7 @@ export class Match extends BaseEntity {
     updatedAt!: Date;
 
     static fromApi(api: MatchFtcApi, event: Event, hasBeenPlayed: boolean): Match {
-        let timezone = event.timezone ?? "utc";
+        let timezone = event.timezone;
         let tournamentLevel = tournamentLevelFromFtcApi(api.tournamentLevel);
         return Match.create({
             eventSeason: event.season,

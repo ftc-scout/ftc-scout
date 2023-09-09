@@ -26,12 +26,12 @@
         code: string;
         started: boolean;
         published: boolean;
-        timeZone?: string | null;
+        timezone: string;
         remote: boolean;
     };
     export let focusedTeam: number | null = null;
 
-    $: timeZone = event.timeZone ?? "UTC";
+    $: timeZone = event.timezone;
     $: remote = event.remote;
     $: eventCode = event.code;
     $: season = event.season;

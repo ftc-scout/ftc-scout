@@ -76,8 +76,8 @@ export class Event extends BaseEntity {
     @Column("json")
     webcasts!: string[];
 
-    @Column({ type: "varchar", nullable: true })
-    timezone!: string | null;
+    @Column({ type: "varchar" })
+    timezone!: string;
 
     @Column("date")
     start!: Date;
@@ -198,7 +198,7 @@ export class Event extends BaseEntity {
             website: api.website ? api.website.trim() : null,
             liveStreamURL: api.liveStreamUrl ? api.liveStreamUrl.trim() : null,
             webcasts: api.webcasts ? api.webcasts : [],
-            timezone: api.timezone,
+            timezone: api.timezone ?? "UTC",
             start: new Date(api.dateStart),
             end: new Date(api.dateEnd),
             modifiedRules: MODIFIED_RULES.indexOf(api.code) != -1,
