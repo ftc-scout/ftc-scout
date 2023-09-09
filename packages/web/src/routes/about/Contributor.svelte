@@ -16,28 +16,23 @@
 
 <style>
     .wrap {
-        /* width: 100%; */
         flex-grow: 1;
         min-width: 250px;
         max-width: 300px;
         display: flex;
         align-items: center;
-        gap: var(--large-gap);
+        gap: var(--md-gap);
 
-        box-shadow: -1px 1px 5px 2px #e0e0e0;
+        padding: 0 var(--md-pad);
         border-radius: 8px;
-
-        padding: var(--padding);
 
         cursor: pointer;
         color: inherit;
-
-        transition: all 200ms ease;
     }
 
     .wrap:hover {
+        background: var(--hover-color);
         text-decoration: none;
-        box-shadow: -2px 2px 7px 3px #e0e0e0;
     }
 
     .info {

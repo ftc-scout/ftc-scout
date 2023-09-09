@@ -2,6 +2,7 @@
     import Card from "$lib/components/Card.svelte";
     import Head from "$lib/components/Head.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
+    import { DISCORD } from "$lib/constants";
 </script>
 
 <Head
@@ -9,54 +10,61 @@
     description="The developer api for FTCScout providing access to all our statistics and data."
 />
 
-<WidthProvider width="1600px">
+<WidthProvider width="100ch">
     <Card>
-        <h1>FTC<em>Scout</em> API</h1>
+        <h1 class="head">FTC<em>Scout</em> API</h1>
 
-        <p>
-            The FTC<em>Scout</em> API provides access to all of the FTC<em>Scout</em>'s data and
-            statistics.
-        </p>
-        <p>
-            The FTC<em>Scout</em> API uses
-            <a href="https://graphql.org/" target="_blank" rel="noreferrer">GraphQL</a> allowing you
-            to access as much or as little data as you need in the shape that is most convenient to you.
-        </p>
-        <p>
-            The FTC<em>Scout</em> API can be queried at
-            <a href="https://api.ftcscout.org/graphql">api.ftcscout.org/graphql</a>. You can
-            experiment using the playground below, or open the playground in a new tab by clicking
-            <a href="https://api.ftcscout.org/graphql" target="_blank" rel="noreferrer">here</a>.
-        </p>
-
-        <iframe
-            class="maybe-hide"
-            src="https://api.ftcscout.org/graphql"
-            title="FTCScout API Playground"
-        />
+        <div class="rest">
+            <p>
+                The FTC<em>Scout</em> API provides access to all of the FTC<em>Scout</em>'s data and
+                statistics.
+            </p>
+            <p>
+                The API uses
+                <a href="https://graphql.org/" target="_blank" rel="noreferrer">GraphQL</a> allowing
+                you to access as much or as little data as you need in the shape that is most convenient
+                to you.
+            </p>
+            <p>
+                You can query the API at
+                <a href="https://api.ftcscout.org/graphql">api.ftcscout.org/graphql</a> or you can
+                try the playground <span class="maybe-hide">below or</span> in a new tab by clicking
+                <a href="https://api.ftcscout.org/graphql" target="_blank" rel="noreferrer">here</a
+                >.
+            </p>
+            <p>
+                If you need help with the api feel free to ask on our <a href={DISCORD}>Discord</a>.
+            </p>
+        </div>
     </Card>
 </WidthProvider>
 
+<div class="maybe-hide">
+    <WidthProvider width="1600px">
+        <Card>
+            <iframe src="https://api.ftcscout.org/graphql" title="FTCScout API Playground" />
+        </Card>
+    </WidthProvider>
+</div>
+
 <style>
-    * {
-        line-height: 2.25rem;
+    .head {
+        background: var(--hover-color);
+        border-radius: 8px;
+        padding: var(--md-pad);
+        margin-bottom: var(--sm-gap);
     }
 
-    p,
-    p * {
-        font-size: 16px;
+    .rest {
+        padding: var(--sm-pad);
     }
 
-    @media (max-width: 800px) {
-        :not(h1, h2) {
-            font-size: 14px;
-        }
+    h1 {
+        font-size: var(--vl-font-size);
     }
 
-    h1,
-    h1 * {
-        font-size: 32px;
-        font-weight: bold;
+    p {
+        line-height: 1.75;
     }
 
     iframe {
