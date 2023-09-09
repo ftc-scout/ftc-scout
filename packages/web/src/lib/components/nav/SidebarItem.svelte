@@ -10,7 +10,10 @@
     export let strict = false;
     export let newTab: boolean | null = null;
 
-    $: active = strict ? $page.url.pathname == link : $page.url.pathname.startsWith(link);
+    $: activePath = "/" + link.split("/")[1];
+    $: active = strict
+        ? $page.url.pathname == activePath
+        : $page.url.pathname.startsWith(activePath);
 </script>
 
 <a
