@@ -2,6 +2,8 @@
     import Navbar from "$lib/components/nav/Navbar.svelte";
     import { browser } from "$app/environment";
     import Sidebar from "$lib/components/nav/Sidebar.svelte";
+    import MessageBar from "$lib/components/nav/MessageBar.svelte";
+    import { SHOW_MESSAGE_BAR } from "$lib/constants";
 
     if (browser) {
         // Svelte uses window.scrollTo to emulate the scroll resetting when navigation. However we
@@ -29,6 +31,9 @@
 </svelte:head>
 
 <Navbar />
+{#if SHOW_MESSAGE_BAR}
+    <MessageBar />
+{/if}
 <Sidebar />
 
 <!-- Autofocus allows the document to be scrolled immediately without having to click. -->

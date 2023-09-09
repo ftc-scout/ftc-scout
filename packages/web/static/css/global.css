@@ -95,6 +95,7 @@
 body {
     --fg-color: rgb(var(--fg-color-vs));
     --theme-color: rgb(var(--theme-color-vs));
+    --alert-color: rgb(252, 170, 47);
 
     --red-team-color: rgb(var(--red-team-color-vs));
     --red-team-bg-color: rgba(var(--red-team-color-vs), var(--team-color-transparency));
