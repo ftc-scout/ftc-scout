@@ -11,7 +11,6 @@
         faTrophy,
         faEnvelope,
         faServer,
-        faChartLine,
     } from "@fortawesome/free-solid-svg-icons";
     import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
     import SidebarItem from "./SidebarItem.svelte";
@@ -50,7 +49,6 @@
     <IconSidebarItem icon={faGithub} name="Github" link={GITHUB} newTab />
     <IconSidebarItem icon={faDiscord} name="Discord" link={DISCORD} newTab />
     <IconSidebarItem icon={faEnvelope} name="Email" link="mailto:{EMAIL}" />
-    <IconSidebarItem icon={faChartLine} name="Analytics" link={"/analytics"} newTab />
     <IconSidebarItem icon={faServer} name="Status" link={STATUS} newTab />
 </div>
 
