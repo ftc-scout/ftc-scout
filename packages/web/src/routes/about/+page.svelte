@@ -182,6 +182,10 @@
         justify-content: center;
     }
 
+    img {
+        border-radius: 8px;
+    }
+
     .contributors {
         display: flex;
         align-items: center;
