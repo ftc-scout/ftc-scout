@@ -31,7 +31,19 @@
         /* Completeness */
         "skipLibCheck": true
     },
-    "references": [{ "path": "../common" }]
+    "references": [{ "path": "../common" }],
+    "include": [
+        "ambient.d.ts",
+        "./types/**/$types.d.ts",
+        "../vite.config.ts",
+        "../src/**/*.js",
+        "../src/**/*.ts",
+        "../src/**/*.json",
+        "../src/**/*.svelte",
+        "../tests/**/*.js",
+        "../tests/**/*.ts",
+        "../tests/**/*.svelte"
+    ]
     // Path aliases are handled by https://kit.svelte.dev/docs/configuration#alias
     //
     // If you want to overwrite includes/excludes, make sure to copy over the relevant includes/excludes
