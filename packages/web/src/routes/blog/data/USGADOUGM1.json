@@ -1,0 +1,247 @@
+{
+    "matches": [
+        {
+            "__typename": "Match",
+            "season": 2022,
+            "eventCode": "USGADOUGM1",
+            "id": 9,
+            "matchNum": 9,
+            "description": "Q-9",
+            "tournamentLevel": "Quals",
+            "scheduledStartTime": "2022-10-29T15:46:00.000Z",
+            "actualStartTime": "2022-10-29T17:15:53.011Z",
+            "scores": {
+                "__typename": "MatchScores2022",
+                "season": 2022,
+                "eventCode": "USGADOUGM1",
+                "matchId": 9,
+                "autoConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 0,
+                    "redFarTerminal": 0,
+                    "blueNearTerminal": 0,
+                    "blueFarTerminal": 0,
+                    "junctions": [
+                        [[], ["RedCone"], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], [], []]
+                    ]
+                },
+                "dcConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 0,
+                    "redFarTerminal": 0,
+                    "blueNearTerminal": 4,
+                    "blueFarTerminal": 1,
+                    "junctions": [
+                        [[], ["RedCone"], [], [], []],
+                        [
+                            [],
+                            [],
+                            ["RedCone", "BlueCone", "RedCone", "BlueCone"],
+                            ["BlueBeacon2"],
+                            ["BlueCone"]
+                        ],
+                        [
+                            [],
+                            ["BlueCone"],
+                            [],
+                            ["RedCone", "BlueCone", "RedCone", "BlueCone", "BlueBeacon1"],
+                            []
+                        ],
+                        [
+                            ["BlueCone"],
+                            ["BlueCone"],
+                            ["BlueCone", "BlueCone"],
+                            ["BlueCone"],
+                            ["RedCone"]
+                        ],
+                        [["BlueCone"], ["BlueCone"], [], [], []]
+                    ]
+                },
+                "red": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USGADOUGM1",
+                    "matchId": 9,
+                    "alliance": "Red",
+                    "autoNav2022_1": "None",
+                    "autoNav2022_2": "None",
+                    "autoTerminalCones": 0,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 1,
+                    "autoMediumCones": 0,
+                    "autoHighCones": 0,
+                    "dcNearTerminalCones": 0,
+                    "dcFarTerminalCones": 0,
+                    "dcTerminalCones": 0,
+                    "dcGroundCones": 0,
+                    "dcLowCones": 2,
+                    "dcMediumCones": 0,
+                    "dcHighCones": 4,
+                    "egNav1": false,
+                    "egNav2": false,
+                    "coneOwnedJunctions": 2,
+                    "beaconOwnedJunctions": 0,
+                    "circuit": false,
+                    "minorsCommitted": 0,
+                    "majorsCommitted": 1,
+                    "penaltyPointsCommitted": 30,
+                    "penaltyPointsByOpp": 0,
+                    "autoNavPoints": 0,
+                    "autoConePoints": 3,
+                    "egNavPoints": 0,
+                    "ownershipPoints": 6,
+                    "circuitPoints": 0,
+                    "autoPoints": 3,
+                    "dcPoints": 26,
+                    "egPoints": 6,
+                    "totalPointsNp": 35,
+                    "totalPoints": 35
+                },
+                "blue": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USGADOUGM1",
+                    "matchId": 9,
+                    "alliance": "Blue",
+                    "autoNav2022_1": "TeamSignal",
+                    "autoNav2022_2": "TeamSignal",
+                    "autoTerminalCones": 0,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 0,
+                    "autoMediumCones": 0,
+                    "autoHighCones": 0,
+                    "dcNearTerminalCones": 4,
+                    "dcFarTerminalCones": 1,
+                    "dcTerminalCones": 5,
+                    "dcGroundCones": 1,
+                    "dcLowCones": 3,
+                    "dcMediumCones": 2,
+                    "dcHighCones": 7,
+                    "egNav1": true,
+                    "egNav2": false,
+                    "coneOwnedJunctions": 9,
+                    "beaconOwnedJunctions": 2,
+                    "circuit": true,
+                    "minorsCommitted": 0,
+                    "majorsCommitted": 0,
+                    "penaltyPointsCommitted": 0,
+                    "penaltyPointsByOpp": 30,
+                    "autoNavPoints": 40,
+                    "autoConePoints": 0,
+                    "egNavPoints": 2,
+                    "ownershipPoints": 47,
+                    "circuitPoints": 20,
+                    "autoPoints": 40,
+                    "dcPoints": 59,
+                    "egPoints": 69,
+                    "totalPointsNp": 168,
+                    "totalPoints": 198
+                }
+            },
+            "teams": [
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USGADOUGM1",
+                    "matchId": 9,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Red",
+                    "teamNumber": 14750,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 14750,
+                        "name": "ATOM"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USGADOUGM1",
+                    "matchId": 9,
+                    "station": "Two",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Red",
+                    "teamNumber": 20172,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 20172,
+                        "name": "Prometheus"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USGADOUGM1",
+                    "matchId": 9,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Blue",
+                    "teamNumber": 9785,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 9785,
+                        "name": "Cronos"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USGADOUGM1",
+                    "matchId": 9,
+                    "station": "Two",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Blue",
+                    "teamNumber": 12995,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 12995,
+                        "name": "Monkey Wrench Robotics"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                }
+            ]
+        }
+    ],
+    "event": {
+        "__typename": "Event",
+        "website": null,
+        "type": "LeagueMeet",
+        "relatedEvents": [],
+        "season": 2022,
+        "code": "USGADOUGM1",
+        "name": "GA Douglasville Meet 1",
+        "remote": false,
+        "start": "2022-10-29",
+        "end": "2022-10-29",
+        "location": {
+            "__typename": "Location",
+            "venue": "Douglas County High School",
+            "city": "Douglasville",
+            "state": "GA",
+            "country": "USA"
+        },
+        "started": true,
+        "published": true,
+        "timezone": "America/New_York"
+    }
+}

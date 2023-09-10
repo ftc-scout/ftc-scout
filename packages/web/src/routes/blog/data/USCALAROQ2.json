@@ -1,0 +1,247 @@
+{
+    "matches": [
+        {
+            "__typename": "Match",
+            "season": 2022,
+            "eventCode": "USCALAROQ2",
+            "id": 30,
+            "matchNum": 30,
+            "description": "Q-30",
+            "tournamentLevel": "Quals",
+            "scheduledStartTime": "2023-02-05T20:52:00.000Z",
+            "actualStartTime": "2023-02-05T21:53:48.583Z",
+            "scores": {
+                "__typename": "MatchScores2022",
+                "season": 2022,
+                "eventCode": "USCALAROQ2",
+                "matchId": 30,
+                "autoConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 0,
+                    "redFarTerminal": 0,
+                    "blueNearTerminal": 0,
+                    "blueFarTerminal": 0,
+                    "junctions": [
+                        [[], [], [], [], []],
+                        [[], ["RedCone"], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], ["BlueCone"], []],
+                        [[], [], [], [], []]
+                    ]
+                },
+                "dcConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 2,
+                    "redFarTerminal": 0,
+                    "blueNearTerminal": 0,
+                    "blueFarTerminal": 0,
+                    "junctions": [
+                        [[], ["RedCone"], [], [], []],
+                        [
+                            ["RedCone"],
+                            ["RedCone", "RedCone"],
+                            ["RedCone"],
+                            ["BlueCone", "RedCone"],
+                            ["BlueCone", "RedCone"]
+                        ],
+                        [
+                            [],
+                            ["RedCone", "BlueCone"],
+                            [],
+                            ["BlueCone", "RedCone", "BlueCone", "RedCone", "BlueCone"],
+                            []
+                        ],
+                        [
+                            ["BlueCone", "BlueCone", "BlueCone", "BlueCone", "BlueCone"],
+                            [],
+                            ["BlueCone"],
+                            ["BlueCone"],
+                            []
+                        ],
+                        [[], [], [], ["BlueCone", "BlueBeacon1"], []]
+                    ]
+                },
+                "red": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USCALAROQ2",
+                    "matchId": 30,
+                    "alliance": "Red",
+                    "autoNav2022_1": "TeamSignal",
+                    "autoNav2022_2": "TeamSignal",
+                    "autoTerminalCones": 0,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 0,
+                    "autoMediumCones": 1,
+                    "autoHighCones": 0,
+                    "dcNearTerminalCones": 2,
+                    "dcFarTerminalCones": 0,
+                    "dcTerminalCones": 2,
+                    "dcGroundCones": 0,
+                    "dcLowCones": 3,
+                    "dcMediumCones": 3,
+                    "dcHighCones": 4,
+                    "egNav1": false,
+                    "egNav2": false,
+                    "coneOwnedJunctions": 6,
+                    "beaconOwnedJunctions": 0,
+                    "circuit": false,
+                    "minorsCommitted": 1,
+                    "majorsCommitted": 0,
+                    "penaltyPointsCommitted": 10,
+                    "penaltyPointsByOpp": 10,
+                    "autoNavPoints": 40,
+                    "autoConePoints": 4,
+                    "egNavPoints": 0,
+                    "ownershipPoints": 18,
+                    "circuitPoints": 0,
+                    "autoPoints": 44,
+                    "dcPoints": 43,
+                    "egPoints": 18,
+                    "totalPointsNp": 105,
+                    "totalPoints": 115
+                },
+                "blue": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USCALAROQ2",
+                    "matchId": 30,
+                    "alliance": "Blue",
+                    "autoNav2022_1": "TeamSignal",
+                    "autoNav2022_2": "None",
+                    "autoTerminalCones": 0,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 0,
+                    "autoMediumCones": 1,
+                    "autoHighCones": 0,
+                    "dcNearTerminalCones": 0,
+                    "dcFarTerminalCones": 0,
+                    "dcTerminalCones": 0,
+                    "dcGroundCones": 0,
+                    "dcLowCones": 7,
+                    "dcMediumCones": 2,
+                    "dcHighCones": 5,
+                    "egNav1": false,
+                    "egNav2": true,
+                    "coneOwnedJunctions": 5,
+                    "beaconOwnedJunctions": 1,
+                    "circuit": false,
+                    "minorsCommitted": 1,
+                    "majorsCommitted": 0,
+                    "penaltyPointsCommitted": 10,
+                    "penaltyPointsByOpp": 10,
+                    "autoNavPoints": 20,
+                    "autoConePoints": 4,
+                    "egNavPoints": 2,
+                    "ownershipPoints": 25,
+                    "circuitPoints": 0,
+                    "autoPoints": 24,
+                    "dcPoints": 54,
+                    "egPoints": 27,
+                    "totalPointsNp": 105,
+                    "totalPoints": 115
+                }
+            },
+            "teams": [
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCALAROQ2",
+                    "matchId": 30,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Red",
+                    "teamNumber": 22740,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 22740,
+                        "name": "Bot Bot"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCALAROQ2",
+                    "matchId": 30,
+                    "station": "Two",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Red",
+                    "teamNumber": 22342,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 22342,
+                        "name": "STAMPEDE MACHINES"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCALAROQ2",
+                    "matchId": 30,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Blue",
+                    "teamNumber": 16321,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 16321,
+                        "name": "X Drive"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCALAROQ2",
+                    "matchId": 30,
+                    "station": "Two",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Blue",
+                    "teamNumber": 9220,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 9220,
+                        "name": "Rancho Rebel Robotics"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                }
+            ]
+        }
+    ],
+    "event": {
+        "__typename": "Event",
+        "website": null,
+        "type": "Qualifier",
+        "relatedEvents": [],
+        "season": 2022,
+        "code": "USCALAROQ2",
+        "name": "CA-SoCal ILT 2 - Romoland Sunday",
+        "remote": false,
+        "start": "2023-02-05",
+        "end": "2023-02-05",
+        "location": {
+            "__typename": "Location",
+            "venue": "Heritage High School",
+            "city": "Romoland",
+            "state": "CA",
+            "country": "USA"
+        },
+        "started": true,
+        "published": true,
+        "timezone": "America/Los_Angeles"
+    }
+}

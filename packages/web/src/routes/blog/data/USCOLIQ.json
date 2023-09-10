@@ -1,0 +1,319 @@
+{
+    "matches": [
+        {
+            "__typename": "Match",
+            "season": 2022,
+            "eventCode": "USCOLIQ",
+            "id": 11001,
+            "matchNum": 1,
+            "description": "SF1-1",
+            "tournamentLevel": "Semis",
+            "scheduledStartTime": null,
+            "actualStartTime": "2023-02-04T23:35:56.881Z",
+            "scores": {
+                "__typename": "MatchScores2022",
+                "season": 2022,
+                "eventCode": "USCOLIQ",
+                "matchId": 11001,
+                "autoConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 0,
+                    "redFarTerminal": 0,
+                    "blueNearTerminal": 0,
+                    "blueFarTerminal": 0,
+                    "junctions": [
+                        [[], [], [], [], []],
+                        [[], [], ["RedCone", "RedCone", "RedCone", "RedCone", "RedCone"], [], []],
+                        [[], ["RedCone", "RedCone"], [], [], []],
+                        [
+                            ["BlueCone", "BlueCone", "BlueCone", "BlueCone", "BlueCone"],
+                            ["BlueCone"],
+                            [],
+                            [],
+                            []
+                        ],
+                        [[], [], [], [], []]
+                    ]
+                },
+                "dcConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 1,
+                    "redFarTerminal": 0,
+                    "blueNearTerminal": 0,
+                    "blueFarTerminal": 0,
+                    "junctions": [
+                        [[], [], ["RedBeacon1"], ["RedCone", "RedBeacon2"], []],
+                        [
+                            [],
+                            ["RedCone"],
+                            [
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone",
+                                "RedCone"
+                            ],
+                            [],
+                            ["BlueCone"]
+                        ],
+                        [
+                            [],
+                            ["RedCone", "RedCone", "RedCone", "RedCone"],
+                            [],
+                            ["BlueCone", "BlueCone"],
+                            []
+                        ],
+                        [
+                            ["BlueCone", "BlueCone", "BlueCone", "BlueCone", "BlueCone"],
+                            ["BlueCone", "RedCone", "RedCone"],
+                            [
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone",
+                                "BlueCone"
+                            ],
+                            ["BlueCone", "BlueBeacon1"],
+                            []
+                        ],
+                        [[], ["BlueCone"], [], [], []]
+                    ]
+                },
+                "red": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "alliance": "Red",
+                    "autoNav2022_1": "TeamSignal",
+                    "autoNav2022_2": "TeamSignal",
+                    "autoTerminalCones": 0,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 0,
+                    "autoMediumCones": 0,
+                    "autoHighCones": 7,
+                    "dcNearTerminalCones": 1,
+                    "dcFarTerminalCones": 0,
+                    "dcTerminalCones": 1,
+                    "dcGroundCones": 0,
+                    "dcLowCones": 1,
+                    "dcMediumCones": 3,
+                    "dcHighCones": 17,
+                    "egNav1": true,
+                    "egNav2": false,
+                    "coneOwnedJunctions": 4,
+                    "beaconOwnedJunctions": 2,
+                    "circuit": false,
+                    "minorsCommitted": 2,
+                    "majorsCommitted": 0,
+                    "penaltyPointsCommitted": 20,
+                    "penaltyPointsByOpp": 0,
+                    "autoNavPoints": 40,
+                    "autoConePoints": 35,
+                    "egNavPoints": 2,
+                    "ownershipPoints": 32,
+                    "circuitPoints": 0,
+                    "autoPoints": 75,
+                    "dcPoints": 101,
+                    "egPoints": 34,
+                    "totalPointsNp": 210,
+                    "totalPoints": 210
+                },
+                "blue": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "alliance": "Blue",
+                    "autoNav2022_1": "TeamSignal",
+                    "autoNav2022_2": "TeamSignal",
+                    "autoTerminalCones": 0,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 5,
+                    "autoMediumCones": 1,
+                    "autoHighCones": 0,
+                    "dcNearTerminalCones": 0,
+                    "dcFarTerminalCones": 0,
+                    "dcTerminalCones": 0,
+                    "dcGroundCones": 0,
+                    "dcLowCones": 7,
+                    "dcMediumCones": 2,
+                    "dcHighCones": 15,
+                    "egNav1": false,
+                    "egNav2": true,
+                    "coneOwnedJunctions": 5,
+                    "beaconOwnedJunctions": 1,
+                    "circuit": false,
+                    "minorsCommitted": 0,
+                    "majorsCommitted": 0,
+                    "penaltyPointsCommitted": 0,
+                    "penaltyPointsByOpp": 20,
+                    "autoNavPoints": 40,
+                    "autoConePoints": 19,
+                    "egNavPoints": 2,
+                    "ownershipPoints": 25,
+                    "circuitPoints": 0,
+                    "autoPoints": 59,
+                    "dcPoints": 104,
+                    "egPoints": 27,
+                    "totalPointsNp": 190,
+                    "totalPoints": 210
+                }
+            },
+            "teams": [
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Red",
+                    "teamNumber": 17483,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 17483,
+                        "name": "Blackout"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "station": "Two",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Red",
+                    "teamNumber": 11260,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 11260,
+                        "name": "Up-A-Creek Robotics"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "station": "NotOnField",
+                    "allianceRole": "SecondPick",
+                    "alliance": "Red",
+                    "teamNumber": 20771,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 20771,
+                        "name": "Bearbotics Sigma"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": false
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Blue",
+                    "teamNumber": 17969,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 17969,
+                        "name": "MECH"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "station": "Two",
+                    "allianceRole": "SecondPick",
+                    "alliance": "Blue",
+                    "teamNumber": 21430,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 21430,
+                        "name": "BroomBots"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USCOLIQ",
+                    "matchId": 11001,
+                    "station": "NotOnField",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Blue",
+                    "teamNumber": 11308,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 11308,
+                        "name": "YISE"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": false
+                }
+            ]
+        }
+    ],
+    "event": {
+        "__typename": "Event",
+        "website": "https://coloradofirst.org/COFIRST/event/first-tech-challenge-qualifier-southwest-metro/",
+        "type": "Qualifier",
+        "relatedEvents": [],
+        "season": 2022,
+        "code": "USCOLIQ",
+        "name": "CO Southwest Metro Qualifier",
+        "remote": false,
+        "start": "2023-02-04",
+        "end": "2023-02-04",
+        "location": {
+            "__typename": "Location",
+            "venue": "Chatfield Senior High School",
+            "city": "Littleton",
+            "state": "CO",
+            "country": "USA"
+        },
+        "started": true,
+        "published": true,
+        "timezone": "America/Denver"
+    }
+}

@@ -61,11 +61,18 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
+        gap: var(--md-gap);
 
         background: var(--hover-color);
         border-radius: 8px;
         padding: var(--md-pad);
         margin-bottom: var(--sm-gap);
+    }
+
+    @media (max-width: 800px) {
+        .head {
+            flex-direction: column;
+        }
     }
 
     .rest {

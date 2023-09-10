@@ -1,0 +1,242 @@
+{
+    "matches": [
+        {
+            "__typename": "Match",
+            "season": 2022,
+            "eventCode": "USIAMALT",
+            "id": 23,
+            "matchNum": 23,
+            "description": "Q-23",
+            "tournamentLevel": "Quals",
+            "scheduledStartTime": "2023-01-07T19:15:00.000Z",
+            "actualStartTime": "2023-01-07T19:48:25.838Z",
+            "scores": {
+                "__typename": "MatchScores2022",
+                "season": 2022,
+                "eventCode": "USIAMALT",
+                "matchId": 23,
+                "autoConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 1,
+                    "redFarTerminal": 0,
+                    "blueNearTerminal": 1,
+                    "blueFarTerminal": 0,
+                    "junctions": [
+                        [[], [], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], [], []],
+                        [[], [], [], ["BlueCone"], []]
+                    ]
+                },
+                "dcConeLayout": {
+                    "__typename": "ConeLayout",
+                    "redNearTerminal": 1,
+                    "redFarTerminal": 1,
+                    "blueNearTerminal": 1,
+                    "blueFarTerminal": 1,
+                    "junctions": [
+                        [["RedCone"], [], ["RedBeacon1"], [], ["RedCone"]],
+                        [[], ["RedCone"], ["RedCone"], ["BlueCone"], ["BlueCone"]],
+                        [[], [], ["BlueCone", "RedCone"], ["RedCone"], ["BlueCone"]],
+                        [
+                            ["BlueCone"],
+                            ["BlueCone", "BlueCone", "BlueCone"],
+                            ["BlueCone"],
+                            [
+                                "BlueCone",
+                                "RedCone",
+                                "BlueCone",
+                                "RedCone",
+                                "BlueCone",
+                                "RedBeacon2"
+                            ],
+                            ["BlueCone"]
+                        ],
+                        [["RedCone"], [], [], ["BlueCone"], ["RedCone"]]
+                    ]
+                },
+                "red": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USIAMALT",
+                    "matchId": 23,
+                    "alliance": "Red",
+                    "autoNav2022_1": "Terminal",
+                    "autoNav2022_2": "TeamSignal",
+                    "autoTerminalCones": 1,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 0,
+                    "autoMediumCones": 0,
+                    "autoHighCones": 0,
+                    "dcNearTerminalCones": 1,
+                    "dcFarTerminalCones": 1,
+                    "dcTerminalCones": 2,
+                    "dcGroundCones": 5,
+                    "dcLowCones": 0,
+                    "dcMediumCones": 3,
+                    "dcHighCones": 2,
+                    "egNav1": true,
+                    "egNav2": false,
+                    "coneOwnedJunctions": 8,
+                    "beaconOwnedJunctions": 2,
+                    "circuit": true,
+                    "minorsCommitted": 0,
+                    "majorsCommitted": 0,
+                    "penaltyPointsCommitted": 0,
+                    "penaltyPointsByOpp": 20,
+                    "autoNavPoints": 22,
+                    "autoConePoints": 1,
+                    "egNavPoints": 2,
+                    "ownershipPoints": 44,
+                    "circuitPoints": 20,
+                    "autoPoints": 23,
+                    "dcPoints": 34,
+                    "egPoints": 66,
+                    "totalPointsNp": 123,
+                    "totalPoints": 143
+                },
+                "blue": {
+                    "__typename": "MatchScores2022Alliance",
+                    "season": 2022,
+                    "eventCode": "USIAMALT",
+                    "matchId": 23,
+                    "alliance": "Blue",
+                    "autoNav2022_1": "None",
+                    "autoNav2022_2": "Terminal",
+                    "autoTerminalCones": 1,
+                    "autoGroundCones": 0,
+                    "autoLowCones": 1,
+                    "autoMediumCones": 0,
+                    "autoHighCones": 0,
+                    "dcNearTerminalCones": 1,
+                    "dcFarTerminalCones": 1,
+                    "dcTerminalCones": 2,
+                    "dcGroundCones": 2,
+                    "dcLowCones": 4,
+                    "dcMediumCones": 7,
+                    "dcHighCones": 1,
+                    "egNav1": false,
+                    "egNav2": false,
+                    "coneOwnedJunctions": 8,
+                    "beaconOwnedJunctions": 0,
+                    "circuit": true,
+                    "minorsCommitted": 2,
+                    "majorsCommitted": 0,
+                    "penaltyPointsCommitted": 20,
+                    "penaltyPointsByOpp": 0,
+                    "autoNavPoints": 2,
+                    "autoConePoints": 4,
+                    "egNavPoints": 0,
+                    "ownershipPoints": 24,
+                    "circuitPoints": 20,
+                    "autoPoints": 6,
+                    "dcPoints": 51,
+                    "egPoints": 44,
+                    "totalPointsNp": 101,
+                    "totalPoints": 101
+                }
+            },
+            "teams": [
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USIAMALT",
+                    "matchId": 23,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Red",
+                    "teamNumber": 19926,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 19926,
+                        "name": "Bago Bots"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USIAMALT",
+                    "matchId": 23,
+                    "station": "Two",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Red",
+                    "teamNumber": 7841,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 7841,
+                        "name": "Ballen Pretzels 2"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USIAMALT",
+                    "matchId": 23,
+                    "station": "One",
+                    "allianceRole": "Captain",
+                    "alliance": "Blue",
+                    "teamNumber": 19686,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 19686,
+                        "name": "Cedar Bots 2"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                },
+                {
+                    "__typename": "TeamMatchParticipation",
+                    "season": 2022,
+                    "eventCode": "USIAMALT",
+                    "matchId": 23,
+                    "station": "Two",
+                    "allianceRole": "FirstPick",
+                    "alliance": "Blue",
+                    "teamNumber": 8807,
+                    "team": {
+                        "__typename": "Team",
+                        "number": 8807,
+                        "name": "Molten Sprockets"
+                    },
+                    "surrogate": false,
+                    "noShow": false,
+                    "dq": false,
+                    "onField": true
+                }
+            ]
+        }
+    ],
+    "event": {
+        "__typename": "Event",
+        "website": "https://engineering.uiowa.edu/first-tech-challenge-season-events-deadlines",
+        "type": "LeagueTournament",
+        "relatedEvents": [],
+        "season": 2022,
+        "code": "USIAMALT",
+        "name": "IA Magnetic League Tournament",
+        "remote": false,
+        "start": "2023-01-07",
+        "end": "2023-01-07",
+        "location": {
+            "__typename": "Location",
+            "venue": "Central Lyon High School",
+            "city": "Rock Rapids",
+            "state": "IA",
+            "country": "USA"
+        },
+        "started": true,
+        "published": true,
+        "timezone": "America/Chicago"
+    }
+}
