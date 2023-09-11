@@ -38,7 +38,7 @@
     export let data;
 
     $: eventStore = data.event;
-    $: event = $eventStore?.data.eventByCode!;
+    $: event = $eventStore?.data?.eventByCode!;
 
     $: stats = event?.teams?.filter((t) => notEmpty(t.stats)) ?? [];
 
@@ -57,8 +57,8 @@
 
     let focusedTeam: number | null = null;
     $: focusedTeamData =
-        event.teams.find((t) => t.teamNumber == focusedTeam) ??
-        event.awards.find((a) => a.teamNumber == focusedTeam)!;
+        event?.teams?.find((t) => t.teamNumber == focusedTeam) ??
+        event?.awards?.find((a) => a.teamNumber == focusedTeam)!;
     setContext(TEAM_CLICK_ACTION_CTX, (t: number) => (focusedTeam = focusedTeam == t ? null : t));
 </script>
 

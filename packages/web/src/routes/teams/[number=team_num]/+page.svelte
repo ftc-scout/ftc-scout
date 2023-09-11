@@ -43,9 +43,9 @@
     export let data;
 
     $: teamStore = data.team;
-    $: team = $teamStore?.data.teamByNumber!;
+    $: team = $teamStore?.data?.teamByNumber!;
 
-    $: sortedEvents = ([...team.events] ?? []).sort(eventSorter);
+    $: sortedEvents = [...(team?.events ?? [])].sort(eventSorter);
 
     let season: Writable<Season> = queryParam("season", {
         encode: (val) => (val == CURRENT_SEASON ? null : "" + val),
