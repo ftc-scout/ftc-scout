@@ -46,7 +46,10 @@
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
     function gotoTab(tab: string) {
-        if (browser) goto(tab + "?" + $page.url.searchParams, { replaceState: true });
+        if (browser) {
+            let url = $page.url.searchParams.size ? `${tab}?${$page.url.searchParams}` : tab;
+            goto(url, { replaceState: true });
+        }
     }
 
     let selectedTab = $page.params.tab;
