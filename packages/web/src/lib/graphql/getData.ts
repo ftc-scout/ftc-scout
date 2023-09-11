@@ -9,7 +9,7 @@ import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
 import { writable, type Readable, type Writable, readable } from "svelte/store";
 
-let cache = {};
+let cache: Record<string, ApolloQueryResult<any>> = {};
 
 export async function getData<Data = any, Variables extends OperationVariables = object>(
     client: ApolloClient<NormalizedCacheObject>,
@@ -26,7 +26,7 @@ export async function getData<Data = any, Variables extends OperationVariables =
         query,
         variables,
         // No caching if on server or if bypassing apollo cache
-        fetchPolicy: browser && !bypassCacheKey ? undefined : "no-cache",
+        fetchPolicy: browser && !bypassCacheKey ? "cache-first" : "no-cache",
     });
 
     let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
