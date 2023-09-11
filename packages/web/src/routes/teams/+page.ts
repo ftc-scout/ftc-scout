@@ -12,6 +12,6 @@ export const load: PageLoad = async ({ fetch, url }) => {
     if (region == RegionOptionGQL.All) region = null;
 
     return {
-        teams: await getData(getClient(fetch), TeamsRegionSearchDocument, { region }),
+        teams: await getData(getClient(fetch), TeamsRegionSearchDocument, { region }, "teams-page"),
     };
 };

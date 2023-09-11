@@ -7,7 +7,7 @@ import { EventsSearchDocument } from "$lib/graphql/generated/graphql-operations"
 export const load: PageLoad = async ({ params, fetch }) => {
     let season = +params.season as Season;
 
-    let events = await getData(getClient(fetch), EventsSearchDocument, { season });
+    let events = await getData(getClient(fetch), EventsSearchDocument, { season }, "events-page");
 
     return { events };
 };
