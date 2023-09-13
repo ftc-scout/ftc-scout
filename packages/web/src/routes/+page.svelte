@@ -5,10 +5,12 @@
     import MatchTable from "$lib/components/matches/MatchTable.svelte";
     import SkeletonRow from "$lib/components/skeleton/SkeletonRow.svelte";
     import { prettyPrintDateRange } from "$lib/printers/dateRange";
-    import { faBolt, faHashtag } from "@fortawesome/free-solid-svg-icons";
+    import { faBolt, faHashtag, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
-    import { CURRENT_SEASON } from "@ftc-scout/common";
+    import { CURRENT_SEASON, DESCRIPTORS } from "@ftc-scout/common";
     import Head from "$lib/components/Head.svelte";
+    import { createTippy } from "svelte-tippy";
+    import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -18,6 +20,9 @@
     $: events = $homeStore?.data?.eventsOnDate;
 
     $: wr = $homeStore?.data.tradWorldRecord;
+
+    let tippy = createTippy({});
+    $: np = DESCRIPTORS[CURRENT_SEASON].pensSubtract ? "" : "no penalty ";
 </script>
 
 <Head title="FTCScout" />
@@ -69,7 +74,18 @@
         </div>
 
         <div class="wr">
-            <h2>World Record</h2>
+            <h2>
+                World Record
+                <span
+                    class="help"
+                    use:tippy={{
+                        content: `Top ${np}score in a FIRST sponsored event.`,
+                        theme: $tippyTheme,
+                    }}
+                >
+                    <Fa icon={faQuestionCircle} />
+                </span>
+            </h2>
             <hr />
 
             {#if wr}
@@ -233,6 +249,10 @@
     }
 
     .wr h2 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--sm-gap);
         margin-bottom: var(--md-gap);
     }
 
@@ -245,5 +265,10 @@
         font-weight: bold;
         display: block;
         margin-bottom: var(--md-gap);
+    }
+
+    .help {
+        font-size: calc(var(--md-font-size));
+        /* color: var(--secondary-text-color); */
     }
 </style>
