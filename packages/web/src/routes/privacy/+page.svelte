@@ -66,9 +66,8 @@
             <p>
                 To delete your personal information: We don't collect or share personal information,
                 so there is nothing to delete. If you would like us to delete specific IP addresses
-                from our records anyway, email us at <a href="mailto:privacy@ftcscout.org"
-                    >privacy@ftcscout.org</a
-                >
+                from our records anyway, email us at
+                <a href="mailto:privacy@ftcscout.org">privacy@ftcscout.org</a>.
             </p>
         </div>
     </Card>
