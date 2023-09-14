@@ -1,17 +1,8 @@
 <script lang="ts" context="module">
-    function loadAlertPreference(): {
-        preference: "show" | "hide";
-    } {
-        let cookie = browser ? parse(document.cookie)[ALERT_COOKIE_NAME] : undefined;
-        let parsed = undefined;
-        try {
-            parsed = JSON.parse(cookie ?? "");
-        } catch {}
-        return (
-            parsed ?? {
-                preference: parsed,
-            }
-        );
+    function loadAlertPreference(): "show" | "hide" {
+        if (!browser) return "hide";
+        let parsed = parse(document.cookie)[ALERT_COOKIE_NAME];
+        return parsed == undefined ? "show" : "hide";
     }
 
     export let theme = writable(loadAlertPreference());
@@ -21,135 +12,78 @@
     import { serialize, parse } from "cookie";
     import { writable } from "svelte/store";
     import Fa from "svelte-fa";
-    import { faClose, faArrowRight } from "@fortawesome/free-solid-svg-icons";
-    import {
-        ALERT_COOKIE_AGE,
-        ALERT_COOKIE_NAME,
-        ALERT_LINK,
-        ALERT_LINK_ENABLED,
-        ALERT_MESSAGE,
-    } from "../../constants";
+    import { faClose, faArrowRight, faWarning } from "@fortawesome/free-solid-svg-icons";
+    import { ALERT_COOKIE_AGE, ALERT_COOKIE_NAME } from "../../constants";
     import { browser } from "$app/environment";
 
-    function handleBarChange(newTheme: typeof $theme) {
-        document.cookie = serialize(ALERT_COOKIE_NAME, JSON.stringify(newTheme), {
+    export let message: string;
+    export let link: string | null = null;
+
+    function hide() {
+        $theme = "hide";
+        document.cookie = serialize(ALERT_COOKIE_NAME, "hide", {
             path: "/",
             maxAge: ALERT_COOKIE_AGE,
             httpOnly: false,
         });
-
-        render();
-    }
-
-    function setBar(next: "show" | "hide") {
-        $theme = {
-            preference: next,
-        };
-        handleBarChange($theme);
-    }
-
-    function render() {
-        if ($theme.preference == undefined) {
-            $theme = {
-                preference: "show",
-            };
-        }
-        if ($theme.preference == "show") {
-            // remove class from element
-            document.getElementsByClassName("alert")[0].classList.remove("alerthide");
-        } else {
-            // add class to element
-            document.getElementsByClassName("alert")[0].classList.add("alerthide");
-        }
-        return null;
     }
 </script>
 
-<div on:load={render()}>
-    <div class="alerthide alert">
-        <div class="left">
-            <p>{ALERT_MESSAGE}</p>
-        </div>
+<div class="wrap" class:show={$theme == "show"}>
+    <div><Fa icon={faWarning} /> {message}</div>
 
-        <div class="right">
-            {#if ALERT_LINK_ENABLED}
-                <a href={ALERT_LINK} target="_blank" rel="noopener noreferrer">
-                    <button
-                        ><Fa
-                            icon={faArrowRight}
-                            fw
-                            size="1.25x"
-                            translateX="0"
-                            style="font-size: 35px"
-                        /></button
-                    >
-                </a>
-            {/if}
-            <!-- close button -->
-            <button on:click|preventDefault={() => setBar("hide")}
-                ><Fa
-                    icon={faClose}
-                    fw
-                    size="1.25x"
-                    translateX="0"
-                    style="font-size: 40px"
-                /></button
-            >
-        </div>
+    <div>
+        {#if link}
+            <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+                <Fa icon={faArrowRight} fw size="1.5x" />
+            </a>
+        {/if}
+        <button on:click={hide}>
+            <Fa icon={faClose} fw size="1.5x" />
+        </button>
     </div>
 </div>
 
 <style>
-    button {
-        padding: 0;
-        border: none;
-        background: none;
-        color: var(--alertbar-text-color);
-        width: calc(var(--navbar-size) * 0.8);
-        height: calc(var(--navbar-size) * 0.8);
-
-        cursor: pointer;
-    }
-
-    button:hover {
-        background-color: rgba(0, 0, 0, 0.15);
-        border-radius: 10000px;
-    }
-
-    .alerthide {
-        display: none !important;
-    }
-
-    .alert {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-
-        margin-top: var(--navbar-size);
-        min-height: var(--navbar-size);
-
-        padding: var(--md-pad);
-        padding-left: calc(var(--navbar-size) * 0.8);
-
-        background: var(--alertbar-color);
-        z-index: var(--navbar-zi);
-
-        display: flex;
+    .wrap {
+        display: none;
         align-items: center;
         justify-content: space-between;
+        gap: var(--md-gap);
+        padding: var(--md-pad) var(--lg-pad);
 
-        font-size: var(--md-font-size);
+        background: var(--alert-bar-color);
+        font-size: var(--lg-font-size);
+        font-weight: bold;
+
+        border-radius: 8px;
     }
 
-    .left {
+    .show {
         display: flex;
-        align-items: center;
     }
 
-    .right {
-        display: flex;
-        align-items: center;
-        gap: calc(var(--lg-gap) * 1.75);
+    a {
+        color: inherit;
+    }
+
+    button {
+        padding: none;
+        border: none;
+        background: none;
+        color: inherit;
+        font-size: inherit;
+    }
+
+    a,
+    button {
+        display: inline-block;
+        cursor: pointer;
+        border-radius: var(--pill-border-radius);
+        background: var(--alert-bar-color);
+    }
+
+    :is(a, button):hover {
+        filter: brightness(0.9);
     }
 </style>

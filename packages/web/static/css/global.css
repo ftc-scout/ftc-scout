@@ -95,8 +95,6 @@
 body {
     --fg-color: rgb(var(--fg-color-vs));
     --theme-color: rgb(var(--theme-color-vs));
-    --alertbar-color: rgb(252, 160, 22);
-    --alertbar-text-color: black;
 
     --red-team-color: rgb(var(--red-team-color-vs));
     --red-team-bg-color: rgba(var(--red-team-color-vs), var(--team-color-transparency));
@@ -130,6 +128,8 @@ body {
     --zebra-stripe-opacity: rgba(0, 0, 0, 0.0396);
 
     --fade-shadow: rgba(0, 0, 0, 0.2);
+
+    --alert-bar-color: rgb(252, 160, 22);
 
     --text-color: #000000;
     --secondary-text-color: #636466;
@@ -199,6 +199,8 @@ body.dark {
     --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
 
     --fade-shadow: rgba(255, 255, 255, 0.15);
+
+    --alert-bar-color: rgb(169, 109, 18);
 
     --text-color: #dfe2e6;
     --secondary-text-color: #b7b7b8;
@@ -281,6 +283,8 @@ body.dark .render-light {
         --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
 
         --fade-shadow: rgba(255, 255, 255, 0.15);
+
+        --alert-bar-color: rgb(169, 109, 18);
 
         --text-color: #dfe2e6;
         --secondary-text-color: #b7b7b8;

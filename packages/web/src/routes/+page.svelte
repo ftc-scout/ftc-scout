@@ -11,6 +11,7 @@
     import Head from "$lib/components/Head.svelte";
     import { createTippy } from "svelte-tippy";
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
+    import AlertBar from "$lib/components/nav/AlertBar.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -26,6 +27,11 @@
 </script>
 
 <Head title="FTCScout" />
+
+<AlertBar
+    message="This is an example alert. Click here to learn more."
+    link="https://example.com"
+/>
 
 <WidthProvider>
     <Card vis={false}>
