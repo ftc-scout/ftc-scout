@@ -10,7 +10,7 @@
     <Card>
         <div class="head">
             <h1>Privacy Policy</h1>
-            <em class="revision">Last Revision: September 16th, 2022.</em>
+            <em class="revision">Last Revision: September 11th, 2023.</em>
         </div>
 
         <div class="rest">
@@ -32,25 +32,42 @@
 
             <h2>Analytics</h2>
             <p>
-                We do not have any analytics software installed on the website, though we get
-                information limited anonymous information through our Content Delivery Network
-                (CDN).
+                We care deeply about personal privacy. Any information we recieve is information you
+                choose to send us. Some of that information is automatically included with any
+                request you make.
             </p>
-            <p>Anonymous information provided by CDN:</p>
+            <br />
+            <b>Information we process:</b>
             <ul>
-                <li>Bandwidth usage</li>
-                <li>Cached request count</li>
-                <li>Request count</li>
-                <li>Visitor count</li>
-                <li>Web traffic by country</li>
-                <li>Web traffic by TLS version</li>
+                <li>User-Agent String</li>
+                <li>IP Address</li>
+                <li>Request URL</li>
+                <li>Request Method</li>
             </ul>
-            <p>No personally-identifiable information is collected, saved, or processed.</p>
-
+            <b>We use it to determine:</b>
+            <ul>
+                <li>Total visitor count</li>
+                <li>Visitor count by country</li>
+                <li>User counts by platform (mobile vs desktop, etc)</li>
+                <li>Times of day people use FTCScout the most</li>
+            </ul>
+            <b>The information we store cannot be used to:</b>
+            <ul>
+                <li>Identify you</li>
+                <li>Find your precise location</li>
+                <li>Track you online</li>
+            </ul>
+            <br />
+            <p>
+                We do not use your information for any other puropse, and we only collect
+                information sent to us by your browser.
+            </p>
             <h2>Your rights under The California Consumer Privacy Act (CCPA)</h2>
             <p>
                 To delete your personal information: We don't collect or share personal information,
-                so there is nothing to delete.
+                so there is nothing to delete. If you would like us to delete specific IP addresses
+                from our records anyway, email us at
+                <a href="mailto:privacy@ftcscout.org">privacy@ftcscout.org</a>.
             </p>
         </div>
     </Card>

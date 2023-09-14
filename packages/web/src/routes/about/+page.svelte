@@ -135,10 +135,10 @@
                     href="https://github.com/Joncode9001"
                 />
                 <Contributor
-                    name="Levi Gilbert-Adler"
+                    name="Liv Gilbert-Adler"
                     role="Web Administrator"
-                    imgSrc="/img/levi.png"
-                    alt="A photo of Levi Gilbert-Adler"
+                    imgSrc="/img/liv.png"
+                    alt="A photo of Liv Gilbert-Adler"
                     href="https://github.com/9021007"
                 />
             </div>

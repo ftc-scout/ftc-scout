@@ -5,6 +5,14 @@ export const IS_DEV = !IS_PROD;
 export const THEME_COOKIE_NAME = "ftc-scout:theme";
 export const THEME_COOKIE_AGE = 60 * 60 * 24 * 356 * 10;
 
+// alert bar settings
+export const ALERT_COOKIE_NAME = "ftc-scout:alert-dismissed";
+export const ALERT_COOKIE_AGE = 60 * 60 * 24 * 7;
+export const ALERT_ENABLED = false;
+export const ALERT_MESSAGE = "This is an example alert. Click here to learn more.";
+export const ALERT_LINK = "https://example.com";
+export const ALERT_LINK_ENABLED = false;
+
 // sidear contents
 export const EMAIL = "contact@ftcscout.org";
 export const DISCORD = "https://discord.gg/XTZhD9RnKa";
