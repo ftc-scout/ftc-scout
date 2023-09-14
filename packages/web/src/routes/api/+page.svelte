@@ -21,9 +21,8 @@
             </p>
             <p>
                 The API uses
-                <a href="https://graphql.org/" target="_blank" rel="noreferrer">GraphQL</a> allowing
-                you to access as much or as little data as you need in the shape that is most convenient
-                to you.
+                <a href="https://graphql.org/" target="_blank" rel="noreferrer">GraphQL</a>,
+                allowing you to access as much or as little data as you need.
             </p>
             <p>
                 You can query the API at
@@ -33,7 +32,9 @@
                 >.
             </p>
             <p>
-                If you need help with the api feel free to ask on our <a href={DISCORD}>Discord</a>.
+                If you need help with the API, feel free to ask for assistance on our <a
+                    href={DISCORD}>Discord</a
+                >.
             </p>
         </div>
     </Card>
