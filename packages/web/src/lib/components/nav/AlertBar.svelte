@@ -32,8 +32,6 @@
     import { browser } from "$app/environment";
 
     function handleBarChange(newTheme: typeof $theme) {
-        console.log("writing cookie" + newTheme.preference);
-
         document.cookie = serialize(ALERT_COOKIE_NAME, JSON.stringify(newTheme), {
             path: "/",
             maxAge: ALERT_COOKIE_AGE,
@@ -44,7 +42,6 @@
     }
 
     function setBar(next: "show" | "hide") {
-        console.log("setBar" + next);
         $theme = {
             preference: next,
         };
@@ -52,14 +49,11 @@
     }
 
     function render() {
-        console.log("render" + $theme.preference);
         if ($theme.preference == undefined) {
             $theme = {
                 preference: "show",
             };
-            console.log("set to show");
         }
-        console.log("render" + $theme.preference);
         if ($theme.preference == "show") {
             // remove class from element
             document.getElementsByClassName("alert")[0].classList.remove("alerthide");
@@ -71,7 +65,7 @@
     }
 </script>
 
-<nav on:load={render()}>
+<div on:load={render()}>
     <div class="alerthide alert">
         <div class="left">
             <p>{ALERT_MESSAGE}</p>
@@ -103,8 +97,7 @@
             >
         </div>
     </div>
-    <button on:click|preventDefault={() => render()}>Render</button>
-</nav>
+</div>
 
 <style>
     button {
@@ -114,6 +107,7 @@
         color: var(--alertbar-text-color);
         width: calc(var(--navbar-size) * 0.8);
         height: calc(var(--navbar-size) * 0.8);
+
         cursor: pointer;
     }
 
