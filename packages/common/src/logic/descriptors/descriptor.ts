@@ -260,7 +260,6 @@ export class ScoreModalComponent {
     displayName: string;
     remoteDisplayName: string;
     getValue: (ms: any) => number;
-    getValueRemote: ((ms: any) => number) | null;
     getTitle: (ms: any) => string;
 
     children: string[];
@@ -270,7 +269,6 @@ export class ScoreModalComponent {
         displayName: string;
         remoteDisplayName: string;
         getValue: (ms: any) => number;
-        getValueRemote: ((ms: any) => number) | null;
         getTitle: (ms: any) => string;
         children: string[];
     }) {
@@ -278,7 +276,6 @@ export class ScoreModalComponent {
         this.displayName = opts.displayName;
         this.remoteDisplayName = opts.remoteDisplayName;
         this.getValue = opts.getValue;
-        this.getValueRemote = opts.getValueRemote;
         this.getTitle = opts.getTitle;
         this.children = opts.children;
     }
@@ -353,7 +350,6 @@ export class DescriptorColumn {
         displayName: string;
         remoteDisplayName?: string;
         getValue?: (ms: any) => number;
-        getValueRemote?: (ms: any) => number;
         getTitle?: (ms: any) => string;
         children?: string[];
     }): DescriptorColumn {
@@ -363,8 +359,8 @@ export class DescriptorColumn {
             id: this.id,
             displayName: opts.displayName,
             remoteDisplayName: opts.remoteDisplayName ?? opts.displayName,
-            getValue: opts.getValue ?? ((ms) => ms[tradMsName]),
-            getValueRemote: opts.getValueRemote ?? opts.getValue ?? ((ms) => ms[remoteMsName]),
+            getValue:
+                opts.getValue ?? ((ms) => (remoteMsName in ms ? ms[remoteMsName] : ms[tradMsName])),
             getTitle: opts.getTitle ?? (() => ""),
             children: opts.children ?? [],
         });

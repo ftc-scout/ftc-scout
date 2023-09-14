@@ -395,8 +395,9 @@ export const Descriptor2021 = new Descriptor({
             .addScoreModal({
                 displayName: "Navigation Points",
                 getValue: (ms) =>
-                    autoNav2021Points(ms.autoNav2021_1) + autoNav2021Points(ms.autoNav2021_2),
-                getValueRemote: (ms) => autoNav2021Points(ms.autoNav2021),
+                    "autoNav2021" in ms
+                        ? autoNav2021Points(ms)
+                        : autoNav2021Points(ms.autoNav2021_1) + autoNav2021Points(ms.autoNav2021_2),
                 getTitle: (ms) => ("autoNav2021" in ms ? formatAutoNav2021(ms.autoNav2021) : ""),
             })
             .addTep({ columnPrefix: "Auto Nav", fullName: "Auto Navigation Points" })
