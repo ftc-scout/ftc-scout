@@ -6,7 +6,7 @@ import { Station } from "../../Station";
 import { nOf } from "../../../utils/format/n-of";
 
 function cappingPoints(level: number): number {
-    return level == -1 ? 0 : level * 5;
+    return level == -1 ? 0 : level + 5;
 }
 
 function formatCapLevel(level: number): string {
