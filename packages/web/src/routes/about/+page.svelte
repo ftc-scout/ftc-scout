@@ -32,9 +32,9 @@
                 <a href="https://ftcscores.com/" target="_blank" rel="noreferrer">FTCScores</a>,
                 <a href="http://www.ftcstats.org/" target="_blank" rel="noreferrer">FTC Stats</a>,
                 and
-                <a href="https://ftc-events.firstinspires.org/" target="_blank" rel="noreferrer">
-                    FTC Events
-                </a>.
+                <a href="https://ftc-events.firstinspires.org/" target="_blank" rel="noreferrer"
+                    >FTC Events</a
+                >.
             </p>
 
             <h2>Why FTC<em>Scout</em>?</h2>
@@ -48,10 +48,8 @@
 
             <p>
                 FTC<em>Scout</em> provides more advanced statistics than any other FTC website on
-                the Internet. Although other websites offer some of the features of FTC<em
-                    >Scout
-                </em>
-                we collect them all in the same place. Additionally FTC<em>Scout</em> offers features
+                the Internet. Although other websites offer many of the features of FTC<em>Scout</em
+                >, we collect them all in one place. Additionally, FTC<em>Scout</em> offers features
                 that no other websites do.
             </p>
 
@@ -76,7 +74,7 @@
             </p>
 
             <p>
-                Finally FTC<em>Scout</em> is designed to correctly handle remote events (both statistics
+                Finally, FTC<em>Scout</em> is designed to correctly handle remote events (both statistics
                 and page layout).
             </p>
 
@@ -112,11 +110,11 @@
             <h2>Our Team</h2>
             <p>
                 FTC<em>Scout</em> was developed by alumni from
-                <a href="/teams/16321">16321 X Drive</a>, but it is FOSS (<a
+                <a href="/teams/16321">16321 X Drive</a>, and it is FOSS (<a
                     href="https://en.wikipedia.org/wiki/Free_and_open-source_software"
                     target="_blank"
                     rel="noreferrer">Free and Open-Source Software</a
-                >) so you can contribute to it
+                >), so you can contribute your ideas and improvements to it
                 <a href={GITHUB} target="_blank" rel="noreferrer">on our Github</a>.
             </p>
             <div class="contributors">
