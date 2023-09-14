@@ -27,11 +27,11 @@
             <h2>Cookies</h2>
             <p>
                 The only cookies we store are functional cookies. This means that they are necessary
-                for the page to function correctly. We do not use tracking cookies, nor to any
+                for the page to function correctly. We do not use tracking cookies, nor do any
                 cookies we place contain any personal information.
             </p>
-            <br />
-            <b>Our cookies are used for the following, and the following only:</b>
+
+            <h3>Our cookies are used for the following, and the following only:</h3>
             <ul>
                 <li>Saving dark/light mode preference</li>
                 <li>Remembering if you have dismissed a banner</li>
@@ -43,44 +43,47 @@
 
             <h2>Analytics</h2>
             <p>
-                We care deeply about personal privacy. Any information we recieve is information you
+                We care deeply about personal privacy. Any information we receive is information you
                 choose to send us. Some of that information is automatically included with any
                 request you make. Your browser makes a request every time you visit a website, or
                 open a link to a new page on a website.
             </p>
-            <br />
-            <b>Information we process:</b>
+
+            <h3>Information we process:</h3>
             <ul>
                 <li><span style="white-space: nowrap;">User-Agent</span> String</li>
                 <li>IP Address</li>
                 <li>Request URL</li>
                 <li>Request Method</li>
             </ul>
-            <b>We use it to determine:</b>
+
+            <h3>We use it to determine:</h3>
             <ul>
                 <li>Total visitor count</li>
                 <li>Visitor count by country</li>
                 <li>User counts by platform (mobile vs desktop, etc)</li>
                 <li>Times of day people use FTCScout the most</li>
             </ul>
-            <b>The information we store cannot be used to:</b>
+
+            <h3>The information we store cannot be used to:</h3>
             <ul>
                 <li>Identify you</li>
                 <li>Find your precise location</li>
                 <li>Track you online</li>
             </ul>
-            <br />
+
             <p>
-                We do not use your information for any other puropse, and we only collect
+                We do not use your information for any other purpose, and we only collect
                 information sent to us by your browser.
             </p>
+
             <h2>Your rights under The California Consumer Privacy Act (CCPA)</h2>
             <p>
                 To delete your personal information: We don't collect or share personal information,
                 so there is nothing to delete. If you would like us to delete your visit counts from
                 our records anyway, email us at <a href="mailto:privacy@ftcscout.org"
-                    >privacy@ftcscout.org</a
-                >
+                    >privacy@ftcscout.org
+                </a>
                 with your IP Address and <span style="white-space: nowrap;">User-Agent</span> String.
             </p>
         </div>
@@ -117,6 +120,11 @@
     h2 {
         font-size: var(--lg-font-size);
         margin: var(--lg-gap) 0 var(--sm-gap) 0;
+    }
+
+    h3 {
+        font-size: var(--md-font-size);
+        margin: var(--md-gap) 0 var(--sm-gap) 0;
     }
 
     p,
