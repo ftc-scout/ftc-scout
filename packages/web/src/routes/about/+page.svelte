@@ -23,18 +23,9 @@
             </p>
 
             <p>
-                FTC<i>Scout</i> is the passion project of a group of alumni from team
-                <a href="/teams/16321">16321 X Drive</a>. It was inspired by many great FTC websites
-                including
-                <a href="https://theorangealliance.org/" target="_blank" rel="noreferrer">
-                    The Orange Alliance</a
-                >,
-                <a href="https://ftcscores.com/" target="_blank" rel="noreferrer">FTCScores</a>,
-                <a href="http://www.ftcstats.org/" target="_blank" rel="noreferrer">FTC Stats</a>,
-                and
-                <a href="https://ftc-events.firstinspires.org/" target="_blank" rel="noreferrer"
-                    >FTC Events</a
-                >.
+                Started in Los Angeles, California, FTC<i>Scout</i> is the passion project of a
+                group of alumni from team
+                <a href="/teams/16321">16321 X Drive</a>.
             </p>
 
             <h2>Why FTC<em>Scout</em>?</h2>
@@ -74,8 +65,9 @@
             </p>
 
             <p>
-                Finally, FTC<em>Scout</em> is designed to correctly handle remote events (both statistics
-                and page layout).
+                Finally, starting in the 2022-2023 Power Play season, FTC<em>Scout</em> now provides
+                a visualization of the playing field for every match. To access this feature, just click
+                "View Field Layout" in the score breakdown popup of any match.
             </p>
 
             <h3>Fast, Secure, and Accessible</h3>
