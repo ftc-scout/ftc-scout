@@ -5,6 +5,7 @@ export const Season = {
     UltimateGoal: 2020,
     FreightFrenzy: 2021,
     PowerPlay: 2022,
+    CenterStage: 2023,
 } as const;
 
 export type Season = (typeof Season)[keyof typeof Season];
