@@ -3,7 +3,7 @@ import { GraphQLOutputType } from "graphql";
 import { Season } from "../Season";
 import { notEmpty } from "../../utils/filter";
 import { Station } from "../Station";
-import { NonRankStatColumn } from "../stats/stat-table";
+import { Color, NonRankStatColumn, StatType } from "../stats/stat-table";
 import {
     TEP_GROUP_COLORS,
     TEP_GROUP_DATA_TYS,
@@ -115,6 +115,10 @@ export class Descriptor {
         return this.columns.map((c) => c.ms).filter(notEmpty);
     }
 
+    scoreModalColumns(): ScoreModalComponent[] {
+        return this.columns.map((c) => c.scoreM).filter(notEmpty);
+    }
+
     tepColumns(): TepComponent[] {
         return this.columns.map((c) => c.tep).filter(notEmpty);
     }
@@ -125,6 +129,10 @@ export class Descriptor {
 
     getTepTree(remote: boolean): Tree<TepComponent>[] {
         return remote ? this.tepTreeRemote : this.tepTree;
+    }
+
+    getSCoreModalTree(remote: boolean): Tree<ScoreModalComponent>[] {
+        return remote ? this.scoreModalTreeRemote : this.scoreModalTree;
     }
 }
 
@@ -255,6 +263,12 @@ export class TepComponent {
     }
 }
 
+export const MSStatSide = {
+    This: "This",
+    Opp: "Opp",
+} as const;
+export type MSStatSide = (typeof MSStatSide)[keyof typeof MSStatSide];
+
 export class ScoreModalComponent {
     id: string;
     displayName: string;
@@ -278,6 +292,25 @@ export class ScoreModalComponent {
         this.getValue = opts.getValue;
         this.getTitle = opts.getTitle;
         this.children = opts.children;
+    }
+
+    getStatColumn(side: MSStatSide): NonRankStatColumn<any> {
+        return new NonRankStatColumn({
+            color: side == MSStatSide.This ? Color.Blue : Color.Red,
+            id: this.id + side,
+            columnName: (side == MSStatSide.Opp ? "Opp " : "") + this.displayName, // TODO
+            dialogName: this.displayName,
+            titleName: `${side} ${this.displayName}`,
+            sqlExpr: `todo`,
+            ty: StatType.Int,
+            getNonRankValue:
+                side == MSStatSide.This
+                    ? (d: any) => ({ ty: "int", val: this.getValue(d) })
+                    : (d: any) =>
+                          d.opponentsScore
+                              ? { ty: "int", val: this.getValue(d.opponentsScore) }
+                              : null,
+        });
     }
 }
 

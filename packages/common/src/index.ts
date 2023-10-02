@@ -14,6 +14,7 @@ export * from "./logic/stats/calculate-team-event-stats";
 export * from "./logic/stats/stat-table";
 export * from "./logic/stats/filter";
 export * from "./logic/stats/make-tep-stats";
+export * from "./logic/stats/make-match-stats";
 export * from "./logic/TournamentLevel";
 export * from "./utils/filter";
 export * from "./utils/gql/enum";

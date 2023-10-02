@@ -34,6 +34,8 @@
     import Awards from "./Awards.svelte";
     import { isNonCompetition } from "$lib/util/event-type";
     import Head from "$lib/components/Head.svelte";
+    import Insights from "./Insights.svelte";
+    import { getMatchScores } from "$lib/components/stats/getMatchScores";
 
     export let data;
 
@@ -41,6 +43,7 @@
     $: event = $eventStore?.data?.eventByCode!;
 
     $: stats = event?.teams?.filter((t) => notEmpty(t.stats)) ?? [];
+    $: insights = event?.matches?.flatMap(getMatchScores) ?? [];
 
     $: season = +$page.params.season as Season;
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
@@ -110,6 +113,7 @@
             tabs={[
                 [faBolt, "Matches", "matches", !!event.matches.length],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
+                [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", !!event.awards.length],
                 [faHashtag, "Teams", "teams", !!event.teams.length],
             ]}
@@ -136,6 +140,16 @@
                     remote={event.remote}
                     eventName={event.name}
                     data={stats}
+                    {focusedTeam}
+                />
+            </TabContent>
+
+            <TabContent name="insights">
+                <Insights
+                    {season}
+                    remote={event.remote}
+                    eventName={event.name}
+                    data={insights}
                     {focusedTeam}
                 />
             </TabContent>

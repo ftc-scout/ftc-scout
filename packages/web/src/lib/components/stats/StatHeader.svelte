@@ -104,7 +104,7 @@
 
                 shadow = document.createElement("div");
                 shadow.style.position = "absolute";
-                shadow.style.background = "#00000030"; // TODO
+                shadow.style.background = "#00000030";
                 shadow.style.width = `${width}px`;
                 shadow.style.top = `${height}px`;
                 shadow.style.bottom = "0";
@@ -112,7 +112,7 @@
 
                 moveIndicator = document.createElement("div");
                 moveIndicator.style.position = "absolute";
-                moveIndicator.style.background = "gray"; // TODO
+                moveIndicator.style.background = "gray";
                 moveIndicator.style.width = `2px`;
                 moveIndicator.style.top = `${height}px`;
                 moveIndicator.style.bottom = "0";

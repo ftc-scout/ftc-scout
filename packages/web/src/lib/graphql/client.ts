@@ -8,6 +8,7 @@ import {
 } from "@apollo/client/core";
 import { IS_DEV } from "../constants";
 import { browser } from "$app/environment";
+import { DESCRIPTORS_LIST } from "@ftc-scout/common";
 
 let client: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -26,23 +27,14 @@ export function getClient(
 
     let cache = new InMemoryCache({
         possibleTypes: {
-            // TODO
-            TeamEventStats: [
-                "TeamEventStats2022",
-                "TeamEventStats2021Trad",
-                "TeamEventStats2021Remote",
-                "TeamEventStats2020Trad",
-                "TeamEventStats2020Remote",
-                "TeamEventStats2019",
-            ],
-            MatchScores: [
-                "MatchScores2022",
-                "MatchScores2021Remote",
-                "MatchScores2021Trad",
-                "MatchScores2020Remote",
-                "MatchScores2020Trad",
-                "MatchScores2019",
-            ],
+            TeamEventStats: DESCRIPTORS_LIST.flatMap((d) => {
+                let base = `TeamEventStats${d.season}`;
+                return d.hasRemote ? [base + "Trad", base + "Remote"] : [base];
+            }),
+            MatchScores: DESCRIPTORS_LIST.flatMap((d) => {
+                let base = `MatchScores${d.season}`;
+                return d.hasRemote ? [base + "Trad", base + "Remote"] : [base];
+            }),
         },
         typePolicies: {
             Team: { keyFields: ["number"] },

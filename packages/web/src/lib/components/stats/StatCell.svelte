@@ -26,7 +26,7 @@
             {prettyPrintOrdinal(val.val)}
         {:else if val.ty == "float"}
             {prettyPrintFloat(val.val)}
-        {:else if val.ty == "int"}
+        {:else if val.ty == "int" || val.ty == "string"}
             {val.val}
         {:else if val.ty == "record"}
             {val.wins}-{val.losses}-{val.ties}

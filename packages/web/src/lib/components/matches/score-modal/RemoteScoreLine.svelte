@@ -11,7 +11,7 @@
     export let heading: boolean = false;
     export let sub = false;
 
-    $: value = prop.getValue!(scores);
+    $: value = prop.getValue(scores);
 
     $: p = sub ? "+" : "";
 

@@ -1,6 +1,6 @@
 export const Station = {
-    One: "1",
-    Two: "2",
+    One: "One",
+    Two: "Two",
     NotOnField: "NotOnField",
     Solo: "Solo",
 } as const;

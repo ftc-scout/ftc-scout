@@ -12,6 +12,7 @@ export const StatType = {
     Int: "int",
     Float: "float",
     Rank: "rank",
+    String: "string",
     Record: "record",
     Team: "team",
     Event: "event",
@@ -21,6 +22,7 @@ export type StatValue =
     | { ty: "int"; val: number }
     | { ty: "float"; val: number }
     | { ty: "rank"; val: number }
+    | { ty: "string"; val: string }
     | { ty: "team"; number: number; name: string }
     | { ty: "event"; season: number; code: string; name: string; start: string; end: string }
     | { ty: "record"; wins: number; losses: number; ties: number };
@@ -51,7 +53,7 @@ export class StatColumn<T> {
 
     static distill(val: StatValue | null): number | string | null {
         if (val == null) return null;
-        if (val.ty == "int" || val.ty == "float" || val.ty == "rank") {
+        if (val.ty == "int" || val.ty == "float" || val.ty == "rank" || val.ty == "string") {
             return val.val;
         } else if (val.ty == "team") {
             return val.number;
