@@ -616,4 +616,8 @@ export const Descriptor2019 = new Descriptor({
             ],
         },
     ])
+    .addMatchInsightCols(
+        ["autoPlacementPoints", "skyscraperBonusPoints", "cappingPoints"],
+        ["autoPlacementPoints", "skyscraperBonusPoints", "cappingPoints"]
+    )
     .finish();

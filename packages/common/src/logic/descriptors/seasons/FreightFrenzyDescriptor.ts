@@ -964,4 +964,16 @@ export const Descriptor2021 = new Descriptor({
                 ],
             },
         ]
-    );
+    )
+    .addMatchInsightCols(
+        [
+            "autoFreightPoints",
+            "dcFreight1Points",
+            "dcSharedHubPoints",
+            "sharedUnbalancedPoints",
+            "egDuckPoints",
+            "cappingPoints",
+        ],
+        ["autoFreightPoints", "dcFreight1Points", "egDuckPoints", "cappingPoints"]
+    )
+    .finish();

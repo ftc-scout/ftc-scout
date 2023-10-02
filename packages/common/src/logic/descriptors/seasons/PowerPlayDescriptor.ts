@@ -900,4 +900,5 @@ export const Descriptor2022 = new Descriptor({
             ],
         },
     ])
+    .addMatchInsightCols(["autoConePoints", "circuitPoints"], ["autoConePoints", "circuitPoints"])
     .finish();

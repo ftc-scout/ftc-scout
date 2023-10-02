@@ -65,6 +65,9 @@ export class Descriptor {
     tepTree: Tree<TepComponent>[] = [];
     tepTreeRemote: Tree<TepComponent>[] = [];
 
+    matchInsightCols: string[] = [];
+    matchInsightColsRemote: string[] = [];
+
     constructor(opts: {
         season: Season;
         seasonName: string;
@@ -107,6 +110,13 @@ export class Descriptor {
         return this;
     }
 
+    addMatchInsightCols(trad: string[], remote: string[]): Descriptor {
+        this.matchInsightCols = trad;
+        this.matchInsightColsRemote = remote;
+
+        return this;
+    }
+
     finish(): Descriptor {
         return this;
     }
@@ -133,6 +143,10 @@ export class Descriptor {
 
     getSCoreModalTree(remote: boolean): Tree<ScoreModalComponent>[] {
         return remote ? this.scoreModalTreeRemote : this.scoreModalTree;
+    }
+
+    getMatchInsightCols(remote: boolean): string[] {
+        return remote ? this.matchInsightCols : this.matchInsightColsRemote;
     }
 }
 

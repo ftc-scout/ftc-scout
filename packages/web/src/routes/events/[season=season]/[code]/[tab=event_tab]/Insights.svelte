@@ -23,6 +23,7 @@
         "autoPointsThis",
         "dcPointsThis",
         "egPointsThis",
+        ...descriptor.getMatchInsightCols(remote).map((c) => c + "This"),
         "team1This",
         "team2This",
         "matchNum",
