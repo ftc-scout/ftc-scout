@@ -86,6 +86,8 @@ export const Descriptor2020 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 1",
+                columnPrefix: "Auto Nav 1",
+                fullName: "Robot 1 Auto Navigation Points",
                 getValue: (ms) => ms.autoNav2020_1 * 5,
             })
     )
@@ -98,6 +100,8 @@ export const Descriptor2020 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Robot 2",
+                columnPrefix: "Auto Nav 2",
+                fullName: "Robot 2 Auto Navigation Points",
                 getValue: (ms) => ms.autoNav2020_2 * 5,
             })
     )
@@ -148,6 +152,8 @@ export const Descriptor2020 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Wobble 1",
+                columnPrefix: "Wobble 1",
+                fullName: "Wobble Goal 1 Points",
                 getValue: (ms) => wobbleEndPosPoints(ms.wobbleEndPos1),
                 getTitle: (ms) => formatWobbleEndPos(ms.wobbleEndPos1),
             })
@@ -160,6 +166,8 @@ export const Descriptor2020 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Wobble 2",
+                columnPrefix: "Wobble 2",
+                fullName: "Wobble Goal 2 Points",
                 getValue: (ms) => wobbleEndPosPoints(ms.wobbleEndPos2),
                 getTitle: (ms) => formatWobbleEndPos(ms.wobbleEndPos2),
             })
@@ -200,7 +208,11 @@ export const Descriptor2020 = new Descriptor({
                         : self.autoNav2020_1 * 5 + self.autoNav2020_2 * 5,
                 dataTy: Int16DTy,
             })
-            .addScoreModal({ displayName: "Navigation Points" })
+            .addScoreModal({
+                displayName: "Navigation Points",
+                columnPrefix: "Auto Nav",
+                fullName: "Auto Navigation Points",
+            })
             .addTep({ columnPrefix: "Auto Nav", fullName: "Auto Navigation Points" })
     )
     .addColumn(
@@ -226,13 +238,19 @@ export const Descriptor2020 = new Descriptor({
                     self.autoTowerLow * 3 + self.autoTowerMid * 6 + self.autoTowerHigh * 12,
                 dataTy: Int16DTy,
             })
-            .addScoreModal({ displayName: "Tower Points" })
+            .addScoreModal({
+                displayName: "Tower Points",
+                columnPrefix: "Tower",
+                fullName: "Auto Tower Points",
+            })
             .addTep({ columnPrefix: "Auto Tower", fullName: "Auto Tower Points" })
     )
     .addColumn(
         new DescriptorColumn({ name: "autoTowerLowPoints" })
             .addScoreModal({
                 displayName: "Low",
+                columnPrefix: "Auto Tower Low",
+                fullName: "Auto Tower Low Points",
                 getValue: (ms) => ms.autoTowerLow * 3,
                 getTitle: (ms) => nOf(ms.autoTowerLow, "Ring"),
             })
@@ -246,6 +264,8 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "autoTowerMidPoints" })
             .addScoreModal({
                 displayName: "Mid",
+                columnPrefix: "Auto Tower Mid",
+                fullName: "Auto Tower Mid Points",
                 getValue: (ms) => ms.autoTowerMid * 6,
                 getTitle: (ms) => nOf(ms.autoTowerMid, "Ring"),
             })
@@ -259,6 +279,8 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "autoTowerHighPoints" })
             .addScoreModal({
                 displayName: "High",
+                columnPrefix: "Auto Tower High",
+                fullName: "Auto Tower Low Points",
                 getValue: (ms) => ms.autoTowerHigh * 12,
                 getTitle: (ms) => nOf(ms.autoTowerHigh, "Ring"),
             })
@@ -276,6 +298,8 @@ export const Descriptor2020 = new Descriptor({
             })
             .addScoreModal({
                 displayName: "Wobble Goal Points",
+                columnPrefix: "Auto Wobble",
+                fullName: "Auto Wobble Goal Points",
                 getTitle: (ms) => nOf(+ms.autoWobble1 + +ms.autoWobble2, "Wobble Goal"),
             })
             .addTep({ columnPrefix: "Auto Wobble", fullName: "Auto Wobble Goal Points" })
@@ -285,6 +309,8 @@ export const Descriptor2020 = new Descriptor({
             .addMatchScore({ fromSelf: (self) => self.autoPowershots * 15, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Powershot Points",
+                columnPrefix: "Auto Powershot",
+                fullName: "Auto Powershot Points",
                 getTitle: (ms) => nOf(ms.autoPowershots, "Powershot"),
             })
             .addTep({ columnPrefix: "Auto Powershot", fullName: "Auto Powershot Points" })
@@ -296,7 +322,11 @@ export const Descriptor2020 = new Descriptor({
                     wobbleEndPosPoints(self.wobbleEndPos1) + wobbleEndPosPoints(self.wobbleEndPos2),
                 dataTy: Int16DTy,
             })
-            .addScoreModal({ displayName: "Wobble Goal Points" })
+            .addScoreModal({
+                displayName: "Wobble Goal Points",
+                columnPrefix: "Endgame Wobble",
+                fullName: "Endgame Wobble Goal Points",
+            })
             .addTep({ columnPrefix: "Endgame Wobble", fullName: "Endgame Wobble Goal Points" })
     )
     .addColumn(
@@ -304,6 +334,8 @@ export const Descriptor2020 = new Descriptor({
             .addMatchScore({ fromSelf: (self) => self.egPowershots * 15, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Powershot Points",
+                columnPrefix: "Endgame Powershot",
+                fullName: "Endgame Powershot Points",
                 getTitle: (ms) => nOf(ms.egPowershots, "Powershot"),
             })
             .addTep({ columnPrefix: "Endgame Powershot", fullName: "Endgame Powershot Points" })
@@ -313,6 +345,8 @@ export const Descriptor2020 = new Descriptor({
             .addMatchScore({ fromSelf: (self) => self.egWobbleRings * 5, dataTy: Int16DTy })
             .addScoreModal({
                 displayName: "Wobble Ring Points",
+                columnPrefix: "Wobble Rings",
+                fullName: "Endgame Wobble Ring Points",
                 getTitle: (ms) => nOf(ms.egWobbleRings, "Ring"),
             })
             .addTep({
@@ -324,6 +358,8 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "majorsCommittedPoints" })
             .addScoreModal({
                 displayName: "Majors Points",
+                columnPrefix: "Majors",
+                fullName: "Major Penalty Points",
                 getValue: (ms) => ms.majorsCommitted * -30,
                 getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
             })
@@ -338,6 +374,8 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "minorsCommittedPoints" })
             .addScoreModal({
                 displayName: "Minors Points",
+                columnPrefix: "Minors",
+                fullName: "Minor Penalty Points",
                 getValue: (ms) => ms.minorsCommitted * -10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })
@@ -358,7 +396,7 @@ export const Descriptor2020 = new Descriptor({
                     self.autoPowershotPoints,
                 dataTy: Int16DTy,
             })
-            .addScoreModal({ displayName: "Auto" })
+            .addScoreModal({ displayName: "Auto", columnPrefix: "Auto", fullName: "Auto Points" })
             .addTep({ columnPrefix: "Auto", dialogName: "Auto Points", fullName: "Auto Points" })
     )
     .addColumn(
@@ -368,7 +406,11 @@ export const Descriptor2020 = new Descriptor({
                     self.dcTowerLow * 2 + self.dcTowerMid * 4 + self.dcTowerHigh * 6,
                 dataTy: Int16DTy,
             })
-            .addScoreModal({ displayName: "Driver-Controlled" })
+            .addScoreModal({
+                displayName: "Driver-Controlled",
+                columnPrefix: "Teleop",
+                fullName: "Teleop Points",
+            })
             .addTep({
                 columnPrefix: "Teleop",
                 dialogName: "Teleop Points",
@@ -379,6 +421,8 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "dcTowerLowPoints" })
             .addScoreModal({
                 displayName: "Low",
+                columnPrefix: "DC Tower Low",
+                fullName: "Teleop Tower Low Points",
                 getValue: (ms) => ms.dcTowerLow * 2,
                 getTitle: (ms) => nOf(ms.dcTowerLow, "Ring"),
             })
@@ -392,6 +436,8 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "dcTowerMidPoints" })
             .addScoreModal({
                 displayName: "Mid",
+                columnPrefix: "DC Tower Mid",
+                fullName: "Teleop Tower Mid Points",
                 getValue: (ms) => ms.dcTowerMid * 4,
                 getTitle: (ms) => nOf(ms.dcTowerMid, "Ring"),
             })
@@ -405,6 +451,8 @@ export const Descriptor2020 = new Descriptor({
         new DescriptorColumn({ name: "dcTowerHighPoints" })
             .addScoreModal({
                 displayName: "High",
+                columnPrefix: "DC Tower High",
+                fullName: "Teleop Tower High Points",
                 getValue: (ms) => ms.dcTowerHigh * 6,
                 getTitle: (ms) => nOf(ms.dcTowerHigh, "Ring"),
             })
@@ -421,7 +469,11 @@ export const Descriptor2020 = new Descriptor({
                     self.egPowershotPoints + self.egWobblePoints + self.egWobbleRingPoints,
                 dataTy: Int16DTy,
             })
-            .addScoreModal({ displayName: "Endgame" })
+            .addScoreModal({
+                displayName: "Endgame",
+                columnPrefix: "Endgame",
+                fullName: "Endgame Points",
+            })
             .addTep({
                 columnPrefix: "Endgame",
                 dialogName: "Endgame Points",
@@ -434,7 +486,11 @@ export const Descriptor2020 = new Descriptor({
                 fromSelf: (self) => self.majorsCommitted * -30 + self.minorsCommitted * -10,
                 dataTy: Int16DTy,
             })
-            .addScoreModal({ displayName: "Penalties" })
+            .addScoreModal({
+                displayName: "Penalties",
+                columnPrefix: "Penalties",
+                fullName: "Penalty Points",
+            })
             .addTep({
                 columnPrefix: "Penalties",
                 dialogName: "Penalty Points",

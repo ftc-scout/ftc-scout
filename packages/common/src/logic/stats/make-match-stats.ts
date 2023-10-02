@@ -116,9 +116,9 @@ const TOTAL_POINTS_STATS = [
     new NonRankStatColumn({
         color: Color.Blue,
         id: "totalPointsThis",
-        columnName: "Total", // TODO
+        columnName: "Total",
         dialogName: "Total Points",
-        titleName: `This Total Points`,
+        titleName: "Total Points",
         sqlExpr: `todo`,
         ty: StatType.Int,
         getNonRankValue: (d: any) => ({ ty: "int", val: d.totalPoints }),
@@ -126,9 +126,9 @@ const TOTAL_POINTS_STATS = [
     new NonRankStatColumn({
         color: Color.Blue,
         id: "totalPointsNpThis",
-        columnName: "Total NP", // TODO
+        columnName: "Total NP",
         dialogName: "Total Points NP",
-        titleName: `This Total Points No Penalties`,
+        titleName: "Total Points No Penalties",
         sqlExpr: `todo`,
         ty: StatType.Int,
         getNonRankValue: (d: any) => ({ ty: "int", val: d.totalPointsNp }),
@@ -136,9 +136,9 @@ const TOTAL_POINTS_STATS = [
     new NonRankStatColumn({
         color: Color.Red,
         id: "totalPointsOpp",
-        columnName: "Opp Total", // TODO
+        columnName: "Opp Total",
         dialogName: "Total Points",
-        titleName: `Opp Total Points`,
+        titleName: "Opponent Total Points",
         sqlExpr: `todo`,
         ty: StatType.Int,
         getNonRankValue: (d: any) =>
@@ -147,9 +147,9 @@ const TOTAL_POINTS_STATS = [
     new NonRankStatColumn({
         color: Color.Red,
         id: "totalPointsNpOpp",
-        columnName: "Opp Total NP", // TODO
+        columnName: "Opp Total NP",
         dialogName: "Total Points NP",
-        titleName: `Opp Total Points No Penalties`,
+        titleName: "Opp Total Points No Penalties",
         sqlExpr: `todo`,
         ty: StatType.Int,
         getNonRankValue: (d: any) =>

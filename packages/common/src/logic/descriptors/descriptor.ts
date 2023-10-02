@@ -273,6 +273,8 @@ export class ScoreModalComponent {
     id: string;
     displayName: string;
     remoteDisplayName: string;
+    columnPrefix: string;
+    fullName: string;
     getValue: (ms: any) => number;
     getTitle: (ms: any) => string;
 
@@ -282,6 +284,8 @@ export class ScoreModalComponent {
         id: string;
         displayName: string;
         remoteDisplayName: string;
+        columnPrefix: string;
+        fullName: string;
         getValue: (ms: any) => number;
         getTitle: (ms: any) => string;
         children: string[];
@@ -289,6 +293,8 @@ export class ScoreModalComponent {
         this.id = opts.id;
         this.displayName = opts.displayName;
         this.remoteDisplayName = opts.remoteDisplayName;
+        this.columnPrefix = opts.columnPrefix;
+        this.fullName = opts.fullName;
         this.getValue = opts.getValue;
         this.getTitle = opts.getTitle;
         this.children = opts.children;
@@ -298,9 +304,9 @@ export class ScoreModalComponent {
         return new NonRankStatColumn({
             color: side == MSStatSide.This ? Color.Blue : Color.Red,
             id: this.id + side,
-            columnName: (side == MSStatSide.Opp ? "Opp " : "") + this.displayName, // TODO
+            columnName: (side == MSStatSide.Opp ? "Opp " : "") + this.columnPrefix,
             dialogName: this.displayName,
-            titleName: `${side} ${this.displayName}`,
+            titleName: (side == MSStatSide.Opp ? "Opponent " : "") + this.fullName,
             sqlExpr: `todo`,
             ty: StatType.Int,
             getNonRankValue:
@@ -382,6 +388,8 @@ export class DescriptorColumn {
     addScoreModal(opts: {
         displayName: string;
         remoteDisplayName?: string;
+        columnPrefix: string;
+        fullName: string;
         getValue?: (ms: any) => number;
         getTitle?: (ms: any) => string;
         children?: string[];
@@ -392,6 +400,8 @@ export class DescriptorColumn {
             id: this.id,
             displayName: opts.displayName,
             remoteDisplayName: opts.remoteDisplayName ?? opts.displayName,
+            columnPrefix: opts.columnPrefix,
+            fullName: opts.fullName,
             getValue:
                 opts.getValue ?? ((ms) => (remoteMsName in ms ? ms[remoteMsName] : ms[tradMsName])),
             getTitle: opts.getTitle ?? (() => ""),
