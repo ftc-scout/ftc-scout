@@ -321,7 +321,7 @@ export class ScoreModalComponent {
             columnName: (side == MSStatSide.Opp ? "Opp " : "") + this.columnPrefix,
             dialogName: this.displayName,
             titleName: (side == MSStatSide.Opp ? "Opponent " : "") + this.fullName,
-            sqlExpr: `todo`,
+            sqlExpr: (side == MSStatSide.This ? "ms." : "msOpp.") + this.id,
             ty: StatType.Int,
             getNonRankValue:
                 side == MSStatSide.This

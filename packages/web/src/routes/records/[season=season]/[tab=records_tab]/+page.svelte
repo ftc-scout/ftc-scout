@@ -33,6 +33,7 @@
     import RemoteSelect from "$lib/components/ui/form/RemoteSelect.svelte";
     import { PAGE_EC_DC } from "$lib/util/search-params/int";
     import Head from "$lib/components/Head.svelte";
+    import Match from "./Match.svelte";
 
     function go(tab: string, season: Season) {
         let tabChanged = tab != $page.params.tab;
@@ -60,6 +61,7 @@
 
     export let data: PageData;
     $: tepData = data.tepData;
+    $: matchData = data.matchData;
 
     let focusedTeam: number | null = null;
     let focusedTeamName: string | null;
@@ -160,7 +162,9 @@
             <Tep {tepData} {focusedTeam} />
         </TabContent>
 
-        <TabContent name="matches">Matches</TabContent>
+        <TabContent name="matches">
+            <Match {matchData} {focusedTeam} />
+        </TabContent>
     </TabbedCard>
 </WidthProvider>
 

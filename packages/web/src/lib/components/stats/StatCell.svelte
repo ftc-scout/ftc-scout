@@ -19,7 +19,7 @@
 {:else if val.ty == "team"}
     <StatTeam {val} {eventCode} {focusedTeam} />
 {:else if val.ty == "event"}
-    <StatEvent {val} />
+    <StatEvent {val} color={stat.color} />
 {:else}
     <td class="{stat.color} {val?.ty ?? 'na'}" title={stat.titleName}>
         {#if val.ty == "rank" && val.val}

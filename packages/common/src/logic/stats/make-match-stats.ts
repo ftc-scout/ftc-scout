@@ -13,7 +13,7 @@ const TEAM_STATS = [
         columnName: "Team 1",
         dialogName: "Team 1",
         titleName: "Team 1",
-        sqlExpr: "TODO",
+        sqlExpr: "tmp1.team_number",
         ty: StatType.Team,
         getNonRankValue: (d: any) => {
             let t = d.teams.find((s: any) => s.station == Station.One || s.station == Station.Solo);
@@ -26,7 +26,7 @@ const TEAM_STATS = [
         columnName: "Team 2",
         dialogName: "Team 2",
         titleName: "Team 2",
-        sqlExpr: "TODO",
+        sqlExpr: "tmp2.team_number",
         ty: StatType.Team,
         getNonRankValue: (d: any) => {
             let t = d.teams.find((t: any) => t.station == Station.Two);
@@ -39,7 +39,7 @@ const TEAM_STATS = [
         columnName: "Opp Team 1",
         dialogName: "Team 1",
         titleName: "Opponent Team 1",
-        sqlExpr: "TODO",
+        sqlExpr: "tmp1Opp.team_number",
         ty: StatType.Team,
         getNonRankValue: (d: any) => {
             let opp = d.opponentsScore;
@@ -56,7 +56,7 @@ const TEAM_STATS = [
         columnName: "Opp Team 2",
         dialogName: "Team 2",
         titleName: "Opponent Team 2",
-        sqlExpr: "TODO",
+        sqlExpr: "tmp2Opp.team_number",
         ty: StatType.Team,
         getNonRankValue: (d: any) => {
             let opp = d.opponentsScore;
@@ -74,7 +74,7 @@ let INFO_STATS = [
         columnName: "Match Num",
         dialogName: "Match Number",
         titleName: "Match Number",
-        sqlExpr: "TODO",
+        sqlExpr: "match_id",
         ty: StatType.String,
         getNonRankValue: (d: any) => ({ ty: "string", val: d.match.description }),
     }),
@@ -84,7 +84,7 @@ let INFO_STATS = [
         columnName: "Alliance",
         dialogName: "Alliance",
         titleName: "Alliance",
-        sqlExpr: "TODO",
+        sqlExpr: "alliance",
         ty: StatType.String,
         getNonRankValue: (d: any) => ({ ty: "string", val: d.alliance }),
     }),
@@ -94,8 +94,8 @@ let INFO_STATS = [
         columnName: "Event",
         dialogName: "Event",
         titleName: "Event",
-        sqlExpr: "TODO",
-        ty: StatType.String,
+        sqlExpr: "e.start",
+        ty: StatType.Event,
         getNonRankValue: (d: any) => {
             let e = d.match.event;
             return e
@@ -107,7 +107,7 @@ let INFO_STATS = [
                       start: e.start,
                       end: e.end,
                   }
-                : null; // TODO check this actually works
+                : null;
         },
     }),
 ];
@@ -119,7 +119,7 @@ const TOTAL_POINTS_STATS = [
         columnName: "Total",
         dialogName: "Total Points",
         titleName: "Total Points",
-        sqlExpr: `todo`,
+        sqlExpr: `ms.totalPoints`,
         ty: StatType.Int,
         getNonRankValue: (d: any) => ({ ty: "int", val: d.totalPoints }),
     }),
@@ -129,7 +129,7 @@ const TOTAL_POINTS_STATS = [
         columnName: "Total NP",
         dialogName: "Total Points NP",
         titleName: "Total Points No Penalties",
-        sqlExpr: `todo`,
+        sqlExpr: `ms.totalPointsNp`,
         ty: StatType.Int,
         getNonRankValue: (d: any) => ({ ty: "int", val: d.totalPointsNp }),
     }),
@@ -139,7 +139,7 @@ const TOTAL_POINTS_STATS = [
         columnName: "Opp Total",
         dialogName: "Total Points",
         titleName: "Opponent Total Points",
-        sqlExpr: `todo`,
+        sqlExpr: `msOpp.totalPoints`,
         ty: StatType.Int,
         getNonRankValue: (d: any) =>
             d.opponentsScore ? { ty: "int", val: d.opponentsScore.totalPoints } : null,
@@ -150,7 +150,7 @@ const TOTAL_POINTS_STATS = [
         columnName: "Opp Total NP",
         dialogName: "Total Points NP",
         titleName: "Opp Total Points No Penalties",
-        sqlExpr: `todo`,
+        sqlExpr: `msOpp.totalPointsNp`,
         ty: StatType.Int,
         getNonRankValue: (d: any) =>
             d.opponentsScore ? { ty: "int", val: d.opponentsScore.totalPointsNp } : null,

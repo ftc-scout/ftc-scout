@@ -136,7 +136,8 @@ function filterValToSQL(
     if (val.lit) {
         return val.lit + "";
     } else if (val.var) {
-        if (stats.getStat(val.var).ty == "event") {
+        let ty = stats.getStat(val.var).ty;
+        if (ty == "event") {
             return "null";
         } else {
             let sql = stats.getStat(val.var)?.sqlExpr ?? null;
@@ -145,4 +146,27 @@ function filterValToSQL(
     } else {
         return "0";
     }
+}
+
+export function isFilteringOn(filter: TyFilterGQL | null, id: (id: string) => boolean): boolean {
+    return (
+        (!!filter?.cond && isFilteringOnCond(filter.cond, id)) ||
+        (!!filter?.group && isFilterOnGroup(filter.group, id))
+    );
+}
+
+function isFilterOnGroup(group: TyFilterGroupGQL, id: (id: string) => boolean) {
+    for (let child of group.children) {
+        if (isFilteringOn(child, id)) return true;
+    }
+
+    return false;
+}
+
+function isFilteringOnCond(cond: TyFilterCondGQL, id: (id: string) => boolean): boolean {
+    return isFilteringOnVal(cond.lhs, id) || isFilteringOnVal(cond.rhs, id);
+}
+
+function isFilteringOnVal(val: TyFilterValueGQL, id: (id: string) => boolean): boolean {
+    return !!val.var && id(val.var);
 }

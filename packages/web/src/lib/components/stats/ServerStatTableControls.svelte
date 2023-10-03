@@ -57,6 +57,7 @@
     $: isDefaultStats = calcIsDefaultStats(defaultStats, $shownStats);
 
     export let csv: { filename: string; title: string };
+    export let includeSkipRankTys = true;
 
     function changeSort(id: string) {
         let oldDir = $currentSort.id == id ? $currentSort.dir : null;
@@ -99,7 +100,7 @@
     {isDefaultStats}
     {focusedTeam}
     bind:rankTy={$rankTy}
-    includeSkipRankTys
+    {includeSkipRankTys}
     showRank
     {csv}
     on:change_sort={(e) => changeSort(e.detail)}

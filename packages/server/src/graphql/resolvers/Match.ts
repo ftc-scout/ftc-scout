@@ -52,9 +52,9 @@ export const MatchGQL: GraphQLObjectType = new GraphQLObjectType({
 
 export function singleSeasonScoreAwareMatchLoader<
     K extends { eventSeason: Season } & FindOptionsWhere<Match>
->(keys: K[], info: GraphQLResolveInfo[]) {
-    let includeScores = info.some((i) => "scores" in graphqlFields(i));
-    let includeTeams = info.some((i) => "teams" in graphqlFields(i));
+>(keys: K[], info: GraphQLResolveInfo[], includeScores = false, includeTeams = false) {
+    includeScores ||= info.some((i) => "scores" in graphqlFields(i));
+    includeTeams ||= info.some((i) => "teams" in graphqlFields(i));
     let season = keys[0].eventSeason;
 
     let q = DATA_SOURCE.getRepository(Match)

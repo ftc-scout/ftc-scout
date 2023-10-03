@@ -1,0 +1,47 @@
+query MatchRecords(
+    $season: Int!
+    $skip: Int!
+    $take: Int!
+    $sortBy: String!
+    $sortDir: SortDir!
+    $filter: Filter
+    $region: RegionOption
+    $remote: RemoteOption
+    $start: Date
+    $end: Date
+) {
+    matchRecords(
+        season: $season
+        skip: $skip
+        take: $take
+        sortBy: $sortBy
+        sortDir: $sortDir
+        filter: $filter
+        region: $region
+        remote: $remote
+        start: $start
+        end: $end
+    ) {
+        data {
+            data {
+                match {
+                    ...FullMatch
+                    event {
+                        season
+                        code
+                        name
+                        start
+                        end
+                    }
+                }
+                alliance
+            }
+            filterRank
+            filterSkipRank
+            noFilterRank
+            noFilterSkipRank
+        }
+        offset
+        count
+    }
+}

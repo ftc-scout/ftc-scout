@@ -1,8 +1,9 @@
 <script lang="ts">
-    import type { StatValue } from "@ftc-scout/common";
+    import type { Color, StatValue } from "@ftc-scout/common";
     import { prettyPrintDateRangeString } from "../../printers/dateRange";
 
     export let val: Extract<StatValue, { ty: "event" }>;
+    export let color: Color;
     $: season = val.season;
     $: code = val.code;
     $: name = val.name;
@@ -11,7 +12,7 @@
     $: href = `/events/${season}/${code}/matches`;
 </script>
 
-<td class="inner-hover" title={name}>
+<td class="inner-hover {color}" title={name}>
     <a class="wrap" {href}>
         <span> {name} </span>
         <em class="date">{prettyPrintDateRangeString(start, end)}</em>
@@ -65,5 +66,21 @@
 
     .date {
         color: var(--secondary-text-color);
+    }
+
+    .red {
+        background: var(--red-stat-bg-color);
+    }
+    .blue {
+        background: var(--blue-stat-bg-color);
+    }
+    .light-blue {
+        background: var(--light-blue-stat-bg-color);
+    }
+    .purple {
+        background: var(--purple-stat-bg-color);
+    }
+    .green {
+        background: var(--green-stat-bg-color);
     }
 </style>

@@ -20,3 +20,10 @@ export function getMatchScores(m: FullMatchFragment): AllianceScore[] {
         return [s];
     }
 }
+
+export function getMatchScoresForAlliance(m: FullMatchFragment, alliance: Alliance): AllianceScore {
+    let scores = getMatchScores(m);
+    return alliance == Alliance.Solo
+        ? scores[0]
+        : scores.find((s) => "alliance" in s && s.alliance == alliance)!;
+}
