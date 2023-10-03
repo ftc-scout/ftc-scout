@@ -224,6 +224,7 @@ export const Descriptor2019 = new Descriptor({
                 displayName: "Majors Points",
                 columnPrefix: "Majors",
                 fullName: "Major Penalties Committed Points",
+                sql: (ms) => `(${ms}.majorsCommitted * 20)`,
                 getValue: (ms) => ms.majorsCommitted * 20,
                 getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
             })
@@ -240,6 +241,7 @@ export const Descriptor2019 = new Descriptor({
                 displayName: "Minors Points",
                 columnPrefix: "Minors",
                 fullName: "Minor Penalties Committed Points",
+                sql: (ms) => `(${ms}.minorsCommitted * 5)`,
                 getValue: (ms) => ms.minorsCommitted * 5,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })

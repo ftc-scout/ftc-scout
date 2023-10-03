@@ -289,6 +289,7 @@ export class ScoreModalComponent {
     remoteDisplayName: string;
     columnPrefix: string;
     fullName: string;
+    sql: ((ms: string) => string) | undefined;
     getValue: (ms: any) => number;
     getTitle: (ms: any) => string;
 
@@ -300,6 +301,7 @@ export class ScoreModalComponent {
         remoteDisplayName: string;
         columnPrefix: string;
         fullName: string;
+        sql?: ((ms: string) => string) | undefined;
         getValue: (ms: any) => number;
         getTitle: (ms: any) => string;
         children: string[];
@@ -309,19 +311,21 @@ export class ScoreModalComponent {
         this.remoteDisplayName = opts.remoteDisplayName;
         this.columnPrefix = opts.columnPrefix;
         this.fullName = opts.fullName;
+        this.sql = opts.sql;
         this.getValue = opts.getValue;
         this.getTitle = opts.getTitle;
         this.children = opts.children;
     }
 
     getStatColumn(side: MSStatSide): NonRankStatColumn<any> {
+        let ms = side == MSStatSide.This ? "ms" : "msOpp";
         return new NonRankStatColumn({
             color: side == MSStatSide.This ? Color.Blue : Color.Red,
             id: this.id + side,
             columnName: (side == MSStatSide.Opp ? "Opp " : "") + this.columnPrefix,
             dialogName: this.displayName,
             titleName: (side == MSStatSide.Opp ? "Opponent " : "") + this.fullName,
-            sqlExpr: (side == MSStatSide.This ? "ms." : "msOpp.") + this.id,
+            sqlExpr: this?.sql?.(ms) ?? ms + "." + this.id,
             ty: StatType.Int,
             getNonRankValue:
                 side == MSStatSide.This
@@ -404,6 +408,7 @@ export class DescriptorColumn {
         remoteDisplayName?: string;
         columnPrefix: string;
         fullName: string;
+        sql?: (ms: string) => string;
         getValue?: (ms: any) => number;
         getTitle?: (ms: any) => string;
         children?: string[];
@@ -416,6 +421,7 @@ export class DescriptorColumn {
             remoteDisplayName: opts.remoteDisplayName ?? opts.displayName,
             columnPrefix: opts.columnPrefix,
             fullName: opts.fullName,
+            sql: opts.sql,
             getValue:
                 opts.getValue ?? ((ms) => (remoteMsName in ms ? ms[remoteMsName] : ms[tradMsName])),
             getTitle: opts.getTitle ?? (() => ""),

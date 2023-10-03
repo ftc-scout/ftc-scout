@@ -141,7 +141,15 @@ function filterValToSQL(
             return "null";
         } else {
             let sql = stats.getStat(val.var)?.sqlExpr ?? null;
-            return sql ? name(sql) : "0";
+            if (!sql) {
+                return "0";
+            } else if (sql.includes(".")) {
+                let [s, e] = sql.split(".");
+                console.log(sql, s + "." + name(e));
+                return s + "." + name(e);
+            } else {
+                return name(sql);
+            }
         }
     } else {
         return "0";

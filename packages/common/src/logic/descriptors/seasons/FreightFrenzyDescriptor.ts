@@ -457,6 +457,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Level 1",
                 columnPrefix: "Auto Freight 1",
                 fullName: "Level 1 Auto Freight Points",
+                sql: (ms) => `(${ms}.autoFreight1 * 6)`,
                 getValue: (ms) => ms.autoFreight1 * 6,
                 getTitle: (ms) => nOf(ms.autoFreight1, "Freight", "Freight"),
             })
@@ -472,6 +473,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Level 2",
                 columnPrefix: "Auto Freight 2",
                 fullName: "Level 2 Auto Freight Points",
+                sql: (ms) => `(${ms}.autoFreight2 * 6)`,
                 getValue: (ms) => ms.autoFreight2 * 6,
                 getTitle: (ms) => nOf(ms.autoFreight2, "Freight", "Freight"),
             })
@@ -487,6 +489,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Level 3",
                 columnPrefix: "Auto Freight 3",
                 fullName: "Level 3 Auto Freight Points",
+                sql: (ms) => `(${ms}.autoFreight3 * 6)`,
                 getValue: (ms) => ms.autoFreight3 * 6,
                 getTitle: (ms) => nOf(ms.autoFreight3, "Freight", "Freight"),
             })
@@ -502,6 +505,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Storage",
                 columnPrefix: "Auto Storage",
                 fullName: "Auto Storage Points",
+                sql: (ms) => `(${ms}.autoStorageFreight * 2)`,
                 getValue: (ms) => ms.autoStorageFreight * 2,
                 getTitle: (ms) => nOf(ms.autoStorageFreight, "Freight", "Freight"),
             })
@@ -572,6 +576,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Level 1",
                 columnPrefix: "Hub 1",
                 fullName: "Level 1 Alliance Hub Points",
+                sql: (ms) => `(${ms}.dcFreight1 * 2)`,
                 getValue: (ms) => ms.dcFreight1 * 2,
                 getTitle: (ms) => nOf(ms.dcFreight1, "Freight", "Freight"),
             })
@@ -587,6 +592,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Level 2",
                 columnPrefix: "Hub 2",
                 fullName: "Level 2 Alliance Hub Points",
+                sql: (ms) => `(${ms}.dcFreight2 * 4)`,
                 getValue: (ms) => ms.dcFreight2 * 4,
                 getTitle: (ms) => nOf(ms.dcFreight2, "Freight", "Freight"),
             })
@@ -602,6 +608,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Level 3",
                 columnPrefix: "Hub 3",
                 fullName: "Level 3 Alliance Hub Points",
+                sql: (ms) => `(${ms}.dcFreight3 * 6)`,
                 getValue: (ms) => ms.dcFreight3 * 6,
                 getTitle: (ms) => nOf(ms.dcFreight3, "Freight", "Freight"),
             })
@@ -720,6 +727,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Majors Points",
                 columnPrefix: "Capping",
                 fullName: "Major Penalty Points",
+                sql: (ms) => `(${ms}.majorsCommitted * -30)`,
                 getValue: (ms) => ms.majorsCommitted * -30,
                 getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
             })
@@ -736,6 +744,7 @@ export const Descriptor2021 = new Descriptor({
                 displayName: "Minors Points",
                 columnPrefix: "Minors",
                 fullName: "Minor Penalty Points",
+                sql: (ms) => `(${ms}.minorsCommitted * -10)`,
                 getValue: (ms) => ms.minorsCommitted * -10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })

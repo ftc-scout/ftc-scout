@@ -251,6 +251,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "Low",
                 columnPrefix: "Auto Tower Low",
                 fullName: "Auto Tower Low Points",
+                sql: (ms) => `(${ms}.autoTowerLow * 3)`,
                 getValue: (ms) => ms.autoTowerLow * 3,
                 getTitle: (ms) => nOf(ms.autoTowerLow, "Ring"),
             })
@@ -266,6 +267,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "Mid",
                 columnPrefix: "Auto Tower Mid",
                 fullName: "Auto Tower Mid Points",
+                sql: (ms) => `(${ms}.autoTowerMid * 6)`,
                 getValue: (ms) => ms.autoTowerMid * 6,
                 getTitle: (ms) => nOf(ms.autoTowerMid, "Ring"),
             })
@@ -281,6 +283,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "High",
                 columnPrefix: "Auto Tower High",
                 fullName: "Auto Tower Low Points",
+                sql: (ms) => `(${ms}.autoTowerHigh * 12)`,
                 getValue: (ms) => ms.autoTowerHigh * 12,
                 getTitle: (ms) => nOf(ms.autoTowerHigh, "Ring"),
             })
@@ -360,6 +363,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "Majors Points",
                 columnPrefix: "Majors",
                 fullName: "Major Penalty Points",
+                sql: (ms) => `(${ms}.majorsCommitted * -30)`,
                 getValue: (ms) => ms.majorsCommitted * -30,
                 getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
             })
@@ -376,6 +380,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "Minors Points",
                 columnPrefix: "Minors",
                 fullName: "Minor Penalty Points",
+                sql: (ms) => `(${ms}.minorsCommitted * -10)`,
                 getValue: (ms) => ms.minorsCommitted * -10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })
@@ -423,6 +428,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "Low",
                 columnPrefix: "DC Tower Low",
                 fullName: "Teleop Tower Low Points",
+                sql: (ms) => `(${ms}.dcTowerLow * 2)`,
                 getValue: (ms) => ms.dcTowerLow * 2,
                 getTitle: (ms) => nOf(ms.dcTowerLow, "Ring"),
             })
@@ -438,6 +444,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "Mid",
                 columnPrefix: "DC Tower Mid",
                 fullName: "Teleop Tower Mid Points",
+                sql: (ms) => `(${ms}.dcTowerMid * 4)`,
                 getValue: (ms) => ms.dcTowerMid * 4,
                 getTitle: (ms) => nOf(ms.dcTowerMid, "Ring"),
             })
@@ -453,6 +460,7 @@ export const Descriptor2020 = new Descriptor({
                 displayName: "High",
                 columnPrefix: "DC Tower High",
                 fullName: "Teleop Tower High Points",
+                sql: (ms) => `(${ms}.dcTowerHigh * 6)`,
                 getValue: (ms) => ms.dcTowerHigh * 6,
                 getTitle: (ms) => nOf(ms.dcTowerHigh, "Ring"),
             })

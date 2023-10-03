@@ -442,6 +442,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Terminal",
                 columnPrefix: "Auto Terminal",
                 fullName: "Auto Terminal Points",
+                sql: (ms) => `(${ms}.autoTerminalCones * 1)`,
                 getValue: (ms) => ms.autoTerminalCones * 1,
                 getTitle: (ms) => nOf(ms.autoTerminalCones, "Cone"),
             })
@@ -457,6 +458,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Ground",
                 columnPrefix: "Auto Ground",
                 fullName: "Auto Ground Junction Points",
+                sql: (ms) => `(${ms}.autoGroundCones * 2)`,
                 getValue: (ms) => ms.autoGroundCones * 2,
                 getTitle: (ms) => nOf(ms.autoGroundCones, "Cone"),
             })
@@ -472,6 +474,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Low",
                 columnPrefix: "Auto Low",
                 fullName: "Auto Low Junction Points",
+                sql: (ms) => `(${ms}.autoLowCones * 3)`,
                 getValue: (ms) => ms.autoLowCones * 3,
                 getTitle: (ms) => nOf(ms.autoLowCones, "Cone"),
             })
@@ -487,6 +490,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Medium",
                 columnPrefix: "Auto Medium",
                 fullName: "Auto Medium Junction Points",
+                sql: (ms) => `(${ms}.autoMediumCones * 4)`,
                 getValue: (ms) => ms.autoMediumCones * 4,
                 getTitle: (ms) => nOf(ms.autoMediumCones, "Cone"),
             })
@@ -502,6 +506,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "High",
                 columnPrefix: "Auto High",
                 fullName: "Auto High Junction Points",
+                sql: (ms) => `(${ms}.autoHighCones * 5)`,
                 getValue: (ms) => ms.autoHighCones * 5,
                 getTitle: (ms) => nOf(ms.autoHighCones, "Cone"),
             })
@@ -560,6 +565,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Regular",
                 columnPrefix: "Cone Ownership",
                 fullName: "Cone Ownership Points",
+                sql: (ms) => `(${ms}.coneOwnedJunctions * 3)`,
                 getValue: (ms) => ms.coneOwnedJunctions * 3,
                 getTitle: (ms) => nOf(ms.coneOwnedJunctions, "Junction"),
             })
@@ -575,6 +581,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Beacon",
                 columnPrefix: "Beacon Ownership",
                 fullName: "Beacon Ownership Points",
+                sql: (ms) => `(${ms}.beaconOwnedJunctions * 10)`,
                 getValue: (ms) => ms.beaconOwnedJunctions * 10,
                 getTitle: (ms) => nOf(ms.beaconOwnedJunctions, "Beacon"),
             })
@@ -603,6 +610,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Majors Points",
                 columnPrefix: "Majors",
                 fullName: "Major Penalty Points Committed",
+                sql: (ms) => `(${ms}.majorsCommitted * 30)`,
                 getValue: (ms) => ms.majorsCommitted * 30,
                 getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
             })
@@ -619,6 +627,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Minors Points",
                 columnPrefix: "Minors",
                 fullName: "Minor Penalty Points Committed",
+                sql: (ms) => `(${ms}.minorsCommitted * 10)`,
                 getValue: (ms) => ms.minorsCommitted * 10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })
@@ -718,6 +727,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Terminal",
                 columnPrefix: "DC Terminal",
                 fullName: "Teleop Terminal Points",
+                sql: (ms) => `(${ms}.dcTerminalCones * 1)`,
                 getValue: (ms) => ms.dcTerminalCones * 1,
                 getTitle: (ms) => nOf(ms.dcTerminalCones, "Cone"),
             })
@@ -733,6 +743,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Ground",
                 columnPrefix: "DC Ground",
                 fullName: "Teleop Ground Junction Points",
+                sql: (ms) => `(${ms}.dcGroundCones * 2)`,
                 getValue: (ms) => ms.dcGroundCones * 2,
                 getTitle: (ms) => nOf(ms.dcGroundCones, "Cone"),
             })
@@ -748,6 +759,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Low",
                 columnPrefix: "DC Low",
                 fullName: "Teleop Low Junction Points",
+                sql: (ms) => `(${ms}.dcLowCones * 3)`,
                 getValue: (ms) => ms.dcLowCones * 3,
                 getTitle: (ms) => nOf(ms.dcLowCones, "Cone"),
             })
@@ -763,6 +775,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "Medium",
                 columnPrefix: "DC Medium",
                 fullName: "Teleop Medium Junction Points",
+                sql: (ms) => `(${ms}.dcMediumCones * 4)`,
                 getValue: (ms) => ms.dcMediumCones * 4,
                 getTitle: (ms) => nOf(ms.dcMediumCones, "Cone"),
             })
@@ -778,6 +791,7 @@ export const Descriptor2022 = new Descriptor({
                 displayName: "High",
                 columnPrefix: "DC High",
                 fullName: "Teleop High Junction Points",
+                sql: (ms) => `(${ms}.dcHighCones * 5)`,
                 getValue: (ms) => ms.dcHighCones * 5,
                 getTitle: (ms) => nOf(ms.dcHighCones, "Cone"),
             })
