@@ -17,6 +17,7 @@
         faLocationDot,
         faMedal,
         faTrophy,
+        faVideo,
     } from "@fortawesome/free-solid-svg-icons";
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import { prettyPrintURL } from "$lib/printers/url";
@@ -96,6 +97,19 @@
                 <InfoIconRow icon={faLink}>
                     <a href={event.website} target="_blank" rel="noreferrer" class="norm-link">
                         {prettyPrintURL(event.website)}
+                    </a>
+                </InfoIconRow>
+            {/if}
+
+            {#if event.liveStreamURL}
+                <InfoIconRow icon={faVideo}>
+                    <a
+                        href={event.liveStreamURL}
+                        target="_blank"
+                        rel="noreferrer"
+                        class="norm-link"
+                    >
+                        {prettyPrintURL(event.liveStreamURL)}
                     </a>
                 </InfoIconRow>
             {/if}

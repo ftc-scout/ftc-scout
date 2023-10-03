@@ -196,7 +196,10 @@ export class Event extends BaseEntity {
             state: api.stateprov,
             city: api.city,
             website: api.website ? api.website.trim() : null,
-            liveStreamURL: api.liveStreamUrl ? api.liveStreamUrl.trim() : null,
+            liveStreamURL:
+                api.liveStreamUrl && api.liveStreamUrl.startsWith("https://")
+                    ? api.liveStreamUrl.trim()
+                    : null,
             webcasts: api.webcasts ? api.webcasts : [],
             timezone: api.timezone ?? "UTC",
             start: new Date(api.dateStart),

@@ -2,6 +2,7 @@ query EventPage($season: Int!, $code: String!) {
     eventByCode(season: $season, code: $code) {
         ...BasicEventInfo
         website
+        liveStreamURL
         type
         matches {
             ...FullMatch

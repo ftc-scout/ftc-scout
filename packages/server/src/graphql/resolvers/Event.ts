@@ -54,7 +54,7 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             resolve: (e) => ({ venue: e.venue, city: e.city, state: e.state, country: e.country }),
         },
         website: nullTy(StrTy),
-        livestreamURL: nullTy(StrTy),
+        liveStreamURL: nullTy(StrTy),
         webcasts: listTy(StrTy),
         timezone: StrTy,
         start: DateTy,
