@@ -28,8 +28,7 @@
         where the blue alliance scored a circuit spanning nine junctions and terminals. Interestingly
         the red alliance also scored a circuit in this match. A rare double circuit, an event that has
         only occurred
-        <a
-            href={`/records/2022/matches?filter=%7B"all"%3A%5B%7B"lhs"%3A"Circuit+Points"%2C"op"%3A"%3D"%2C"rhs"%3A20%7D%2C%7B"lhs"%3A"Circuit+Points+Opponent"%2C"op"%3A"%3D"%2C"rhs"%3A20%7D%5D%7D`}
+        <a href={`/records/2022/matches?filter=and-circuitPointsThis.eq.20+circuitPointsOpp.eq.20-`}
             >79 times</a
         > (just 3% of matches!).
     </p>
@@ -48,7 +47,7 @@
 
     <p>
         57 alliances have scored a circuit using the minimum number of cones possible (six). <a
-            href="/records/2022/matches?filter=%7B%22all%22%3A%5B%7B%22lhs%22%3A%22Circuit+Points%22%2C%22op%22%3A%22%3D%22%2C%22rhs%22%3A20%7D%2C%7B%22lhs%22%3A%22Driver+Controlled+Points%22%2C%22op%22%3A%22%3D%22%2C%22rhs%22%3A18%7D%2C%7B%22lhs%22%3A%22Driver+Controlled+High+Points%22%2C%22op%22%3A%22%3D%22%2C%22rhs%22%3A10%7D%2C%7B%22lhs%22%3A%22Beacon+Ownership+Points%22%2C%22op%22%3A%22%3D%22%2C%22rhs%22%3A0%7D%5D%7D"
+            href="/records/2022/matches?filter=and-circuitPointsThis.eq.20+dcPointsThis.eq.18+dcHighPointsThis.eq.10+beaconOwnershipPointsThis.eq.0-&rank-ty=FilterSkip"
             >See the list here.</a
         >
     </p>

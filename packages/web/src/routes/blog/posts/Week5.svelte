@@ -67,7 +67,7 @@
     <p>
         The team with the most draws, barring 0-0 matches and only matches with penalties is just a
         massive 11 way tie. Some familiar teams show up. <a
-            href="/records/2022/matches?filter=%7B%22all%22%3A%5B%7B%22lhs%22%3A%22Total+Points%22%2C%22op%22%3A%22%3D%22%2C%22rhs%22%3A%22Total+Points+Opponent%22%7D%2C%7B%22any%22%3A%5B%7B%22lhs%22%3A%22Total+Points%22%2C%22op%22%3A%22%E2%89%A0%22%2C%22rhs%22%3A%22Total+Points+No+Penalties%22%7D%2C%7B%22lhs%22%3A%22Total+Points+Opponent%22%2C%22op%22%3A%22%E2%89%A0%22%2C%22rhs%22%3A%22Total+Points+No+Penalties+Opponent%22%7D%5D%7D%5D%7D"
+            href="/records/2022/matches?filter=and-totalPointsThis.eq.totalPointsOpp+or-totalPointsThis.neq.totalPointsNpThis+totalPointsOpp.neq.totalPointsNpOpp--"
             >Matches in question.</a
         >
     </p>
