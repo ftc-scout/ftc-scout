@@ -14,7 +14,7 @@
 <script lang="ts">
     import { writable, type Writable } from "svelte/store";
     import { slide } from "svelte/transition";
-    import type { Tree } from "@ftc-scout/common";
+    import { Color, type Tree } from "@ftc-scout/common";
     import type { StatSectionRow, StatSet, StatSetSection } from "@ftc-scout/common";
     import ViewCell from "./ViewCell.svelte";
     import ExpandButton from "../../ExpandButton.svelte";
@@ -31,6 +31,10 @@
 
     $: openSections = getOpenSections(stats.id);
     $: id = section.getRowId(row.val.id);
+    $: extra =
+        section.columns.length == 2 &&
+        section.columns[0].color == Color.Blue &&
+        section.columns[1].color == Color.Red;
 </script>
 
 {#if shown}
@@ -52,7 +56,7 @@
             {row.val.name}
         </td>
         {#each section.columns as column}
-            <ViewCell {data} {stats} {section} row={row.val} {column} />
+            <ViewCell {data} {stats} {section} row={row.val} {column} {extra} />
         {/each}
     </tr>
 {/if}

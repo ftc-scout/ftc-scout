@@ -14,12 +14,13 @@
     export let section: StatSetSection;
     export let row: StatSectionRow;
     export let column: StatSectionColumn;
+    export let extra = false;
 
     $: stat = stats.getStat(section.getId(row.id, column.id));
     $: value = stat.getNonRankValue(data);
 </script>
 
-<td class={column.color}>
+<td class={column.color} class:extra>
     <div class:zero={value && "val" in value && !value.val}>
         {#if value == null}
             <span class="na">N/A</span>
@@ -50,8 +51,6 @@
     td {
         padding: var(--md-pad);
         min-width: 75px;
-
-        font-weight: bold;
     }
 
     @media (max-width: 700px) {
@@ -70,23 +69,27 @@
 
     .red {
         background: var(--red-stat-bg-color);
-        color: var(--red-stat-color);
     }
     .blue {
         background: var(--blue-stat-bg-color);
-        color: var(--blue-stat-color);
     }
     .light-blue {
         background: var(--light-blue-stat-bg-color);
-        color: var(--light-blue-stat-color);
     }
     .purple {
         background: var(--purple-stat-bg-color);
-        color: var(--purple-stat-color);
     }
     .green {
         background: var(--green-stat-bg-color);
-        color: var(--green-stat-color);
+    }
+
+    .extra.red {
+        color: var(--red-team-text-color);
+        font-weight: bold;
+    }
+    .extra.blue {
+        color: var(--blue-team-text-color);
+        font-weight: bold;
     }
 
     .na {
