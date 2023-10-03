@@ -169,6 +169,11 @@
 </WidthProvider>
 
 <style>
+    h1 {
+        margin-top: var(--sm-gap);
+        margin-bottom: var(--lg-gap);
+    }
+
     label,
     div {
         display: flex;
