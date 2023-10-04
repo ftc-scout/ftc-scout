@@ -4,6 +4,7 @@ import { loadAllTeams } from "../db/loaders/load-all-teams";
 import { loadAllEvents } from "../db/loaders/load-all-events";
 import { loadAllMatches } from "../db/loaders/load-all-matches";
 import { loadAllAwards } from "../db/loaders/load-all-awards";
+import { loadFutureEvents } from "../db/loaders/load-future-events";
 
 export const LoadType = {
     Full: "Full",
@@ -59,6 +60,7 @@ export async function watchApi() {
         console.info(`Syncing. (Cycle ${cycleCount})`);
         await runJob(async () => await loadAllTeams(CURRENT_SEASON), MINS_PER_DAY);
         await runJob(async () => await loadAllEvents(CURRENT_SEASON), MINS_PER_HOUR);
+        await runJob(async () => await loadFutureEvents(CURRENT_SEASON), MINS_PER_DAY / 2);
         await runJob(async () => await loadAllMatches(CURRENT_SEASON, LoadType.Partial), 1);
         await runJob(async () => await loadAllMatches(CURRENT_SEASON, LoadType.Full), MINS_PER_DAY);
         await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Partial), 5);
