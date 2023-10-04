@@ -131,13 +131,6 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             // Filter
             let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
 
-            let joinEvent =
-                chosenRegion != RegionOption.All ||
-                start != null ||
-                end != null ||
-                remote != RemoteOption.All ||
-                sortBy == "event";
-
             let contextAddedQ = Tep.createQueryBuilder("tep")
                 .select("tep.event_code", "tep_ec")
                 .addSelect("tep.team_number", "tep_tn")
@@ -151,18 +144,14 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 )
                 .addSelect(`${rankerSql}`, "ranker")
                 .addSelect(name(ns, defaultRankerSqlName))
-                .andWhere("has_stats");
+                .leftJoin("event", "e", "tep.season = e.season AND tep.event_code = e.code")
+                .andWhere("has_stats")
+                .andWhere("NOT e.modified_rules");
 
-            let countQ = Tep.createQueryBuilder("tep").where("has_stats");
-
-            if (joinEvent) {
-                contextAddedQ.leftJoin(
-                    "event",
-                    "e",
-                    "tep.season = e.season AND tep.event_code = e.code"
-                );
-                countQ.leftJoin("event", "e", "tep.season = e.season AND tep.event_code = e.code");
-            }
+            let countQ = Tep.createQueryBuilder("tep")
+                .leftJoin("event", "e", "tep.season = e.season AND tep.event_code = e.code")
+                .where("has_stats")
+                .andWhere("NOT e.modified_rules");
 
             if (chosenRegion != RegionOption.All) {
                 contextAddedQ.andWhere("region_code IN (:...regions)", {
@@ -329,13 +318,6 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             // Filter
             let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
 
-            let joinEvent =
-                chosenRegion != RegionOption.All ||
-                start != null ||
-                end != null ||
-                remote != RemoteOption.All ||
-                sortBy == "event";
-
             let joinOurTeams =
                 isFilteringOn(filter, (id) => id == "team1This") ||
                 isFilteringOn(filter, (id) => id == "team2This") ||
@@ -356,18 +338,13 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 .addSelect("ms.match_id", "ms_id")
                 .addSelect("ms.alliance", "ms_al")
                 .addSelect(`${rankerSql}`, "ranker")
-                .addSelect("ms." + defaultRankerSqlName, name(ns, defaultRankerSqlName));
+                .addSelect("ms." + defaultRankerSqlName, name(ns, defaultRankerSqlName))
+                .leftJoin("event", "e", "ms.season = e.season AND ms.event_code = e.code")
+                .where("NOT e.modified_rules");
 
-            let countQ = Ms.createQueryBuilder("ms");
-
-            if (joinEvent) {
-                contextAddedQ.leftJoin(
-                    "event",
-                    "e",
-                    "ms.season = e.season AND ms.event_code = e.code"
-                );
-                countQ.leftJoin("event", "e", "ms.season = e.season AND ms.event_code = e.code");
-            }
+            let countQ = Ms.createQueryBuilder("ms")
+                .leftJoin("event", "e", "ms.season = e.season AND ms.event_code = e.code")
+                .where("NOT e.modified_rules");
 
             if (joinOurTeams) {
                 contextAddedQ.leftJoin(
