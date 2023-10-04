@@ -30,7 +30,12 @@
 
         if (!resultsLoading) {
             resultsLoading = true;
-            results = getDataSync(getClient(), CombinedSearchDocument, { season: CURRENT_SEASON });
+            results = getDataSync(
+                getClient(),
+                CombinedSearchDocument,
+                { season: CURRENT_SEASON },
+                "searchbar"
+            );
         }
     }
 
@@ -64,6 +69,8 @@
         } else if (e.code == "ArrowUp") {
             e.preventDefault();
             $focusNum = Math.max(-1, $focusNum - 1);
+        } else if (e.code == "Escape") {
+            document.getElementById("searchbar")?.blur();
         }
     }
 

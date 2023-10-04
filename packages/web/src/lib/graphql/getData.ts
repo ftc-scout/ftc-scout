@@ -50,21 +50,28 @@ export async function getData<Data = any, Variables extends OperationVariables =
 export function getDataSync<Data = any, Variables extends OperationVariables = object>(
     client: ApolloClient<NormalizedCacheObject> | null,
     query: DocumentNode | TypedDocumentNode<Data, Variables>,
-    variables: Variables
+    variables: Variables,
+    bypassCacheKey: string | null = null
 ): Readable<ApolloQueryResult<Data> | null> {
+    let keyWithVars = bypassCacheKey + "-" + JSON.stringify(variables);
+    if (bypassCacheKey && cache[keyWithVars]) {
+        return readable(cache[keyWithVars]);
+    }
+
     if (!client) return readable(null);
 
     let queryResult = client.query({
         query,
         variables,
-        // No caching if on server
-        ...(!browser && { fetchPolicy: "no-cache" }),
+        // No caching if on server or if bypassing apollo cache
+        fetchPolicy: browser && !bypassCacheKey ? "cache-first" : "no-cache",
     });
 
     let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
 
     queryResult.then((r) => {
         result.set(r);
+        if (bypassCacheKey) cache[keyWithVars] = r;
     });
 
     return result;
