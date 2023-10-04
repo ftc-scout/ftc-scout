@@ -145,7 +145,6 @@ function filterValToSQL(
                 return "0";
             } else if (sql.includes(".")) {
                 let [s, e] = sql.split(".");
-                console.log(sql, s + "." + name(e));
                 return s + "." + name(e);
             } else {
                 return name(sql);
