@@ -8,6 +8,7 @@ import { error } from "@sveltejs/kit";
 import { DESCRIPTORS, Season } from "@ftc-scout/common";
 
 export const load: PageLoad = async ({ params, fetch }) => {
+    console.log(params);
     let season = +params.season as Season;
 
     let eventData = await getData(getClient(fetch), EventPageDocument, {

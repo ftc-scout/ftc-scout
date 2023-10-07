@@ -195,6 +195,30 @@ fragment FullStats on TeamEventStats {
         }
     }
 }
+fragment FullTeamEventStats2023Group on TeamEventStats2023Group {
+    egNavPoints
+    egNavPointsIndividual
+    autoPixelPoints
+    autoBackstagePoints
+    autoBackdropPoints
+    autoNavPoints
+    autoNavPointsIndividual
+    setLinePoints
+    mosaicPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    penaltyPointsCommitted
+    majorsByOppPoints
+    minorsByOppPoints
+    penaltyPointsByOpp
+    autoPoints
+    dcPoints
+    dcBackdropPoints
+    dcStudioPoints
+    egPoints
+    totalPointsNp
+    totalPoints
+}
 
 fragment FullTeamEventStats2022Group on TeamEventStats2022Group {
     autoNavPoints

@@ -1,6 +1,17 @@
-# // HELPSpecific
+# // HELP: Season Specific
 fragment FullMatchScores on MatchScores {
     __typename
+    ... on MatchScores2023 {
+        season
+        eventCode
+        matchId
+        red {
+            ...FullMatchScore2023Alliance
+        }
+        blue {
+            ...FullMatchScore2023Alliance
+        }
+    }
     ... on MatchScores2022 {
         season
         eventCode
@@ -133,7 +144,38 @@ fragment FullConeLayout on ConeLayout {
     blueFarTerminal
     junctions
 }
-
+fragment FullMatchScore2023Alliance on MatchScores2023Alliance {
+    season
+    eventCode
+    matchId
+    alliance
+    egNav2023_1
+    egNav2023_2
+    autoBackdrop
+    autoBackstage
+    dcStudio
+    dcBackdrop
+    autoNav1
+    autoNav2
+    maxSetLine
+    mosaics
+    minorsCommitted
+    majorsCommitted
+    minorsByOpp
+    majorsByOpp
+    egNavPoints
+    autoPixelPoints
+    autoNavPoints
+    setLinePoints
+    mosaicPoints
+    penaltyPointsCommitted
+    penaltyPointsByOpp
+    autoPoints
+    dcPoints
+    egPoints
+    totalPointsNp
+    totalPoints
+}
 fragment FullMatchScore2022Alliance on MatchScores2022Alliance {
     season
     eventCode

@@ -28,6 +28,7 @@ export function getClient(
         possibleTypes: {
             // TODO
             TeamEventStats: [
+                "TeamEventStats2023",
                 "TeamEventStats2022",
                 "TeamEventStats2021Trad",
                 "TeamEventStats2021Remote",
@@ -36,6 +37,7 @@ export function getClient(
                 "TeamEventStats2019",
             ],
             MatchScores: [
+                "MatchScores2023",
                 "MatchScores2022",
                 "MatchScores2021Remote",
                 "MatchScores2021Trad",

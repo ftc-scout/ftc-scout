@@ -2,7 +2,7 @@ import { Descriptor2019 } from "./seasons/SkystoneDescriptor";
 import { Descriptor2020 } from "./seasons/UltimateGoalDescriptor";
 import { Descriptor2021 } from "./seasons/FreightFrenzyDescriptor";
 import { Descriptor2022 } from "./seasons/PowerPlayDescriptor";
-import { Descriptor2023 } from "./descriptor/CenterStageDescriptor";
+import { Descriptor2023 } from "./seasons/CenterStageDescriptor";
 import { ALL_SEASONS, Season } from "../Season";
 import { Descriptor } from "./descriptor";
 

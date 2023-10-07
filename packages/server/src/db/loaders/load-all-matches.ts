@@ -89,7 +89,6 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 allDbMatches.map((m) => m.toFrontend()),
                 teams.map((t) => t.teamNumber)
             );
-
             await DATA_SOURCE.transaction(async (em) => {
                 await em.save(allDbMatches, { chunk: 100 });
                 await em.save(allDbTmps, { chunk: 500 });

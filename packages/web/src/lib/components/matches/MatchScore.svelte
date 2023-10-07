@@ -36,6 +36,7 @@
     import { SHOW_MATCH_SCORE, type ShowMatchFn } from "./MatchTable.svelte";
 
     export let match: FullMatchFragment;
+    $: console.log(match);
     export let timeZone: string;
 
     $: winner = computeWinner(match.scores);
