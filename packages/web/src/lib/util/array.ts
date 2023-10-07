@@ -25,3 +25,11 @@ export function arrayEq<T>(a: T[], b: T[]): boolean {
 
     return true;
 }
+
+export function windows<T>(arr: T[]): [T, T][] {
+    let res: [T, T][] = [];
+    for (let i = 0; i + 1 < arr.length; i++) {
+        res.push([arr[i], arr[i + 1]]);
+    }
+    return res;
+}

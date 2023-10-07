@@ -33,6 +33,7 @@
     import { Color } from "@ftc-scout/common";
     import type { ConeLayout } from "../../../../graphql/generated/graphql-operations";
     import Beacons from "./Beacons.svelte";
+    import CircuitVis from "./CircuitVis.svelte";
 
     export let layout: ConeLayout;
 </script>
@@ -42,6 +43,9 @@
         <Cones cones={layout} color={Color.Red} />
         <Cones cones={layout} color={Color.Blue} />
         <Beacons cones={layout} />
+
+        <CircuitVis cones={layout} color={Color.Red} />
+        <CircuitVis cones={layout} color={Color.Blue} />
 
         <Field />
         <PPTape />
