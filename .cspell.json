@@ -26,6 +26,7 @@
         "subpixels",
         "teleop",
         "teps",
+        "threlte",
         "timestamptz",
         "tmps",
         "typeorm",

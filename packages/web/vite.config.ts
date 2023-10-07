@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 
 export default defineConfig((mode) => ({
     ssr: {
-        noExternal: ["@graphql-typed-document-node/core"],
+        noExternal: ["@graphql-typed-document-node/core", "three"],
     },
     optimizeDeps: {
         exclude: ["@graphql-typed-document-node/core", "svelte-fa"],

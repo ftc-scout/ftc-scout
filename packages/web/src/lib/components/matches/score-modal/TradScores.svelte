@@ -3,8 +3,10 @@
     import type { TradScoresTy } from "../MatchScore.svelte";
     import TradScoresHeader from "./TradScoresHeader.svelte";
     import TradScoreLine from "./TradScoreLine.svelte";
+    import FieldVis from "../vis/FieldVis.svelte";
 
     export let scores: TradScoresTy;
+    export let matchDescription: string;
     $: season = scores.season as Season;
 </script>
 
@@ -21,6 +23,8 @@
         {/each}
     </tbody>
 </table>
+
+<FieldVis {scores} {matchDescription} />
 
 <style>
     table,

@@ -3,8 +3,10 @@
     import type { RemoteScoresTy } from "../MatchScore.svelte";
     import RemoteScoresHeader from "./RemoteScoresHeader.svelte";
     import RemoteScoreLine from "./RemoteScoreLine.svelte";
+    import FieldVis from "../vis/FieldVis.svelte";
 
     export let scores: RemoteScoresTy;
+    export let matchDescription: string;
     export let teamNumber: number;
     $: season = scores.season as Season;
 </script>
@@ -26,6 +28,8 @@
         {/each}
     </tbody>
 </table>
+
+<FieldVis {scores} {matchDescription} />
 
 <style>
     table,

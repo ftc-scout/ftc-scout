@@ -20,6 +20,7 @@
     export let match: FullMatchFragment | null = null;
 
     $: scores = match?.scores;
+    $: matchDescription = match?.description;
 
     $: trad = scores != null && "red" in scores ? (scores as TradScoresTy) : null;
     $: remote = scores != null && !("red" in scores) ? (scores as RemoteScoresTy) : null;
@@ -27,7 +28,7 @@
     let dispatch = createEventDispatcher();
 </script>
 
-{#if match && scores}
+{#if match && scores && matchDescription}
     <Modal
         bind:shown
         titleText="Match {match.description}"
@@ -37,9 +38,13 @@
         }}
     >
         {#if trad}
-            <TradScores scores={trad} />
+            <TradScores scores={trad} {matchDescription} />
         {:else if remote}
-            <RemoteScores scores={remote} teamNumber={match.teams[0].teamNumber} />
+            <RemoteScores
+                scores={remote}
+                {matchDescription}
+                teamNumber={match.teams[0].teamNumber}
+            />
         {/if}
     </Modal>
 {/if}
