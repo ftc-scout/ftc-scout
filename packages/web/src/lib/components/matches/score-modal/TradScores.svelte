@@ -4,8 +4,10 @@
     import TradScoresHeader from "./TradScoresHeader.svelte";
     import TradScoreLine from "./TradScoreLine.svelte";
     import FieldVis from "../vis/FieldVis.svelte";
+    import type { SimpleTeamMatchParticipation } from "../vis/2022/HoverInfo.svelte";
 
     export let scores: TradScoresTy;
+    export let teams: SimpleTeamMatchParticipation[];
     export let matchDescription: string;
     $: season = scores.season as Season;
 </script>
@@ -24,7 +26,7 @@
     </tbody>
 </table>
 
-<FieldVis {scores} {matchDescription} />
+<FieldVis {scores} {matchDescription} {teams} />
 
 <style>
     table,

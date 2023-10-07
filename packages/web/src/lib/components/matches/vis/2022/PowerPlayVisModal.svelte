@@ -8,10 +8,12 @@
 <script lang="ts">
     import type { FullMatchFragment } from "../../../../graphql/generated/graphql-operations";
     import Modal from "../../../Modal.svelte";
+    import type { SimpleTeamMatchParticipation } from "./HoverInfo.svelte";
 
     export let shown = false;
     export let matchDescription: string;
     export let scores: Scores2022;
+    export let teams: SimpleTeamMatchParticipation[];
 
     let PowerPlayVis: any;
 
@@ -38,7 +40,7 @@
     </form>
 
     {#if PowerPlayVis}
-        <svelte:component this={PowerPlayVis} {layout} />
+        <svelte:component this={PowerPlayVis} {layout} {teams} />
     {:else}
         <div />
     {/if}

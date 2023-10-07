@@ -38,11 +38,12 @@
         }}
     >
         {#if trad}
-            <TradScores scores={trad} {matchDescription} />
+            <TradScores scores={trad} {matchDescription} teams={match.teams} />
         {:else if remote}
             <RemoteScores
                 scores={remote}
                 {matchDescription}
+                teams={match.teams}
                 teamNumber={match.teams[0].teamNumber}
             />
         {/if}

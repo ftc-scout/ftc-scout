@@ -4,8 +4,10 @@
     import RemoteScoresHeader from "./RemoteScoresHeader.svelte";
     import RemoteScoreLine from "./RemoteScoreLine.svelte";
     import FieldVis from "../vis/FieldVis.svelte";
+    import type { SimpleTeamMatchParticipation } from "../vis/2022/HoverInfo.svelte";
 
     export let scores: RemoteScoresTy;
+    export let teams: SimpleTeamMatchParticipation[];
     export let matchDescription: string;
     export let teamNumber: number;
     $: season = scores.season as Season;
@@ -29,7 +31,7 @@
     </tbody>
 </table>
 
-<FieldVis {scores} {matchDescription} />
+<FieldVis {scores} {matchDescription} {teams} />
 
 <style>
     table,

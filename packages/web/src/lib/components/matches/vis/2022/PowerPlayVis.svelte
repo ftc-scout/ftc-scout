@@ -31,11 +31,19 @@
     import PpJunctions from "./PPJunctions.svelte";
     import Cones from "./Cones.svelte";
     import { Color } from "@ftc-scout/common";
-    import type { ConeLayout } from "../../../../graphql/generated/graphql-operations";
+    import type {
+        ConeLayout,
+        TeamMatchParticipation,
+    } from "../../../../graphql/generated/graphql-operations";
     import Beacons from "./Beacons.svelte";
     import CircuitVis from "./CircuitVis.svelte";
+    import Hover from "./HoverTarget.svelte";
+    import HoverInfo from "./HoverInfo.svelte";
 
     export let layout: ConeLayout;
+    export let teams: TeamMatchParticipation[];
+    let hoverPos: [number, number] | null;
+    let hoverJunction: number | null;
 </script>
 
 <div>
@@ -47,11 +55,15 @@
         <CircuitVis cones={layout} color={Color.Red} />
         <CircuitVis cones={layout} color={Color.Blue} />
 
+        <Hover cones={layout} bind:hoverPos bind:hoverJunction />
+
         <Field />
         <PPTape />
         <PpJunctions />
         <Camera />
     </Canvas>
+
+    <HoverInfo {hoverPos} {hoverJunction} cones={layout} {teams} />
 </div>
 
 <style>

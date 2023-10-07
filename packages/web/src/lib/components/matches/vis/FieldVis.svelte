@@ -4,15 +4,17 @@
     import Button from "../../ui/Button.svelte";
     import { Season } from "@ftc-scout/common";
     import PowerPlayVisModal from "./2022/PowerPlayVisModal.svelte";
+    import type { SimpleTeamMatchParticipation } from "./2022/HoverInfo.svelte";
 
     export let scores: FullMatchFragment["scores"];
+    export let teams: SimpleTeamMatchParticipation[];
     export let matchDescription: string;
 
     let shown2022 = false;
 </script>
 
 {#if scores && scores.__typename == "MatchScores2022"}
-    <PowerPlayVisModal bind:shown={shown2022} {matchDescription} {scores} />
+    <PowerPlayVisModal bind:shown={shown2022} {matchDescription} {scores} {teams} />
 {/if}
 
 <!-- // HELP: Season Specific -->
