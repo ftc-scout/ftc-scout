@@ -19,7 +19,7 @@ export function getClient(
     if (!fetch) throw "First call to get client must provide fetch";
 
     let link = new HttpLink({
-        uri: env.PUBLIC_SERVER_ORIGIN!,
+        uri: env.PUBLIC_SERVER_ORIGIN! + "/graphql",
         credentials: "omit",
         headers: { [env.PUBLIC_FRONTEND_CODE!]: "." },
         fetch,

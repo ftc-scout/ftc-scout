@@ -2,7 +2,7 @@ import "dotenv/config";
 
 import { DATA_SOURCE } from "./db/data-source";
 import { initDynamicEntities } from "./db/entities/dyn/init";
-import express from "express";
+import express, { text } from "express";
 import cors from "cors";
 import compression from "compression";
 import { apiLoggerMiddleware } from "./db/entities/ApiReq";
@@ -13,6 +13,7 @@ import { expressMiddleware } from "@apollo/server/express4";
 import { GQL_SCHEMA } from "./graphql/schema";
 import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
 import { setupBannerRoutes } from "./banner";
+import { handleAnalytics } from "./analytics";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -39,6 +40,8 @@ async function main() {
     await apolloServer.start();
 
     app.use("/graphql", apiLoggerMiddleware, expressMiddleware(apolloServer));
+
+    app.post("/analytics", text(), handleAnalytics);
 
     setupBannerRoutes(app);
 

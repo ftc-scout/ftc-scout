@@ -2,6 +2,8 @@
     import Navbar from "$lib/components/nav/Navbar.svelte";
     import { browser } from "$app/environment";
     import Sidebar from "$lib/components/nav/Sidebar.svelte";
+    import { afterNavigate } from "$app/navigation";
+    import { sendAnalyticsRequest } from "./analytics";
 
     if (browser) {
         // Svelte uses window.scrollTo to emulate the scroll resetting when navigation. However we
@@ -17,6 +19,8 @@
             pageYOffset: { get: () => document.getElementById("content")?.scrollTop },
         });
     }
+
+    afterNavigate(sendAnalyticsRequest);
 </script>
 
 <svelte:head>

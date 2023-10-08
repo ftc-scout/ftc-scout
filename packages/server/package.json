@@ -23,16 +23,20 @@
         "graphql": "^16.7.1",
         "graphql-scalars": "^1.22.2",
         "luxon": "^3.3.0",
+        "md5": "^2.3.0",
         "pg": "^8.11.0",
         "typeorm": "^0.3.16",
-        "typeorm-naming-strategies": "^4.1.0"
+        "typeorm-naming-strategies": "^4.1.0",
+        "ua-parser-js": "^1.0.36"
     },
     "devDependencies": {
         "@types/compression": "^1.7.2",
         "@types/cors": "^2.8.13",
         "@types/express": "^4.17.17",
         "@types/luxon": "^3.3.0",
+        "@types/md5": "^2.3.3",
         "@types/node": "^20.2.5",
+        "@types/ua-parser-js": "^0.7.37",
         "nodemon": "^2.0.22"
     }
 }
