@@ -68,7 +68,7 @@
         <a href="/teams/14503">Team #14503 Robo Sapiens</a>.
     </p>
 
-    <MatchTable {...data} />
+    <MatchTable event={data.event} matches={data.matches} />
 
     <p>
         Unfortunately for them they were a surrogate. If they had gotten to count the match instead

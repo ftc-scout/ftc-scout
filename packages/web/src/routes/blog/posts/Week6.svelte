@@ -33,7 +33,7 @@
         > (just 3% of matches!).
     </p>
 
-    <MatchTable {...data1} />
+    <MatchTable event={data1.event} matches={data1.matches} />
 
     <div class="image-wrap">
         <img
@@ -60,7 +60,7 @@
         but they made it into a Scouting Report and isn’t that all that really matters?).
     </p>
 
-    <MatchTable {...data2} />
+    <MatchTable event={data2.event} matches={data2.matches} />
 
     <div class="image-wrap">
         <img

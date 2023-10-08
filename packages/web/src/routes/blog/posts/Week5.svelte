@@ -30,7 +30,7 @@
         <i>best</i> in our region.)
     </p>
 
-    <MatchTable {...data1} />
+    <MatchTable event={data1.event} matches={data1.matches} />
 
     <p>This is an uninteresting story so far.</p>
     <p>
@@ -62,7 +62,7 @@
         <a href="/teams/11260?scores=USCOLIQ-11001">this one </a>.
     </p>
 
-    <MatchTable {...data2} />
+    <MatchTable event={data2.event} matches={data2.matches} />
 
     <p>
         The team with the most draws, barring 0-0 matches and only matches with penalties is just a

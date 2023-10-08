@@ -30,7 +30,7 @@
         >.
     </p>
 
-    <MatchTable {...data} />
+    <MatchTable event={data.event} matches={data.matches} />
 
     <p>
         The records for autonomous, teleop, and endgame are 55, 108, and 69 respectively. That means
