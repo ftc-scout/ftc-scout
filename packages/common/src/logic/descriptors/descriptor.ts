@@ -146,7 +146,7 @@ export class Descriptor {
     }
 
     getMatchInsightCols(remote: boolean): string[] {
-        return remote ? this.matchInsightCols : this.matchInsightColsRemote;
+        return remote ? this.matchInsightColsRemote : this.matchInsightCols;
     }
 }
 
@@ -329,11 +329,17 @@ export class ScoreModalComponent {
             ty: StatType.Int,
             getNonRankValue:
                 side == MSStatSide.This
-                    ? (d: any) => ({ ty: "int", val: this.getValue(d) })
-                    : (d: any) =>
-                          d.opponentsScore
-                              ? { ty: "int", val: this.getValue(d.opponentsScore) }
-                              : null,
+                    ? (d: any) => {
+                          let val = this.getValue(d);
+                          if (val == undefined) return null;
+                          return { ty: "int", val };
+                      }
+                    : (d: any) => {
+                          if (!d.opponentsScore) return null;
+                          let val = this.getValue(d.opponentsScore);
+                          if (val == undefined) return null;
+                          return { ty: "int", val };
+                      },
         });
     }
 }

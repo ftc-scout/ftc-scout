@@ -86,7 +86,7 @@ let INFO_STATS = [
         titleName: "Alliance",
         sqlExpr: "alliance",
         ty: StatType.String,
-        getNonRankValue: (d: any) => ({ ty: "string", val: d.alliance }),
+        getNonRankValue: (d: any) => (d.alliance ? { ty: "string", val: d.alliance } : null),
     }),
     new NonRankStatColumn({
         color: Color.Purple,

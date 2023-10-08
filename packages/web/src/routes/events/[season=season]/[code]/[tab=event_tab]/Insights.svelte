@@ -25,9 +25,9 @@
         "egPointsThis",
         ...descriptor.getMatchInsightCols(remote).map((c) => c + "This"),
         "team1This",
-        "team2This",
+        ...(remote ? [] : ["team2This"]),
         "matchNum",
-        "alliance",
+        ...(remote ? [] : ["alliance"]),
     ];
 
     $: saveId = `eventPageMs${season}${remote ? "Remote" : "Trad"}`;
