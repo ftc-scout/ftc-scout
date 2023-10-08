@@ -1,0 +1,13 @@
+mutation Vote($id: Int!, $vote: Int!) {
+    voteBestName(id: $id, vote: $vote) {
+        id
+        team1 {
+            number
+            name
+        }
+        team2 {
+            number
+            name
+        }
+    }
+}

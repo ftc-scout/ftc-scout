@@ -11,6 +11,8 @@
     import Head from "$lib/components/Head.svelte";
     import { createTippy } from "svelte-tippy";
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
+    import { getClient } from "../lib/graphql/client.js";
+    import { VoteDocument } from "../lib/graphql/generated/graphql-operations.js";
 
     export let data;
     $: homeStore = data.home;
@@ -19,10 +21,31 @@
     $: matchesPlayedCount = $homeStore?.data?.matchesPlayedCount;
     $: events = $homeStore?.data?.eventsOnDate;
 
+    $: bestName = $homeStore?.data.getBestName;
+
     $: wr = $homeStore?.data.tradWorldRecord;
 
     let tippy = createTippy({});
     $: np = DESCRIPTORS[CURRENT_SEASON].pensSubtract ? "" : "no penalty ";
+
+    function vote(vote: number) {
+        if (!bestName) return;
+
+        let id = bestName.id;
+        vote = vote == 0 ? bestName.team1.number : bestName.team2.number;
+
+        let clear = setTimeout(() => (bestName = null), 300);
+
+        getClient()
+            .mutate({
+                mutation: VoteDocument,
+                variables: { id, vote },
+            })
+            .then((res) => {
+                clearTimeout(clear);
+                bestName = res.data?.voteBestName;
+            });
+    }
 </script>
 
 <Head title="FTCScout" />
@@ -47,6 +70,36 @@
                 <b class="count">{matchesPlayedCount ?? "..."}</b>
                 <p class="name">Matches Played</p>
             </a>
+        </div>
+
+        <div class="name-vote">
+            <h2>
+                Which Name do You Like Better?
+                <span
+                    class="help"
+                    use:tippy={{
+                        content: `Vote for the best of the two randomly selected team names. Once \
+                        the competition is over we will release a blog post with the winners.`,
+                        theme: $tippyTheme,
+                    }}
+                >
+                    <Fa icon={faQuestionCircle} />
+                </span>
+            </h2>
+            <hr />
+            {#if bestName}
+                <div class="options">
+                    <button on:click={() => vote(0)}>
+                        {bestName.team1.number} - <i>{bestName.team1.name}</i>
+                    </button>
+                    <div class="or">OR</div>
+                    <button on:click={() => vote(1)}>
+                        {bestName.team2.number} - <i>{bestName.team2.name}</i>
+                    </button>
+                </div>
+            {:else}
+                <SkeletonRow header={false} card={false} rows={2} />
+            {/if}
         </div>
 
         <div class="events">
@@ -271,6 +324,65 @@
 
     .help {
         font-size: calc(var(--md-font-size));
-        /* color: var(--secondary-text-color); */
+    }
+
+    .name-vote {
+        background: var(--fg-color);
+        border: 1px solid var(--sep-color);
+        border-radius: 8px;
+        padding: var(--md-pad);
+        margin-bottom: var(--vl-gap);
+    }
+
+    .name-vote h2 {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--sm-gap);
+        margin-bottom: var(--md-gap);
+    }
+
+    .name-vote hr {
+        margin-bottom: var(--lg-gap);
+    }
+
+    .name-vote .options {
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        gap: var(--lg-gap);
+        margin: var(--md-gap);
+    }
+
+    @media (max-width: 800px) {
+        .name-vote .options {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    .name-vote button {
+        font-family: inherit;
+        font-size: var(--lg-font-size);
+
+        cursor: pointer;
+        user-select: auto;
+
+        border: 1px solid var(--sep-color);
+        border-radius: var(--pill-border-radius);
+        padding: var(--md-pad);
+        background: var(--form-bg-color);
+    }
+
+    .name-vote button:hover {
+        background: var(--form-hover-bg-color);
+    }
+
+    .name-vote button:active {
+        background: var(--form-click-bg-color);
+    }
+
+    .name-vote .or {
+        text-align: center;
+        font-size: var(--md-font-size);
     }
 </style>

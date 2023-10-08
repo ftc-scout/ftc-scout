@@ -11,6 +11,7 @@ import { Award } from "./entities/Award";
 import { TeamEventParticipationSchemas } from "./entities/dyn/team-event-participation";
 import { ApiReq } from "./entities/ApiReq";
 import { Analytics } from "./entities/Analytics";
+import { BestName } from "./entities/BestName";
 
 export const DEV_ENTITIES: MixedList<string | Function | EntitySchema<any>> = [FtcApiReq];
 
@@ -23,6 +24,7 @@ export const ENTITIES: MixedList<string | Function | EntitySchema<any>> = [
     TeamMatchParticipation,
     ...Object.values(MatchScoreSchemas),
     ...Object.values(TeamEventParticipationSchemas),
+    BestName,
     ApiReq,
     Analytics,
     ...(IS_DEV ? DEV_ENTITIES : []),
