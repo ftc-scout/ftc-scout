@@ -83,7 +83,7 @@
         }
 
         function down(e: MouseEvent) {
-            if (e.target == element) {
+            if (e.target == element && e.button == 0) {
                 moving = true;
 
                 getParents();
