@@ -7,6 +7,57 @@ import { BoolDTy, EnumDTy, Int16DTy } from "../types";
 import { Station } from "../../Station";
 import { nOf } from "../../../utils/format/n-of";
 
+export const AutoSpecialScoring = {
+    None: "None",
+    NoProp: "NoProp",
+    TeamProp: "TeamProp",
+} as const;
+export type AutoSpecialScoring = (typeof AutoSpecialScoring)[keyof typeof AutoSpecialScoring];
+const AutoSpecialScoringDTy = EnumDTy(
+    AutoSpecialScoring,
+    "AutoSpecialScoring",
+    "auto_special_scoring_enum"
+);
+
+function autoSpecialScoringFromAPI(scored: boolean, teamprop: boolean): AutoSpecialScoring {
+    if (scored) {
+        if (teamprop) {
+            return AutoSpecialScoring.TeamProp;
+        } else {
+            return AutoSpecialScoring.NoProp;
+        }
+    } else {
+        return AutoSpecialScoring.None;
+    }
+}
+function autoSpecialScoringPoints(autoSpecialScoring: AutoSpecialScoring): number {
+    switch (autoSpecialScoring) {
+        case "None":
+            return 0;
+        case "NoProp":
+            return 10;
+        case "TeamProp":
+            return 20;
+    }
+}
+
+function formatAutoSpecialScoringPoints(autoSpecialScoring: AutoSpecialScoring): string {
+    switch (autoSpecialScoring) {
+        case "None":
+            return "Not scored";
+        case "NoProp":
+            return "Scored without prop";
+        case "TeamProp":
+            return "Scored with team prop";
+    }
+}
+function dronePoints(zone: number): number {
+    if (zone == 0) {
+        return 0;
+    } else {
+        return (4 - zone) * 10;
+    }
+}
 export const EgNav2023 = {
     None: "None",
     Backstage: "Backstage",
@@ -88,6 +139,58 @@ export const Descriptor2023 = new Descriptor({
             })
     )
     .addColumn(
+        new DescriptorColumn({ name: "purple1" })
+            .addMatchScore({
+                fromApi: (api: Api) =>
+                    autoSpecialScoringFromAPI(api.spikeMarkPixel1, api.initTeamProp1),
+                dataTy: AutoSpecialScoringDTy,
+            })
+            .addScoreModal({
+                displayName: "Robot 1",
+                getValue: (ms) => autoSpecialScoringPoints(ms.purple1),
+                getTitle: (ms) => formatAutoSpecialScoringPoints(ms.purple1),
+            })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "purple2" })
+            .addMatchScore({
+                fromApi: (api: Api) =>
+                    autoSpecialScoringFromAPI(api.spikeMarkPixel2, api.initTeamProp2),
+                dataTy: AutoSpecialScoringDTy,
+            })
+            .addScoreModal({
+                displayName: "Robot 2",
+                getValue: (ms) => autoSpecialScoringPoints(ms.purple2),
+                getTitle: (ms) => formatAutoSpecialScoringPoints(ms.purple2),
+            })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "yellow1" })
+            .addMatchScore({
+                fromApi: (api: Api) =>
+                    autoSpecialScoringFromAPI(api.targetBackdropPixel1, api.initTeamProp1),
+                dataTy: AutoSpecialScoringDTy,
+            })
+            .addScoreModal({
+                displayName: "Robot 1",
+                getValue: (ms) => autoSpecialScoringPoints(ms.yellow1),
+                getTitle: (ms) => formatAutoSpecialScoringPoints(ms.yellow1),
+            })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "yellow2" })
+            .addMatchScore({
+                fromApi: (api: Api) =>
+                    autoSpecialScoringFromAPI(api.targetBackdropPixel2, api.initTeamProp2),
+                dataTy: AutoSpecialScoringDTy,
+            })
+            .addScoreModal({
+                displayName: "Robot 2",
+                getValue: (ms) => autoSpecialScoringPoints(ms.yellow2),
+                getTitle: (ms) => formatAutoSpecialScoringPoints(ms.yellow2),
+            })
+    )
+    .addColumn(
         new DescriptorColumn({ name: "autoBackdrop" })
             .addMatchScore({
                 fromApi: (api: Api) => api.autoBackdrop,
@@ -104,9 +207,9 @@ export const Descriptor2023 = new Descriptor({
             .finish()
     )
     .addColumn(
-        new DescriptorColumn({ name: "dcStudio" })
+        new DescriptorColumn({ name: "dcBackstage" })
             .addMatchScore({
-                fromApi: (api: Api) => api.dcStudio,
+                fromApi: (api: Api) => api.dcBackstagePoints,
                 dataTy: Int16DTy,
             })
             .finish()
@@ -134,6 +237,22 @@ export const Descriptor2023 = new Descriptor({
                 dataTy: BoolDTy,
             })
             .addScoreModal({ displayName: "Robot 2", getValue: (ms) => ms.autoNav2 * 5 })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "drone1" })
+            .addMatchScore({
+                fromApi: (api: Api) => api.drone1,
+                dataTy: Int16DTy,
+            })
+            .addScoreModal({ displayName: "Drone 1", getValue: (ms) => dronePoints(ms.drone1) })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "drone2" })
+            .addMatchScore({
+                fromApi: (api: Api) => api.drone2,
+                dataTy: Int16DTy,
+            })
+            .addScoreModal({ displayName: "Drone 2", getValue: (ms) => dronePoints(ms.drone2) })
     )
     .addColumn(
         new DescriptorColumn({ name: "maxSetLine" })
@@ -212,6 +331,54 @@ export const Descriptor2023 = new Descriptor({
             .finish()
     )
     .addColumn(
+        new DescriptorColumn({ name: "purplePoints" })
+            .addMatchScore({
+                fromSelf: (self) =>
+                    autoSpecialScoringPoints(self.purple1) + autoSpecialScoringPoints(self.purple2),
+                dataTy: Int16DTy,
+            })
+            .addScoreModal({ displayName: "Purple Bonus Points" })
+            .addTep({ columnPrefix: "Purple", fullName: "Purple Bonus Points" })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "purplePointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) =>
+                    station == Station.One
+                        ? autoSpecialScoringPoints(ms.purple1)
+                        : autoSpecialScoringPoints(ms.purple2),
+                columnPrefix: "Purple Bonus Individual",
+                dialogName: "Individual",
+                fullName: "Purple Bonus Points Individual",
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "yellowPoints" })
+            .addMatchScore({
+                fromSelf: (self) =>
+                    autoSpecialScoringPoints(self.yellow1) + autoSpecialScoringPoints(self.yellow2),
+                dataTy: Int16DTy,
+            })
+            .addScoreModal({ displayName: "Yellow Bonus Points" })
+            .addTep({ columnPrefix: "Yellow", fullName: "Yellow Bonus Points" })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "yellowPointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) =>
+                    station == Station.One
+                        ? autoSpecialScoringPoints(ms.yellow1)
+                        : autoSpecialScoringPoints(ms.yellow2),
+                columnPrefix: "Yellow Bonus Individual",
+                dialogName: "Individual",
+                fullName: "Yellow Bonus Points Individual",
+            })
+            .finish()
+    )
+    .addColumn(
         new DescriptorColumn({ name: "autoPixelPoints" })
             .addMatchScore({
                 fromSelf: (self) => self.autoBackdrop * 5 + self.autoBackstage * 3,
@@ -273,6 +440,26 @@ export const Descriptor2023 = new Descriptor({
                 columnPrefix: "Auto Nav Individual",
                 dialogName: "Individual",
                 fullName: "Auto Navigation Points Individual",
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dronePoints" })
+            .addMatchScore({
+                fromSelf: (self) => dronePoints(self.drone1) + dronePoints(self.drone2),
+                dataTy: Int16DTy,
+            })
+            .addScoreModal({ displayName: "Drone Points" })
+            .addTep({ columnPrefix: "Drone", fullName: "Drone Points" })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dronePointsIndividual" })
+            .addTep({
+                isIndividual: true,
+                make: (ms, station) => dronePoints(station == Station.One ? ms.drone1 : ms.drone2),
+                columnPrefix: "Drone Individual",
+                dialogName: "Individual",
+                fullName: "Drone Points Individual",
             })
             .finish()
     )
@@ -374,7 +561,11 @@ export const Descriptor2023 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "autoPoints" })
             .addMatchScore({
-                fromSelf: (self) => self.autoNavPoints + self.autoPixelPoints,
+                fromSelf: (self) =>
+                    self.autoNavPoints +
+                    self.autoPixelPoints +
+                    self.purplePoints +
+                    self.yellowPoints,
                 dataTy: Int16DTy,
             })
             .addScoreModal({ displayName: "Auto" })
@@ -385,7 +576,7 @@ export const Descriptor2023 = new Descriptor({
             .addMatchScore({
                 fromSelf: (self) =>
                     self.dcBackdrop * 3 +
-                    self.dcStudio * 1 +
+                    self.dcBackstage * 1 +
                     self.mosaicPoints +
                     self.setLinePoints,
                 dataTy: Int16DTy,
@@ -411,14 +602,14 @@ export const Descriptor2023 = new Descriptor({
             })
     )
     .addColumn(
-        new DescriptorColumn({ name: "dcStudioPoints" })
+        new DescriptorColumn({ name: "dcBackstagePoints" })
             .addScoreModal({
                 displayName: "Backstage",
-                getValue: (ms) => ms.dcStudio * 1,
-                getTitle: (ms) => nOf(ms.dcStudio, "Pixel"),
+                getValue: (ms) => ms.dcBackstage * 1,
+                getTitle: (ms) => nOf(ms.dcBackstage, "Pixel"),
             })
             .addTep({
-                make: (ms) => ms.dcStudio * 1,
+                make: (ms) => ms.dcBackstage * 1,
                 columnPrefix: "DC Backstage",
                 fullName: "Teleop Backstage Points",
             })
@@ -426,7 +617,7 @@ export const Descriptor2023 = new Descriptor({
     .addColumn(
         new DescriptorColumn({ name: "egPoints" })
             .addMatchScore({
-                fromSelf: (self) => self.egNavPoints,
+                fromSelf: (self) => self.egNavPoints + self.dronePoints,
 
                 dataTy: Int16DTy,
             })
@@ -479,14 +670,31 @@ export const Descriptor2023 = new Descriptor({
                         { val: "autoBackstagePoints", children: [] },
                     ],
                 },
+                {
+                    val: "purplePoints",
+                    children: [
+                        { val: "purple1", children: [] },
+                        { val: "purple2", children: [] },
+                        { val: "purplePointsIndividual", children: [] },
+                    ],
+                },
+                {
+                    val: "yellowPoints",
+                    children: [
+                        { val: "yellow1", children: [] },
+                        { val: "yellow2", children: [] },
+                        { val: "yellowPointsIndividual", children: [] },
+                    ],
+                },
             ],
         },
         {
             val: "dcPoints",
             children: [
                 { val: "dcBackdropPoints", children: [] },
-                { val: "dcStudioPoints", children: [] },
+                { val: "dcBackstagePoints", children: [] },
                 { val: "mosaicPoints", children: [] },
+                { val: "setLinePoints", children: [] },
             ],
         },
         {
@@ -500,7 +708,14 @@ export const Descriptor2023 = new Descriptor({
                         { val: "egNavPointsIndividual", children: [] },
                     ],
                 },
-                { val: "setLinePoints", children: [] },
+                {
+                    val: "dronePoints",
+                    children: [
+                        { val: "drone1", children: [] },
+                        { val: "drone2", children: [] },
+                        { val: "dronePointsIndividual", children: [] },
+                    ],
+                },
             ],
         },
         {

@@ -145,6 +145,15 @@ fragment FullConeLayout on ConeLayout {
     junctions
 }
 fragment FullMatchScore2023Alliance on MatchScores2023Alliance {
+    dronePoints
+    drone1
+    drone2
+    purple1
+    purple2
+    purplePoints
+    yellow1
+    yellow2
+    yellowPoints
     season
     eventCode
     matchId
@@ -153,7 +162,7 @@ fragment FullMatchScore2023Alliance on MatchScores2023Alliance {
     egNav2023_2
     autoBackdrop
     autoBackstage
-    dcStudio
+    dcBackstage
     dcBackdrop
     autoNav1
     autoNav2

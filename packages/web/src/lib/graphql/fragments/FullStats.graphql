@@ -196,6 +196,12 @@ fragment FullStats on TeamEventStats {
     }
 }
 fragment FullTeamEventStats2023Group on TeamEventStats2023Group {
+    purplePoints
+    purplePointsIndividual
+    yellowPoints
+    yellowPointsIndividual
+    dronePoints
+    dronePointsIndividual
     egNavPoints
     egNavPointsIndividual
     autoPixelPoints
@@ -214,7 +220,7 @@ fragment FullTeamEventStats2023Group on TeamEventStats2023Group {
     autoPoints
     dcPoints
     dcBackdropPoints
-    dcStudioPoints
+    dcBackstagePoints
     egPoints
     totalPointsNp
     totalPoints
