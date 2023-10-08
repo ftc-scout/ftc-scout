@@ -15,8 +15,8 @@ export function sendAnalyticsRequest(navigate: AfterNavigate) {
     let fromUrl = navigate.from?.url;
 
     let payload = {
-        url: toUrl.pathname + toUrl.search,
-        from: fromUrl ? fromUrl.pathname + fromUrl.search : null,
+        url: toUrl.pathname + toUrl.search + toUrl.hash,
+        from: fromUrl ? fromUrl.pathname + fromUrl.search + fromUrl : null,
         time: Date.now(),
         sessionId: sessionId,
     };
