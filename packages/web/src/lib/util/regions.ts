@@ -80,7 +80,7 @@ const REGION_NAMES: Record<RegionOption, string> = {
     DE: "Germany",
     EG: "Egypt",
     ES: "Spain",
-    FR: "Franc",
+    FR: "France",
     GB: "Great Britain",
     IL: "Israel",
     IN: "India",
