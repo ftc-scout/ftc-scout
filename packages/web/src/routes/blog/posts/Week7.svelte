@@ -26,6 +26,7 @@
             system preference respected. Let us know if there are any dark mode visual bugs or things
             that don't look great.
         </li>
+        <li><b>Center Stage!:</b> We now have the 2023-2024 season Center Stage!</li>
     </ul>
 
     <h2>Improvements</h2>
