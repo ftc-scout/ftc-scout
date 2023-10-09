@@ -17,6 +17,7 @@
     import Week4 from "./posts/Week4.svelte";
     import Week5 from "./posts/Week5.svelte";
     import Week6 from "./posts/Week6.svelte";
+    import Week7 from "./posts/Week7.svelte";
 </script>
 
 <Head
@@ -25,6 +26,7 @@
 />
 
 <WidthProvider width="90ch">
+    <Week7 />
     <SeasonMarker season={Season.PowerPlay} />
     <Week6 />
     <Week5 />
