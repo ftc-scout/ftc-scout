@@ -2,7 +2,7 @@
     import BlogTemplate from "../BlogTemplate.svelte";
 </script>
 
-<BlogTemplate slug="season-2-whats-new">
+<BlogTemplate slug="change-log">
     <svelte:fragment slot="title">FTC<em>Scout</em> Season 2: What's New</svelte:fragment>
     <svelte:fragment slot="author">Daniel James</svelte:fragment>
     <svelte:fragment slot="date">October 21, 2023</svelte:fragment>
@@ -49,6 +49,7 @@
                     correctly.
                 </li>
                 <li>Socials links in the sidebar look nicer.</li>
+                <li>And more…</li>
             </ul>
         </li>
         <li>
