@@ -725,7 +725,7 @@ export const Descriptor2021 = new Descriptor({
         new DescriptorColumn({ name: "majorsCommittedPoints" })
             .addScoreModal({
                 displayName: "Majors Points",
-                columnPrefix: "Capping",
+                columnPrefix: "Majors",
                 fullName: "Major Penalty Points",
                 sql: (ms) => `(${ms}.majorsCommitted * -30)`,
                 getValue: (ms) => ms.majorsCommitted * -30,

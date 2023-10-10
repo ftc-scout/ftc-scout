@@ -136,7 +136,7 @@
             <Card slot="empty">
                 <div class="empty">
                     {#if isNonCompetition(event.type)}
-                        <p>This event is not competition; no matches will be played.</p>
+                        <p>This event is not a competition; no matches will be played.</p>
                     {:else}
                         <b>No information has been published about this event.</b>
                         <p>Please check back later.</p>

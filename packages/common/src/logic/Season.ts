@@ -5,11 +5,17 @@ export const Season = {
     UltimateGoal: 2020,
     FreightFrenzy: 2021,
     PowerPlay: 2022,
+    CenterStage: 2023,
 } as const;
 
 export type Season = (typeof Season)[keyof typeof Season];
 
-export const CURRENT_SEASON = Season.PowerPlay;
+export const CURRENT_SEASON = Season.CenterStage;
 // Preserve the order oldest to newest
-export const PAST_SEASONS = [Season.Skystone, Season.UltimateGoal, Season.FreightFrenzy] as const;
+export const PAST_SEASONS = [
+    Season.PowerPlay,
+    Season.Skystone,
+    Season.UltimateGoal,
+    Season.FreightFrenzy,
+] as const;
 export const ALL_SEASONS = [...PAST_SEASONS, CURRENT_SEASON] as const;
