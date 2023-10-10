@@ -55,6 +55,7 @@ export class Descriptor {
 
     firstDate: Date;
     lastDate: Date;
+    kickoff: Date;
 
     columns: DescriptorColumn[] = [];
     columnsMap: Record<string, DescriptorColumn> = {};
@@ -76,6 +77,7 @@ export class Descriptor {
         rankings: RankingsMethod;
         firstDate: Date;
         lastDate: Date;
+        kickoff: Date;
     }) {
         this.season = opts.season;
         this.seasonName = opts.seasonName;
@@ -85,6 +87,7 @@ export class Descriptor {
         this.rankings = opts.rankings;
         this.firstDate = opts.firstDate;
         this.lastDate = opts.lastDate;
+        this.kickoff = opts.kickoff;
     }
 
     addColumn(col: DescriptorColumn): Descriptor {

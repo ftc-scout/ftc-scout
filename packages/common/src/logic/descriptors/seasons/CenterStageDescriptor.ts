@@ -111,6 +111,7 @@ export const Descriptor2023 = new Descriptor({
     },
     firstDate: new Date("2023-09-10"),
     lastDate: new Date("2024-09-05"),
+    kickoff: new Date("2023-09-09"),
 })
     .addColumn(
         new DescriptorColumn({ name: "egNav1" })

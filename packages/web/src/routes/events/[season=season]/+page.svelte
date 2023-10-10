@@ -38,17 +38,18 @@
         .sort((a, b) => sortString(a.name, b.name))
         .sort((a, b) => new Date(a.start).valueOf() - new Date(b.start).valueOf());
 
-    function calcFirstMonday(es: typeof events): Date {
-        if (es.length == 0) return new Date();
+    let season = +$page.params.season as Season;
+    $: gotoSubPage(season);
 
-        let firstDate = new Date(es[0].start);
+    function calcFirstMonday(season: Season): Date {
+        let firstDate = DESCRIPTORS[season].kickoff;
         let minDow = firstDate.getDay();
         let mondayZero = mod(minDow - 1, 7);
         let mondayAdjust = (mondayZero - 7) % 7;
         return addDays(firstDate, mondayAdjust);
     }
 
-    $: firstMonday = calcFirstMonday(sortedEvents);
+    $: firstMonday = calcFirstMonday(season);
 
     function groupEvents(es: FuzzyResult<(typeof events)[number]>[]) {
         if (es.length == 0) return [];
@@ -82,9 +83,6 @@
             goto(`/events/${season}${params}`, { replaceState: true });
         }
     }
-
-    let season = +$page.params.season as Season;
-    $: gotoSubPage(season);
 
     let region = queryParam<RegionOption>("regions", REGION_EC_DC);
     let eventTy = queryParam<EventTypeOption>("event-types", EVENT_TY_EC_DC);

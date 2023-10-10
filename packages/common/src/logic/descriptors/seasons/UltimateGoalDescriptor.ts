@@ -65,6 +65,7 @@ export const Descriptor2020 = new Descriptor({
     },
     firstDate: new Date("2020-10-18"),
     lastDate: new Date("2021-09-11"),
+    kickoff: new Date("2020-09-12"),
 })
     .addColumn(
         new DescriptorColumn({ name: "autoWobble1" })

@@ -160,6 +160,7 @@ export const Descriptor2021 = new Descriptor({
     },
     firstDate: new Date("2021-09-17"),
     lastDate: new Date("2022-09-23"),
+    kickoff: new Date("2021-09-18"),
 })
     .addColumn(
         new DescriptorColumn({ name: "barcodeElement1" })
