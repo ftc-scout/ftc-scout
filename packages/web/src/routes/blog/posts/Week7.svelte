@@ -15,18 +15,24 @@
 
     <h2>New Features</h2>
     <ul>
-        <li>
-            <b>Vote for the best team name:</b> We are running a competition to see which team has the
-            best name. On the home screen you will see two random teams. Vote for your favorite name
-            by clicking it. Once we have enough votes we will write a blog post about the winners.
-        </li>
+        <li><b>Center Stage!:</b> We now have the 2023-2024 season Center Stage!</li>
         <li>
             <b>Dark Mode!:</b> FTC<em>Scout</em> is the first FTC website with dark mode. Enable it by
             clicking the moon icon in the top right. Your preference will be remembered and your operating
             system preference respected. Let us know if there are any dark mode visual bugs or things
             that don't look great.
         </li>
-        <li><b>Center Stage!:</b> We now have the 2023-2024 season Center Stage!</li>
+        <li>
+            <b>Vote for the best team name:</b> We are running a competition to see which team has the
+            best name. On the home screen you will see two random teams. Vote for your favorite name
+            by clicking it. Once we have enough votes we will write a blog post about the winners.
+        </li>
+        <li>
+            <b>REST Api:</b> We hear you. The GraphQL api is too complicated for quick queries.
+            That's why we added a simple REST api for getting data about matches and events. You can
+            read about it <a href="/api/rest">here</a>. <b>Note:</b> If you are currently using the GraphQL
+            field a small number of fields have changed names.
+        </li>
     </ul>
 
     <h2>Improvements</h2>
