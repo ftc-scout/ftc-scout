@@ -14,6 +14,7 @@ import { GQL_SCHEMA } from "./graphql/schema";
 import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
 import { setupBannerRoutes } from "./banner";
 import { handleAnalytics } from "./analytics";
+import { setupRest } from "./rest/setupRest";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -42,6 +43,8 @@ async function main() {
     app.use("/graphql", apiLoggerMiddleware, expressMiddleware(apolloServer));
 
     app.post("/analytics", text(), handleAnalytics);
+
+    setupRest(app);
 
     setupBannerRoutes(app);
 
