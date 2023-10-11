@@ -36,7 +36,7 @@
             <b>REST Api:</b> We hear you. The GraphQL api is too complicated for quick queries.
             That's why we added a simple REST api for getting data about matches and events. You can
             read about it <a href="/api/rest">here</a>. <b>Note:</b> If you are currently using the GraphQL
-            field a small number of fields have changed names.
+            API a small number of fields have changed names.
         </li>
     </ul>
 
