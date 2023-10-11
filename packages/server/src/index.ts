@@ -15,6 +15,10 @@ import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
 import { setupBannerRoutes } from "./banner";
 import { handleAnalytics } from "./analytics";
 import { setupRest } from "./rest/setupRest";
+import { createServer } from "http";
+import { WebSocketServer } from "ws";
+import { useServer } from "graphql-ws/lib/use/ws";
+import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -32,10 +36,30 @@ async function main() {
         express.json()
     );
 
+    let httpServer = createServer(app);
+    let wsServer = new WebSocketServer({
+        server: httpServer,
+        path: "/graphql",
+    });
+
+    const serverCleanup = useServer({ schema: GQL_SCHEMA }, wsServer);
+
     let apolloServer = new ApolloServer({
         introspection: true,
         schema: GQL_SCHEMA,
-        plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
+        plugins: [
+            ApolloServerPluginLandingPageGraphQLPlayground(),
+            ApolloServerPluginDrainHttpServer({ httpServer }),
+            {
+                async serverWillStart() {
+                    return {
+                        async drainServer() {
+                            await serverCleanup.dispose();
+                        },
+                    };
+                },
+            },
+        ],
     });
 
     await apolloServer.start();
@@ -48,7 +72,7 @@ async function main() {
 
     setupBannerRoutes(app);
 
-    app.listen(SERVER_PORT, () => {
+    httpServer.listen(SERVER_PORT, () => {
         console.info(`Server started and listening on port ${SERVER_PORT}.`);
     });
 

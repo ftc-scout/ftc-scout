@@ -27,7 +27,7 @@
     import MatchTable from "$lib/components/matches/MatchTable.svelte";
     import { goto } from "$app/navigation";
     import { browser } from "$app/environment";
-    import { setContext } from "svelte";
+    import { onMount, setContext } from "svelte";
     import { TEAM_CLICK_ACTION_CTX } from "$lib/components/matches/MatchTeam.svelte";
     import FocusedTeam from "$lib/components/stats/FocusedTeam.svelte";
     import Teams from "./Teams.svelte";
@@ -37,6 +37,10 @@
     import Head from "$lib/components/Head.svelte";
     import Insights from "./Insights.svelte";
     import { getMatchScores } from "$lib/components/stats/getMatchScores";
+    import { unsubscribe, watchEvent } from "./watchEvent";
+    import { getClient } from "../../../../../lib/graphql/client";
+    import { getDataSync } from "../../../../../lib/graphql/getData";
+    import { EventPageDocument } from "../../../../../lib/graphql/generated/graphql-operations";
 
     export let data;
 
@@ -64,6 +68,20 @@
         event?.teams?.find((t) => t.teamNumber == focusedTeam) ??
         event?.awards?.find((a) => a.teamNumber == focusedTeam)!;
     setContext(TEAM_CLICK_ACTION_CTX, (t: number) => (focusedTeam = focusedTeam == t ? null : t));
+
+    $: if (event && !event.remote) watchEvent(event, refresh);
+    onMount(() => {
+        return unsubscribe;
+    });
+
+    async function refresh() {
+        let args = {
+            season: +$page.params.season as Season,
+            code: $page.params.code,
+        };
+
+        data = { event: getDataSync(getClient(fetch), EventPageDocument, args) };
+    }
 </script>
 
 <Head

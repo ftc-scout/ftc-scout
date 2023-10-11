@@ -14,6 +14,7 @@
         "@apollo/server": "^4.7.5",
         "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
         "@ftc-scout/common": "^0.0.1",
+        "@graphql-tools/schema": "^10.0.0",
         "canvas": "^2.11.2",
         "compression": "^1.7.4",
         "cors": "^2.8.5",
@@ -22,12 +23,15 @@
         "express": "^4.18.2",
         "graphql": "^16.7.1",
         "graphql-scalars": "^1.22.2",
+        "graphql-subscriptions": "^2.0.0",
+        "graphql-ws": "^5.14.1",
         "luxon": "^3.3.0",
         "md5": "^2.3.0",
         "pg": "^8.11.0",
         "typeorm": "^0.3.16",
         "typeorm-naming-strategies": "^4.1.0",
-        "ua-parser-js": "^1.0.36"
+        "ua-parser-js": "^1.0.36",
+        "ws": "^8.14.2"
     },
     "devDependencies": {
         "@types/compression": "^1.7.2",

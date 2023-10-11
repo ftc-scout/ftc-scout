@@ -32,6 +32,7 @@ import { LocationGQL } from "../objs/Location";
 import { DateTime } from "luxon";
 import { DATA_SOURCE } from "../../db/data-source";
 import { Brackets } from "typeorm";
+import { newMatchesKey, pubsub } from "./pubsub";
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Event",
@@ -271,5 +272,14 @@ export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
             return entities;
         },
+    },
+};
+
+export const EventSubscriptions: Record<string, GraphQLFieldConfig<any, any>> = {
+    newMatches: {
+        type: list(nn(MatchGQL)).ofType,
+        args: { season: IntTy, code: StrTy },
+        subscribe: (_, { season, code }: { season: Season; code: string }) =>
+            pubsub.asyncIterator(newMatchesKey(season, code)),
     },
 };

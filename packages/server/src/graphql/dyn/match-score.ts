@@ -31,6 +31,7 @@ export function frontendMSFromDB(ms: MatchScore[]): AnyObject | null {
             season: s.season,
             eventCode: s.eventCode,
             matchId: s.matchId,
+            alliance: Alliance.Solo,
             ...fields(s, true),
         };
     } else if (ms.length == 2) {
@@ -125,6 +126,7 @@ function makeMSTysRemote(descriptor: Descriptor): GraphQLObjectType | null {
         season: IntTy,
         eventCode: StrTy,
         matchId: IntTy,
+        alliance: { type: nn(AllianceGQL) },
     };
 
     for (let c of descriptor.msColumns()) {

@@ -1,0 +1,8 @@
+fragment InsertTep on TeamEventParticipation {
+    season
+    eventCode
+    teamNumber
+    stats {
+        ...FullStats
+    }
+}

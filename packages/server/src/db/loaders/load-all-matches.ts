@@ -4,6 +4,7 @@ import {
     MatchScoresFtcApi,
     Season,
     calculateTeamEventStats,
+    groupBy,
 } from "@ftc-scout/common";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
 import { Event } from "../entities/Event";
@@ -21,6 +22,7 @@ import {
 } from "../entities/dyn/team-event-participation";
 import { exit } from "process";
 import { IS_DEV } from "../../constants";
+import { newMatchesKey, pubsub } from "../../graphql/resolvers/pubsub";
 
 const IGNORED_MATCHES = [
     //cSpell:disable
@@ -95,6 +97,19 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 await em.getRepository(MatchScoreSchemas[season]).save(allDbScores, { chunk: 100 });
                 await em.getRepository(TepSchemas[season]).save(allDbTeps, { chunk: 100 });
             });
+
+            let updatedScores = allDbScores.filter((m) => "updatedAt" in m);
+            let updatedTmps = allDbTmps.filter((tmp) => "updatedAt" in tmp);
+            let updatedMatches = allDbMatches.filter((m) => {
+                return (
+                    "updatedAt" in (m as any) ||
+                    updatedScores.some((s) => m.eventCode == s.eventCode && m.id == s.matchId) ||
+                    updatedTmps.some((tmp) => m.eventCode == tmp.eventCode && m.id == tmp.matchId)
+                );
+            });
+
+            publishMatchUpdates(updatedMatches);
+
             console.info(`Loaded ${i + 1}/${events.length}.`);
         } catch (e) {
             console.error(`Loaded ${i + 1}/${events.length} !!! ERROR !!!`);
@@ -154,5 +169,14 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
             .andWhere("start <= (NOW() at time zone timezone)::date")
             .andWhere(`"end" >= (NOW() at time zone timezone)::date`)
             .getMany();
+    }
+}
+
+function publishMatchUpdates(matches: Match[]) {
+    let grouped = groupBy(matches, (m) => m.eventCode);
+
+    for (let eventCode of Object.keys(grouped)) {
+        let eMatches = grouped[eventCode];
+        pubsub.publish(newMatchesKey(matches[0].eventSeason, eventCode), { newMatches: eMatches });
     }
 }

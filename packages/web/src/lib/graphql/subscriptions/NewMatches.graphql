@@ -1,0 +1,5 @@
+subscription NewMatches($season: Int!, $code: String!) {
+    newMatches(season: $season, code: $code) {
+        ...FullMatch
+    }
+}

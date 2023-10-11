@@ -4,6 +4,7 @@ query EventPage($season: Int!, $code: String!) {
         website
         liveStreamURL
         type
+        ongoing
         matches {
             ...FullMatch
         }

@@ -5,10 +5,14 @@ import {
     type HttpOptions,
     type NormalizedCacheObject,
     InMemoryCache,
+    split,
 } from "@apollo/client/core";
 import { IS_DEV } from "../constants";
 import { browser } from "$app/environment";
 import { DESCRIPTORS_LIST } from "@ftc-scout/common";
+import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createClient } from "graphql-ws";
+import { getMainDefinition } from "@apollo/client/utilities";
 
 let client: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -18,12 +22,30 @@ export function getClient(
     if (client) return client;
     if (!fetch) throw "First call to get client must provide fetch";
 
-    let link = new HttpLink({
-        uri: env.PUBLIC_SERVER_ORIGIN! + "/graphql",
+    let httpLink = new HttpLink({
+        uri: "http://" + env.PUBLIC_SERVER_ORIGIN! + "/graphql",
         credentials: "omit",
         headers: { [env.PUBLIC_FRONTEND_CODE!]: "." },
         fetch,
     });
+
+    let link = browser
+        ? split(
+              ({ query }) => {
+                  let definition = getMainDefinition(query);
+                  return (
+                      definition.kind == "OperationDefinition" &&
+                      definition.operation == "subscription"
+                  );
+              },
+              new GraphQLWsLink(
+                  createClient({
+                      url: "ws://" + env.PUBLIC_SERVER_ORIGIN! + "/graphql",
+                  })
+              ),
+              httpLink
+          )
+        : httpLink;
 
     let cache = new InMemoryCache({
         possibleTypes: {

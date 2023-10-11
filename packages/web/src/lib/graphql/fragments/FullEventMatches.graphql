@@ -1,0 +1,5 @@
+fragment FullEventMatches on Event {
+    matches {
+        ...FullMatch
+    }
+}

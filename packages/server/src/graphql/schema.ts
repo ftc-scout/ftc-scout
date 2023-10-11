@@ -1,6 +1,6 @@
 import { GraphQLObjectType, GraphQLSchema } from "graphql";
 import { TeamQueries } from "./resolvers/Team";
-import { EventQueries } from "./resolvers/Event";
+import { EventQueries, EventSubscriptions } from "./resolvers/Event";
 import { RecordQueries } from "./resolvers/records/Records";
 import { HomeQueries } from "./resolvers/Home";
 import { BestNameMutations, BestNameQueries } from "./resolvers/BestName";
@@ -23,7 +23,15 @@ const mutation = new GraphQLObjectType({
     },
 });
 
+const subscription = new GraphQLObjectType({
+    name: "Subscription",
+    fields: {
+        ...EventSubscriptions,
+    },
+});
+
 export const GQL_SCHEMA = new GraphQLSchema({
     query,
     mutation,
+    subscription,
 });

@@ -6,9 +6,11 @@ fragment FullMatchScores on MatchScores {
         eventCode
         matchId
         red {
+            alliance
             ...FullMatchScore2023Alliance
         }
         blue {
+            alliance
             ...FullMatchScore2023Alliance
         }
     }
@@ -23,9 +25,11 @@ fragment FullMatchScores on MatchScores {
             ...FullConeLayout
         }
         red {
+            alliance
             ...FullMatchScore2022Alliance
         }
         blue {
+            alliance
             ...FullMatchScore2022Alliance
         }
     }
@@ -73,9 +77,11 @@ fragment FullMatchScores on MatchScores {
         eventCode
         matchId
         red {
+            alliance
             ...FullMatchScore2021Alliance
         }
         blue {
+            alliance
             ...FullMatchScore2021Alliance
         }
     }
@@ -118,9 +124,11 @@ fragment FullMatchScores on MatchScores {
         eventCode
         matchId
         red {
+            alliance
             ...FullMatchScore2020Alliance
         }
         blue {
+            alliance
             ...FullMatchScore2020Alliance
         }
     }
@@ -129,9 +137,11 @@ fragment FullMatchScores on MatchScores {
         eventCode
         matchId
         red {
+            alliance
             ...FullMatchScore2019Alliance
         }
         blue {
+            alliance
             ...FullMatchScore2019Alliance
         }
     }

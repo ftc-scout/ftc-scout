@@ -2,7 +2,7 @@ import { env } from "$env/dynamic/public";
 import { browser } from "$app/environment";
 import type { AfterNavigate } from "@sveltejs/kit";
 
-const ANALYTICS_URL = env.PUBLIC_SERVER_ORIGIN! + "/analytics";
+const ANALYTICS_URL = "http://" + env.PUBLIC_SERVER_ORIGIN! + "/analytics";
 
 let lastUrl = "";
 let sessionId = crypto.randomUUID();

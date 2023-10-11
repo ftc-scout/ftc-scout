@@ -23,6 +23,11 @@
             that don't look great.
         </li>
         <li>
+            <b>Matches Update Without Refresh:</b> If you are viewing the event page for a live
+            event you no longer need to refresh the page to see if new matches have been added. The
+            matches will be updated automatically as soon as FTC<em>Scout</em> has them.
+        </li>
+        <li>
             <b>Vote for the best team name:</b> We are running a competition to see which team has the
             best name. On the home screen you will see two random teams. Vote for your favorite name
             by clicking it. Once we have enough votes we will write a blog post about the winners.

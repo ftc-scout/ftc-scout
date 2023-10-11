@@ -15,7 +15,8 @@ export async function getData<Data = any, Variables extends OperationVariables =
     client: ApolloClient<NormalizedCacheObject>,
     query: DocumentNode | TypedDocumentNode<Data, Variables>,
     variables: Variables,
-    bypassCacheKey: string | null = null
+    bypassCacheKey: string | null = null,
+    noCache: boolean = false
 ): Promise<Readable<ApolloQueryResult<Data> | null>> {
     let keyWithVars = bypassCacheKey + "-" + JSON.stringify(variables);
     if (bypassCacheKey && cache[keyWithVars]) {
@@ -26,7 +27,7 @@ export async function getData<Data = any, Variables extends OperationVariables =
         query,
         variables,
         // No caching if on server or if bypassing apollo cache
-        fetchPolicy: browser && !bypassCacheKey ? "cache-first" : "no-cache",
+        fetchPolicy: browser && !bypassCacheKey && !noCache ? "cache-first" : "no-cache",
     });
 
     let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
