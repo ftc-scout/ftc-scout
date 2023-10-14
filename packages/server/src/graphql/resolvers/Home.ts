@@ -1,4 +1,14 @@
-import { DESCRIPTORS, DateTimeTy, IntTy, Season, list, nn, nullTy } from "@ftc-scout/common";
+import {
+    DESCRIPTORS,
+    DateTimeTy,
+    EventTypeOption,
+    IntTy,
+    Season,
+    getEventTypes,
+    list,
+    nn,
+    nullTy,
+} from "@ftc-scout/common";
 import { GraphQLFieldConfig } from "graphql";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
 import { DATA_SOURCE } from "../../db/data-source";
@@ -7,6 +17,7 @@ import { EventGQL } from "./Event";
 import { Event } from "../../db/entities/Event";
 import { MatchGQL } from "./Match";
 import { MatchScore } from "../../db/entities/dyn/match-score";
+import { EventTypeOptionGQL } from "./enums";
 
 export const HomeQueries: Record<string, GraphQLFieldConfig<any, any>> = {
     activeTeamsCount: {
@@ -40,15 +51,20 @@ export const HomeQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
     eventsOnDate: {
         type: list(nn(EventGQL)),
-        args: { date: nullTy(DateTimeTy) },
-        resolve: async (_, { date }: { date: Date }) => {
-            return DATA_SOURCE.getRepository(Event)
+        args: { date: nullTy(DateTimeTy), type: { type: EventTypeOptionGQL } },
+        resolve: async (_, { date, type }: { date: Date; type: EventTypeOption }) => {
+            let q = DATA_SOURCE.getRepository(Event)
                 .createQueryBuilder("e")
                 .where("e.start <= (:e at time zone timezone)::date", { e: date ?? "NOW()" })
                 .andWhere("e.end >= (:e at time zone timezone)::date")
                 .orderBy("e.start", "ASC")
-                .addOrderBy("e.name", "DESC")
-                .getMany();
+                .addOrderBy("e.name", "DESC");
+
+            if (type && type != EventTypeOption.All) {
+                q.andWhere("type IN (:...types)", { types: getEventTypes(type) });
+            }
+
+            return q.getMany();
         },
     },
 

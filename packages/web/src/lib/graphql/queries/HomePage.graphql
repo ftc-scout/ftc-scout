@@ -1,7 +1,7 @@
 query HomePage($season: Int!) {
     activeTeamsCount(season: $season)
     matchesPlayedCount(season: $season)
-    eventsOnDate {
+    eventsOnDate(type: Competition) {
         season
         code
         name
