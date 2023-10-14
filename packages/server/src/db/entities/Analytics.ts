@@ -1,4 +1,4 @@
-import { BaseEntity, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Analytics extends BaseEntity {
@@ -6,23 +6,34 @@ export class Analytics extends BaseEntity {
     id!: number;
 
     @Column()
+    @Index()
     url!: string;
 
     @Column("varchar", { nullable: true })
+    @Index()
     fromUrl!: string | null;
 
     @Column()
+    @Index()
+    pathChanged!: boolean;
+
+    @Column()
+    @Index()
     sessionId!: string;
 
     @Column()
+    @Index()
     userId!: string;
 
     @Column()
+    @Index()
     browser!: string;
 
     @Column()
+    @Index()
     deviceType!: string;
 
     @Column("timestamptz")
+    @Index()
     date!: Date;
 }

@@ -12,6 +12,7 @@ export function handleAnalytics(req: Request, res: Response) {
         let url = parsed.url;
         let fromUrl = parsed.from;
         let sessionId = parsed.sessionId;
+        let pathChanged = !!parsed.pathChanged;
         let time = +parsed.time;
 
         if (
@@ -41,6 +42,7 @@ export function handleAnalytics(req: Request, res: Response) {
         Analytics.create({
             url,
             fromUrl,
+            pathChanged,
             sessionId,
             userId,
             browser,
