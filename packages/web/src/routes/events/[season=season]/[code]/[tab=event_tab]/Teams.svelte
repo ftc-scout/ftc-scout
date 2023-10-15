@@ -30,30 +30,21 @@
                     }
                 }}
             >
-                {team.team.number} - <em>{team.team.name}</em>
-                <span class="loc"> &nbsp <Location {...team.team.location} link={false} /></span>
+                <span>{team.team.number} - <em>{team.team.name}</em></span>
+                <em class="loc"> &nbsp <Location {...team.team.location} link={false} /></em>
             </a>
         </li>
     {/each}
 </ul>
 
 <style>
-    ul {
-        columns: 2;
-    }
-
-    @media (max-width: 1000px) {
-        ul {
-            columns: 1;
-        }
-    }
-
     li {
         list-style: none;
     }
 
     .loc {
         color: var(--secondary-text-color);
+        white-space: nowrap;
     }
 
     a {
@@ -65,7 +56,8 @@
         font-size: inherit;
         text-align: inherit;
 
-        display: block;
+        display: flex;
+        justify-content: space-between;
         width: 100%;
 
         padding: var(--md-pad);
