@@ -208,5 +208,6 @@
         flex-direction: column;
         align-items: center;
         gap: var(--md-gap);
+        text-align: center;
     }
 </style>
