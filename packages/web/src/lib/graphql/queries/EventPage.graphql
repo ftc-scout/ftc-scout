@@ -15,6 +15,11 @@ query EventPage($season: Int!, $code: String!) {
             team {
                 number
                 name
+                location {
+                    city
+                    state
+                    country
+                }
             }
             stats {
                 ...FullStats

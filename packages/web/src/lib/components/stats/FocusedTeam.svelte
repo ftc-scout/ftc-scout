@@ -9,7 +9,9 @@
 
     type Team = Omit<NonNullable<EventPageQuery["eventByCode"]>["teams"][number], "__typename">;
 
-    export let team: Pick<Team, "team" | "stats" | "season"> & { eventCode?: string | undefined };
+    export let team: Pick<Team, "stats" | "season"> & { eventCode?: string | undefined } & {
+        team: { name: string; number: number };
+    };
     export let remote: boolean;
 
     $: season = team.season as Season;

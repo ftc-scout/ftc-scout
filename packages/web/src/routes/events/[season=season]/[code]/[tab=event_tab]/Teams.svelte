@@ -4,6 +4,7 @@
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import { CURRENT_SEASON } from "@ftc-scout/common";
     import { browser } from "$app/environment";
+    import Location from "../../../../../lib/components/Location.svelte";
 
     export let teams: NonNullable<EventPageQuery["eventByCode"]>["teams"];
     export let focusedTeam: number | null;
@@ -30,14 +31,29 @@
                 }}
             >
                 {team.team.number} - <em>{team.team.name}</em>
+                <span class="loc"> &nbsp <Location {...team.team.location} link={false} /></span>
             </a>
         </li>
     {/each}
 </ul>
 
 <style>
+    ul {
+        columns: 2;
+    }
+
+    @media (max-width: 1000px) {
+        ul {
+            columns: 1;
+        }
+    }
+
     li {
         list-style: none;
+    }
+
+    .loc {
+        color: var(--secondary-text-color);
     }
 
     a {
@@ -63,6 +79,10 @@
 
     a.selected {
         background-color: var(--neutral-team-color);
+        color: var(--team-text-color);
+    }
+
+    a.selected .loc {
         color: var(--team-text-color);
     }
 </style>
