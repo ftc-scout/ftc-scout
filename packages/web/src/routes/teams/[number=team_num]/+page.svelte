@@ -37,6 +37,7 @@
     import Head from "$lib/components/Head.svelte";
     import { setContext } from "svelte";
     import { SHOW_REMOTE_FOCUS_CTX } from "$lib/components/matches/MatchTeam.svelte";
+    import QuickStats from "./QuickStats.svelte";
 
     const toSeason = (n: number) => n as Season;
 
@@ -102,6 +103,10 @@
                 <SeasonSelect bind:season={$season} nonForm />
             </Form>
         </Card>
+
+        {#if team.quickStats}
+            <QuickStats stats={team.quickStats} season={$season} />
+        {/if}
 
         {#each sortedEvents as tep}
             {@const event = tep.event}

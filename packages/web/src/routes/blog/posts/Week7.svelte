@@ -33,6 +33,12 @@
             by clicking it. Once we have enough votes we will write a blog post about the winners.
         </li>
         <li>
+            <b>Quick Stats:</b> On the page for individual teams you will now see a "Quick Stats" section.
+            This includes the team's best OPR for total points, auto points, teleop points, and endgame
+            points. It also shows you the team's percentile among all teams in each of those categories.
+            (You can view the exact rank by hovering over the percentile).
+        </li>
+        <li>
             <b>REST Api:</b> We hear you. The GraphQL api is too complicated for quick queries.
             That's why we added a simple REST api for getting data about matches and events. You can
             read about it <a href="/api/rest">here</a>. <b>Note:</b> If you are currently using the GraphQL

@@ -12,6 +12,25 @@ query Team($number: Int!, $season: Int!) {
         schoolName
         sponsors
         rookieYear
+        quickStats(season: $season) {
+            tot {
+                value
+                rank
+            }
+            auto {
+                value
+                rank
+            }
+            dc {
+                value
+                rank
+            }
+            eg {
+                value
+                rank
+            }
+            count
+        }
         events(season: $season) {
             season
             eventCode

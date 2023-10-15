@@ -1,7 +1,10 @@
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
 import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
 import {
+    ALL_SEASONS,
+    DESCRIPTORS,
     DateTimeTy,
+    FloatTy,
     IntTy,
     RegionOption,
     StrTy,
@@ -26,6 +29,47 @@ import { TeamEventParticipationGQL } from "./TeamEventParticipation";
 import { RegionOptionGQL } from "./enums";
 import { DATA_SOURCE } from "../../db/data-source";
 import { Event } from "../../db/entities/Event";
+
+const QuickStatGQL = new GraphQLObjectType({
+    name: "QuickStat",
+    fields: {
+        value: FloatTy,
+        rank: IntTy,
+    },
+});
+const QuickStatsGQL = new GraphQLObjectType({
+    name: "QuickStats",
+    fields: {
+        season: IntTy,
+        number: IntTy,
+        tot: { type: nn(QuickStatGQL) },
+        auto: { type: nn(QuickStatGQL) },
+        dc: { type: nn(QuickStatGQL) },
+        eg: { type: nn(QuickStatGQL) },
+        count: IntTy,
+    },
+});
+
+let cachedQSCount: Partial<Record<Season, { count: number; time: number }>> = {};
+let cacheTime = 1000 * 60 * 5; // 5 minutes
+
+async function getQuickStatCount(season: Season) {
+    let cached = cachedQSCount[season];
+    if (cached && Date.now() - cached.time < cacheTime) {
+        return cached.count;
+    }
+
+    let raw = await DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
+        .select("count(distinct team_number)")
+        .where("NOT is_remote")
+        .andWhere("has_stats")
+        .getRawOne();
+    let count = +raw.count;
+
+    cachedQSCount[season] = { count, time: Date.now() };
+
+    return count;
+}
 
 export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Team",
@@ -94,6 +138,53 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
                     return (await Promise.all(qs)).flat();
                 }
             ),
+        },
+
+        quickStats: {
+            type: QuickStatsGQL,
+            args: { season: IntTy },
+            resolve: async (team, { season }: { season: Season }) => {
+                if (ALL_SEASONS.indexOf(season) == -1) throw "invalid season";
+
+                let total = DESCRIPTORS[season].pensSubtract ? "total_points" : "total_points_np";
+                let max = DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
+                    .select("team_number")
+                    .addSelect(`max(opr_${total})`, "tot")
+                    .addSelect("max(opr_auto_points)", "auto")
+                    .addSelect("max(opr_dc_points)", "dc")
+                    .addSelect("max(opr_eg_points)", "eg")
+                    .where("NOT is_remote")
+                    .andWhere("has_stats")
+                    .groupBy("team_number");
+
+                let ranks = DATA_SOURCE.createQueryBuilder()
+                    .from("max", "max")
+                    .select("*")
+                    .addSelect("rank() over (order by tot DESC)", "tot_rank")
+                    .addSelect("rank() over (order by auto DESC)", "auto_rank")
+                    .addSelect("rank() over (order by dc DESC)", "dc_rank")
+                    .addSelect("rank() over (order by eg DESC)", "eg_rank");
+
+                let res = await DATA_SOURCE.createQueryBuilder()
+                    .addCommonTableExpression(max, "max")
+                    .addCommonTableExpression(ranks, "ranks")
+                    .from("ranks", "ranks")
+                    .select("*")
+                    .where("team_number = :number", { number: team.number })
+                    .getRawOne();
+
+                if (!res) return null;
+
+                return {
+                    season,
+                    number: team.number,
+                    tot: { value: res.tot, rank: +res.tot_rank },
+                    auto: { value: res.auto, rank: +res.auto_rank },
+                    dc: { value: res.dc, rank: +res.dc_rank },
+                    eg: { value: res.eg, rank: +res.eg_rank },
+                    count: await getQuickStatCount(season),
+                };
+            },
         },
     }),
 });
