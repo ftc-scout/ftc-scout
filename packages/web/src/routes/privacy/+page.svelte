@@ -10,7 +10,7 @@
     <Card>
         <div class="head">
             <h1>Privacy Policy</h1>
-            <em class="revision">Last Revision: September 14th, 2023.</em>
+            <em class="revision">Last Revision: October 15th, 2023.</em>
         </div>
 
         <div class="rest">

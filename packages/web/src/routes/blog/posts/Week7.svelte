@@ -5,7 +5,7 @@
 <BlogTemplate slug="change-log">
     <svelte:fragment slot="title">FTC<em>Scout</em> Season 2: What's New</svelte:fragment>
     <svelte:fragment slot="author">Daniel James</svelte:fragment>
-    <svelte:fragment slot="date">October 21, 2023</svelte:fragment>
+    <svelte:fragment slot="date">October 15, 2023</svelte:fragment>
 
     <p>
         This offseason we rewrote <em>FTC</em>Scout from the ground up. In the process we made many
