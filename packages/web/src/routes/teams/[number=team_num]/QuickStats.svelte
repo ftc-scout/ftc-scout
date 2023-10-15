@@ -26,17 +26,41 @@
         <div class="val first">{prettyPrintFloat(stats.dc.value)}</div>
         <div class="val first">{prettyPrintFloat(stats.eg.value)}</div>
 
-        <div class="row-label">Percentile</div>
-        <div class="val" title="{prettyPrintOrdinal(stats.tot.rank)} in the world">
+        <div class="row-label thin">World Rank</div>
+        <div class="val thin">{prettyPrintOrdinal(stats.tot.rank)}</div>
+        <div class="val thin">{prettyPrintOrdinal(stats.auto.rank)}</div>
+        <div class="val thin">{prettyPrintOrdinal(stats.dc.rank)}</div>
+        <div class="val thin">{prettyPrintOrdinal(stats.eg.rank)}</div>
+
+        <div class="row-label thin">Percentile</div>
+        <div class="val thin">
             {prettyPrintFloat(((stats.tot.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
-        <div class="val" title="{prettyPrintOrdinal(stats.auto.rank)} in the world">
+        <div class="val thin">
             {prettyPrintFloat(((stats.auto.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
-        <div class="val" title="{prettyPrintOrdinal(stats.dc.rank)} in the world">
+        <div class="val thin">
             {prettyPrintFloat(((stats.dc.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
-        <div class="val" title="{prettyPrintOrdinal(stats.eg.rank)} in the world">
+        <div class="val thin">
+            {prettyPrintFloat(((stats.eg.rank - 1) / (stats.count - 1)) * 100)}%
+        </div>
+
+        <div class="row-label thick">Rank / Percentile</div>
+        <div class="val thick">
+            {prettyPrintOrdinal(stats.tot.rank)} /
+            {prettyPrintFloat(((stats.tot.rank - 1) / (stats.count - 1)) * 100)}%
+        </div>
+        <div class="val thick">
+            {prettyPrintOrdinal(stats.auto.rank)} /
+            {prettyPrintFloat(((stats.auto.rank - 1) / (stats.count - 1)) * 100)}%
+        </div>
+        <div class="val thick">
+            {prettyPrintOrdinal(stats.dc.rank)} /
+            {prettyPrintFloat(((stats.dc.rank - 1) / (stats.count - 1)) * 100)}%
+        </div>
+        <div class="val thick">
+            {prettyPrintOrdinal(stats.eg.rank)} /
             {prettyPrintFloat(((stats.eg.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
     </div>
@@ -67,15 +91,28 @@
         font-weight: bold;
 
         border-bottom: 1px solid var(--sep-color);
+        white-space: nowrap;
     }
 
     .row-label {
         text-align: left;
         font-weight: bold;
-
-        white-space: nowrap;
         border-right: 1px solid var(--sep-color);
         padding-right: var(--vl-gap);
+    }
+
+    .thin {
+        display: none;
+    }
+
+    @media (max-width: 700px) {
+        .thin {
+            display: block;
+        }
+
+        .thick {
+            display: none;
+        }
     }
 
     .first {
