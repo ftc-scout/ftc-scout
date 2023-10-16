@@ -19,7 +19,9 @@
                 The REST api can be queried at <a href="https://api.ftcscout.org/rest/v1">
                     api.ftcscout.org/rest/v1
                 </a>. You do not need to add any additional headers. Please do not abuse the API or
-                we may have to add rate limiting. The following routes are available.
+                we may have to add rate limiting. The available routes are listed below. If you
+                would like to make to make a large number of queries, please use the GraphQL API
+                instead.
             </p>
 
             <h2>General Notes</h2>

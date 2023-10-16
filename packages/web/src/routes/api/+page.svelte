@@ -16,8 +16,8 @@
 
         <div class="rest">
             <p>
-                FTC<em>Scout</em> has two APIs for you to choose between: a fully featured GraphQL api
-                and a simple to use REST api.
+                FTC<em>Scout</em> has two APIs for you to choose between: a fully featured GraphQL API
+                and a simple to use REST API.
             </p>
 
             <p>
@@ -47,12 +47,12 @@
             <h2>REST</h2>
             <p>
                 The REST API is best used for simpler cases. It is not used internally and so
-                doesn't provide all of our data. For example you can't perform season record queries
-                using it. However if you just need team data, match data, or single event statistics
-                it provides an easy way to access those.
+                doesn't provide all of our data. For example, you can't perform season record
+                queries using it. However, if you just need team data, match data, or single event
+                statistics, it provides an easy way to access those.
             </p>
             <p>
-                Query the api at <a href="https://api.ftcscout.org/rest/v1"
+                Query the API at <a href="https://api.ftcscout.org/rest/v1"
                     >api.ftcscout.org/rest/v1</a
                 >.
             </p>

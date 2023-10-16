@@ -8,9 +8,8 @@
     <svelte:fragment slot="date">October 15, 2023</svelte:fragment>
 
     <p>
-        This offseason we rewrote <em>FTC</em>Scout from the ground up. In the process we made many
-        improvements, fixed lots of bugs, and added cool new features. Here is a fairly exhaustive
-        list of what's changed.
+        This offseason we rewrote FTC<em>Scout</em> from the ground up. In the process we made many improvements,
+        fixed lots of bugs, and added cool new features. Here is a fairly exhaustive list of what's changed.
     </p>
 
     <h2>New Features</h2>
@@ -28,9 +27,9 @@
             matches will be updated automatically as soon as FTC<em>Scout</em> has them.
         </li>
         <li>
-            <b>Vote for the best team name:</b> We are running a competition to see which team has the
+            <b>Vote for the Best Team Name:</b> We are running a competition to see which team has the
             best name. On the home screen you will see two random teams. Vote for your favorite name
-            by clicking it. Once we have enough votes we will write a blog post about the winners.
+            by clicking it. Once we have enough votes, we will write a blog post about the winners.
         </li>
         <li>
             <b>Quick Stats:</b> On the page for individual teams you will now see a "Quick Stats" section.
@@ -39,8 +38,8 @@
             (You can view the exact rank by hovering over the percentile).
         </li>
         <li>
-            <b>REST Api:</b> We hear you. The GraphQL api is too complicated for quick queries.
-            That's why we added a simple REST api for getting data about matches and events. You can
+            <b>REST API:</b> We hear you. The GraphQL API is too complicated for quick queries.
+            That's why we added a simple REST API for getting data about matches and events. You can
             read about it <a href="/api/rest">here</a>. <b>Note:</b> If you are currently using the GraphQL
             API a small number of fields have changed names.
         </li>
