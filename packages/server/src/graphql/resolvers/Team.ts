@@ -60,9 +60,11 @@ async function getQuickStatCount(season: Season) {
     }
 
     let raw = await DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
+        .leftJoin("event e", "e.season = t.season AND e.code = t.event_code")
         .select("count(distinct team_number)")
         .where("NOT is_remote")
         .andWhere("has_stats")
+        .andWhere("NOT e.modified_rules")
         .getRawOne();
     let count = +raw.count;
 
@@ -148,6 +150,7 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
 
                 let total = DESCRIPTORS[season].pensSubtract ? "total_points" : "total_points_np";
                 let max = DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
+                    .leftJoin("event e", "e.season = t.season AND e.code = t.event_code")
                     .select("team_number")
                     .addSelect(`max(opr_${total})`, "tot")
                     .addSelect("max(opr_auto_points)", "auto")
@@ -155,6 +158,7 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
                     .addSelect("max(opr_eg_points)", "eg")
                     .where("NOT is_remote")
                     .andWhere("has_stats")
+                    .andWhere("NOT e.modified_rules")
                     .groupBy("team_number");
 
                 let ranks = DATA_SOURCE.createQueryBuilder()

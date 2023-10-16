@@ -35,8 +35,8 @@
         <li>
             <b>Quick Stats:</b> On the page for individual teams you will now see a "Quick Stats" section.
             This includes the team's best OPR for total points, auto points, teleop points, and endgame
-            points. It also shows you the team's percentile among all teams in each of those categories.
-            (You can view the exact rank by hovering over the percentile).
+            points. It also shows you the team's rank and percentile among all teams in each of those
+            categories.
         </li>
         <li>
             <b>REST Api:</b> We hear you. The GraphQL api is too complicated for quick queries.
