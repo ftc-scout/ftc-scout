@@ -22,8 +22,10 @@ export function getClient(
     if (client) return client;
     if (!fetch) throw "First call to get client must provide fetch";
 
+    let s = IS_DEV ? "" : "s";
+
     let httpLink = new HttpLink({
-        uri: "http://" + env.PUBLIC_SERVER_ORIGIN! + "/graphql",
+        uri: `http${s}://${env.PUBLIC_SERVER_ORIGIN}/graphql`,
         credentials: "omit",
         headers: { [env.PUBLIC_FRONTEND_CODE!]: "." },
         fetch,
@@ -40,7 +42,7 @@ export function getClient(
               },
               new GraphQLWsLink(
                   createClient({
-                      url: "ws://" + env.PUBLIC_SERVER_ORIGIN! + "/graphql",
+                      url: `ws${s}://${env.PUBLIC_SERVER_ORIGIN}/graphql`,
                   })
               ),
               httpLink

@@ -16,6 +16,7 @@
         "web:check": "npm run check -w packages/web",
         "web:check:watch": "npm run check:watch -w packages/web",
         "web:gen": "npm run gen -w packages/web",
+        "web:start": "npm run start -w packages/web",
         "check": "npm run common:check && npm run server:check && npm run web:check"
     },
     "lint-staged": {

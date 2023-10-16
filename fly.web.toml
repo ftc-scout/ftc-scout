@@ -1,0 +1,26 @@
+# fly.toml app configuration file generated for ftc-scout-web on 2023-10-15T14:36:27-07:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = "ftc-scout-web"
+primary_region = "sjc"
+
+[build]
+  dockerfile = "./packages/web/Dockerfile"
+
+[build.args]
+  NODE_ENV="production"
+
+[env]
+  PUBLIC_SERVER_ORIGIN="ftc-scout-server.fly.dev"
+  PUBLIC_FRONTEND_CODE="xyz"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = false
+  min_machines_running = 1
+  max_machines_running = 1
+  processes = ["app"]

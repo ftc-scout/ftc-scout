@@ -1,8 +1,10 @@
 import { env } from "$env/dynamic/public";
 import { browser } from "$app/environment";
 import type { AfterNavigate } from "@sveltejs/kit";
+import { IS_DEV } from "../lib/constants";
 
-const ANALYTICS_URL = "http://" + env.PUBLIC_SERVER_ORIGIN! + "/analytics";
+const s = IS_DEV ? "" : "s";
+const ANALYTICS_URL = `http${s}://${env.PUBLIC_SERVER_ORIGIN}/analytics`;
 
 let lastPath = "";
 let lastRest = "";

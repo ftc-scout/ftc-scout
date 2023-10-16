@@ -1,0 +1,8 @@
+**/node_modules/
+packages/*/dist/
+**/tsconfig.tsbuildinfo
+
+/.idea/
+.DS_Store
+
+db.sql

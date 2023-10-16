@@ -8,9 +8,11 @@
         "preview": "vite preview",
         "check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
-        "gen": "graphql-codegen"
+        "gen": "graphql-codegen",
+        "start": "node build/index.js"
     },
     "devDependencies": {
+        "@flydotio/dockerfile": "^0.4.10",
         "@graphql-codegen/cli": "^4.0.1",
         "@graphql-codegen/introspection": "^4.0.0",
         "@graphql-codegen/typed-document-node": "^5.0.1",
@@ -32,6 +34,7 @@
         "@fortawesome/free-solid-svg-icons": "^6.4.0",
         "@ftc-scout/common": "^0.0.1",
         "@graphql-typed-document-node/core": "^3.2.0",
+        "@sveltejs/adapter-node": "^1.3.1",
         "@threlte/core": "^6.0.6",
         "@threlte/extras": "^5.4.0",
         "export-to-csv": "^0.2.1",
