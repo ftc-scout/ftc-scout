@@ -2,7 +2,7 @@ name: Fly Deploy Server
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'packages/common/**'
       - 'packages/server/**'

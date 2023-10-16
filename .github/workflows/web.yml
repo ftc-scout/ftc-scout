@@ -2,7 +2,7 @@ name: Fly Deploy Web
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'packages/common/**'
       - 'packages/web/**'
