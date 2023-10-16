@@ -12,6 +12,6 @@ In addition, it provides detailed statistics and advanced filtering options
 
 ![Event Rankings Filtering Menu](readmefiles/image3.png)
 
-FTCScout also provides a comprehensive API for fetching information. It uses GraphQL, so it's only the information you need, and it loads in all at once.
+FTCScout also provides a comprehensive API for fetching information. You have the choice between using [GraphQL](https://api.ftcscout.org/graphql) or the [Rest API](https://ftcscout.org/api/rest) to query information.
 
 ![Alt text](readmefiles/image4.png)
