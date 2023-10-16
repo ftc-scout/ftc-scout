@@ -130,7 +130,7 @@
 
 <form
     on:submit|preventDefault={submit}
-    use:focusWithinOut={() => (shown = false)}
+    use:focusWithinOut={() => setTimeout(() => (shown = false), 50)}
     class:has-text={searchText != ""}
     class:shown
 >
@@ -371,7 +371,7 @@
             /* width: var(--expanded-width); */
             transition-property: none;
 
-            font-size: var(--lg-font-size);
+            font-size: 16px;
         }
 
         form:not(.shown) {
