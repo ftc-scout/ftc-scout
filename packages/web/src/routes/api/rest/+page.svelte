@@ -7,7 +7,7 @@
 
 <Head
     title="Api | FTCScout"
-    description="The developer api for FTCScout providing access to all our statistics and data."
+    description="The developer API for FTCScout, providing access to all our statistics and data."
 />
 
 <WidthProvider width="100ch">
@@ -16,10 +16,11 @@
 
         <div class="rest">
             <p>
-                The REST api can be queried at <a href="https://api.ftcscout.org/rest/v1">
+                The REST API can be queried at <a href="https://api.ftcscout.org/rest/v1">
                     api.ftcscout.org/rest/v1
                 </a>. You do not need to add any additional headers. Please do not abuse the API or
-                we may have to add rate limiting. The following routes are available.
+                we may have to add rate limiting. If you need to make large volumes of queries, use
+                the GraphQL API. The available routes are listed below.
             </p>
 
             <h2>General Notes</h2>
