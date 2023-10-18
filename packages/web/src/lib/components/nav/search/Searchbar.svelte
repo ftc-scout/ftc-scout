@@ -126,7 +126,7 @@
     afterNavigate(() => (searchText = ""));
 </script>
 
-<svelte:document on:keyup={docKey} />
+<svelte:document on:keydown={docKey} />
 
 <form
     on:submit|preventDefault={submit}

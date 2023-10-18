@@ -8,9 +8,8 @@
     <svelte:fragment slot="date">October 15, 2023</svelte:fragment>
 
     <p>
-        This offseason we rewrote <em>FTC</em>Scout from the ground up. In the process we made many
-        improvements, fixed lots of bugs, and added cool new features. Here is a fairly exhaustive
-        list of what's changed.
+        This offseason we rewrote FTC<em>Scout</em> from the ground up. In the process we made many improvements,
+        fixed lots of bugs, and added cool new features. Here is a fairly exhaustive list of what's changed.
     </p>
 
     <h2>New Features</h2>
