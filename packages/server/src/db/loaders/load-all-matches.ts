@@ -148,7 +148,7 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
     if (loadType == LoadType.Full) {
         return DATA_SOURCE.getRepository(Event)
             .createQueryBuilder("e")
-            .select(["code", "remote", "timezone"])
+            .select(["e.season", "e.code", "e.remote", "e.timezone"])
             .distinct(true)
             .leftJoin(Match, "m", "e.season = m.event_season AND e.code = m.event_code")
             .leftJoin(
@@ -162,8 +162,8 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
             .getMany();
     } else {
         return DATA_SOURCE.getRepository(Event)
-            .createQueryBuilder()
-            .select(["code", "remote", "timezone"])
+            .createQueryBuilder("e")
+            .select(["e.season", "e.code", "e.remote", "e.timezone"])
             .distinct(true)
             .where("season = :season", { season })
             .andWhere("start <= (NOW() at time zone timezone)::date")
