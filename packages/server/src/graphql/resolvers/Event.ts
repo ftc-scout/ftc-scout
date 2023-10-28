@@ -71,11 +71,12 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             ...BoolTy,
             resolve: (e) =>
                 DateTime.fromISO(e.start as any, { zone: e.timezone }) < DateTime.now() &&
-                DateTime.now() < DateTime.fromISO(e.end as any, { zone: e.timezone }),
+                DateTime.now() < DateTime.fromISO(e.end as any, { zone: e.timezone }).endOf("day"),
         },
         finished: {
             ...BoolTy,
-            resolve: (e) => DateTime.fromISO(e.end as any, { zone: e.timezone }) < DateTime.now(),
+            resolve: (e) =>
+                DateTime.fromISO(e.end as any, { zone: e.timezone }).endOf("day") < DateTime.now(),
         },
 
         relatedEvents: {
