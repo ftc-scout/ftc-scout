@@ -1,12 +1,14 @@
 import {
     DESCRIPTORS,
     DateTy,
+    EventTypeOption,
     IntTy,
     RegionOption,
     RemoteOption,
     Season,
     SortDir,
     StrTy,
+    getEventTypes,
     getMatchStatSet,
     getRegionCodes,
     getTepStatSet,
@@ -20,7 +22,13 @@ import { TeamEventParticipationGQL } from "../TeamEventParticipation";
 import { TeamEventParticipation } from "../../../db/entities/dyn/team-event-participation";
 import { DATA_SOURCE } from "../../../db/data-source";
 import { NamingStrategyInterface } from "typeorm";
-import { AllianceGQL, RegionOptionGQL, RemoteOptionGQL, SortDirGQL } from "../enums";
+import {
+    AllianceGQL,
+    EventTypeOptionGQL,
+    RegionOptionGQL,
+    RemoteOptionGQL,
+    SortDirGQL,
+} from "../enums";
 import { FilterGQL, TyFilterGQL, filterGQLToSql, isFilteringOn } from "./filter-gql";
 import { MatchScore } from "../../../db/entities/dyn/match-score";
 import { MatchGQL, singleSeasonScoreAwareMatchLoader } from "../Match";
@@ -72,6 +80,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             sortDir: { type: SortDirGQL },
             filter: { type: FilterGQL },
             region: { type: RegionOptionGQL },
+            type: { type: EventTypeOptionGQL },
             remote: { type: RemoteOptionGQL },
             start: nullTy(DateTy),
             end: nullTy(DateTy),
@@ -86,6 +95,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 sortDir,
                 filter,
                 region,
+                type,
                 remote,
                 start,
                 end,
@@ -97,6 +107,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 sortDir: SortDir | null;
                 filter: TyFilterGQL;
                 region: RegionOption | null;
+                type: EventTypeOption | null;
                 remote: RemoteOption | null;
                 start: Date | null;
                 end: Date | null;
@@ -127,6 +138,9 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
             // Region
             let chosenRegion = region ?? RegionOption.All;
+
+            // Event Type
+            let chosenType = type ?? EventTypeOption.Competition;
 
             // Filter
             let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
@@ -159,6 +173,15 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 });
                 countQ.andWhere("region_code IN (:...regions)", {
                     regions: getRegionCodes(chosenRegion),
+                });
+            }
+
+            if (chosenType != EventTypeOption.All && chosenType != EventTypeOption.Competition) {
+                contextAddedQ.andWhere("type IN (:...types)", {
+                    types: getEventTypes(chosenType),
+                });
+                countQ.andWhere("type IN (:...types)", {
+                    types: getEventTypes(chosenType),
                 });
             }
 
@@ -259,6 +282,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             sortDir: { type: SortDirGQL },
             filter: { type: FilterGQL },
             region: { type: RegionOptionGQL },
+            type: { type: EventTypeOptionGQL },
             remote: { type: RemoteOptionGQL },
             start: nullTy(DateTy),
             end: nullTy(DateTy),
@@ -273,6 +297,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 sortDir,
                 filter,
                 region,
+                type,
                 remote,
                 start,
                 end,
@@ -284,6 +309,7 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 sortDir: SortDir | null;
                 filter: TyFilterGQL;
                 region: RegionOption | null;
+                type: EventTypeOption | null;
                 remote: RemoteOption | null;
                 start: Date | null;
                 end: Date | null;
@@ -314,6 +340,9 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
 
             // Region
             let chosenRegion = region ?? RegionOption.All;
+
+            // Event Type
+            let chosenType = type ?? EventTypeOption.Competition;
 
             // Filter
             let filterSql = filter ? filterGQLToSql(filter, statSet, (s) => name(ns, s)) : "true";
@@ -423,6 +452,15 @@ export const RecordQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 });
                 countQ.andWhere("region_code IN (:...regions)", {
                     regions: getRegionCodes(chosenRegion),
+                });
+            }
+
+            if (chosenType != EventTypeOption.All && chosenType != EventTypeOption.Competition) {
+                contextAddedQ.andWhere("type IN (:...types)", {
+                    types: getEventTypes(chosenType),
+                });
+                countQ.andWhere("type IN (:...types)", {
+                    types: getEventTypes(chosenType),
                 });
             }
 

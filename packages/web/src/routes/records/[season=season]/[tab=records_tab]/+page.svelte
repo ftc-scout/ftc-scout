@@ -29,17 +29,18 @@
     import { REGION_EC_DC } from "$lib/util/search-params/region";
     import { DATE_EC_DC } from "$lib/util/search-params/date";
     import DateRange from "$lib/components/ui/form/DateRange.svelte";
-    import { REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
+    import { EVENT_TY_EC_DC, REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
     import RemoteSelect from "$lib/components/ui/form/RemoteSelect.svelte";
     import { PAGE_EC_DC } from "$lib/util/search-params/int";
     import Head from "$lib/components/Head.svelte";
     import Match from "./Match.svelte";
+    import EventTypeSelect from "../../../../lib/components/ui/form/EventTypeSelect.svelte";
 
     function go(tab: string, season: Season) {
         let tabChanged = tab != $page.params.tab;
         let seasonChanged = season != +$page.params.season;
         if (browser && (tabChanged || seasonChanged)) {
-            let toKeep = ["region", "filter"];
+            let toKeep = ["region", "type", "filter"];
             if (DESCRIPTORS[season].hasRemote) toKeep.push("remote");
             if (!seasonChanged) {
                 toKeep.push("start");
@@ -79,6 +80,7 @@
     });
 
     let region = queryParam("region", REGION_EC_DC);
+    let eventType = queryParam("type", EVENT_TY_EC_DC);
     let start = queryParam("start", DATE_EC_DC);
     let end = queryParam("end", DATE_EC_DC);
     let remote = queryParam("remote", REMOTE_EC_DC);
@@ -87,6 +89,7 @@
     function change() {
         startQueryParamBatch();
         $region = $region;
+        $eventType = $eventType;
         $start = $start;
         $end = $end;
         $remote = $remote;
@@ -136,6 +139,17 @@
                     <label for="remote-select">
                         Events
                         <RemoteSelect bind:remote={$remote} id="remote-select" on:change={change} />
+                    </label>
+                {:else}
+                    <!-- TODO: better layout -->
+                    <label for="type-select">
+                        Event Types
+                        <EventTypeSelect
+                            bind:eventType={$eventType}
+                            id="type-select"
+                            on:change={change}
+                            competitionOnly
+                        />
                     </label>
                 {/if}
             </div>

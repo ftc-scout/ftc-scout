@@ -1,7 +1,7 @@
 import { EventTypeOption, RemoteOption } from "@ftc-scout/common";
 import type { EcDc } from "./search-params";
 
-export const EVENT_TY_EC_DC: EcDc<EventTypeOption> = {
+export const EVENT_TY_EC_DC = {
     encode: (e) => (e == EventTypeOption.Competition ? null : e),
     decode: (s) => {
         if (s == null) return EventTypeOption.Competition;
@@ -10,7 +10,7 @@ export const EVENT_TY_EC_DC: EcDc<EventTypeOption> = {
             EventTypeOption.Competition
         );
     },
-};
+} satisfies EcDc<EventTypeOption>;
 
 export const REMOTE_EC_DC = {
     encode: (r) => (r == RemoteOption.All ? null : r),

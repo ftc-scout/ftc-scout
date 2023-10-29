@@ -26,6 +26,7 @@ export type EventType = (typeof EventType)[keyof typeof EventType];
 export const EventTypeOption = {
     All: "All",
     Competition: "Competition",
+    Official: "Official",
     NonCompetition: "NonCompetition",
     ...EventType,
 } as const;
@@ -37,6 +38,8 @@ export function getEventTypes(option: EventTypeOption): EventType[] {
             return Object.values(EventType);
         case EventTypeOption.Competition:
             return COMPETITION_EVENT_TYPES;
+        case EventTypeOption.Official:
+            return OFFICIAL_EVENT_TYPES;
         case EventTypeOption.NonCompetition:
             return NON_COMPETITION_EVENT_TYPES;
         default:
@@ -53,6 +56,15 @@ export const COMPETITION_EVENT_TYPES = [
     EventType.FIRSTChampionship,
     EventType.SuperQualifier,
     EventType.OffSeason,
+];
+
+export const OFFICIAL_EVENT_TYPES = [
+    EventType.LeagueMeet,
+    EventType.Qualifier,
+    EventType.LeagueTournament,
+    EventType.Championship,
+    EventType.FIRSTChampionship,
+    EventType.SuperQualifier,
 ];
 
 export const NON_COMPETITION_EVENT_TYPES = [

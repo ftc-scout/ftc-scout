@@ -5,6 +5,7 @@ import { getClient } from "$lib/graphql/client";
 import {
     MatchRecordsDocument,
     RegionOption as RegionOptionGQL,
+    EventTypeOption as EventTypeOptionGQL,
     RemoteOption as RemoteOptionGQL,
     SortDir as SortDirGQL,
     TepRecordsDocument,
@@ -14,7 +15,7 @@ import { PAGE_SIZE } from "./+page.svelte";
 import { FILTER_EC_DC, SORT_DIR_EC_DC, STAT_EC_DC } from "$lib/util/search-params/stats";
 import { filterGroupToGql } from "$lib/components/stats/filter/filterToGql";
 import { REGION_EC_DC } from "$lib/util/search-params/region";
-import { REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
+import { EVENT_TY_EC_DC, REMOTE_EC_DC } from "$lib/util/search-params/event-ty";
 import { DATE_EC_DC } from "$lib/util/search-params/date";
 import { dateToStr } from "$lib/util/date";
 
@@ -35,6 +36,7 @@ export const load: PageLoad = ({ fetch, params, url }) => {
         let filter = filterLoc ? { group: filterGroupToGql(filterLoc) } : null;
 
         let region = REGION_EC_DC.decode(url.searchParams.get("region")) as RegionOptionGQL;
+        let type = EVENT_TY_EC_DC.decode(url.searchParams.get("type")) as EventTypeOptionGQL;
         let remote = REMOTE_EC_DC.decode(url.searchParams.get("remote")) as RemoteOptionGQL;
         let start = DATE_EC_DC.decode(url.searchParams.get("start"));
         let end = DATE_EC_DC.decode(url.searchParams.get("end"));
@@ -52,6 +54,7 @@ export const load: PageLoad = ({ fetch, params, url }) => {
                 sortDir,
                 filter,
                 region,
+                type,
                 remote,
                 start: dateToStr(start),
                 end: dateToStr(end),
@@ -71,6 +74,7 @@ export const load: PageLoad = ({ fetch, params, url }) => {
         let filter = filterLoc ? { group: filterGroupToGql(filterLoc) } : null;
 
         let region = REGION_EC_DC.decode(url.searchParams.get("region")) as RegionOptionGQL;
+        let type = EVENT_TY_EC_DC.decode(url.searchParams.get("type")) as EventTypeOptionGQL;
         let remote = REMOTE_EC_DC.decode(url.searchParams.get("remote")) as RemoteOptionGQL;
         let start = DATE_EC_DC.decode(url.searchParams.get("start"));
         let end = DATE_EC_DC.decode(url.searchParams.get("end"));
@@ -88,6 +92,7 @@ export const load: PageLoad = ({ fetch, params, url }) => {
                 sortDir,
                 filter,
                 region,
+                type,
                 remote,
                 start: dateToStr(start),
                 end: dateToStr(end),
