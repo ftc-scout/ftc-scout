@@ -14,7 +14,7 @@ const config = {
         adapter: adapter(),
         csp: {
             directives: {
-                "default-src": ["self", "ftc-scout-server.fly.dev", "api.ftcscout.org"],
+                "default-src": ["self", 'ws:', "ftc-scout-server.fly.dev", "api.ftcscout.org"],
                 "script-src": ["self", "www.googletagmanager.com"],
                 "style-src": ["self", "unsafe-inline", "fonts.googleapis.com"],
                 "img-src": ["self", "data:", "fonts.googleapis.com", "ftc-scout-server.fly.dev"],

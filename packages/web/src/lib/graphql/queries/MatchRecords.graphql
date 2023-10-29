@@ -6,6 +6,7 @@ query MatchRecords(
     $sortDir: SortDir!
     $filter: Filter
     $region: RegionOption
+    $type: EventTypeOption
     $remote: RemoteOption
     $start: Date
     $end: Date
@@ -18,6 +19,7 @@ query MatchRecords(
         sortDir: $sortDir
         filter: $filter
         region: $region
+        type: $type
         remote: $remote
         start: $start
         end: $end
