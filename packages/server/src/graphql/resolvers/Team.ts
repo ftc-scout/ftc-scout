@@ -53,22 +53,31 @@ const QuickStatsGQL = new GraphQLObjectType({
 let cachedQSCount: Partial<Record<Season, { count: number; time: number }>> = {};
 let cacheTime = 1000 * 60 * 5; // 5 minutes
 
-async function getQuickStatCount(season: Season) {
+async function getQuickStatCount(season: Season, region: RegionOption | null) {
+    let specialRegion = region && region != RegionOption.All;
+
     let cached = cachedQSCount[season];
-    if (cached && Date.now() - cached.time < cacheTime) {
+    if (!specialRegion && cached && Date.now() - cached.time < cacheTime) {
         return cached.count;
     }
 
-    let raw = await DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
+    let q = DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
         .leftJoin("event", "e", "e.season = t.season AND e.code = t.event_code")
         .select("count(distinct team_number)")
         .where("NOT is_remote")
         .andWhere("has_stats")
-        .andWhere("NOT e.modified_rules")
-        .getRawOne();
+        .andWhere("NOT e.modified_rules");
+
+    if (region && region != RegionOption.All) {
+        q.andWhere("region_code IN (:...regions)", { regions: getRegionCodes(region) });
+    }
+
+    let raw = await q.getRawOne();
     let count = +raw.count;
 
-    cachedQSCount[season] = { count, time: Date.now() };
+    if (!specialRegion) {
+        cachedQSCount[season] = { count, time: Date.now() };
+    }
 
     return count;
 }
@@ -144,8 +153,11 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
 
         quickStats: {
             type: QuickStatsGQL,
-            args: { season: IntTy },
-            resolve: async (team, { season }: { season: Season }) => {
+            args: { season: IntTy, region: { type: RegionOptionGQL } },
+            resolve: async (
+                team,
+                { season, region }: { season: Season; region: RegionOption | null }
+            ) => {
                 if (ALL_SEASONS.indexOf(season) == -1) throw "invalid season";
 
                 let total = DESCRIPTORS[season].pensSubtract ? "total_points" : "total_points_np";
@@ -160,6 +172,12 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
                     .andWhere("has_stats")
                     .andWhere("NOT e.modified_rules")
                     .groupBy("team_number");
+
+                if (region && region != RegionOption.All) {
+                    max.andWhere("region_code IN (:...regions)", {
+                        regions: getRegionCodes(region),
+                    });
+                }
 
                 let ranks = DATA_SOURCE.createQueryBuilder()
                     .from("max", "max")
@@ -186,7 +204,7 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
                     auto: { value: res.auto, rank: +res.auto_rank },
                     dc: { value: res.dc, rank: +res.dc_rank },
                     eg: { value: res.eg, rank: +res.eg_rank },
-                    count: await getQuickStatCount(season),
+                    count: await getQuickStatCount(season, region),
                 };
             },
         },
