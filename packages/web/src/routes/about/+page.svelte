@@ -58,7 +58,7 @@
                 of the season. In addition you can use our highly capable filtering and sorting
                 options to find even more information. For example here you can see the
                 <a
-                    href="http://localhost:5173/records/2022/teams?region=USCA&filter=and-team.eq.16321-&sort=autoPointsOpr"
+                    href="/records/2022/teams?region=USCA&filter=and-team.eq.16321-&sort=autoPointsOpr"
                 >
                     rankings of X Drive's Autonomous OPRs in California for the Power Play season.
                 </a>
