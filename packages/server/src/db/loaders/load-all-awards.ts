@@ -54,8 +54,8 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
 
     if (loaded) {
         let query = DATA_SOURCE.getRepository(Event)
-            .createQueryBuilder()
-            .select("code")
+            .createQueryBuilder("e")
+            .select(["e.season", "e.code"])
             .where("season = :season", { season });
 
         if (loadType == LoadType.Full) {
