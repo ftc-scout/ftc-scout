@@ -132,6 +132,7 @@ export function awardCodeFromFtcApi(award: AwardFtcApi): [AwardType, number] | n
         case 17: // Innovation Challenge Winner
             return [AwardType.Winner, awardTop(award, 1)];
         case 18: // Volunteer OTY
+        case 19: // Volunteer Award
             return null; // Too annoying to handle.
         case 22: // Division Finalist
             return [AwardType.DivisionFinalist, awardTop(award, 3)];
