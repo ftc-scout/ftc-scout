@@ -1,9 +1,11 @@
 import {
     DESCRIPTORS,
+    EventTypeOption,
     MatchFtcApi,
     MatchScoresFtcApi,
     Season,
     calculateTeamEventStats,
+    getEventTypes,
     groupBy,
 } from "@ftc-scout/common";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
@@ -159,6 +161,7 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
             .where("e.season = :season", { season })
             .andWhere("start < now()")
             .andWhere("start > 'now'::timestamp - '1 month'::interval")
+            .andWhere("type IN (:...types)", { types: getEventTypes(EventTypeOption.Competition) })
             .getMany();
     } else {
         return DATA_SOURCE.getRepository(Event)
@@ -168,6 +171,7 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
             .where("season = :season", { season })
             .andWhere("start <= (NOW() at time zone timezone)::date")
             .andWhere(`"end" >= (NOW() at time zone timezone)::date`)
+            .andWhere("type IN (:...types)", { types: getEventTypes(EventTypeOption.Competition) })
             .getMany();
     }
 }
