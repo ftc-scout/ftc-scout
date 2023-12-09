@@ -72,32 +72,6 @@
             </a>
         </div>
 
-        <div class="events">
-            <div class="head">
-                <h2>Today's Events</h2>
-                <p>{prettyPrintDateRange(new Date(), new Date())}</p>
-            </div>
-
-            <hr />
-
-            {#if events && events.length}
-                <ul>
-                    {#each events as e}
-                        <li>
-                            <a href="/events/{e.season}/{e.code}/matches">
-                                <span>{e.name}</span>
-                                <em class="loc"><Location {...e.location} link={false} /></em>
-                            </a>
-                        </li>
-                    {/each}
-                </ul>
-            {:else if events}
-                <p class="no-events">There are no events scheduled for today.</p>
-            {:else}
-                <SkeletonRow header={false} card={false} rows={10} />
-            {/if}
-        </div>
-
         <div class="name-vote">
             <h2>
                 The Best Team Name
@@ -125,6 +99,32 @@
                 </div>
             {:else}
                 <SkeletonRow header={false} card={false} rows={2} />
+            {/if}
+        </div>
+
+        <div class="events">
+            <div class="head">
+                <h2>Today's Events</h2>
+                <p>{prettyPrintDateRange(new Date(), new Date())}</p>
+            </div>
+
+            <hr />
+
+            {#if events && events.length}
+                <ul>
+                    {#each events as e}
+                        <li>
+                            <a href="/events/{e.season}/{e.code}/matches">
+                                <span>{e.name}</span>
+                                <em class="loc"><Location {...e.location} link={false} /></em>
+                            </a>
+                        </li>
+                    {/each}
+                </ul>
+            {:else if events}
+                <p class="no-events">There are no events scheduled for today.</p>
+            {:else}
+                <SkeletonRow header={false} card={false} rows={10} />
             {/if}
         </div>
 
