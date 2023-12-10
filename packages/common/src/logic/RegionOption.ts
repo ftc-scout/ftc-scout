@@ -114,10 +114,13 @@ export function getRegionCodes(region: RegionOption): RegionCode[] {
             return Object.values(RegionCode).filter((c) => c.startsWith("US"));
         case RegionOption.International:
             return INTERNATIONAL_REGIONS;
-        case RegionOption.USCA:
         case RegionOption.USTX:
+        case RegionOption.USCA:
         case RegionOption.USNY:
-            return Object.values(RegionCode).filter((c) => c.startsWith(region));
+            return [
+                ...Object.values(RegionCode).filter((c) => c.startsWith(region)),
+                region,
+            ] as any;
         default:
             return [region];
     }
