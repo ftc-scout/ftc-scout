@@ -265,7 +265,7 @@ function calculateRanks(
                 stats.rp = stats.tot.totalPoints;
                 break;
             case "Record":
-                stats.rp = (2 * stats.wins + 2 * stats.ties) / stats.qualMatchesPlayed;
+                stats.rp = (2 * stats.wins + stats.ties) / stats.qualMatchesPlayed;
                 break;
         }
     }
