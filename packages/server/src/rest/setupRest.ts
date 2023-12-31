@@ -3,6 +3,7 @@ import { Team } from "../db/entities/Team";
 import { TeamEventParticipation } from "../db/entities/dyn/team-event-participation";
 import {
     ALL_SEASONS,
+    CURRENT_SEASON,
     EventTypeOption,
     RegionOption,
     Season,
@@ -18,6 +19,7 @@ import { Match } from "../db/entities/Match";
 import { DATA_SOURCE } from "../db/data-source";
 import { frontendMSFromDB } from "../graphql/dyn/match-score";
 import { FindOptionsWhere } from "typeorm";
+import { getQuickStats } from "../graphql/resolvers/Team";
 
 const pre = "/rest/v1/";
 
@@ -46,6 +48,7 @@ export function setupRest(app: Express) {
     app.get(pre + "teams/:number(\\d+)/events/:season(\\d+)", teamEvents);
     app.get(pre + "teams/:number(\\d+)/awards", teamAwards);
     app.get(pre + "teams/:number(\\d+)/matches", teamMatches);
+    app.get(pre + "teams/:number(\\d+)/quick-stats", teamQuickStats);
     app.get(pre + "teams/search", teamSearch);
 
     app.get(pre + "events/:season(\\d+)/:code", eventByCode);
@@ -165,6 +168,30 @@ async function teamMatches(req: Request<{ number: string }>, res: Response) {
     });
 
     res.send(tmps);
+}
+
+async function teamQuickStats(req: Request<{ number: string }>, res: Response) {
+    let teamNumber = +req.params.number;
+    let season = +((req.query.season as string | undefined) ?? CURRENT_SEASON);
+    let region = req.query.region as RegionOption | undefined;
+
+    if (!isSeason(season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    if (region && !isRegion(region)) {
+        res.status(400).send(`Invalid region ${region}.`);
+        return;
+    }
+
+    let stats = await getQuickStats(teamNumber, season, region ?? null);
+
+    if (!stats) {
+        res.status(404).send(`Team ${teamNumber} has no stats for ${season}.`);
+    } else {
+        res.send(stats);
+    }
 }
 
 async function teamSearch(req: Request, res: Response) {

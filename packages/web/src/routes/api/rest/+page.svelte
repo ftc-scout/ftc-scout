@@ -93,6 +93,26 @@
 
             <section>
                 <code class="route">
+                    /teams/<span class="var">:number</span>/quick-stats?season=<span class="var"
+                        >Int</span
+                    >&ZeroWidthSpace;{"&"}region=<span class="var">RegionOption</span>
+                </code>
+                <p>
+                    Get the quick stats for a team in a specific season and region. If the season is
+                    not specified defaults to the current season. If the region is not specified
+                    defaults to the whole world.
+                </p>
+                <p>
+                    Returns all fields of the <code>QuickStats</code> GraphQL type.
+                </p>
+                <p>
+                    <code class="resp-code">404</code>s if the team does not exist or has no events
+                    in the specified season.
+                </p>
+            </section>
+
+            <section>
+                <code class="route">
                     /teams/search?region=<span class="var">RegionOption</span
                     >&ZeroWidthSpace;&limit=<span class="var">Int</span
                     >&ZeroWidthSpace;&searchText=<span class="var">String</span>

@@ -82,6 +82,55 @@ async function getQuickStatCount(season: Season, region: RegionOption | null) {
     return count;
 }
 
+export async function getQuickStats(number: number, season: Season, region: RegionOption | null) {
+    let total = DESCRIPTORS[season].pensSubtract ? "total_points" : "total_points_np";
+    let max = DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
+        .leftJoin("event", "e", "e.season = t.season AND e.code = t.event_code")
+        .select("team_number")
+        .addSelect(`max(opr_${total})`, "tot")
+        .addSelect("max(opr_auto_points)", "auto")
+        .addSelect("max(opr_dc_points)", "dc")
+        .addSelect("max(opr_eg_points)", "eg")
+        .where("NOT is_remote")
+        .andWhere("has_stats")
+        .andWhere("NOT e.modified_rules")
+        .groupBy("team_number");
+
+    if (region && region != RegionOption.All) {
+        max.andWhere("region_code IN (:...regions)", {
+            regions: getRegionCodes(region),
+        });
+    }
+
+    let ranks = DATA_SOURCE.createQueryBuilder()
+        .from("max", "max")
+        .select("*")
+        .addSelect("rank() over (order by tot DESC)", "tot_rank")
+        .addSelect("rank() over (order by auto DESC)", "auto_rank")
+        .addSelect("rank() over (order by dc DESC)", "dc_rank")
+        .addSelect("rank() over (order by eg DESC)", "eg_rank");
+
+    let res = await DATA_SOURCE.createQueryBuilder()
+        .addCommonTableExpression(max, "max")
+        .addCommonTableExpression(ranks, "ranks")
+        .from("ranks", "ranks")
+        .select("*")
+        .where("team_number = :number", { number })
+        .getRawOne();
+
+    if (!res) return null;
+
+    return {
+        season,
+        number: number,
+        tot: { value: res.tot, rank: +res.tot_rank },
+        auto: { value: res.auto, rank: +res.auto_rank },
+        dc: { value: res.dc, rank: +res.dc_rank },
+        eg: { value: res.eg, rank: +res.eg_rank },
+        count: await getQuickStatCount(season, region),
+    };
+}
+
 export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Team",
     fields: () => ({
@@ -159,53 +208,7 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
                 { season, region }: { season: Season; region: RegionOption | null }
             ) => {
                 if (ALL_SEASONS.indexOf(season) == -1) throw "invalid season";
-
-                let total = DESCRIPTORS[season].pensSubtract ? "total_points" : "total_points_np";
-                let max = DATA_SOURCE.createQueryBuilder(`tep_${season}`, "t")
-                    .leftJoin("event", "e", "e.season = t.season AND e.code = t.event_code")
-                    .select("team_number")
-                    .addSelect(`max(opr_${total})`, "tot")
-                    .addSelect("max(opr_auto_points)", "auto")
-                    .addSelect("max(opr_dc_points)", "dc")
-                    .addSelect("max(opr_eg_points)", "eg")
-                    .where("NOT is_remote")
-                    .andWhere("has_stats")
-                    .andWhere("NOT e.modified_rules")
-                    .groupBy("team_number");
-
-                if (region && region != RegionOption.All) {
-                    max.andWhere("region_code IN (:...regions)", {
-                        regions: getRegionCodes(region),
-                    });
-                }
-
-                let ranks = DATA_SOURCE.createQueryBuilder()
-                    .from("max", "max")
-                    .select("*")
-                    .addSelect("rank() over (order by tot DESC)", "tot_rank")
-                    .addSelect("rank() over (order by auto DESC)", "auto_rank")
-                    .addSelect("rank() over (order by dc DESC)", "dc_rank")
-                    .addSelect("rank() over (order by eg DESC)", "eg_rank");
-
-                let res = await DATA_SOURCE.createQueryBuilder()
-                    .addCommonTableExpression(max, "max")
-                    .addCommonTableExpression(ranks, "ranks")
-                    .from("ranks", "ranks")
-                    .select("*")
-                    .where("team_number = :number", { number: team.number })
-                    .getRawOne();
-
-                if (!res) return null;
-
-                return {
-                    season,
-                    number: team.number,
-                    tot: { value: res.tot, rank: +res.tot_rank },
-                    auto: { value: res.auto, rank: +res.auto_rank },
-                    dc: { value: res.dc, rank: +res.dc_rank },
-                    eg: { value: res.eg, rank: +res.eg_rank },
-                    count: await getQuickStatCount(season, region),
-                };
+                return getQuickStats(team.number, season, region);
             },
         },
     }),
