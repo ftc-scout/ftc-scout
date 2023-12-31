@@ -34,34 +34,34 @@
 
         <div class="row-label thin">Percentile</div>
         <div class="val thin">
-            {prettyPrintFloat(((stats.tot.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.tot.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
         <div class="val thin">
-            {prettyPrintFloat(((stats.auto.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.auto.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
         <div class="val thin">
-            {prettyPrintFloat(((stats.dc.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.dc.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
         <div class="val thin">
-            {prettyPrintFloat(((stats.eg.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.eg.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
 
         <div class="row-label thick">Rank / Percentile</div>
         <div class="val thick">
             {prettyPrintOrdinal(stats.tot.rank)} /
-            {prettyPrintFloat(((stats.tot.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.tot.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
         <div class="val thick">
             {prettyPrintOrdinal(stats.auto.rank)} /
-            {prettyPrintFloat(((stats.auto.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.auto.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
         <div class="val thick">
             {prettyPrintOrdinal(stats.dc.rank)} /
-            {prettyPrintFloat(((stats.dc.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.dc.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
         <div class="val thick">
             {prettyPrintOrdinal(stats.eg.rank)} /
-            {prettyPrintFloat(((stats.eg.rank - 1) / (stats.count - 1)) * 100)}%
+            {prettyPrintFloat((1 - (stats.eg.rank - 1) / (stats.count - 1)) * 100)}%
         </div>
     </div>
 </Card>
