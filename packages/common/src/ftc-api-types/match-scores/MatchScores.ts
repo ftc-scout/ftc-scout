@@ -10,7 +10,7 @@ export interface TradTopLevel<AllianceScore> {
     matchLevel: "OTHER" | "QUALIFICATION" | "SEMIFINAL" | "FINAL" | "PLAYOFF";
     matchSeries: number;
     matchNumber: number;
-    alliances: AllianceScore[];
+    Alliances: AllianceScore[];
 }
 
 export interface RemoteTopLevel<Score> {

@@ -12,7 +12,7 @@ export interface MatchFtcApi {
     scoreBlueFinal: number | null;
     scoreBlueFoul: number | null;
     scoreBlueAuto: number | null;
-    teams: TeamMatchParticipationFtcApi[];
+    Teams: TeamMatchParticipationFtcApi[];
 }
 
 export interface TeamMatchParticipationFtcApi {

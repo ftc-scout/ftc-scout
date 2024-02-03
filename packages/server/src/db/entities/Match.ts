@@ -86,7 +86,7 @@ export class Match extends BaseEntity {
             eventSeason: event.season,
             eventCode: event.code,
             id: event.remote
-                ? api.teams[0].teamNumber * 1000 + api.matchNumber
+                ? api.Teams[0].teamNumber * 1000 + api.matchNumber
                 : tournamentLevelValue(tournamentLevel) * 10000 +
                   api.series * 1000 +
                   api.matchNumber,
