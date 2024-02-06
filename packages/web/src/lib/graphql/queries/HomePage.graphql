@@ -24,15 +24,4 @@ query HomePage($season: Int!) {
             name
         }
     }
-    getBestName {
-        id
-        team1 {
-            number
-            name
-        }
-        team2 {
-            number
-            name
-        }
-    }
 }
