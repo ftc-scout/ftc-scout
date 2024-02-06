@@ -90,7 +90,7 @@ export function initMS() {
     }
 
     MatchScore.fromApi = (api: MatchScoresFtcApi, match: Match, remote: boolean): MatchScore[] => {
-        let scores = "scores" in api ? [api.scores] : api.Alliances;
+        let scores = "scores" in api ? [api.scores] : api.alliances;
         return scores.map((s, i) => {
             let other = scores.length == 2 ? scores[1 - i] : null;
 

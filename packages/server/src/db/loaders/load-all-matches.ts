@@ -39,7 +39,7 @@ function isIgnored(season: Season, eCode: string, m: MatchFtcApi): boolean {
         (im) =>
             im.season == season &&
             im.eventCode == eCode &&
-            m.Teams.some((t) => im.teamNumber == t.teamNumber)
+            m.teams.some((t) => im.teamNumber == t.teamNumber)
     );
 }
 
@@ -72,7 +72,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 let theseScores = findScores(match, scores);
                 let hasBeenPlayed = !!theseScores.length;
                 let dbMatch = Match.fromApi(match, event, hasBeenPlayed);
-                let dbTmps = TeamMatchParticipation.fromApi(match.Teams, dbMatch, event.remote);
+                let dbTmps = TeamMatchParticipation.fromApi(match.teams, dbMatch, event.remote);
                 let dbScores =
                     event.remote && dbTmps[0].noShow
                         ? [] // Remote matches that weren't played still return scores
@@ -134,7 +134,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
 function findScores(match: MatchFtcApi, scores: MatchScoresFtcApi[]): MatchScoresFtcApi[] {
     return scores.filter((s) =>
         "teamNumber" in s
-            ? match.Teams[0].teamNumber == s.teamNumber && match.matchNumber == s.matchNumber
+            ? match.teams[0].teamNumber == s.teamNumber && match.matchNumber == s.matchNumber
             : match.tournamentLevel == s.matchLevel &&
               match.series == s.matchSeries &&
               match.matchNumber == s.matchNumber
