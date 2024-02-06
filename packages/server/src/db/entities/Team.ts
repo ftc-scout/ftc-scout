@@ -50,13 +50,7 @@ export class Team extends BaseEntity {
     updatedAt!: Date;
 
     static fromApi(api: TeamFtcApi): Team | null {
-        if (
-            api.nameShort == null ||
-            api.country == null ||
-            api.stateProv == null ||
-            api.city == null ||
-            api.rookieYear == null
-        ) {
+        if (api.nameShort == null || api.rookieYear == null) {
             console.warn(`Rejecting api team ${api.teamNumber}.`);
             return null;
         }
@@ -87,9 +81,9 @@ export class Team extends BaseEntity {
             name,
             schoolName,
             sponsors,
-            country: api.country,
-            state: api.stateProv,
-            city: api.city,
+            country: api.country ?? "",
+            state: api.stateProv ?? "",
+            city: api.city ?? "",
             rookieYear: api.rookieYear,
             website: api.website,
         } satisfies DeepPartial<Team>);
