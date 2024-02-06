@@ -10,5 +10,5 @@ export async function getMatchScores(
         getFromFtcApi(`${season}/scores/${eventCode}/playoff`),
     ]);
 
-    return [...(qual?.["MatchScores"] ?? []), ...(playoff?.["MatchScores"] ?? [])];
+    return [...(qual?.["matchScores"] ?? []), ...(playoff?.["matchScores"] ?? [])];
 }
