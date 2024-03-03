@@ -308,7 +308,7 @@ async function eventMatches(req: Request<{ season: string; code: string }>, res:
 
     for (let m of matches) {
         (m as any).scores = frontendMSFromDB(m.scores);
-        (m as any).scores.__typename = undefined;
+        if (m.scores) (m as any).scores.__typename = undefined;
     }
 
     res.send(matches);
