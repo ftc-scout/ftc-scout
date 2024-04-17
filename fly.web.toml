@@ -24,3 +24,4 @@ primary_region = "sjc"
   min_machines_running = 1
   max_machines_running = 1
   processes = ["app"]
+

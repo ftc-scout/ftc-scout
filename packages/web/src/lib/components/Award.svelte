@@ -7,6 +7,7 @@
         placement: number;
         personName?: string | null;
     };
+
     export let comma: boolean;
 
     $: [typeName, placement] = prettyPrintAwardPlacementParts(
