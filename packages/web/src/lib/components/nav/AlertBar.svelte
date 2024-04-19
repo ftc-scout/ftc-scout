@@ -34,7 +34,7 @@
 
     <div>
         {#if link}
-            <a href="https://example.com" target="_blank" rel="noopener noreferrer">
+            <a href={link} target="_blank" rel="noopener noreferrer">
                 <Fa icon={faArrowRight} fw size="1.5x" />
             </a>
         {/if}
