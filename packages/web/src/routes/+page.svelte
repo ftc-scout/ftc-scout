@@ -27,7 +27,7 @@
 
 <Head title="FTCScout" />
 
-<!-- <AlertBar message="This is an example alert. Click here to learn more." link="https://example.com"/> -->
+<AlertBar message="We are currently experiencing very high traffic levels due to worlds. Remember there is no need to refresh the page to see the latest updates" link="https://uptime.9021007.xyz/status/ftcscout"/>
 
 <WidthProvider>
     <Card vis={false}>
