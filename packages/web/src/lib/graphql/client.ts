@@ -28,7 +28,13 @@ export function getClient(
         uri: `http${s}://${env.PUBLIC_SERVER_ORIGIN}/graphql`,
         credentials: "omit",
         headers: { [env.PUBLIC_FRONTEND_CODE!]: "." },
-        fetch,
+        fetch: (input, init) => {
+            if (!browser) console.log(input);
+            if (!browser) console.log(">>> try");
+            let out = fetch(input, init);
+            if (!browser) console.log(">>> succeed");
+            return out;
+        },
     });
 
     let link = browser
