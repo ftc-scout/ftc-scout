@@ -29,7 +29,8 @@ async function main() {
     app.use(
         // Allow requests from our webpage.
         cors({
-            origin: "*",
+            // origin: "*",
+            origin: true,
             credentials: false,
         }),
         compression(),
