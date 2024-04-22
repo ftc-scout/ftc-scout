@@ -11,7 +11,7 @@
     import Head from "$lib/components/Head.svelte";
     import { createTippy } from "svelte-tippy";
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
-    import AlertBar from "$lib/components/nav/AlertBar.svelte";
+    // import AlertBar from "$lib/components/nav/AlertBar.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -28,7 +28,7 @@
 
 <Head title="FTCScout" />
 
-<AlertBar message="We are currently experiencing very high traffic levels due to worlds. Remember there is no need to refresh the page to see the latest updates" link="https://uptime.9021007.xyz/status/ftcscout"/>
+<!-- <AlertBar message="We are currently experiencing very high traffic levels due to worlds. Remember there is no need to refresh the page to see the latest updates" link="https://uptime.9021007.xyz/status/ftcscout"/> -->
 
 <WidthProvider>
     <Card vis={false}>
