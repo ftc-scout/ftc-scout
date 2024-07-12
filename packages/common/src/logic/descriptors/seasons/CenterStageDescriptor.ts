@@ -449,6 +449,7 @@ export const Descriptor2023 = new Descriptor({
                 fullName: "Auto Backstage Points",
                 getValue: (ms) => ms.autoBackstage * 3,
                 getTitle: (ms) => nOf(ms.autoBackstage, "Pixel"),
+                sql: (ms) => `(${ms}.autoBackstage * 3)`,
             })
             .addTep({
                 make: (ms) => ms.autoBackstage * 3,
@@ -464,6 +465,7 @@ export const Descriptor2023 = new Descriptor({
                 fullName: "Auto Backdrop Points",
                 getValue: (ms) => ms.autoBackdrop * 5,
                 getTitle: (ms) => nOf(ms.autoBackdrop, "Pixel"),
+                sql: (ms) => `(${ms}.autoBackdrop * 5)`,
             })
             .addTep({
                 make: (ms) => ms.autoBackdrop * 5,
@@ -560,6 +562,7 @@ export const Descriptor2023 = new Descriptor({
                 fullName: "Major Penalty Points",
                 getValue: (ms) => ms.majorsCommitted * 30,
                 getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
+                sql: (ms) => `(${ms}.majorsCommitted * 30)`,
             })
             .addTep({
                 make: (ms) => ms.majorsCommitted * 30,
@@ -576,6 +579,7 @@ export const Descriptor2023 = new Descriptor({
                 fullName: "Minor Penalty Points",
                 getValue: (ms) => ms.minorsCommitted * 10,
                 getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
+                sql: (ms) => `(${ms}.minorsCommitted * 30)`,
             })
             .addTep({
                 make: (ms) => ms.minorsCommitted * 10,
@@ -677,6 +681,7 @@ export const Descriptor2023 = new Descriptor({
                 fullName: "Driver Controlled Backdrop Points",
                 getValue: (ms) => ms.dcBackdrop * 3,
                 getTitle: (ms) => nOf(ms.dcBackdrop, "Pixel"),
+                sql: (ms) => `(${ms}.dcBackdrop * 3)`,
             })
             .addTep({
                 make: (ms) => ms.dcBackdrop * 3,
@@ -692,6 +697,7 @@ export const Descriptor2023 = new Descriptor({
                 fullName: "Driver Controlled Backstage Points",
                 getValue: (ms) => ms.dcBackstage * 1,
                 getTitle: (ms) => nOf(ms.dcBackstage, "Pixel"),
+                sql: (ms) => `(${ms}.dcBackstage * 1)`,
             })
             .addTep({
                 make: (ms) => ms.dcBackstage * 1,
