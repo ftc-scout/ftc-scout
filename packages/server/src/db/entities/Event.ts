@@ -94,7 +94,7 @@ export class Event extends BaseEntity {
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
-    static fromApi(api: EventFtcApi, season: Season): Event {
+    static fromApi(api: EventFtcApi, season: Season): Event | null {
         let type = eventTypeFromFtcApi(api.typeName ?? "");
         if (
             api.code == null ||
@@ -106,7 +106,8 @@ export class Event extends BaseEntity {
             api.address == null
         ) {
             console.error(api, type);
-            throw `Rejecting api event ${season} ${api.code}.`;
+            console.error(`Rejecting api event ${season} ${api.code}.`)
+            return null
         }
 
         const EVENT_RENAMING: Record<string, string> = {

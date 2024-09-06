@@ -1,6 +1,6 @@
 import { DATA_SOURCE } from "../data-source";
 import { Event } from "../../db/entities/Event";
-import { Season } from "@ftc-scout/common";
+import { Season, notEmpty } from "@ftc-scout/common";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
 import { getAllEvents } from "../../ftc-api/get-events";
 
@@ -11,7 +11,7 @@ export async function loadAllEvents(season: Season) {
 
     console.info(`Fetched events.`);
 
-    let dbEvents = apiEvents.map((api) => Event.fromApi(api, season));
+    let dbEvents = apiEvents.map((api) => Event.fromApi(api, season)).filter(notEmpty);
 
     console.info(`Adding events to database.`);
 
