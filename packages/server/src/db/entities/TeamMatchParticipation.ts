@@ -82,14 +82,14 @@ export class TeamMatchParticipation extends BaseEntity {
             // In some cases when teams are disqualified they are marked as not on the field.
             // If every team is not on the field we ignore this as we still need to know their
             // positions.
-            let anyOnField = teams.some((t) => t.onField && t.station.includes(color));
+            let onFieldCount = teams.filter((t) => t.onField && t.station.includes(color)).length;
 
             return teams
                 .filter((t) => {
                     if (!t.station.includes(color)) return false;
 
                     if (match.eventSeason == 2019) return true;
-                    if (!anyOnField) return true;
+                    if (onFieldCount <= 1) return true;
                     if (!t.dq && !(t.onField ?? true)) return false;
 
                     return true;
