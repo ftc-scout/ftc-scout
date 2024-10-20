@@ -86,12 +86,18 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 allDbTmps.push(...dbTmps);
             }
 
+            // We can't just use the teams list because it sometimes misses teams?
+            // Ex. team 23512 here https://ftc-events.firstinspires.org/2023/USCANOCMPSI/qualifications
+            let allTeams = allDbMatches.flatMap((m) => m.teams.map((t) => t.teamNumber));
+            allTeams = allTeams.concat(teams.map((t) => t.teamNumber));
+            allTeams = [...new Set(allTeams)];
+
             let allDbTeps: Partial<TeamEventParticipation>[] = calculateTeamEventStats(
                 season,
                 event.code,
                 event.remote,
                 allDbMatches.map((m) => m.toFrontend()),
-                teams.map((t) => t.teamNumber)
+                allTeams
             );
             await DATA_SOURCE.transaction(async (em) => {
                 await em.save(allDbMatches, { chunk: 100 });
