@@ -58,6 +58,7 @@ export const Descriptor2020 = new Descriptor({
     season: Season.UltimateGoal,
     seasonName: "Ultimate Goal",
     hasRemote: true,
+    hasEndgame: true,
     pensSubtract: true,
     rankings: {
         rp: "TotalPoints",

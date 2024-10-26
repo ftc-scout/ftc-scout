@@ -278,6 +278,10 @@ function calculateRanks(
                 stats.tb1 = stats.tot.autoPoints;
                 stats.tb2 = stats.tot.egPoints;
                 break;
+            case "AutoAscentAvg":
+                stats.tb1 = stats.avg.autoPoints;
+                stats.tb2 = stats.avg.dcParkPoints;
+                break;
             case "AutoEndgameAvg":
                 stats.tb1 = stats.avg.autoPoints;
                 stats.tb2 = stats.avg.egPoints;

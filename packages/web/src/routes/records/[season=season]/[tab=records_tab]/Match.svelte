@@ -27,7 +27,7 @@
         totalPoints,
         "autoPointsThis",
         "dcPointsThis",
-        "egPointsThis",
+        ...(descriptor.hasEndgame ? ["egPointsThis"] : []),
         ...descriptor.getMatchInsightCols(false).map((c) => c + "This"),
         "team1This",
         "team2This",

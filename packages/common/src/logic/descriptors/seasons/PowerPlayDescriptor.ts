@@ -142,6 +142,7 @@ export const Descriptor2022 = new Descriptor({
     season: Season.PowerPlay,
     seasonName: "Power Play",
     hasRemote: false,
+    hasEndgame: true,
     pensSubtract: false,
     rankings: {
         rp: "Record",

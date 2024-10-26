@@ -1,5 +1,34 @@
 # // HELP: Season Specific
 fragment FullStats on TeamEventStats {
+    ... on TeamEventStats2024 {
+        rank
+        rp
+        tb1
+        tb2
+        wins
+        losses
+        ties
+        dqs
+        qualMatchesPlayed
+        tot {
+            ...FullTeamEventStats2024Group
+        }
+        avg {
+            ...FullTeamEventStats2024Group
+        }
+        opr {
+            ...FullTeamEventStats2024Group
+        }
+        min {
+            ...FullTeamEventStats2024Group
+        }
+        max {
+            ...FullTeamEventStats2024Group
+        }
+        dev {
+            ...FullTeamEventStats2024Group
+        }
+    }
     ... on TeamEventStats2023 {
         rank
         rp
@@ -195,6 +224,38 @@ fragment FullStats on TeamEventStats {
         }
     }
 }
+
+fragment FullTeamEventStats2024Group on TeamEventStats2024Group {
+    autoParkPoints
+    autoParkPointsIndividual
+    autoSamplePoints
+    autoSpecimenPoints
+    autoSampleNetPoints
+    autoSampleLowPoints
+    autoSampleHighPoints
+    autoSpecimenLowPoints
+    autoSpecimenHighPoints
+    dcParkPoints
+    dcParkPointsIndividual
+    dcSamplePoints
+    dcSpecimenPoints
+    dcSampleNetPoints
+    dcSampleLowPoints
+    dcSampleHighPoints
+    dcSpecimenLowPoints
+    dcSpecimenHighPoints
+    autoPoints
+    dcPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    penaltyPointsCommitted
+    majorsByOppPoints
+    minorsByOppPoints
+    penaltyPointsByOpp
+    totalPointsNp
+    totalPoints
+}
+
 fragment FullTeamEventStats2023Group on TeamEventStats2023Group {
     purplePoints
     purplePointsIndividual

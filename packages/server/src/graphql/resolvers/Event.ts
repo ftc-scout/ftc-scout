@@ -49,10 +49,11 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
         regionCode: nullTy(StrTy),
         leagueCode: nullTy(StrTy),
         districtCode: nullTy(StrTy),
-        address: StrTy,
+        address: nullTy(StrTy),
         location: {
             type: nn(LocationGQL),
-            resolve: (e) => ({ venue: e.venue, city: e.city, state: e.state, country: e.country }),
+            resolve: (e) =>
+                !!e ? { venue: e.venue, city: e.city, state: e.state, country: e.country } : null,
         },
         website: nullTy(StrTy),
         liveStreamURL: nullTy(StrTy),

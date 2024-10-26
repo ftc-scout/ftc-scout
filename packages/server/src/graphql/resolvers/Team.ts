@@ -89,8 +89,16 @@ export async function getQuickStats(number: number, season: Season, region: Regi
         .select("team_number")
         .addSelect(`max(opr_${total})`, "tot")
         .addSelect("max(opr_auto_points)", "auto")
-        .addSelect("max(opr_dc_points)", "dc")
-        .addSelect("max(opr_eg_points)", "eg")
+        .addSelect("max(opr_dc_points)", "dc");
+
+    // HELP: Season Specific
+    if (season == Season.IntoTheDeep) {
+        max = max.addSelect("max(opr_dc_park_points)", "eg");
+    } else {
+        max = max.addSelect("max(opr_eg_points)", "eg");
+    }
+
+    max = max
         .where("NOT is_remote")
         .andWhere("has_stats")
         .andWhere("NOT e.modified_rules")

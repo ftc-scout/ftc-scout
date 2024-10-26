@@ -153,6 +153,7 @@ export const Descriptor2021 = new Descriptor({
     season: Season.FreightFrenzy,
     seasonName: "Freight Frenzy",
     hasRemote: true,
+    hasEndgame: true,
     pensSubtract: true,
     rankings: {
         rp: "TotalPoints",

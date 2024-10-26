@@ -104,6 +104,7 @@ export const Descriptor2023 = new Descriptor({
     season: Season.CenterStage,
     seasonName: "Centerstage",
     hasRemote: false,
+    hasEndgame: true,
     pensSubtract: false,
     rankings: {
         rp: "Record",

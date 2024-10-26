@@ -1,5 +1,18 @@
 # // HELP: Season Specific
 fragment TeamPageStats on TeamEventStats {
+    ... on TeamEventStats2024 {
+        rank
+        rp
+        wins
+        losses
+        ties
+        opr {
+            totalPointsNp
+        }
+        avg {
+            totalPointsNp
+        }
+    }
     ... on TeamEventStats2023 {
         rank
         rp

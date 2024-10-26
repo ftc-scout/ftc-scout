@@ -21,7 +21,7 @@
         totalPoints + "Opr",
         "autoPointsOpr",
         "dcPointsOpr",
-        "egPointsOpr",
+        ...(descriptor.hasEndgame ? ["egPointsOpr"] : []),
         totalPoints + "Avg",
         "eventRank",
         "event",

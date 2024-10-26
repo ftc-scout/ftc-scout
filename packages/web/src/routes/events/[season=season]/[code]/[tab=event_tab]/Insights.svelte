@@ -22,7 +22,7 @@
         totalPoints,
         "autoPointsThis",
         "dcPointsThis",
-        "egPointsThis",
+        ...(descriptor.hasEndgame ? ["egPointsThis"] : []),
         ...descriptor.getMatchInsightCols(remote).map((c) => c + "This"),
         "team1This",
         ...(remote ? [] : ["team2This"]),

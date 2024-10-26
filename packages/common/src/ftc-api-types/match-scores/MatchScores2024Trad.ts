@@ -1,0 +1,31 @@
+export interface AllianceScores2024TradFtcApi {
+    alliance: "Blue" | "Red";
+    robot1Auto: "ASCENT" | "OBSERVATION_ZONE" | "NONE";
+    robot2Auto: "ASCENT" | "OBSERVATION_ZONE" | "NONE";
+    autoSampleNet: number;
+    autoSampleLow: number;
+    autoSampleHigh: number;
+    autoSpecimenLow: number;
+    autoSpecimenHigh: number;
+    teleopSampleNet: number;
+    teleopSampleLow: number;
+    teleopSampleHigh: number;
+    teleopSpecimenLow: number;
+    teleopSpecimenHigh: number;
+    robot1Teleop: "OBSERVATION_ZONE" | "ASCENT_1" | "ASCENT_2" | "ASCENT_3" | "NONE";
+    robot2Teleop: "OBSERVATION_ZONE" | "ASCENT_1" | "ASCENT_2" | "ASCENT_3" | "NONE";
+    minorFouls: number;
+    majorFouls: number;
+    autoSamplePoints: number;
+    autoSpecimenPoints: number;
+    teleopSamplePoints: number;
+    teleopSpecimenPoints: number;
+    teleopParkPoints: number;
+    teleopAscentPoints: number;
+    autoPoints: number;
+    teleopPoints: number;
+    endGamePoints: number;
+    foulPointsCommitted: number;
+    preFoulTotal: number;
+    totalPoints: number;
+}

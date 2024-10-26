@@ -14,7 +14,7 @@ import { titleCase } from "../../utils/string";
 
 type RankingsMethod = {
     rp: "TotalPoints" | "Record";
-    tb: "AutoEndgameTot" | "AutoEndgameAvg" | "LosingScore";
+    tb: "AutoEndgameTot" | "AutoAscentAvg" | "AutoEndgameAvg" | "LosingScore";
 };
 
 export type Tree<T, F = never> = {
@@ -50,6 +50,7 @@ export class Descriptor {
     seasonName: string;
     seasonNameWithYear: string;
     hasRemote: boolean;
+    hasEndgame: boolean;
     pensSubtract: boolean;
     rankings: RankingsMethod;
 
@@ -73,6 +74,7 @@ export class Descriptor {
         season: Season;
         seasonName: string;
         hasRemote: boolean;
+        hasEndgame: boolean;
         pensSubtract: boolean;
         rankings: RankingsMethod;
         firstDate: Date;
@@ -83,6 +85,7 @@ export class Descriptor {
         this.seasonName = opts.seasonName;
         this.seasonNameWithYear = `${this.season} ${this.seasonName}`;
         this.hasRemote = opts.hasRemote;
+        this.hasEndgame = opts.hasEndgame;
         this.pensSubtract = opts.pensSubtract;
         this.rankings = opts.rankings;
         this.firstDate = opts.firstDate;

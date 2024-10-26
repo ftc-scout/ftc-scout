@@ -19,6 +19,7 @@ export const Descriptor2019 = new Descriptor({
     season: Season.Skystone,
     seasonName: "Skystone",
     hasRemote: false,
+    hasEndgame: true,
     pensSubtract: false,
     rankings: {
         rp: "Record",

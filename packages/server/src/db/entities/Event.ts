@@ -52,11 +52,11 @@ export class Event extends BaseEntity {
     @Column({ type: "varchar", nullable: true })
     districtCode!: string | null;
 
-    @Column()
-    venue!: string;
+    @Column({ type: "varchar", nullable: true })
+    venue!: string | null;
 
-    @Column()
-    address!: string;
+    @Column({ type: "varchar", nullable: true })
+    address!: string | null;
 
     @Column()
     country!: string;
@@ -101,13 +101,11 @@ export class Event extends BaseEntity {
             type == null ||
             api.country == null ||
             api.stateprov == null ||
-            api.city == null ||
-            api.venue == null ||
-            api.address == null
+            api.city == null
         ) {
             console.error(api, type);
-            console.error(`Rejecting api event ${season} ${api.code}.`)
-            return null
+            console.error(`Rejecting api event ${season} ${api.code}.`);
+            return null;
         }
 
         const EVENT_RENAMING: Record<string, string> = {
@@ -191,8 +189,8 @@ export class Event extends BaseEntity {
             regionCode: api.regionCode,
             leagueCode: api.leagueCode,
             districtCode: api.districtCode ? api.districtCode : null,
-            venue: api.venue.trim(),
-            address: api.address?.trim(),
+            venue: api.venue?.trim() ?? null,
+            address: api.address?.trim() ?? null,
             country: api.country,
             state: api.stateprov,
             city: api.city,
