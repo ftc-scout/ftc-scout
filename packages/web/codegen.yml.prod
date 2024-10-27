@@ -1,4 +1,4 @@
-schema: "https://ftc-scout-server.fly.dev/graphql"
+schema: "https://api.ftcscout.org/graphql"
 documents: "./src/lib/graphql/**/*.graphql"
 generates:
     ./src/lib/graphql/generated/graphql-operations.ts:
