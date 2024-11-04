@@ -6,7 +6,7 @@
 </script>
 
 <Head
-    title="Api | FTCScout"
+    title="API | FTCScout"
     description="The developer APIs for FTCScout providing access to all our statistics and data."
 />
 
