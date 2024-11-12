@@ -8,7 +8,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { EventFtcApi, EventType, Season, eventTypeFromFtcApi } from "@ftc-scout/common";
+import { EventFtcApi, EventType, RegionCode, Season, eventTypeFromFtcApi } from "@ftc-scout/common";
 import { Match } from "./Match";
 
 @Entity()
@@ -176,6 +176,10 @@ export class Event extends BaseEntity {
             // cspell:enable
         ];
 
+        const MODIFIED_REGION_CODES: Record<string, RegionCode> = {
+            NE: RegionCode.USNE,
+        };
+
         return Event.create({
             season,
             code: api.code,
@@ -186,7 +190,9 @@ export class Event extends BaseEntity {
             fieldCount: api.fieldCount,
             published: api.published,
             type,
-            regionCode: api.regionCode,
+            regionCode: api.regionCode
+                ? MODIFIED_REGION_CODES[api.regionCode] ?? api.regionCode
+                : null,
             leagueCode: api.leagueCode,
             districtCode: api.districtCode ? api.districtCode : null,
             venue: api.venue?.trim() ?? null,

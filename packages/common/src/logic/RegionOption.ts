@@ -63,6 +63,7 @@ export const RegionCode = {
     USMT: "USMT",
     USNC: "USNC",
     USND: "USND",
+    USNE: "USNE",
     USNH: "USNH",
     USNJ: "USNJ",
     USNM: "USNM",
