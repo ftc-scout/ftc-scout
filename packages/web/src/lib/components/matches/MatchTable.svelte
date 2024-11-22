@@ -41,11 +41,14 @@
     $: finals = matches
         .filter((m) => m.tournamentLevel == TournamentLevel.Finals)
         .sort(matchSorter);
+    $: doubleElim = matches.filter((m) => m.tournamentLevel == TournamentLevel.DoubleElim);
 
     $: soloMatches = groupBy(matches, (m) => m.id - (m.id % 1000));
 
     $: anySurrogate = matches.some((m) => m.teams.some((t) => t.surrogate));
     $: anyDq = matches.some((m) => m.teams.some((t) => t.dq));
+
+    $: teamCount = new Set(matches.flatMap((m) => m.teams.map((t) => t.teamNumber))).size;
 
     let modalShown = false;
     let modalMatch: FullMatchFragment | null;
@@ -100,6 +103,21 @@
                     />
                 {/each}
             {:else}
+                {#if doubleElim.length}
+                    <SectionRow name={"Playoffs"} />
+                {/if}
+                {#each doubleElim as match, i}
+                    <TradMatchRow
+                        {match}
+                        {eventCode}
+                        {season}
+                        {timeZone}
+                        {focusedTeam}
+                        zebraStripe={i % 2 == 1}
+                        newRound={i != 0 && doubleElim[i - 1].series != match.series}
+                        {teamCount}
+                    />
+                {/each}
                 {#if finals.length}
                     <SectionRow name={"Finals"} />
                 {/if}
@@ -126,7 +144,7 @@
                         zebraStripe={i % 2 == 1}
                     />
                 {/each}
-                {#if quals.length && (finals.length || semis.length)}
+                {#if quals.length && (finals.length || semis.length || doubleElim.length)}
                     <SectionRow name={"Qualification Matches"} />
                 {/if}
                 {#each quals as match, i}

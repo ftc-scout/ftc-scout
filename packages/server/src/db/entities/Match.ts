@@ -70,6 +70,8 @@ export class Match extends BaseEntity {
                 return `SF${this.series}-${this.matchNum}`;
             case TournamentLevel.Finals:
                 return `F-${this.matchNum}`;
+            case TournamentLevel.DoubleElim:
+                return `R${this.series}-${this.matchNum}`;
         }
     }
 
@@ -82,6 +84,7 @@ export class Match extends BaseEntity {
     static fromApi(api: MatchFtcApi, event: Event, hasBeenPlayed: boolean): Match {
         let timezone = event.timezone;
         let tournamentLevel = tournamentLevelFromFtcApi(api.tournamentLevel);
+
         return Match.create({
             eventSeason: event.season,
             eventCode: event.code,
@@ -89,7 +92,7 @@ export class Match extends BaseEntity {
                 ? api.teams[0].teamNumber * 1000 + api.matchNumber
                 : tournamentLevelValue(tournamentLevel) * 10000 +
                   api.series * 1000 +
-                  api.matchNumber,
+                  computeMatchNumber(tournamentLevel, api),
             hasBeenPlayed,
             scheduledStartTime:
                 DateTime.fromISO(api.startTime, { zone: timezone }).year > 2000
@@ -102,11 +105,24 @@ export class Match extends BaseEntity {
                 ? DateTime.fromISO(api.postResultTime, { zone: timezone }).toJSDate()
                 : null,
             tournamentLevel,
-            series: api.series,
+            series: computeSeries(tournamentLevel, api),
         } satisfies DeepPartial<Match>);
     }
 
     toFrontend(): FrontendMatch {
         return { ...this, scores: frontendMSFromDB(this.scores) as any };
     }
+}
+
+function computeSeries(level: TournamentLevel, api: MatchFtcApi) {
+    if (level != TournamentLevel.DoubleElim) return api.series;
+
+    let match = api.description.match(/Round (\d+)/)?.[1];
+    return match ? +match : 1;
+}
+
+function computeMatchNumber(level: TournamentLevel, api: MatchFtcApi) {
+    if (level != TournamentLevel.DoubleElim) return api.matchNumber;
+
+    return api.series;
 }

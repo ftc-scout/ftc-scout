@@ -3,6 +3,7 @@ fragment FullMatch on Match {
     eventCode
     id
     matchNum
+    series
     description
     tournamentLevel
     scheduledStartTime

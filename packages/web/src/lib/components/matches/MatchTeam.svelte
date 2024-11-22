@@ -94,6 +94,10 @@
         height: 100%;
     }
 
+    :global(.hearts) + td .inner {
+        padding-left: var(--sm-gap);
+    }
+
     .red {
         background: var(--red-team-bg-color);
     }
