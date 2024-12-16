@@ -28,6 +28,7 @@
             "eventCode": "USTXHOSLLT",
             "id": 7,
             "matchNum": 7,
+            "series": 1,
             "description": "Q-7",
             "tournamentLevel": "Quals",
             "scheduledStartTime": "2022-02-26T17:40:00.000Z",

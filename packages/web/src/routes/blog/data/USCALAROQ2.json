@@ -6,6 +6,7 @@
             "eventCode": "USCALAROQ2",
             "id": 30,
             "matchNum": 30,
+            "series": 1,
             "description": "Q-30",
             "tournamentLevel": "Quals",
             "scheduledStartTime": "2023-02-05T20:52:00.000Z",

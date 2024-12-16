@@ -6,6 +6,7 @@
             "eventCode": "USGADOUGM1",
             "id": 9,
             "matchNum": 9,
+            "series": 1,
             "description": "Q-9",
             "tournamentLevel": "Quals",
             "scheduledStartTime": "2022-10-29T15:46:00.000Z",

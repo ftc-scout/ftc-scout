@@ -6,6 +6,7 @@
             "eventCode": "USNJNOM2",
             "id": 8,
             "matchNum": 8,
+            "series": 1,
             "description": "Q-8",
             "tournamentLevel": "Quals",
             "scheduledStartTime": "2022-11-05T14:18:00.000Z",

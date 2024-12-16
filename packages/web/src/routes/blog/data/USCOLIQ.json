@@ -6,6 +6,7 @@
             "eventCode": "USCOLIQ",
             "id": 11001,
             "matchNum": 1,
+            "series": 1,
             "description": "SF1-1",
             "tournamentLevel": "Semis",
             "scheduledStartTime": null,
