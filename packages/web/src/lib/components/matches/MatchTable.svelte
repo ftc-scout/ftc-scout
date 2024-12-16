@@ -19,6 +19,9 @@
     import ScoreModal from "./score-modal/ScoreModal.svelte";
     import { setContext } from "svelte";
     import { queryParam } from "../../util/search-params/search-params";
+    import { faHeart, faHeartBroken } from "@fortawesome/free-solid-svg-icons";
+    import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
+    import Fa from "svelte-fa";
 
     export let matches: FullMatchFragment[];
     export let event: {
@@ -182,6 +185,18 @@
         {#if anyDq}
             <div style:text-decoration="line-through">Disqualified or No Show</div>
         {/if}
+    </div>
+{/if}
+
+{#if doubleElim.length > 0}
+    <div style:margin-top="var(--md-gap)" style="display: flex; gap: var(--vl-gap)">
+        <div><Fa icon={faHeart} style="color: var(--red-team-color)" /> Elimination Remaining</div>
+        <div>
+            <Fa icon={faHeartBroken} style="color: var(--grayed-out-text-color)" /> Lost This Match
+        </div>
+        <div>
+            <Fa icon={faHeartOutline} style="color: var(--grayed-out-text-color)" /> Lost Previous Match
+        </div>
     </div>
 {/if}
 
