@@ -29,9 +29,37 @@
 
     $: a = compute(1, alreadyLost, lostThis);
     $: b = compute(2, alreadyLost, lostThis);
+
+    function computeTitle(alreadyLost: boolean, lostThis: boolean) {
+        let title = "";
+
+        if (alreadyLost) {
+            title += "Lost once";
+        } else if (!lostThis) {
+            title += "Undefeated";
+        } else {
+            title += "Was undefeated";
+        }
+        title += " · ";
+
+        title += lostThis ? "Lost this match" : "Won this match";
+
+        if (alreadyLost && lostThis) {
+            title += " · Eliminated";
+        }
+
+        return title;
+    }
+
+    $: title = computeTitle(alreadyLost, lostThis);
 </script>
 
-<td class:red={alliance == Alliance.Red} class:blue={alliance == Alliance.Blue} class="hearts">
+<td
+    class:red={alliance == Alliance.Red}
+    class:blue={alliance == Alliance.Blue}
+    class="hearts"
+    {title}
+>
     {#if a}
         <Fa icon={a} class="heart {a == faHeartBroken || a == faHeartOutline ? 'broken' : ''}" />
     {/if}
