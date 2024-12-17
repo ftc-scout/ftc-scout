@@ -71,7 +71,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
 
                 let theseScores = findScores(match, scores);
                 let hasBeenPlayed = !!theseScores.length;
-                let dbMatch = Match.fromApi(match, event, hasBeenPlayed);
+                let dbMatch = Match.fromApi(match, event, hasBeenPlayed, matches);
                 let dbTmps = TeamMatchParticipation.fromApi(match.teams, dbMatch, event.remote);
                 let dbScores =
                     event.remote && dbTmps[0].noShow

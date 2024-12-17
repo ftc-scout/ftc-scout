@@ -16,7 +16,6 @@
     export let timeZone: string;
     export let focusedTeam: number | null;
     export let zebraStripe: boolean;
-    export let newRound: boolean = false;
     export let teamCount = 0;
 
     $: teams = match.teams;
@@ -29,6 +28,7 @@
     $: blues = [...blueTeams, ...blueExtras].sort(sortTeams);
 
     $: isDoubleElim = match.tournamentLevel == TournamentLevel.DoubleElim;
+    $: isNewRound = isDoubleElim && checkIsNewRound(match.series, match.matchNum, teamCount);
 
     $: winner = computeWinner(match.scores);
 
@@ -64,9 +64,25 @@
             );
         }
     }
+
+    function checkIsNewRound(series: number, matchNum: number, teamCount: number): boolean {
+        if (matchNum != 1) {
+            return false;
+        }
+
+        if (teamCount <= 10) {
+            return false;
+        } else if (teamCount <= 20) {
+            return series == 3 || series == 5 || series == 6;
+        } else if (teamCount <= 40) {
+            return series == 3 || series == 5 || series == 7 || series == 9 || series == 10;
+        } else {
+            return series == 5 || series == 9 || series == 11 || series == 13 || series == 14;
+        }
+    }
 </script>
 
-<tr class:zebraStripe class:isDoubleElim class:new-round={newRound}>
+<tr class:zebraStripe class:isDoubleElim class:new-round={isNewRound}>
     <MatchScore {match} {timeZone} />
 
     {#if isDoubleElim}
