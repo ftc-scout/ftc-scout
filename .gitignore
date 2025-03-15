@@ -9,3 +9,4 @@ packages/*/dist/
 .env.*
 !.env.example
 db.sql
+/compose

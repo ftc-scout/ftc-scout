@@ -19,6 +19,7 @@ import { createServer } from "http";
 import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
+import { setupSiteMap } from "./sitemap/setupSitemap";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -70,6 +71,7 @@ async function main() {
     app.post("/analytics", text(), handleAnalytics);
 
     setupRest(app);
+    setupSiteMap(app);
 
     setupBannerRoutes(app);
 
