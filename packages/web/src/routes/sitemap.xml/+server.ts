@@ -2,7 +2,9 @@ import { PUBLIC_SERVER_ORIGIN } from "$env/static/public";
 import { IS_DEV } from "$lib/constants";
 
 export const GET = async () => {
-    const endpoint = `http${IS_DEV}://${PUBLIC_SERVER_ORIGIN}/sitemap.xml`;
+    let s = IS_DEV ? "" : "s";
+    const endpoint = `http${s}://${PUBLIC_SERVER_ORIGIN}/sitemap.xml`;
+    console.log(`Fetching sitemap from ${endpoint}`);
     const res = await fetch(endpoint);
     const xml = await res.text();
 
