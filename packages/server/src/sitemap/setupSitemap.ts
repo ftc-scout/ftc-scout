@@ -1,5 +1,3 @@
-//@ts-nocheck
-
 import type { Express, Response, Request } from "express";
 import { Team } from "../db/entities/Team";
 import { Event } from "../db/entities/Event";
@@ -9,7 +7,7 @@ export function setupSiteMap(app: Express) {
     app.get("/sitemap.xml", sitemap);
 }
 
-async function sitemap(req: Request, res: Response) {
+async function sitemap(_req: Request, res: Response) {
     const xmlHeader = '<?xml version="1.0" encoding="UTF-8"?>\n';
     const urlsetHeader = '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
     const urlsetFooter = "</urlset>";
