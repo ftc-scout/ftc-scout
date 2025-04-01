@@ -71,7 +71,7 @@ export class Match extends BaseEntity {
             case TournamentLevel.Finals:
                 return `F-${this.matchNum}`;
             case TournamentLevel.DoubleElim:
-                return `R${this.series}-${this.matchNum}`;
+                return this.matchNum > 1 ? `M-${this.series}.${this.matchNum}` : `M-${this.series}`;
         }
     }
 
@@ -81,18 +81,28 @@ export class Match extends BaseEntity {
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
-    static fromApi(api: MatchFtcApi, event: Event, hasBeenPlayed: boolean): Match {
+    static fromApi(
+        api: MatchFtcApi,
+        event: Event,
+        hasBeenPlayed: boolean,
+        allMatches: MatchFtcApi[]
+    ): Match {
         let timezone = event.timezone;
         let tournamentLevel = tournamentLevelFromFtcApi(api.tournamentLevel);
+        let [tournamentLevel_, series, matchNum] = computeMatchOrder(
+            tournamentLevel,
+            api,
+            event,
+            allMatches
+        );
+        tournamentLevel = tournamentLevel_;
 
         return Match.create({
             eventSeason: event.season,
             eventCode: event.code,
             id: event.remote
-                ? api.teams[0].teamNumber * 1000 + api.matchNumber
-                : tournamentLevelValue(tournamentLevel) * 10000 +
-                  api.series * 1000 +
-                  computeMatchNumber(tournamentLevel, api),
+                ? api.teams[0].teamNumber * 1000 + matchNum
+                : tournamentLevelValue(tournamentLevel) * 10000 + series * 1000 + matchNum,
             hasBeenPlayed,
             scheduledStartTime:
                 DateTime.fromISO(api.startTime, { zone: timezone }).year > 2000
@@ -105,7 +115,7 @@ export class Match extends BaseEntity {
                 ? DateTime.fromISO(api.postResultTime, { zone: timezone }).toJSDate()
                 : null,
             tournamentLevel,
-            series: computeSeries(tournamentLevel, api),
+            series,
         } satisfies DeepPartial<Match>);
     }
 
@@ -114,15 +124,32 @@ export class Match extends BaseEntity {
     }
 }
 
-function computeSeries(level: TournamentLevel, api: MatchFtcApi) {
-    if (level != TournamentLevel.DoubleElim) return api.series;
+function computeMatchOrder(
+    level: TournamentLevel,
+    api: MatchFtcApi,
+    event: Event,
+    allMatches: MatchFtcApi[]
+): [TournamentLevel, number, number] {
+    if (event.remote) {
+        return [level, 0, api.matchNumber];
+    }
 
-    let match = api.description.match(/Round (\d+)/)?.[1];
-    return match ? +match : 1;
-}
+    if (level != TournamentLevel.DoubleElim) {
+        return [level, api.series, api.matchNumber];
+    }
 
-function computeMatchNumber(level: TournamentLevel, api: MatchFtcApi) {
-    if (level != TournamentLevel.DoubleElim) return api.matchNumber;
+    // Now we have to handle double elim matches
+    let uniquePlayoffTeams = allMatches
+        .filter((m) => m.tournamentLevel == "PLAYOFF")
+        .flatMap((m) => m.teams.map((t) => t.teamNumber));
+    uniquePlayoffTeams = [...new Set(uniquePlayoffTeams)];
 
-    return api.series;
+    if (uniquePlayoffTeams.length <= 4) {
+        // This is technically double elim but there are only two teams so it
+        // is really more of a best of three. Let's call it a finals
+        level = TournamentLevel.Finals;
+        return [level, 0, api.matchNumber];
+    }
+
+    return [level, api.series, api.matchNumber];
 }

@@ -34,7 +34,7 @@
         let title = "";
 
         if (alreadyLost) {
-            title += "Lost once";
+            title += "Had Lost once";
         } else if (!lostThis) {
             title += "Undefeated";
         } else {

@@ -117,7 +117,6 @@
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
-                        newRound={i != 0 && doubleElim[i - 1].series != match.series}
                         {teamCount}
                     />
                 {/each}

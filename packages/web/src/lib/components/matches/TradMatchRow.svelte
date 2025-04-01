@@ -16,7 +16,6 @@
     export let timeZone: string;
     export let focusedTeam: number | null;
     export let zebraStripe: boolean;
-    export let newRound: boolean = false;
     export let teamCount = 0;
 
     $: teams = match.teams;
@@ -29,50 +28,67 @@
     $: blues = [...blueTeams, ...blueExtras].sort(sortTeams);
 
     $: isDoubleElim = match.tournamentLevel == TournamentLevel.DoubleElim;
+    $: isNewRound = isDoubleElim && checkIsNewRound(match.series, match.matchNum, teamCount);
 
     $: winner = computeWinner(match.scores);
 
-    function hasAlreadyLost(matchNum: number, teamCount: number, alliance: Alliance): boolean {
+    function hasAlreadyLost(series: number, teamCount: number, alliance: Alliance): boolean {
         if (teamCount <= 10) {
             return false;
         } else if (teamCount <= 20) {
             return (
-                matchNum == 3 ||
-                matchNum == 5 ||
-                (matchNum == 6 && alliance == Alliance.Blue) ||
-                matchNum == 7
+                series == 3 ||
+                series == 5 ||
+                (series == 6 && alliance == Alliance.Blue) ||
+                series == 7
             );
         } else if (teamCount <= 40) {
             return (
-                matchNum == 5 ||
-                matchNum == 6 ||
-                matchNum == 8 ||
-                matchNum == 9 ||
-                (matchNum == 10 && alliance == Alliance.Blue) ||
-                matchNum == 11
+                series == 5 ||
+                series == 6 ||
+                series == 8 ||
+                series == 9 ||
+                (series == 10 && alliance == Alliance.Blue) ||
+                series == 11
             );
         } else {
             return (
-                matchNum == 5 ||
-                matchNum == 6 ||
-                matchNum == 9 ||
-                matchNum == 10 ||
-                matchNum == 12 ||
-                matchNum == 13 ||
-                (matchNum == 14 && alliance == Alliance.Blue) ||
-                matchNum == 15
+                series == 5 ||
+                series == 6 ||
+                series == 9 ||
+                series == 10 ||
+                series == 12 ||
+                series == 13 ||
+                (series == 14 && alliance == Alliance.Blue) ||
+                series == 15
             );
+        }
+    }
+
+    function checkIsNewRound(series: number, matchNum: number, teamCount: number): boolean {
+        if (matchNum != 1) {
+            return false;
+        }
+
+        if (teamCount <= 10) {
+            return false;
+        } else if (teamCount <= 20) {
+            return series == 3 || series == 5 || series == 6;
+        } else if (teamCount <= 40) {
+            return series == 3 || series == 5 || series == 7 || series == 9 || series == 10;
+        } else {
+            return series == 5 || series == 9 || series == 11 || series == 13 || series == 14;
         }
     }
 </script>
 
-<tr class:zebraStripe class:isDoubleElim class:new-round={newRound}>
+<tr class:zebraStripe class:isDoubleElim class:new-round={isNewRound}>
     <MatchScore {match} {timeZone} />
 
     {#if isDoubleElim}
         <DeLives
             alliance={Alliance.Red}
-            alreadyLost={hasAlreadyLost(match.matchNum, teamCount, Alliance.Red)}
+            alreadyLost={hasAlreadyLost(match.series, teamCount, Alliance.Red)}
             lostThis={winner == Alliance.Blue}
         />
     {/if}
@@ -95,7 +111,7 @@
     {#if isDoubleElim}
         <DeLives
             alliance={Alliance.Blue}
-            alreadyLost={hasAlreadyLost(match.matchNum, teamCount, Alliance.Blue)}
+            alreadyLost={hasAlreadyLost(match.series, teamCount, Alliance.Blue)}
             lostThis={winner == Alliance.Red}
         />
     {/if}
