@@ -5,7 +5,7 @@
 
 <a href="/">
     <Fa icon={faBinoculars} fw size="1.2x" translateX="-0.15" style="font-size: 24px" />
-    <span> FTC<em>Scout</em> </span>
+    <span> AI<em>Scout</em> </span>
 </a>
 
 <style>

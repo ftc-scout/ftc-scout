@@ -7,41 +7,41 @@
 </script>
 
 <Head
-    title="About | FTCScout"
-    description="About FTCScout, a way to track and scout FIRST Tech Challenge."
+    title="About | AIScout"
+    description="About AIScout, a way to track and scout FIRST Tech Challenge."
 />
 
 <WidthProvider width={"1000px"}>
     <Card>
-        <h1 class="head">About FTC<em>Scout</em></h1>
+        <h1 class="head">About AI<em>Scout</em></h1>
 
         <div class="rest">
             <p>
-                FTC<i>Scout</i> is a repository of results and statistics on every aspect of FTC. View
+                AI<i>Scout</i> is a repository of results and statistics on every aspect of FTC. View
                 all a teams events, an event's matches, rankings and awards, the best results and matches
                 for each season, and search for teams and events.
             </p>
 
             <p>
-                Started in Los Angeles, California, FTC<i>Scout</i> is the passion project of a
-                group of alumni from team
+                Started in Los Angeles, California, AI<i>Scout</i> is the passion project of a group
+                of alumni from team
                 <a href="/teams/16321">16321 X Drive</a>.
             </p>
 
-            <h2>Why FTC<em>Scout</em>?</h2>
+            <h2>Why AI<em>Scout</em>?</h2>
 
             <p>
-                Although FTC<em>Scout</em> provides similar features to other websites we believe it
-                has several advantages:
+                Although AI<em>Scout</em> provides similar features to other websites we believe it has
+                several advantages:
             </p>
 
             <h3>Feature-full</h3>
 
             <p>
-                FTC<em>Scout</em> provides more advanced statistics than any other FTC website on
-                the Internet. Although other websites offer many of the features of FTC<em>Scout</em
-                >, we collect them all in one place. Additionally, FTC<em>Scout</em> offers features
-                that no other websites do.
+                AI<em>Scout</em> provides more advanced statistics than any other FTC website on the
+                Internet. Although other websites offer many of the features of AI<em>Scout</em>, we
+                collect them all in one place. Additionally, AI<em>Scout</em> offers features that no
+                other websites do.
             </p>
 
             <p>
@@ -65,17 +65,17 @@
             </p>
 
             <p>
-                Finally, starting in the 2022-2023 Power Play season, FTC<em>Scout</em> now provides
-                a visualization of the playing field for every match. To access this feature, just click
+                Finally, starting in the 2022-2023 Power Play season, AI<em>Scout</em> now provides a
+                visualization of the playing field for every match. To access this feature, just click
                 "View Field Layout" in the score breakdown popup of any match.
             </p>
 
             <h3>Fast, Secure, and Accessible</h3>
             <p>
-                We designed FTC<em>Scout</em> with performance, security, and accessability in mind.
-                FTC<em>Scout</em>
+                We designed AI<em>Scout</em> with performance, security, and accessability in mind.
+                AI<em>Scout</em>
                 pages load fast and with all data at the same time instead of popping in slowly. As a
-                result of optimizations, FTC<em> Scout </em>
+                result of optimizations, AI<em> Scout </em>
                 receives exceptional
                 <a
                     href="https://en.wikipedia.org/wiki/Google_Lighthouse"
@@ -88,20 +88,20 @@
             <div class="image-wrap">
                 <img
                     src="/img/lighthouse.png"
-                    alt="A screenshot of FTCScout's lighthouse scores showing 99% for Performance, 97% for Accessibility, 100% for Best Practices, and 100% for SEO."
+                    alt="A screenshot of AIScout's lighthouse scores showing 99% for Performance, 97% for Accessibility, 100% for Best Practices, and 100% for SEO."
                 />
             </div>
 
             <h3>Beautiful</h3>
             <p>
-                Lastly, although this is a matter of opinion, we believe FTC<em>Scout</em> is
-                beautiful. We put a lot of effort into the design of FTC<em>Scout</em> and think that
-                it looks sleek, modern, and is the best looking of the FTC websites.
+                Lastly, although this is a matter of opinion, we believe AI<em>Scout</em> is
+                beautiful. We put a lot of effort into the design of AI<em>Scout</em> and think that
+                it looks sleek, modern, and is the best looking of the AI websites.
             </p>
 
             <h2>Our Team</h2>
             <p>
-                FTC<em>Scout</em> was developed by alumni from
+                AI<em>Scout</em> was developed by alumni from
                 <a href="/teams/16321">16321 X Drive</a>, and it is FOSS (<a
                     href="https://en.wikipedia.org/wiki/Free_and_open-source_software"
                     target="_blank"
