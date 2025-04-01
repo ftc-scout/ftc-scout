@@ -1,6 +1,7 @@
 <script lang="ts">
     import {
-        faBinoculars,
+        // faBinoculars,
+        faMagicWandSparkles,
         faCalendarAlt,
         faClose,
         faCode,
@@ -36,7 +37,8 @@
 
 <hr />
 
-<SidebarItem icon={faBinoculars} name="The Scouting Report" link="/blog" />
+<!-- <SidebarItem icon={faBinoculars} name="The Scouting Report" link="/blog" /> -->
+<SidebarItem icon={faMagicWandSparkles} name="The Scouting Report" link="/blog" />
 
 <hr />
 

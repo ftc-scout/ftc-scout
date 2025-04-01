@@ -4,6 +4,7 @@
     import Sidebar from "$lib/components/nav/Sidebar.svelte";
     import { afterNavigate } from "$app/navigation";
     import { sendAnalyticsRequest } from "./analytics";
+    import AiButton from "$lib/components/AIButton.svelte";
 
     if (browser) {
         // Svelte uses window.scrollTo to emulate the scroll resetting when navigation. However we
@@ -34,6 +35,7 @@
 
 <Navbar />
 <Sidebar />
+<AiButton />
 
 <!-- Autofocus allows the document to be scrolled immediately without having to click. -->
 <!-- svelte-ignore a11y-autofocus -->
