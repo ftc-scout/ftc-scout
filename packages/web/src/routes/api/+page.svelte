@@ -6,17 +6,17 @@
 </script>
 
 <Head
-    title="API | AIScout"
-    description="The developer APIs for AIScout providing access to all our statistics and data."
+    title="API | FTCScout"
+    description="The developer APIs for FTCScout providing access to all our statistics and data."
 />
 
 <WidthProvider width="100ch">
     <Card>
-        <h1 class="head">AI<em>Scout</em> APIs</h1>
+        <h1 class="head">FTC<em>Scout</em> APIs</h1>
 
         <div class="rest">
             <p>
-                AI<em>Scout</em> has two APIs for you to choose between: a fully featured GraphQL API
+                FTC<em>Scout</em> has two APIs for you to choose between: a fully featured GraphQL API
                 and a simple to use REST API.
             </p>
 
@@ -28,7 +28,7 @@
 
             <h2>GraphQL</h2>
             <p>
-                The AI<em>Scout</em> GraphQL API provides access to all of the AI<em>Scout</em>'s
+                The FTC<em>Scout</em> GraphQL API provides access to all of the FTC<em>Scout</em>'s
                 data and statistics. It is used internally by the website.
             </p>
             <p>

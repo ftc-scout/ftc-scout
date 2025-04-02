@@ -1,13 +1,11 @@
 <script lang="ts">
-    // import { faBinoculars } from "@fortawesome/free-solid-svg-icons";
-    import { faMagicWandSparkles } from "@fortawesome/free-solid-svg-icons";
+    import { faBinoculars } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
 </script>
 
 <a href="/">
-    <!-- <Fa icon={faBinoculars} fw size="1.2x" translateX="-0.15" style="font-size: 24px" /> -->
-    <Fa icon={faMagicWandSparkles} fw size="1.2x" translateX="-0.15" style="font-size: 24px" />
-    <span> AI<em>Scout</em> </span>
+    <Fa icon={faBinoculars} fw size="1.2x" translateX="-0.15" style="font-size: 24px" />
+    <span> FTC<em>Scout</em> </span>
 </a>
 
 <style>

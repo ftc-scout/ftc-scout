@@ -1,6 +1,5 @@
 <script lang="ts">
-    // import { faBinoculars } from "@fortawesome/free-solid-svg-icons";
-    import { faMagicWandSparkles } from "@fortawesome/free-solid-svg-icons";
+    import { faBinoculars } from "@fortawesome/free-solid-svg-icons";
     import type { FullMatchFragment } from "../../../graphql/generated/graphql-operations";
     import Button from "../../ui/Button.svelte";
     import { Season } from "@ftc-scout/common";
@@ -21,10 +20,7 @@
 <!-- // HELP: Season Specific -->
 {#if scores && scores.season == Season.PowerPlay}
     <div>
-        <!-- <Button icon={faBinoculars} on:click={() => (shown2022 = true)}>View Cone Layout</Button> -->
-        <Button icon={faMagicWandSparkles} on:click={() => (shown2022 = true)}
-            >View Cone Layout</Button
-        >
+        <Button icon={faBinoculars} on:click={() => (shown2022 = true)}>View Cone Layout</Button>
     </div>
 {/if}
 
