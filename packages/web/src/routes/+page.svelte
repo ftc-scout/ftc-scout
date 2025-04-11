@@ -26,15 +26,15 @@
     $: np = DESCRIPTORS[CURRENT_SEASON].pensSubtract ? "" : "no penalty ";
 </script>
 
-<Head title="AIScout" />
+<Head title="hivescout" />
 
 <!-- <AlertBar message="We are currently experiencing very high traffic levels due to worlds. Remember there is no need to refresh the page to see the latest updates" link="https://uptime.9021007.xyz/status/ftcscout"/> -->
 
 <WidthProvider>
     <Card vis={false}>
         <div class="title">
-            <h1>AI<em>Scout</em></h1>
-            <p>A new AI to track and scout <em>FIRST</em> Tech Challenge</p>
+            <h1>hive<em>scout</em></h1>
+            <p>scouting hosted by neset for <em>FIRST</em> Tech Challenge</p>
         </div>
 
         <div class="infos">

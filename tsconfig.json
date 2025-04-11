@@ -4,5 +4,8 @@
         { "path": "packages/server" },
         // { "path": "packages/web" },
         { "path": "packages/common" }
-    ]
+    ],
+    "compilerOptions": {
+        "skipLibCheck": true
+    }
 }

@@ -1,13 +1,7 @@
 <script lang="ts">
-    import { faMagicWandSparkles } from "@fortawesome/free-solid-svg-icons";
-    import Fa from "svelte-fa";
 </script>
 
-<div class="aibtncontainer">
-    <button on:click={() => alert("You are being rate limited")} class="ai-button">
-        <Fa icon={faMagicWandSparkles} fw size="1.2x" style="font-size: 24px" />
-    </button>
-</div>
+<div class="aibtncontainer" />
 
 <style>
     .aibtncontainer {

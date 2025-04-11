@@ -7,7 +7,7 @@
 <a href="/">
     <!-- <Fa icon={faBinoculars} fw size="1.2x" translateX="-0.15" style="font-size: 24px" /> -->
     <Fa icon={faMagicWandSparkles} fw size="1.2x" translateX="-0.15" style="font-size: 24px" />
-    <span> AI<em>Scout</em> </span>
+    <span> hive<em>scout</em> </span>
 </a>
 
 <style>

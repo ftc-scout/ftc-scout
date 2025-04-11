@@ -187,7 +187,7 @@ body.dark {
 
     --theme-color-vs: 31, 76, 82;
     --theme-color-opacity: 0.3;
-    --inline-theme-color: #39848e;
+    --inline-theme-color: #f8be14;
 
     --hover-color: #3a3a3a;
     --tab-hover-color: #232323;
@@ -269,9 +269,9 @@ body.dark .render-light {
 
         --modal-bg-color: rgba(78, 78, 78, 0.8);
 
-        --theme-color-vs: 31, 76, 82;
-        --theme-color-opacity: 0.3;
-        --inline-theme-color: #39848e;
+        --theme-color-vs: #f8be14;
+        --theme-color-opacity: 1;
+        --inline-theme-color: #f8be14;
 
         --hover-color: #3a3a3a;
         --tab-hover-color: #232323;
