@@ -24,7 +24,7 @@ async function sitemap(_req: Request, res: Response) {
     }
 
     for (const event of events) {
-        urls.push(`/events/${event.season}/${event.code}`);
+        urls.push(`/events/${event.season}/${event.code}/matches`);
     }
 
     for (const season of seasons) {

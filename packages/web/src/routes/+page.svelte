@@ -11,7 +11,7 @@
     import Head from "$lib/components/Head.svelte";
     import { createTippy } from "svelte-tippy";
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
-    // import AlertBar from "$lib/components/nav/AlertBar.svelte";
+    import AlertBar from "$lib/components/nav/AlertBar.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -26,15 +26,18 @@
     $: np = DESCRIPTORS[CURRENT_SEASON].pensSubtract ? "" : "no penalty ";
 </script>
 
-<Head title="AIScout" />
+<Head title="FTCScout" />
 
-<!-- <AlertBar message="We are currently experiencing very high traffic levels due to worlds. Remember there is no need to refresh the page to see the latest updates" link="https://uptime.9021007.xyz/status/ftcscout"/> -->
+<AlertBar
+    message="Welcome to the FTC World Championships! We're doing our best to keep the site online, but the championships bring extremely large traffic flows to the website. You can check the website status with the arrow to the right..."
+    link="https://uptime.9021007.xyz/status/ftcscout"
+/>
 
 <WidthProvider>
     <Card vis={false}>
         <div class="title">
-            <h1>AI<em>Scout</em></h1>
-            <p>A new AI to track and scout <em>FIRST</em> Tech Challenge</p>
+            <h1>FTC<em>Scout</em></h1>
+            <p>A new way to track and scout <em>FIRST</em> Tech Challenge</p>
         </div>
 
         <div class="infos">
