@@ -10,4 +10,9 @@ export const DATA_SOURCE = new DataSource({
     logging: LOGGING,
     entities: ENTITIES,
     namingStrategy: new SnakeNamingStrategy(),
+    extra: {
+        connectionTimeoutMillis: 1300,
+        query_timeout: 1300,
+        statement_timeout: 1300,
+    },
 });
