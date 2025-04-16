@@ -8,7 +8,7 @@
 
 <script lang="ts">
     import { createEventDispatcher } from "svelte";
-    import type { FullMatchFragment } from "../../../graphql/generated/graphql-operations";
+    import { TournamentLevel, type FullMatchFragment } from "../../../graphql/generated/graphql-operations";
     import Modal from "../../Modal.svelte";
     import type { RemoteScoresTy, TradScoresTy } from "../MatchScore.svelte";
     import RemoteScores from "./RemoteScores.svelte";
