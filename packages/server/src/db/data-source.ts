@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { DATABASE_URL, LOGGING, SYNC_DB } from "../constants";
+import { DATABASE_URL, LOGGING, SYNC_DB, DB_TIMEOUT } from "../constants";
 import { ENTITIES } from "./entities";
 import { SnakeNamingStrategy } from "typeorm-naming-strategies";
 
@@ -11,8 +11,8 @@ export const DATA_SOURCE = new DataSource({
     entities: ENTITIES,
     namingStrategy: new SnakeNamingStrategy(),
     extra: {
-        connectionTimeoutMillis: 3000,
-        query_timeout: 3000,
-        statement_timeout: 3000,
+        connectionTimeoutMillis: DB_TIMEOUT,
+        query_timeout: DB_TIMEOUT,
+        statement_timeout: DB_TIMEOUT,
     },
 });
