@@ -20,6 +20,7 @@ import { WebSocketServer } from "ws";
 import { useServer } from "graphql-ws/lib/use/ws";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { setupSiteMap } from "./sitemap/setupSitemap";
+import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -49,6 +50,10 @@ async function main() {
     let apolloServer = new ApolloServer({
         introspection: true,
         schema: GQL_SCHEMA,
+        cache: new InMemoryLRUCache({
+            maxSize: Math.pow(2, 20) * 100, // ~100MiB
+            ttl: 120, // 2 minutes
+        }),
         plugins: [
             ApolloServerPluginLandingPageGraphQLPlayground(),
             ApolloServerPluginDrainHttpServer({ httpServer }),
