@@ -4,8 +4,8 @@
 
 <p>Sponsored by:</p>
 <!-- EXAMPLE ONLY - NOT ACTUALLY SPONSORED BY FIRST -->
-<a href="https://www.gobilda.com/" target="_blank" rel="noreferrer">
-    <img src="/img/firsticon.png" alt="FIRST Logo" />
+<a href="https://example.com/" target="_blank" rel="noreferrer">
+    <img src="/img/sponsorexample.png" alt="Example Sponsor Logo" />
 </a>
 
 <style>
@@ -18,7 +18,7 @@
     }
     img {
         width: 100%;
-        max-width: 200px;
+        max-width: 250px;
         margin: 0 auto;
         display: block;
         background-color: white;
