@@ -28,7 +28,10 @@
                 />
             </div>
             <h2>Our expenses:</h2>
-            <p>Here is a breakdown of what the sponsorship money will be used for: (USD)</p>
+            <p>
+                Here is a breakdown of what the sponsorship money will be used for, as an estimate:
+                (USD)
+            </p>
             <table>
                 <thead>
                     <tr>
@@ -58,9 +61,10 @@
 
             <h2>Your comittment</h2>
             <p>
-                The cost to sponsor us for 1 year is $100. This will cover our hosting and domain
-                costs for the year, as well as other miscellaneous costs, like taxes and price
-                fluctuations. All money will be used to maintain FTCScout.
+                The cost to sponsor us for 1 year is $150. This will cover our hosting and domain
+                costs for the year, as well as other miscellaneous costs, like taxes, price
+                fluctuations, and server upgrades if necessary. All money will be used to maintain
+                FTCScout.
             </p>
 
             <h2>Information we need:</h2>
