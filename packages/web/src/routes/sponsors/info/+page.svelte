@@ -12,7 +12,7 @@
         <h1 class="head">Sponsor Info</h1>
 
         <div class="rest">
-            <p>If you're interested in sponsoring us, there's some infomration you should know:</p>
+            <p>If you're interested in sponsoring us, there's some information you should know:</p>
 
             <h2>What you recieve:</h2>
             <p>
@@ -102,11 +102,6 @@
     h2 {
         font-size: var(--lg-font-size);
         margin: var(--lg-gap) 0 var(--sm-gap) 0;
-    }
-
-    h3 {
-        font-size: var(--md-font-size);
-        margin: var(--md-gap) 0 var(--sm-gap) 0;
     }
 
     p {
