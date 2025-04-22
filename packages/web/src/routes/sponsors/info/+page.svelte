@@ -59,7 +59,7 @@
                 </tbody>
             </table>
 
-            <h2>Your comittment</h2>
+            <h2>Your commitment</h2>
             <p>
                 The cost to sponsor us for 1 year is $150. This will cover our hosting and domain
                 costs for the year, as well as other miscellaneous costs, like taxes, price
