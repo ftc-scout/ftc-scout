@@ -11,13 +11,14 @@
         faTrophy,
         faEnvelope,
         faServer,
+        faHandHoldingDollar,
     } from "@fortawesome/free-solid-svg-icons";
     import { faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
     import SidebarItem from "./SidebarItem.svelte";
     import { sidebarOpen } from "./Sidebar.svelte";
     import Fa from "svelte-fa";
     import IconSidebarItem from "./IconSidebarItem.svelte";
-    import { EMAIL, DISCORD, STATUS, GITHUB } from "../../constants";
+    import { EMAIL, DISCORD, STATUS, GITHUB, DONATIONS } from "../../constants";
     import { CURRENT_SEASON } from "@ftc-scout/common";
     import Sponsor from "./Sponsor.svelte";
 </script>
@@ -41,6 +42,13 @@
 <hr />
 
 <SidebarItem icon={faInfoCircle} name="About" link="/about" />
+<SidebarItem
+    icon={faHandHoldingDollar}
+    name="Donate"
+    link={DONATIONS}
+    newTab={true}
+    internal={false}
+/>
 <SidebarItem icon={faGavel} name="Privacy Policy" link="/privacy" />
 <SidebarItem icon={faCode} name="API" link="/api" />
 
