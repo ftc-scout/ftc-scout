@@ -19,7 +19,7 @@
     import IconSidebarItem from "./IconSidebarItem.svelte";
     import { EMAIL, DISCORD, STATUS, GITHUB } from "../../constants";
     import { CURRENT_SEASON } from "@ftc-scout/common";
-    // import Sponsor from "./Sponsor.svelte";
+    import Sponsor from "./Sponsor.svelte";
 </script>
 
 <b>
@@ -53,10 +53,13 @@
     <IconSidebarItem icon={faServer} name="Status" link={STATUS} newTab />
 </div>
 
-<!-- <Sponsor/> -->
+<hr />
+
+<Sponsor />
 
 <style>
-    hr {
+    hr,
+    .icons {
         margin-bottom: var(--lg-gap);
     }
 
