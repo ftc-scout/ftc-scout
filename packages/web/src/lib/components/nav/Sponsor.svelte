@@ -1,55 +1,60 @@
-<script lang="ts">
-    // import Fa from "svelte-fa";
-
+<script>
     // Ensure animations work properly
-    function cycleFeatures(container: HTMLElement) {
-        const features = container.querySelectorAll(".feature") as NodeListOf<HTMLElement>;
+    document.addEventListener("DOMContentLoaded", function () {
+        // Function to cycle through the features
+        function cycleFeatures(containerId) {
+            const container = document.getElementById(containerId);
+            const features = container.querySelectorAll(".feature");
 
-        // Initialize - hide all features except the first one
-        features.forEach((feature, index) => {
-            if (index === 0) {
-                feature.classList.add("active");
-            } else {
-                feature.style.transform = "translateX(100%)";
-                feature.style.opacity = "0";
-            }
-        });
+            // Initialize - hide all features except the first one
+            features.forEach((feature, index) => {
+                if (index === 0) {
+                    feature.classList.add("active");
+                } else {
+                    feature.style.transform = "translateX(100%)";
+                    feature.style.opacity = "0";
+                }
+            });
 
-        let currentIndex = 0;
+            let currentIndex = 0;
 
-        // Set interval to cycle through features
-        setInterval(() => {
-            // Calculate next index
-            const nextIndex = (currentIndex + 1) % features.length;
+            // Set interval to cycle through features
+            setInterval(() => {
+                // Calculate next index
+                const nextIndex = (currentIndex + 1) % features.length;
 
-            // Exit current feature to the left
-            features[currentIndex].classList.remove("active");
-            features[currentIndex].classList.add("exit");
+                // Exit current feature to the left
+                features[currentIndex].classList.remove("active");
+                features[currentIndex].classList.add("exit");
 
-            // Show next feature
-            setTimeout(() => {
-                features[nextIndex].style.transform = "";
-                features[nextIndex].style.opacity = "";
-                features[nextIndex].classList.add("active");
-            }, 50);
+                // Show next feature
+                setTimeout(() => {
+                    features[nextIndex].style.transform = "";
+                    features[nextIndex].style.opacity = "";
+                    features[nextIndex].classList.add("active");
+                }, 50);
 
-            // Reset the exited feature after animation completes
-            setTimeout(() => {
-                features[currentIndex].classList.remove("exit");
-                features[currentIndex].style.transform = "translateX(100%)";
-                features[currentIndex].style.opacity = "0";
-                currentIndex = nextIndex;
-            }, 700);
-        }, 8000);
-    }
+                // Reset the exited feature after animation completes
+                setTimeout(() => {
+                    features[currentIndex].classList.remove("exit");
+                    features[currentIndex].style.transform = "translateX(100%)";
+                    features[currentIndex].style.opacity = "0";
+                    currentIndex = nextIndex;
+                }, 700);
+            }, 4000);
+        }
+
+        // Run both feature containers in sync
+        cycleFeatures("dark-features");
+        cycleFeatures("light-features");
+    });
 </script>
 
 <div class="container">
     <!-- Dark Theme Banner -->
-    <a
-        class="banner dark render-dark"
-        href="https://hackclub.com/first?utm_source=ftcscout&utm_content=banner&tub_program=ftcscout"
-        target="_blank"
+    <div
+        class="banner dark"
+        onclick="window.open('https://hackclub.com/fiscal-sponsorship?utm_source=FTCScout', '_blank')"
     >
         <div class="header">
             <div class="logo-container">
@@ -65,7 +70,7 @@
                 <div class="bank-name">Banking platform for robotics!</div>
             </div>
         </div>
-        <div class="feature-container" id="dark-features" use:cycleFeatures>
+        <div class="feature-container" id="dark-features">
             <div class="feature" data-index="0">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -74,7 +79,7 @@
                 </div>
                 <div class="feature-text">Instant 501(c)(3) nonprofit status</div>
             </div>
-            <div class="feature" data-index="1" style="opacity: 0;">
+            <div class="feature" data-index="1">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
@@ -82,7 +87,7 @@
                 </div>
                 <div class="feature-text">Eligible to receive grants</div>
             </div>
-            <div class="feature" data-index="2" style="opacity: 0;">
+            <div class="feature" data-index="2">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
@@ -91,13 +96,21 @@
                 <div class="feature-text">Free physical debit cards</div>
             </div>
         </div>
-    </a>
+        <div class="raffle-section">
+            <div class="raffle-content">
+                <div class="raffle-icon">🎁</div>
+                <div class="raffle-text">
+                    Enter our free raffle for a
+                    <span class="raffle-highlight">Flipper Zero</span>!
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Light Theme Banner -->
-    <a
-        class="banner light render-light"
-        href="https://hackclub.com/first?utm_source=ftcscout&utm_content=banner&tub_program=ftcscout"
-        target="_blank"
+    <div
+        class="banner light"
+        onclick="window.open('https://hackclub.com/fiscal-sponsorship?utm_source=FTCScout', '_blank')"
     >
         <div class="header">
             <div class="logo-container">
@@ -113,16 +126,16 @@
                 <div class="bank-name">Banking platform for robotics!</div>
             </div>
         </div>
-        <div class="feature-container" id="light-features" use:cycleFeatures>
+        <div class="feature-container" id="light-features">
             <div class="feature" data-index="0">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
                     </svg>
                 </div>
-                <div class="feature-text">Instant 501(c)3 nonprofit status</div>
+                <div class="feature-text">Instant 501(c)(3) nonprofit status</div>
             </div>
-            <div class="feature" data-index="1" style="opacity: 0;">
+            <div class="feature" data-index="1">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
@@ -130,7 +143,7 @@
                 </div>
                 <div class="feature-text">Eligible to receive grants</div>
             </div>
-            <div class="feature" data-index="2" style="opacity: 0;">
+            <div class="feature" data-index="2">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
@@ -139,33 +152,55 @@
                 <div class="feature-text">Free physical debit cards</div>
             </div>
         </div>
-    </a>
+        <div class="raffle-section">
+            <div class="raffle-content">
+                <div class="raffle-icon">🎁</div>
+                <div class="raffle-text">
+                    Enter our free raffle for a
+                    <span class="raffle-highlight">Flipper Zero</span>!
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <style>
+    body {
+        margin: 0;
+        padding: 20px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu,
+            Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background-color: #f5f5f7;
+        gap: 20px;
+    }
+
     .container {
         display: flex;
         flex-direction: column;
         gap: 20px;
         width: 100%;
-    }
-
-    a:hover {
-        text-decoration: none;
+        max-width: 280px;
     }
 
     .banner {
-        /* display: flex; */
+        display: flex;
         flex-direction: column;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
         width: 100%;
         box-sizing: border-box;
         overflow: hidden;
-        height: 100px; /* Fixed height for the banners */
-        cursor: pointer; /* Add cursor pointer to indicate clickability */
-        position: relative; /* For the overlay effect */
-        transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for hover effects */
+        height: 100%; /* Increased height to accommodate raffle section */
+        cursor: pointer;
+        position: relative;
+        transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease;
     }
 
     /* Hover effects for better clickability */
@@ -213,9 +248,8 @@
         display: flex;
         align-items: center;
         padding: 10px 12px;
-        border-bottom: 1px solid rgba(128, 128, 128, 0.2);
         position: relative;
-        z-index: 2; /* Ensure content is above the overlay */
+        z-index: 2;
     }
 
     .logo-container {
@@ -249,62 +283,63 @@
     }
 
     .bank-name {
-        font-size: 14.25px;
+        font-size: 14.5px;
         font-weight: bold;
-        letter-spacing: -0.6px;
+        letter-spacing: -0.2px;
         white-space: nowrap;
         overflow: hidden;
     }
 
     .feature-container {
         position: relative;
-        height: 30px;
-        overflow: hidden;
-        margin-top: 10px;
-        margin-bottom: 10px;
-        z-index: 2; /* Ensure content is above the overlay */
+        padding: 8px 12px;
+        height: 16px;
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+        z-index: 2;
     }
 
     .feature {
         display: flex;
         align-items: center;
-        padding: 0 12px;
+        gap: 8px;
+        height: 16px;
         position: absolute;
-        width: 100%;
-        box-sizing: border-box;
-        transition: transform 0.7s ease, opacity 0.7s ease;
+        transition:
+            transform 0.7s ease,
+            opacity 0.7s ease;
     }
 
-    .feature:global(.active) {
+    .feature.active {
         opacity: 1;
-        transform: translateX(0); /* Center position */
+        transform: translateX(0);
     }
 
-    .feature:global(.exit) {
+    .feature.exit {
         opacity: 0;
-        transform: translateX(-100%); /* Exit to left */
+        transform: translateX(-100%);
     }
 
     .checkmark {
-        width: 18px;
-        height: 18px;
+        width: 16px;
+        height: 16px;
         background-color: #d03a52;
         border-radius: 50%;
+        margin-left: 2px;
+        margin-right: 2px;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-right: 12px;
         flex-shrink: 0;
     }
 
     .checkmark svg {
-        width: 10px;
-        height: 10px;
+        width: 9px;
+        height: 9px;
         fill: white;
     }
 
     .feature-text {
-        font-size: 13px;
+        font-size: 12px;
     }
 
     .dark .feature-text {
@@ -313,6 +348,79 @@
 
     .light .feature-text {
         color: #1c1c1e;
+    }
+
+    /* Raffle Section */
+    .raffle-section {
+        position: relative;
+        padding: 8px 12px;
+        height: 100%;
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+        z-index: 2;
+    }
+
+    .raffle-content {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .raffle-icon {
+        width: 20px;
+        height: 20px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 12px;
+    }
+
+    .raffle-text {
+        flex: 1;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .raffle-highlight {
+        color: #fe8c2b;
+        font-weight: bold;
+    }
+
+    .dark .raffle-text {
+        color: #ffffff;
+    }
+
+    .light .raffle-text {
+        color: #1c1c1e;
+    }
+
+    .learn-more-pill {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 10px;
+        font-weight: bold;
+        background-color: #d03a52;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        z-index: 3;
+        transition:
+            transform 0.2s ease,
+            background-color 0.2s ease;
+    }
+
+    .banner:hover .learn-more-pill {
+        transform: scale(1.05);
+        background-color: #e04c64;
+    }
+
+    .light .learn-more-pill {
+        background-color: #d03a52;
+        color: white;
     }
 
     /* Arrow pointing to right to indicate action */
@@ -328,7 +436,9 @@
 
     /* Add slight border glow on hover to emphasize clickability */
     .banner {
-        transition: box-shadow 0.3s ease, transform 0.3s ease;
+        transition:
+            box-shadow 0.3s ease,
+            transform 0.3s ease;
     }
 
     .dark:hover {
