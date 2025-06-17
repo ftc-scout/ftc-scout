@@ -52,9 +52,10 @@
 
 <div class="container">
     <!-- Dark Theme Banner -->
-    <div
-        class="banner dark"
-        onclick="window.open('https://hackclub.com/fiscal-sponsorship?utm_source=FTCScout', '_blank')"
+    <a
+        class="banner dark render-dark"
+        href="https://hackclub.com/first?utm_source=ftcscout&utm_content=banner&tub_program=ftcscout"
+        target="_blank"
     >
         <div class="header">
             <div class="logo-container">
@@ -105,12 +106,13 @@
                 </div>
             </div>
         </div>
-    </div>
+    </a>
 
     <!-- Light Theme Banner -->
-    <div
-        class="banner light"
-        onclick="window.open('https://hackclub.com/fiscal-sponsorship?utm_source=FTCScout', '_blank')"
+     <a
+        class="banner light render-light"
+        href="https://hackclub.com/first?utm_source=ftcscout&utm_content=banner&tub_program=ftcscout"
+        target="_blank"
     >
         <div class="header">
             <div class="logo-container">
@@ -161,7 +163,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </a>
 </div>
 
 <style>
