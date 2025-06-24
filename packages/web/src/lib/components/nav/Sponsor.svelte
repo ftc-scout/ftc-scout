@@ -91,6 +91,15 @@
                 <div class="feature-text">Free physical debit cards</div>
             </div>
         </div>
+        <div class="raffle-section">
+            <div class="raffle-content">
+                <div class="raffle-icon">🎁</div>
+                <div class="raffle-text">
+                    Enter our free raffle for a
+                    <span class="raffle-highlight">Flipper Zero</span>!
+                </div>
+            </div>
+        </div>
     </a>
 
     <!-- Light Theme Banner -->
@@ -120,7 +129,7 @@
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
                     </svg>
                 </div>
-                <div class="feature-text">Instant 501(c)3 nonprofit status</div>
+                <div class="feature-text">Instant 501(c)(3) nonprofit status</div>
             </div>
             <div class="feature" data-index="1" style="opacity: 0;">
                 <div class="checkmark">
@@ -137,6 +146,15 @@
                     </svg>
                 </div>
                 <div class="feature-text">Free physical debit cards</div>
+            </div>
+        </div>
+        <div class="raffle-section">
+            <div class="raffle-content">
+                <div class="raffle-icon">🎁</div>
+                <div class="raffle-text">
+                    Enter our free raffle for a
+                    <span class="raffle-highlight">Flipper Zero</span>!
+                </div>
             </div>
         </div>
     </a>
@@ -162,7 +180,7 @@
         width: 100%;
         box-sizing: border-box;
         overflow: hidden;
-        height: 100px; /* Fixed height for the banners */
+        height: 100%;
         cursor: pointer; /* Add cursor pointer to indicate clickability */
         position: relative; /* For the overlay effect */
         transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth transition for hover effects */
@@ -258,7 +276,7 @@
 
     .feature-container {
         position: relative;
-        height: 30px;
+        height: 20px;
         overflow: hidden;
         margin-top: 10px;
         margin-bottom: 10px;
@@ -273,6 +291,7 @@
         width: 100%;
         box-sizing: border-box;
         transition: transform 0.7s ease, opacity 0.7s ease;
+        gap: 10px;
     }
 
     .feature:global(.active) {
@@ -286,14 +305,13 @@
     }
 
     .checkmark {
-        width: 18px;
-        height: 18px;
+        width: 20px;
+        height: 20px;
         background-color: #d03a52;
         border-radius: 50%;
         display: flex;
         justify-content: center;
         align-items: center;
-        margin-right: 12px;
         flex-shrink: 0;
     }
 
@@ -313,6 +331,68 @@
 
     .light .feature-text {
         color: #1c1c1e;
+    }
+
+    /* Raffle Section */
+    .raffle-section {
+        position: relative;
+        padding: 8px 12px;
+        height: 100%;
+        border-top: 1px solid rgba(128, 128, 128, 0.2);
+        z-index: 2;
+    }
+    .raffle-content {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .raffle-icon {
+        width: 20px;
+        height: 20px;
+        background: linear-gradient(135deg, #ff6b6b, #ffd93d);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+        font-size: 12px;
+    }
+    .raffle-text {
+        flex: 1;
+        font-size: 11px;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+    .raffle-highlight {
+        color: #fe8c2b;
+        font-weight: bold;
+    }
+    .dark .raffle-text {
+        color: #ffffff;
+    }
+    .light .raffle-text {
+        color: #1c1c1e;
+    }
+    .learn-more-pill {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        font-size: 10px;
+        font-weight: bold;
+        background-color: #d03a52;
+        color: white;
+        padding: 2px 8px;
+        border-radius: 12px;
+        z-index: 3;
+        transition: transform 0.2s ease, background-color 0.2s ease;
+    }
+    .banner:hover .learn-more-pill {
+        transform: scale(1.05);
+        background-color: #e04c64;
+    }
+    .light .learn-more-pill {
+        background-color: #d03a52;
+        color: white;
     }
 
     /* Arrow pointing to right to indicate action */
