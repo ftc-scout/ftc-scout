@@ -4,6 +4,7 @@
     // Ensure animations work properly
     function cycleFeatures(container: HTMLElement) {
         const features = container.querySelectorAll(".feature") as NodeListOf<HTMLElement>;
+
         // Initialize - hide all features except the first one
         features.forEach((feature, index) => {
             if (index === 0) {
@@ -13,20 +14,25 @@
                 feature.style.opacity = "0";
             }
         });
+
         let currentIndex = 0;
+
         // Set interval to cycle through features
         setInterval(() => {
             // Calculate next index
             const nextIndex = (currentIndex + 1) % features.length;
+
             // Exit current feature to the left
             features[currentIndex].classList.remove("active");
             features[currentIndex].classList.add("exit");
+
             // Show next feature
             setTimeout(() => {
                 features[nextIndex].style.transform = "";
                 features[nextIndex].style.opacity = "";
                 features[nextIndex].classList.add("active");
             }, 50);
+
             // Reset the exited feature after animation completes
             setTimeout(() => {
                 features[currentIndex].classList.remove("exit");
@@ -97,7 +103,7 @@
     </a>
 
     <!-- Light Theme Banner -->
-     <a
+    <a
         class="banner light render-light"
         href="https://hackclub.com/first?utm_source=ftcscout&utm_content=banner&tub_program=ftcscout"
         target="_blank"
