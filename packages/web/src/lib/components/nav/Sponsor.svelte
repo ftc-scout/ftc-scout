@@ -122,7 +122,7 @@
                 <div class="bank-name">Banking platform for robotics!</div>
             </div>
         </div>
-        <div class="feature-container" id="light-features" >
+        <div class="feature-container" id="light-features" use:cycleFeatures>
             <div class="feature" data-index="0">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -245,7 +245,7 @@
         align-items: center;
         padding: 10px 12px;
         position: relative;
-        z-index: 2;
+        z-index: 2; /* Ensure content is above the overlay */
     }
 
     .logo-container {
@@ -291,7 +291,7 @@
         padding: 8px 12px;
         height: 16px;
         border-top: 1px solid rgba(128, 128, 128, 0.2);
-        z-index: 2;
+        z-index: 2; /* Ensure content is above the overlay */
     }
 
     .feature {
@@ -307,12 +307,12 @@
 
     .feature.active {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateX(0); /* Center position */
     }
 
     .feature.exit {
         opacity: 0;
-        transform: translateX(-100%);
+        transform: translateX(-100%); /* Exit to left */
     }
 
     .checkmark {
