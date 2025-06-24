@@ -373,27 +373,6 @@
     .light .raffle-text {
         color: #1c1c1e;
     }
-    .learn-more-pill {
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        font-size: 10px;
-        font-weight: bold;
-        background-color: #d03a52;
-        color: white;
-        padding: 2px 8px;
-        border-radius: 12px;
-        z-index: 3;
-        transition: transform 0.2s ease, background-color 0.2s ease;
-    }
-    .banner:hover .learn-more-pill {
-        transform: scale(1.05);
-        background-color: #e04c64;
-    }
-    .light .learn-more-pill {
-        background-color: #d03a52;
-        color: white;
-    }
 
     /* Arrow pointing to right to indicate action */
     .bank-name::after {
