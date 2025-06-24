@@ -1,53 +1,41 @@
-<script>
+<script lang="ts">
+    // import Fa from "svelte-fa";
+
     // Ensure animations work properly
-    document.addEventListener("DOMContentLoaded", function () {
-        // Function to cycle through the features
-        function cycleFeatures(containerId) {
-            const container = document.getElementById(containerId);
-            const features = container.querySelectorAll(".feature");
-
-            // Initialize - hide all features except the first one
-            features.forEach((feature, index) => {
-                if (index === 0) {
-                    feature.classList.add("active");
-                } else {
-                    feature.style.transform = "translateX(100%)";
-                    feature.style.opacity = "0";
-                }
-            });
-
-            let currentIndex = 0;
-
-            // Set interval to cycle through features
-            setInterval(() => {
-                // Calculate next index
-                const nextIndex = (currentIndex + 1) % features.length;
-
-                // Exit current feature to the left
-                features[currentIndex].classList.remove("active");
-                features[currentIndex].classList.add("exit");
-
-                // Show next feature
-                setTimeout(() => {
-                    features[nextIndex].style.transform = "";
-                    features[nextIndex].style.opacity = "";
-                    features[nextIndex].classList.add("active");
-                }, 50);
-
-                // Reset the exited feature after animation completes
-                setTimeout(() => {
-                    features[currentIndex].classList.remove("exit");
-                    features[currentIndex].style.transform = "translateX(100%)";
-                    features[currentIndex].style.opacity = "0";
-                    currentIndex = nextIndex;
-                }, 700);
-            }, 4000);
-        }
-
-        // Run both feature containers in sync
-        cycleFeatures("dark-features");
-        cycleFeatures("light-features");
-    });
+    function cycleFeatures(container: HTMLElement) {
+        const features = container.querySelectorAll(".feature") as NodeListOf<HTMLElement>;
+        // Initialize - hide all features except the first one
+        features.forEach((feature, index) => {
+            if (index === 0) {
+                feature.classList.add("active");
+            } else {
+                feature.style.transform = "translateX(100%)";
+                feature.style.opacity = "0";
+            }
+        });
+        let currentIndex = 0;
+        // Set interval to cycle through features
+        setInterval(() => {
+            // Calculate next index
+            const nextIndex = (currentIndex + 1) % features.length;
+            // Exit current feature to the left
+            features[currentIndex].classList.remove("active");
+            features[currentIndex].classList.add("exit");
+            // Show next feature
+            setTimeout(() => {
+                features[nextIndex].style.transform = "";
+                features[nextIndex].style.opacity = "";
+                features[nextIndex].classList.add("active");
+            }, 50);
+            // Reset the exited feature after animation completes
+            setTimeout(() => {
+                features[currentIndex].classList.remove("exit");
+                features[currentIndex].style.transform = "translateX(100%)";
+                features[currentIndex].style.opacity = "0";
+                currentIndex = nextIndex;
+            }, 700);
+        }, 8000);
+    }
 </script>
 
 <div class="container">
@@ -71,7 +59,7 @@
                 <div class="bank-name">Banking platform for robotics!</div>
             </div>
         </div>
-        <div class="feature-container" id="dark-features">
+        <div class="feature-container" id="dark-features" use:cycleFeatures>
             <div class="feature" data-index="0">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -80,7 +68,7 @@
                 </div>
                 <div class="feature-text">Instant 501(c)(3) nonprofit status</div>
             </div>
-            <div class="feature" data-index="1">
+            <div class="feature" data-index="1" style="opacity: 0;">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
@@ -88,7 +76,7 @@
                 </div>
                 <div class="feature-text">Eligible to receive grants</div>
             </div>
-            <div class="feature" data-index="2">
+            <div class="feature" data-index="2" style="opacity: 0;">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
@@ -128,7 +116,7 @@
                 <div class="bank-name">Banking platform for robotics!</div>
             </div>
         </div>
-        <div class="feature-container" id="light-features">
+        <div class="feature-container" id="light-features" >
             <div class="feature" data-index="0">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
@@ -137,7 +125,7 @@
                 </div>
                 <div class="feature-text">Instant 501(c)(3) nonprofit status</div>
             </div>
-            <div class="feature" data-index="1">
+            <div class="feature" data-index="1" style="opacity: 0;">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
@@ -145,7 +133,7 @@
                 </div>
                 <div class="feature-text">Eligible to receive grants</div>
             </div>
-            <div class="feature" data-index="2">
+            <div class="feature" data-index="2" style="opacity: 0;">
                 <div class="checkmark">
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
                         <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z" />
