@@ -30,7 +30,7 @@ jobs:
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
-          images: ghcr.io/ftc-scout/ftc-scout-server:latest
+          images: ghcr.io/ftc-scout/ftc-scout-server
 
       - name: Build and push Docker image
         id: push
