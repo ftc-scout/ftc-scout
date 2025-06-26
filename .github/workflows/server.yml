@@ -1,4 +1,4 @@
-name: Fly Deploy Server
+name: Docker Deploy Server
 on:
   push:
     branches:
@@ -9,7 +9,7 @@ on:
   workflow_dispatch:
 jobs:
   deploy:
-    name: Deploy app
+    name: Build and Publish Image
     runs-on: ubuntu-latest
     permissions:
       contents: read
