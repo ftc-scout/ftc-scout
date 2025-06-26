@@ -54,7 +54,7 @@
         <div class="header">
             <div class="logo-container">
                 <img
-                    src="https://hcb.hackclub.com/brand/hcb-icon-icon-dark.png"
+                    src="/img/hcb-icon-icon-dark.png"
                     alt="Hack Club Bank Logo"
                     width="36"
                     height="36"
@@ -111,7 +111,7 @@
         <div class="header">
             <div class="logo-container">
                 <img
-                    src="https://hcb.hackclub.com/brand/hcb-icon-icon-original.png"
+                    src="/img/hcb-icon-icon-original.png"
                     alt="Hack Club Bank Logo"
                     width="36"
                     height="36"

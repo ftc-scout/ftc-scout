@@ -12,8 +12,12 @@
 
         <div class="rest">
             <p>
-                We don't have any sponsors at the moment, but if you'd like to help us keep the site
-                running, <a href="/sponsors/info">become one!</a>
+                We are currently sponsored by <a
+                    href="https://hackclub.com/first?utm_source=ftcscout&utm_content=banner&tub_program=ftcscout"
+                    >Hack Club</a
+                >
+                for this season, but we we may be available for future sponsorship. See sponsorship
+                details <a href="/sponsors/info">here</a>.
             </p>
         </div></Card
     >

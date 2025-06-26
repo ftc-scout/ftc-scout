@@ -8,12 +8,13 @@
     export let name: string;
     export let link: string;
     export let strict = false;
+    export let internal = true;
     export let newTab: boolean | null = null;
 
     $: activePath = "/" + link.split("/")[1];
     $: active = strict
-        ? $page.url.pathname == activePath
-        : $page.url.pathname.startsWith(activePath);
+        ? $page.url.pathname == activePath && internal
+        : $page.url.pathname.startsWith(activePath) && internal;
 </script>
 
 <a
