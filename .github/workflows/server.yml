@@ -11,8 +11,7 @@ jobs:
     name: Deploy app
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: superfly/flyctl-actions/setup-flyctl@master
-      - run: flyctl deploy -c fly.server.toml --remote-only
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
+      - name: Build Docker Image
+      - run: sudo docker build . -f packages/server/Dockerfile -t ghcr.io/dragon-hatcher/ftc-scout-server:latest
+      - name: Uploading
+      - run: sudo docker push ghcr.io/dragon-hatcher/ftc-scout-server:latest
