@@ -1,4 +1,7 @@
 name: Docker Deploy Web
+env:
+  PUBLIC_SERVER_ORIGIN: 'api.ftcscout.org'
+  PUBLIC FRONTEND_CODE: 'docker-frontend-code'
 on:
   push:
     branches:
