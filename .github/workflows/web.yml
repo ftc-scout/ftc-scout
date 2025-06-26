@@ -1,7 +1,7 @@
 name: Docker Deploy Web
 env:
   PUBLIC_SERVER_ORIGIN: 'api.ftcscout.org'
-  PUBLIC FRONTEND_CODE: 'docker-frontend-code'
+  PUBLIC_FRONTEND_CODE: 'docker-frontend-code'
 on:
   push:
     branches:
@@ -45,3 +45,6 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          secret-envs: |
+            PUBLIC_FRONTEND_CODE=PUBLIC_FRONTEND_CODE
+            PUBLIC_SERVER_ORIGIN=PUBLIC_SERVER_ORIGIN
