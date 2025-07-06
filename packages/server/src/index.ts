@@ -8,7 +8,6 @@ import compression from "compression";
 import { apiLoggerMiddleware } from "./db/entities/ApiReq";
 import { SERVER_PORT, SYNC_API } from "./constants";
 import { ApolloServer } from "@apollo/server";
-import { ApolloServerPluginLandingPageGraphQLPlayground } from "@apollo/server-plugin-landing-page-graphql-playground";
 import { expressMiddleware } from "@apollo/server/express4";
 import { GQL_SCHEMA } from "./graphql/schema";
 import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
@@ -55,7 +54,6 @@ async function main() {
             ttl: 120, // 2 minutes
         }),
         plugins: [
-            ApolloServerPluginLandingPageGraphQLPlayground(),
             ApolloServerPluginDrainHttpServer({ httpServer }),
             {
                 async serverWillStart() {
