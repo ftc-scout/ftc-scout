@@ -46,7 +46,7 @@
 
             <h2>REST</h2>
             <p>
-                The REST API is best used for simpler cases. It is not used internally, and this it
+                The REST API is best used for simpler cases. It is not used internally, and thus it
                 doesn't provide access to all of our data. For example, you can't perform season
                 record queries using it. However, if you just need team data, match data, or single
                 event statistics, it provides an easy way to access those.
