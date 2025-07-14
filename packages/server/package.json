@@ -12,7 +12,6 @@
     },
     "dependencies": {
         "@apollo/server": "^4.7.5",
-        "@apollo/server-plugin-landing-page-graphql-playground": "^4.0.1",
         "@ftc-scout/common": "^0.0.1",
         "@graphql-tools/schema": "^10.0.0",
         "canvas": "^2.11.2",
