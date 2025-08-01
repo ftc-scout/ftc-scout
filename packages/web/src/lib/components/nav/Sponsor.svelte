@@ -96,7 +96,7 @@
                 <div class="raffle-icon">🎁</div>
                 <div class="raffle-text">
                     Enter our free raffle for a
-                    <span class="raffle-highlight">Flipper Zero</span>!
+                    <span class="raffle-highlight">13-inch MacBook Air</span>!
                 </div>
             </div>
         </div>
@@ -153,7 +153,7 @@
                 <div class="raffle-icon">🎁</div>
                 <div class="raffle-text">
                     Enter our free raffle for a
-                    <span class="raffle-highlight">Flipper Zero</span>!
+                    <span class="raffle-highlight">13-inch MacBook Air</span>!
                 </div>
             </div>
         </div>
