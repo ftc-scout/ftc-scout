@@ -55,7 +55,7 @@
             <div class="logo-container">
                 <img
                     src="/img/hcb-icon-icon-dark.png"
-                    alt="Hack Club Bank Logo"
+                    alt="HCB Logo"
                     width="36"
                     height="36"
                 />
