@@ -1,8 +1,12 @@
+export type ApiArtifactType = "NONE" | "PURPLE" | "GREEN";
+
+// TODO: get randomization, its a match level attribute
 export interface AllianceScores2025TradFtcApi {
     alliance: "Blue" | "Red";
     team: number;
     autoClassifiedArtifacts: number;
     autoOverflowArtifacts: number;
+    autoClassifierState: ApiArtifactType[];
     robot1Auto: boolean;
     robot2Auto: boolean;
     autoLeavePoints: number;
@@ -17,6 +21,7 @@ export interface AllianceScores2025TradFtcApi {
     teleopDepotPoints: number;
     teleopPatternPoints: number;
     teleopBasePoints: number;
+    teleopClassifierState: ApiArtifactType[];
     autoPoints: number;
     teleopPoints: number;
     foulPointsCommitted: number;

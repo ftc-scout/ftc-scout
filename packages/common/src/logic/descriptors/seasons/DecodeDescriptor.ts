@@ -1,8 +1,12 @@
-import { AllianceScores2025TradFtcApi } from "../../../ftc-api-types/match-scores/MatchScores2025Trad";
+import {
+    AllianceScores2025TradFtcApi,
+    ApiArtifactType,
+} from "../../../ftc-api-types/match-scores/MatchScores2025Trad";
 import { Season } from "../../Season";
 import { Station } from "../../Station";
 import { Descriptor, DescriptorColumn } from "../descriptor";
-import { BoolDTy, Int16DTy } from "../types";
+import { AnyDTy, BoolDTy, EnumDTy, Int16DTy, listTy, nn } from "../types";
+import { GraphQLObjectType } from "graphql";
 
 type Api = AllianceScores2025TradFtcApi;
 
@@ -43,6 +47,41 @@ function formatBase(points: number): string {
 function baseBonus(r1: BaseReturn, r2: BaseReturn): number {
     return r1 == "FULL" && r2 == "FULL" ? 10 : 0;
 }
+
+export const ArtifactType = {
+    None: "None",
+    Purple: "Purple",
+    Green: "Green",
+} as const;
+export type ArtifactType = (typeof ArtifactType)[keyof typeof ArtifactType];
+const ArtifactTypeDTY = EnumDTy(ArtifactType, "ArtifactType", "artifact_type_enum");
+
+function artifactTypeFromApi(artifactType: ApiArtifactType): ArtifactType {
+    switch (artifactType) {
+        case "NONE":
+            return ArtifactType.None;
+        case "PURPLE":
+            return ArtifactType.Purple;
+        case "GREEN":
+            return ArtifactType.Green;
+    }
+}
+
+function classifierStateFromApi(api: ApiArtifactType[]): ArtifactType[] {
+    let classifier: ArtifactType[] = [];
+    for (const artifact of api) {
+        classifier.push(artifactTypeFromApi(artifact));
+    }
+    return classifier;
+}
+
+let classifierStateGQL = new GraphQLObjectType({
+    name: "ClassifierState",
+    fields: {
+        artifacts: listTy({ type: nn(ArtifactTypeDTY.gql) }),
+    },
+});
+const ClassiferStateDTy = AnyDTy(classifierStateGQL);
 
 export const Descriptor2025 = new Descriptor({
     season: Season.Decode,
@@ -174,6 +213,13 @@ export const Descriptor2025 = new Descriptor({
                 columnPrefix: "Auto Pattern",
                 fullName: "Auto Pattern Points",
             })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "autoClassifierState" }).addMatchScore({
+            outer: true,
+            fromApi: (api: Api) => classifierStateFromApi(api.autoClassifierState),
+            dataTy: ClassiferStateDTy,
+        })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcBasePoints" })
@@ -318,6 +364,13 @@ export const Descriptor2025 = new Descriptor({
                 columnPrefix: "DC Depot",
                 fullName: "DC Depot Points",
             })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcClassifierState" }).addMatchScore({
+            outer: true,
+            fromApi: (api: Api) => classifierStateFromApi(api.teleopClassifierState),
+            dataTy: ClassiferStateDTy,
+        })
     )
     .addColumn(
         new DescriptorColumn({ name: "movementRp", tradOnly: true })
