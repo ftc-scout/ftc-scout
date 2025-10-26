@@ -18,7 +18,7 @@
 <Select
     bind:value={seasonStr}
     name={"season"}
-    options={DESCRIPTORS_LIST.reverse().map((d) => ({
+    options={DESCRIPTORS_LIST.slice().reverse().map((d) => ({
         value: d.season + "",
         name: d.seasonNameWithYear,
     }))}
