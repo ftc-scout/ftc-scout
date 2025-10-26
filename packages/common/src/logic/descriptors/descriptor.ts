@@ -13,8 +13,8 @@ import {
 import { titleCase } from "../../utils/string";
 
 type RankingsMethod = {
-    rp: "TotalPoints" | "Record";
-    tb: "AutoEndgameTot" | "AutoAscentAvg" | "AutoEndgameAvg" | "LosingScore";
+    rp: "TotalPoints" | "Record" | "DecodeRP";
+    tb: "AutoEndgameTot" | "AutoAscentAvg" | "AutoEndgameAvg" | "LosingScore" | "AvgNpBase";
 };
 
 export type Tree<T, F = never> = {

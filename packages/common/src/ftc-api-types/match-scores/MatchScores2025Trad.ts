@@ -1,0 +1,30 @@
+export interface AllianceScores2025TradFtcApi {
+    alliance: "Blue" | "Red";
+    team: number;
+    autoClassifiedArtifacts: number;
+    autoOverflowArtifacts: number;
+    robot1Auto: boolean;
+    robot2Auto: boolean;
+    autoLeavePoints: number;
+    autoArtifactPoints: number;
+    autoPatternPoints: number;
+    teleopClassifiedArtifacts: number;
+    teleopOverflowArtifacts: number;
+    teleopDepotArtifacts: number;
+    robot1Teleop: "NONE" | "PARTIAL" | "FULL";
+    robot2Teleop: "NONE" | "PARTIAL" | "FULL";
+    teleopArtifactPoints: number;
+    teleopDepotPoints: number;
+    teleopPatternPoints: number;
+    teleopBasePoints: number;
+    autoPoints: number;
+    teleopPoints: number;
+    foulPointsCommitted: number;
+    preFoulTotal: number;
+    movementRP: boolean;
+    goalRP: boolean;
+    patternRP: boolean;
+    totalPoints: number;
+    majorFouls: number;
+    minorFouls: number;
+}
