@@ -5,8 +5,8 @@ import {
 import { Season } from "../../Season";
 import { Station } from "../../Station";
 import { Descriptor, DescriptorColumn } from "../descriptor";
-import { AnyDTy, BoolDTy, EnumDTy, Int16DTy, listTy, nn } from "../types";
-import { GraphQLObjectType } from "graphql";
+import { AnyDTy, BoolDTy, EnumDTy, Int16DTy } from "../types";
+import { GraphQLList } from "graphql/type";
 
 type Api = AllianceScores2025TradFtcApi;
 
@@ -54,7 +54,7 @@ export const ArtifactType = {
     Green: "Green",
 } as const;
 export type ArtifactType = (typeof ArtifactType)[keyof typeof ArtifactType];
-const ArtifactTypeDTY = EnumDTy(ArtifactType, "ArtifactType", "artifact_type_enum");
+const ArtifactTypeDTy = EnumDTy(ArtifactType, "ArtifactType", "artifact_type_enum");
 
 function artifactTypeFromApi(artifactType: ApiArtifactType): ArtifactType {
     switch (artifactType) {
@@ -75,12 +75,7 @@ function classifierStateFromApi(api: ApiArtifactType[]): ArtifactType[] {
     return classifier;
 }
 
-let classifierStateGQL = new GraphQLObjectType({
-    name: "ClassifierState",
-    fields: {
-        artifacts: listTy({ type: nn(ArtifactTypeDTY.gql) }),
-    },
-});
+let classifierStateGQL = new GraphQLList(ArtifactTypeDTy.gql);
 const ClassiferStateDTy = AnyDTy(classifierStateGQL);
 
 export const Descriptor2025 = new Descriptor({
@@ -216,7 +211,6 @@ export const Descriptor2025 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "autoClassifierState" }).addMatchScore({
-            outer: true,
             fromApi: (api: Api) => classifierStateFromApi(api.autoClassifierState),
             dataTy: ClassiferStateDTy,
         })
@@ -367,7 +361,6 @@ export const Descriptor2025 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "dcClassifierState" }).addMatchScore({
-            outer: true,
             fromApi: (api: Api) => classifierStateFromApi(api.teleopClassifierState),
             dataTy: ClassiferStateDTy,
         })
