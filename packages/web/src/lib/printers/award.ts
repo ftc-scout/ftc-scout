@@ -11,6 +11,8 @@ export function prettyPrintAwardCategory(type: AwardType): string {
         case AwardType.Inspire:
         case AwardType.JudgesChoice:
         case AwardType.Motivate:
+        case AwardType.Reach:
+        case AwardType.Sustain:
         case AwardType.Promote:
         case AwardType.Think:
             return prettyPrintAwardName(type) + " Winners";
@@ -65,6 +67,10 @@ export function prettyPrintAwardName(type: AwardType): string {
             return "Judges' Choice Award";
         case AwardType.Motivate:
             return "Motivate Award";
+        case AwardType.Reach:
+            return "Reach Award";
+        case AwardType.Sustain:
+            return "Sustain Award";
         case AwardType.Promote:
             return "Promote Award";
         case AwardType.Think:

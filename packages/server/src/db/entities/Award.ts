@@ -21,6 +21,8 @@ export const AwardType = {
     Promote: "Promote",
     Control: "Control",
     Motivate: "Motivate",
+    Reach: "Reach",
+    Sustain: "Sustain",
     Design: "Design",
     Innovate: "Innovate",
     Connect: "Connect",
@@ -140,6 +142,10 @@ export function awardCodeFromFtcApi(award: AwardFtcApi): [AwardType, number] | n
             return [AwardType.DivisionWinner, awardTop(award, 3)];
         case 24: // Conference Finalist
             return [AwardType.ConferenceFinalist, awardTop(award, 3)];
+        case 25: // Reach
+            return [AwardType.Reach, awardTop(award, 3)];
+        case 26: // Sustain
+            return [AwardType.Sustain, awardTop(award, 3)];
         // As far as I can tell these 100 series awards are just the main award shifted down one
         case 102: // Compass Finalist
             return [AwardType.Compass, awardTop(award, 5, true)];
@@ -159,6 +165,10 @@ export function awardCodeFromFtcApi(award: AwardFtcApi): [AwardType, number] | n
             return [AwardType.Think, awardTop(award, 5, true)];
         case 111: // Inspire Finalist
             return [AwardType.Inspire, awardTop(award, 4, true)];
+        case 125: // Reach Finalist
+            return [AwardType.Reach, awardTop(award, 5, true)];
+        case 126: // Sustain Finalist
+            return [AwardType.Sustain, awardTop(award, 5, true)];
         default:
             throw "Can't handle award: " + JSON.stringify(award);
     }
