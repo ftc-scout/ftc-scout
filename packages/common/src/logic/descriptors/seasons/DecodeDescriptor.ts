@@ -386,8 +386,8 @@ export const Descriptor2025 = new Descriptor({
                 dataTy: BoolDTy,
             })
             .addTep({
-                columnPrefix: "Movement RS",
-                fullName: "Movement Ranking Score",
+                columnPrefix: "Movement RP",
+                fullName: "Movement Ranking Points",
                 make: (ms) => (ms.movementRp ? 1 : 0),
             })
     )
@@ -398,8 +398,8 @@ export const Descriptor2025 = new Descriptor({
                 dataTy: BoolDTy,
             })
             .addTep({
-                columnPrefix: "Goal RS",
-                fullName: "Goal Ranking Score",
+                columnPrefix: "Goal RP",
+                fullName: "Goal Ranking Points",
                 make: (ms) => (ms.goalRp ? 1 : 0),
             })
     )
@@ -410,8 +410,8 @@ export const Descriptor2025 = new Descriptor({
                 dataTy: BoolDTy,
             })
             .addTep({
-                columnPrefix: "Pattern RS",
-                fullName: "Pattern Ranking Score",
+                columnPrefix: "Pattern RP",
+                fullName: "Pattern Ranking Points",
                 make: (ms) => (ms.patternRp ? 1 : 0),
             })
     )
