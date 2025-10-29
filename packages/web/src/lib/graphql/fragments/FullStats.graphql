@@ -263,6 +263,8 @@ fragment FullTeamEventStats2025Group on TeamEventStats2025Group {
     autoPatternPoints
     dcBasePoints
     dcBasePointsIndividual
+    dcBasePointsCombined
+    dcBaseBonus
     dcArtifactPoints
     dcArtifactClassifiedPoints
     dcArtifactOverflowPoints

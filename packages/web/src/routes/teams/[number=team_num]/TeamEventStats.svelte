@@ -2,7 +2,7 @@
     import { faTrophy } from "@fortawesome/free-solid-svg-icons";
     import InfoIconRow from "$lib/components/InfoIconRow.svelte";
     import type { TeamQuery } from "$lib/graphql/generated/graphql-operations";
-    import { prettyPrintFloat, prettyPrintInt, prettyPrintOrdinal } from "$lib/printers/number";
+    import { prettyPrintFloat, prettyPrintOrdinal } from "$lib/printers/number";
     import { DESCRIPTORS, type Season } from "@ftc-scout/common";
 
     type Stats = NonNullable<TeamQuery["teamByNumber"]>["events"][number]["stats"];
@@ -11,7 +11,7 @@
     export let remote: boolean;
     export let stats: Stats | undefined;
 
-    $: rpFormat = DESCRIPTORS[season].rankings.rp == "Record" ? prettyPrintFloat : prettyPrintInt;
+    const rpFormat = prettyPrintFloat;
     $: hasOpr = stats && "opr" in stats;
     $: hasAvg = stats && "avg" in stats;
     $: np = DESCRIPTORS[season].pensSubtract || remote ? "" : "np";

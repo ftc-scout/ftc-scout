@@ -268,6 +268,12 @@ export const Descriptor2025 = new Descriptor({
                 columnPrefix: "DC Base Bonus",
                 fullName: "DC Base Bonus Points",
             })
+            .addTep({
+                columnPrefix: "DC Base Bonus",
+                dialogName: "Bonus",
+                fullName: "DC Base Bonus Points",
+                make: (ms) => ms.dcBaseBonus ?? 0,
+            })
     )
     .addColumn(
         new DescriptorColumn({ name: "dcBasePointsIndividual" }).addTep({
@@ -277,6 +283,14 @@ export const Descriptor2025 = new Descriptor({
             columnPrefix: "DC Base Individual",
             dialogName: "Individual",
             fullName: "DC Base Points Individual",
+        })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcBasePointsCombined" }).addTep({
+            columnPrefix: "DC Base Combined",
+            dialogName: "Combined",
+            fullName: "DC Base Points Combined",
+            make: (ms) => (ms.dcBase1 ?? 0) + (ms.dcBase2 ?? 0),
         })
     )
     .addColumn(
@@ -372,8 +386,8 @@ export const Descriptor2025 = new Descriptor({
                 dataTy: BoolDTy,
             })
             .addTep({
-                columnPrefix: "Movement RP",
-                fullName: "Movement Ranking Points",
+                columnPrefix: "Movement RS",
+                fullName: "Movement Ranking Score",
                 make: (ms) => (ms.movementRp ? 1 : 0),
             })
     )
@@ -384,8 +398,8 @@ export const Descriptor2025 = new Descriptor({
                 dataTy: BoolDTy,
             })
             .addTep({
-                columnPrefix: "Goal RP",
-                fullName: "Goal Ranking Points",
+                columnPrefix: "Goal RS",
+                fullName: "Goal Ranking Score",
                 make: (ms) => (ms.goalRp ? 1 : 0),
             })
     )
@@ -396,8 +410,8 @@ export const Descriptor2025 = new Descriptor({
                 dataTy: BoolDTy,
             })
             .addTep({
-                columnPrefix: "Pattern RP",
-                fullName: "Pattern Ranking Points",
+                columnPrefix: "Pattern RS",
+                fullName: "Pattern Ranking Score",
                 make: (ms) => (ms.patternRp ? 1 : 0),
             })
     )
@@ -624,8 +638,9 @@ export const Descriptor2025 = new Descriptor({
                     children: [
                         { val: "dcBase1", children: [] },
                         { val: "dcBase2", children: [] },
-                        { val: "dcBaseBonus", children: [] },
                         { val: "dcBasePointsIndividual", for: "tep", children: [] },
+                        { val: "dcBasePointsCombined", for: "tep", children: [] },
+                        { val: "dcBaseBonus", children: [] },
                     ],
                 },
                 {
