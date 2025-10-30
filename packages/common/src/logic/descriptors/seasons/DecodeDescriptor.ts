@@ -7,6 +7,7 @@ import { Station } from "../../Station";
 import { Descriptor, DescriptorColumn } from "../descriptor";
 import { AnyDTy, BoolDTy, EnumDTy, Int16DTy } from "../types";
 import { GraphQLList } from "graphql/type";
+import { nOf } from "../../../utils/format/n-of";
 
 type Api = AllianceScores2025TradFtcApi;
 
@@ -448,6 +449,7 @@ export const Descriptor2025 = new Descriptor({
                 fullName: "Driver-Controlled Points",
             })
     )
+
     .addColumn(
         new DescriptorColumn({ name: "minorsCommitted" })
             .addMatchScore({
@@ -482,103 +484,86 @@ export const Descriptor2025 = new Descriptor({
     )
     .addColumn(
         new DescriptorColumn({ name: "majorsCommittedPoints" })
-            .addMatchScore({
-                fromSelf: (self) => self.majorsCommitted * 15,
-                dataTy: Int16DTy,
-            })
             .addScoreModal({
-                displayName: "Majors",
-                columnPrefix: "Penalty Majors",
-                fullName: "Major Penalty Points",
+                displayName: "Majors Points",
+                columnPrefix: "Majors",
+                fullName: "Major Penalty Points Committed",
+                sql: (ms) => `(${ms}.majorsCommitted * 15)`,
+                getValue: (ms) => ms.majorsCommitted * 15,
+                getTitle: (ms) => nOf(ms.majorsCommitted, "Major Committed", "Majors Committed"),
             })
             .addTep({
-                columnPrefix: "Majors",
+                make: (ms) => ms.majorsCommitted * 15,
+                columnPrefix: "Majors Committed",
                 dialogName: "Majors",
-                fullName: "Major Penalty Points",
+                fullName: "Major Penalty Points Committed",
             })
     )
     .addColumn(
         new DescriptorColumn({ name: "minorsCommittedPoints" })
-            .addMatchScore({
-                fromSelf: (self) => self.minorsCommitted * 5,
-                dataTy: Int16DTy,
-            })
             .addScoreModal({
-                displayName: "Minors",
-                columnPrefix: "Penalty Minors",
-                fullName: "Minor Penalty Points",
-            })
-            .addTep({
+                displayName: "Minors Points",
                 columnPrefix: "Minors",
-                dialogName: "Minors",
-                fullName: "Minor Penalty Points",
-            })
-    )
-    .addColumn(
-        new DescriptorColumn({ name: "majorsByOppPoints" })
-            .addMatchScore({
-                fromSelf: (self) => self.majorsByOpp * 15,
-                dataTy: Int16DTy,
-            })
-            .addScoreModal({
-                displayName: "Opp Majors",
-                columnPrefix: "Opp Major Penalties",
-                fullName: "Opponent Major Penalty Points",
+                fullName: "Minor Penalty Points Committed",
+                sql: (ms) => `(${ms}.minorsCommitted * 5)`,
+                getValue: (ms) => ms.minorsCommitted * 5,
+                getTitle: (ms) => nOf(ms.minorsCommitted, "Minor Committed", "Minors Committed"),
             })
             .addTep({
-                columnPrefix: "Opp Majors",
-                dialogName: "Majors",
-                fullName: "Opponent Major Penalty Points",
-            })
-    )
-    .addColumn(
-        new DescriptorColumn({ name: "minorsByOppPoints" })
-            .addMatchScore({
-                fromSelf: (self) => self.minorsByOpp * 5,
-                dataTy: Int16DTy,
-            })
-            .addScoreModal({
-                displayName: "Opp Minors",
-                columnPrefix: "Opp Minor Penalties",
-                fullName: "Opponent Minor Penalty Points",
-            })
-            .addTep({
-                columnPrefix: "Opp Minors",
+                make: (ms) => ms.minorsCommitted * 5,
+                columnPrefix: "Minors Committed",
                 dialogName: "Minors",
-                fullName: "Opponent Minor Penalty Points",
+                fullName: "Minor Penalty Points Committed",
             })
     )
     .addColumn(
         new DescriptorColumn({ name: "penaltyPointsCommitted" })
             .addMatchScore({
                 fromSelf: (self) => self.majorsCommitted * 15 + self.minorsCommitted * 5,
+
                 dataTy: Int16DTy,
             })
-            .addScoreModal({
-                displayName: "Penalty Points",
-                columnPrefix: "Penalty Points",
-                fullName: "Penalty Points",
-            })
             .addTep({
-                columnPrefix: "Penalty Points",
+                columnPrefix: "Penalties Committed",
                 dialogName: "Penalty Points",
-                fullName: "Penalty Points",
+                fullName: "Penalty Points Committed",
             })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "majorsByOppPoints" })
+            .addTep({
+                make: (ms) => ms.majorsByOpp * 15,
+                columnPrefix: "Opp Majors Committed",
+                dialogName: "Majors",
+                fullName: "Major Penalty Points by Opponent",
+            })
+            .finish()
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "minorsByOppPoints" })
+            .addTep({
+                make: (ms) => ms.minorsByOpp * 5,
+                columnPrefix: "Opp Minors Committed",
+                dialogName: "Minors",
+                fullName: "Minor Penalty Points by Opponent",
+            })
+            .finish()
     )
     .addColumn(
         new DescriptorColumn({ name: "penaltyPointsByOpp" })
             .addMatchScore({
                 fromSelf: (self) => self.majorsByOpp * 15 + self.minorsByOpp * 5,
+
                 dataTy: Int16DTy,
             })
-            .addScoreModal({
-                displayName: "Opp Penalties",
-                columnPrefix: "Opp Penalty Points",
-                fullName: "Penalty Points By Opponent",
-            })
             .addTep({
-                columnPrefix: "Opp Penalty Points",
+                columnPrefix: "Opp Penalties Committed",
                 dialogName: "Opp Penalty Points",
+                fullName: "Penalty Points by Opponent",
+            })
+            .addScoreModal({
+                displayName: "Penalties",
+                columnPrefix: "Penalties",
                 fullName: "Penalty Points By Opponent",
             })
     )
@@ -664,8 +649,10 @@ export const Descriptor2025 = new Descriptor({
         {
             val: "penaltyPointsByOpp",
             children: [
-                { val: "majorsByOppPoints", children: [] },
-                { val: "minorsByOppPoints", children: [] },
+                { val: "majorsCommittedPoints", for: "sm", children: [] },
+                { val: "minorsCommittedPoints", for: "sm", children: [] },
+                { val: "majorsByOppPoints", for: "tep", children: [] },
+                { val: "minorsByOppPoints", for: "tep", children: [] },
             ],
         },
     ])
