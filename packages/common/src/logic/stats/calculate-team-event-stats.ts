@@ -265,7 +265,21 @@ function calculateRanks(
                 stats.rp = stats.tot.totalPoints;
                 break;
             case "Record":
-                stats.rp = (2 * stats.wins + stats.ties) / stats.qualMatchesPlayed;
+                stats.rp =
+                    stats.qualMatchesPlayed == 0
+                        ? 0
+                        : (2 * stats.wins + stats.ties) / stats.qualMatchesPlayed;
+                break;
+            case "DecodeRP":
+                stats.rp =
+                    stats.qualMatchesPlayed == 0
+                        ? 0
+                        : (3 * stats.wins +
+                              stats.ties +
+                              stats.tot.movementRp +
+                              stats.tot.goalRp +
+                              stats.tot.patternRp) /
+                          stats.qualMatchesPlayed;
                 break;
         }
     }
@@ -288,6 +302,10 @@ function calculateRanks(
                 break;
             case "LosingScore":
                 calcLosingScoreTb(teps, matches);
+                break;
+            case "AvgNpBase":
+                stats.tb1 = stats.avg.totalPointsNp;
+                stats.tb2 = stats.avg.dcBasePoints;
                 break;
         }
     }

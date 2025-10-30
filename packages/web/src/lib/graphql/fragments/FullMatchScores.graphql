@@ -1,6 +1,19 @@
 # // HELP: Season Specific
 fragment FullMatchScores on MatchScores {
     __typename
+    ... on MatchScores2025 {
+        season
+        eventCode
+        matchId
+        red {
+            alliance
+            ...FullMatchScore2025Alliance
+        }
+        blue {
+            alliance
+            ...FullMatchScore2025Alliance
+        }
+    }
     ... on MatchScores2024 {
         season
         eventCode
@@ -158,6 +171,42 @@ fragment FullMatchScores on MatchScores {
             ...FullMatchScore2019Alliance
         }
     }
+}
+
+fragment FullMatchScore2025Alliance on MatchScores2025Alliance {
+    autoLeavePoints
+    autoLeave1
+    autoLeave2
+    autoArtifactPoints
+    autoArtifactClassifiedPoints
+    autoArtifactOverflowPoints
+    autoPatternPoints
+    dcBasePoints
+    dcBase1
+    dcBase2
+    dcBaseBonus
+    dcArtifactPoints
+    dcArtifactClassifiedPoints
+    dcArtifactOverflowPoints
+    dcPatternPoints
+    dcDepotPoints
+    movementRp
+    goalRp
+    patternRp
+    autoPoints
+    dcPoints
+    minorsCommitted
+    majorsCommitted
+    minorsByOpp
+    majorsByOpp
+    minorsByOppPoints
+    majorsByOppPoints
+    majorsCommittedPoints
+    minorsCommittedPoints
+    penaltyPointsCommitted
+    penaltyPointsByOpp
+    totalPointsNp
+    totalPoints
 }
 
 fragment FullMatchScore2024Alliance on MatchScores2024Alliance {

@@ -92,11 +92,13 @@ export async function getQuickStats(number: number, season: Season, region: Regi
         .addSelect("max(opr_dc_points)", "dc");
 
     // HELP: Season Specific
+    let egColumn = "opr_eg_points";
     if (season == Season.IntoTheDeep) {
-        max = max.addSelect("max(opr_dc_park_points)", "eg");
-    } else {
-        max = max.addSelect("max(opr_eg_points)", "eg");
+        egColumn = "opr_dc_park_points";
+    } else if (season == Season.Decode) {
+        egColumn = "opr_dc_base_points";
     }
+    max = max.addSelect(`max(${egColumn})`, "eg");
 
     max = max
         .where("NOT is_remote")

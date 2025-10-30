@@ -17,7 +17,7 @@
     $: defaultStats = [
         "eventRank",
         "team",
-        "rankingPoints",
+        "rankingScore",
         "tb1",
         "played",
         totalPoints + "Avg",
@@ -42,7 +42,7 @@
     defaultSort={{ id: "eventRank", dir: SortDir.Asc }}
     hideRankStats={[
         "eventRank",
-        "rankingPoints",
+        "rankingScore",
         ...(descriptor.rankings.rp == "Record" ? ["record"] : ["totalPointsAvg", "totalPointsTot"]),
     ]}
     {csv}
