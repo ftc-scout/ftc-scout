@@ -199,10 +199,6 @@ fragment FullMatchScore2025Alliance on MatchScores2025Alliance {
     majorsCommitted
     minorsByOpp
     majorsByOpp
-    minorsByOppPoints
-    majorsByOppPoints
-    majorsCommittedPoints
-    minorsCommittedPoints
     penaltyPointsCommitted
     penaltyPointsByOpp
     totalPointsNp
