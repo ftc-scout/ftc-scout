@@ -12,6 +12,7 @@
     import {
         faBolt,
         faCalendarAlt,
+        faChartLine,
         faHashtag,
         faLink,
         faLocationDot,
@@ -33,6 +34,7 @@
     import Teams from "./Teams.svelte";
     import Rankings from "./Rankings.svelte";
     import Awards from "./Awards.svelte";
+    import Preview from "./Preview.svelte";
     import { isNonCompetition } from "$lib/util/event-type";
     import Head from "$lib/components/Head.svelte";
     import Insights from "./Insights.svelte";
@@ -47,10 +49,35 @@
     $: eventStore = data.event;
     $: event = $eventStore?.data?.eventByCode!;
 
+    $: season = +$page.params.season as Season;
+
     $: stats = event?.teams?.filter((t) => notEmpty(t.stats)) ?? [];
     $: insights = event?.matches?.flatMap(getMatchScores) ?? [];
+    type PreviewStat = { teamNumber: number; npOpr: number | null };
+    $: previewStats = ((event as any)?.previewStats ?? []) as PreviewStat[];
+    $: previewStatMap = new Map<number, number | null>(
+        previewStats.map((s) => [s.teamNumber, s.npOpr])
+    );
+    $: previewTeams =
+        event?.teams
+            ?.map((team) => {
+                let quickOpr = previewStatMap.get(team.teamNumber) ?? null;
+                return {
+                    teamNumber: team.teamNumber,
+                    name: team.team.name,
+                    quickOpr,
+                };
+            })
+            .sort((a, b) => {
+                if (a.quickOpr == null && b.quickOpr == null) return a.teamNumber - b.teamNumber;
+                if (a.quickOpr == null) return 1;
+                if (b.quickOpr == null) return -1;
+                let diff = b.quickOpr - a.quickOpr;
+                return diff == 0 ? a.teamNumber - b.teamNumber : diff;
+            }) ?? [];
 
-    $: season = +$page.params.season as Season;
+    $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
+
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
     function gotoTab(tab: string) {
@@ -143,11 +170,17 @@
 
         <TabbedCard
             tabs={[
-                [faBolt, "Matches", "matches", !!event.matches.length],
+                [
+                    faChartLine,
+                    "Preview",
+                    "preview",
+                    (event?.teams?.length ?? 0) > 0 && !event?.started && hasPreviewData,
+                ],
+                [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
                 [faBolt, "Insights", "insights", !!insights.length],
-                [faMedal, "Awards", "awards", !!event.awards.length],
-                [faHashtag, "Teams", "teams", !!event.teams.length],
+                [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
+                [faHashtag, "Teams", "teams", (event?.teams?.length ?? 0) > 0],
             ]}
             bind:selectedTab
         >
@@ -164,6 +197,16 @@
 
             <TabContent name="matches">
                 <MatchTable matches={event.matches} {event} {focusedTeam} />
+            </TabContent>
+
+            <TabContent name="preview">
+                <Preview
+                    teams={previewTeams}
+                    {focusedTeam}
+                    eventName={event.name}
+                    eventCode={event.code}
+                    {season}
+                />
             </TabContent>
 
             <TabContent name="rankings">

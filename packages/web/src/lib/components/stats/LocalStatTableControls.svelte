@@ -98,22 +98,42 @@
     function assignRanks(data: StatData<T>[], sorter: NonRankStatColumn<T>, preFilter: boolean) {
         const field = preFilter ? "noFilterRank" : "filterRank";
 
+        let rankedCount = 0;
+        let lastRank = 0;
+        let lastValue: number | string | null = null;
+
         for (let i = 0; i < data.length; i++) {
-            if (i == 0) {
-                data[i][field] = i + 1;
-            } else {
-                let prev = data[i - 1];
-                let prevVal = sorter.getValueDistilled(prev);
-                let thisVal = sorter.getValueDistilled(data[i]);
-                data[i][field] = prevVal == thisVal ? prev[field] : i + 1;
+            let thisVal = sorter.getValueDistilled(data[i]);
+            if (thisVal == null) {
+                data[i][field] = 0;
+                continue;
             }
+
+            rankedCount++;
+
+            if (lastRank == 0) {
+                lastRank = 1;
+            } else if (lastValue != thisVal) {
+                lastRank = rankedCount;
+            }
+
+            data[i][field] = lastRank;
+            lastValue = thisVal;
         }
     }
 
     function statSortFn(sorter: NonRankStatColumn<T>, dir: SortDir): (a: T, b: T) => number {
-        return (a, b) =>
-            sortMixed(sorter.getNonRankValueDistilled(a), sorter.getNonRankValueDistilled(b)) *
-            (dir == SortDir.Asc ? 1 : -1);
+        return (a, b) => {
+            let av = sorter.getNonRankValueDistilled(a);
+            let bv = sorter.getNonRankValueDistilled(b);
+
+            if (av == null && bv == null) return 0;
+            if (av == null) return 1;
+            if (bv == null) return -1;
+
+            let res = sortMixed(av, bv);
+            return dir == SortDir.Asc ? res : -res;
+        };
     }
 
     function sortAndRank(

@@ -25,6 +25,10 @@ query EventPage($season: Int!, $code: String!) {
                 ...FullStats
             }
         }
+        previewStats {
+            teamNumber
+            npOpr
+        }
         awards {
             season
             eventCode
