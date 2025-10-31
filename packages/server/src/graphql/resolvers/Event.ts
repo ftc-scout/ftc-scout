@@ -9,10 +9,12 @@ import {
     DateTimeTy,
     DateTy,
     EventTypeOption,
+    FloatTy,
     IntTy,
     RegionOption,
     Season,
     StrTy,
+    DESCRIPTORS,
     fuzzySearch,
     getEventTypes,
     getRegionCodes,
@@ -33,6 +35,14 @@ import { DateTime } from "luxon";
 import { DATA_SOURCE } from "../../db/data-source";
 import { Brackets } from "typeorm";
 import { newMatchesKey, pubsub } from "./pubsub";
+
+const EventPreviewStatGQL = new GraphQLObjectType({
+    name: "EventPreviewStat",
+    fields: {
+        teamNumber: IntTy,
+        npOpr: nullTy(FloatTy),
+    },
+});
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Event",
@@ -176,6 +186,45 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                         : { eventSeason: e.season, eventCode: e.code },
                 singleSeasonScoreAwareMatchLoader
             ),
+        },
+        previewStats: {
+            type: list(nn(EventPreviewStatGQL)),
+            resolve: async (event) => {
+                let roster = await TeamEventParticipation[event.season].find({
+                    where: { season: event.season, eventCode: event.code },
+                    select: ["teamNumber"],
+                });
+                let teamNumbers = roster.map((r) => r.teamNumber);
+                if (!teamNumbers.length) return [];
+
+                let descriptor = DESCRIPTORS[event.season];
+                let totalColumn = descriptor.pensSubtract
+                    ? "opr_total_points"
+                    : "opr_total_points_np";
+
+                let rows = await DATA_SOURCE.createQueryBuilder(`tep_${event.season}`, "t")
+                    .leftJoin("event", "e", "e.season = t.season AND e.code = t.event_code")
+                    .select("team_number", "teamNumber")
+                    .addSelect(`max(${totalColumn})`, "npOpr")
+                    .where("team_number IN (:...teamNumbers)", { teamNumbers })
+                    .andWhere("NOT is_remote")
+                    .andWhere("has_stats")
+                    .andWhere("NOT e.modified_rules")
+                    .groupBy("team_number")
+                    .getRawMany();
+
+                let values = new Map<number, number | null>();
+                for (let row of rows) {
+                    let number = +row.teamNumber;
+                    let value = row.npOpr == null ? null : +row.npOpr;
+                    values.set(number, value);
+                }
+
+                return teamNumbers.map((teamNumber) => ({
+                    teamNumber,
+                    npOpr: values.get(teamNumber) ?? null,
+                }));
+            },
         },
     }),
 });
