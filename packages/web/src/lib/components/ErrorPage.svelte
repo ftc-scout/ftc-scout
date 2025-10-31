@@ -17,17 +17,18 @@
 <WidthProvider width="800px">
     <Card vis={false}>
         <div class="inner">
-            <h1>{computedStatus}</h1>
-
             {#if computedStatus == 404 && computedMessage == "Not Found"}
+                <a href="/teams/404"><h1>{computedStatus}</h1></a>
                 <p class="top">Not Found: {$page.url.pathname}</p>
                 <p class="bottom">
                     The page you are looking for doesn't exist. If we linked you here, reach out at
                     <a href="mailto:{EMAIL}">{EMAIL}</a>.
                 </p>
             {:else if computedStatus == 404}
+                <h1>{computedStatus}</h1>
                 <p class="top">{computedMessage}</p>
             {:else}
+                <h1>{computedStatus}</h1>
                 <p class="top">{computedMessage}</p>
                 <p class="bottom">
                     There appears to be an error. If the issue persists, reach out at
@@ -41,6 +42,11 @@
 </WidthProvider>
 
 <style>
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
     h1 {
         font-weight: 600;
         font-size: calc(var(--xl-font-size) * 5);
