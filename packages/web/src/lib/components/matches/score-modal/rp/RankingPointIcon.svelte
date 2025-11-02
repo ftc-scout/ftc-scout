@@ -1,14 +1,23 @@
 <script lang="ts">
     import { faRobot } from "@fortawesome/free-solid-svg-icons";
     import { Alliance } from "@ftc-scout/common";
+    import type { RankingPointType } from "@ftc-scout/common";
     import Fa from "svelte-fa";
 
-    export let id: string;
+    export let rp: RankingPointType;
     export let active: boolean;
     export let alliance: Alliance;
+
+    $: id = rp.id;
+    $: name = rp.name;
 </script>
 
-<span class="rpBadge {active ? (alliance == Alliance.Red ? 'red' : 'blue') : 'inactive'}">
+<!-- HTML for this section taken from FTC Event Web. For adding future years, simply add a new branch in the conditional and copy over from FTC Event Web.  -->
+
+<span
+    class="rpBadge {active ? (alliance == Alliance.Red ? 'red' : 'blue') : 'inactive'}"
+    title={alliance + " Alliance " + name + ": " + (active ? "Achieved" : "Not Achieved")}
+>
     {#if id == "goalRp"}
         <i
             class="fa-solid"
@@ -52,6 +61,7 @@ color: #fff;
         align-items: center;
         justify-content: center;
         color: #fff;
+        margin: 0 2px;
     }
 
     .fa-solid {
