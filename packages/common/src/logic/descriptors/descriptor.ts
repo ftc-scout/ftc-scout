@@ -54,6 +54,8 @@ export class Descriptor {
     pensSubtract: boolean;
     rankings: RankingsMethod;
 
+    rankingPoints?: RankingPointType[];
+
     firstDate: Date;
     lastDate: Date;
     kickoff: Date;
@@ -77,6 +79,7 @@ export class Descriptor {
         hasEndgame: boolean;
         pensSubtract: boolean;
         rankings: RankingsMethod;
+        rankingPoints?: RankingPointType[];
         firstDate: Date;
         lastDate: Date;
         kickoff: Date;
@@ -88,6 +91,9 @@ export class Descriptor {
         this.hasEndgame = opts.hasEndgame;
         this.pensSubtract = opts.pensSubtract;
         this.rankings = opts.rankings;
+        if (!!opts.rankingPoints) {
+            this.rankingPoints = opts.rankingPoints;
+        }
         this.firstDate = opts.firstDate;
         this.lastDate = opts.lastDate;
         this.kickoff = opts.kickoff;
@@ -171,6 +177,11 @@ export type DescriptorDataType = {
         enumName?: string;
     };
     gql: GraphQLOutputType;
+};
+
+export type RankingPointType = {
+    id: string;
+    name: string;
 };
 
 export class MatchScoreComponent {

@@ -1,13 +1,14 @@
 <script lang="ts">
     import { faRobot } from "@fortawesome/free-solid-svg-icons";
+    import { Alliance } from "@ftc-scout/common";
     import Fa from "svelte-fa";
 
     export let id: string;
     export let active: boolean;
-    export let team: "red" | "blue";
+    export let alliance: Alliance;
 </script>
 
-<span class="rpBadge {active ? (team == 'red' ? 'red' : 'blue') : 'inactive'}">
+<span class="rpBadge {active ? (alliance == Alliance.Red ? 'red' : 'blue') : 'inactive'}">
     {#if id == "goalRp"}
         <i
             class="fa-solid"
