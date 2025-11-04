@@ -1,14 +1,16 @@
 <script lang="ts">
-    import { DESCRIPTORS, Season } from "@ftc-scout/common";
+    import { DESCRIPTORS, Season, TournamentLevel } from "@ftc-scout/common";
     import type { TradScoresTy } from "../MatchScore.svelte";
     import TradScoresHeader from "./TradScoresHeader.svelte";
     import TradScoreLine from "./TradScoreLine.svelte";
     import FieldVis from "../vis/FieldVis.svelte";
     import type { SimpleTeamMatchParticipation } from "../vis/2022/HoverInfo.svelte";
+    import RankingPoints from "./rp/RankingPoints.svelte";
 
     export let scores: TradScoresTy;
     export let teams: SimpleTeamMatchParticipation[];
     export let matchDescription: string;
+    export let level: TournamentLevel | undefined;
     $: season = scores.season as Season;
 </script>
 
@@ -25,6 +27,10 @@
         {/each}
     </tbody>
 </table>
+
+{#if level == "Quals"}
+    <RankingPoints {scores} />
+{/if}
 
 <FieldVis {scores} {matchDescription} {teams} />
 
