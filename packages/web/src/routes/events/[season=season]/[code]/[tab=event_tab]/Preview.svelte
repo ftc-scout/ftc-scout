@@ -1,74 +1,61 @@
 <script lang="ts">
     import LocalStatTableControls from "$lib/components/stats/LocalStatTableControls.svelte";
     import {
-        Color,
-        NonRankStatColumn,
+        DESCRIPTORS,
         SortDir,
         StatSet,
-        StatSetSection,
-        StatType,
+        getTepStatSet,
+        NonRankStatColumn,
         type Season,
     } from "@ftc-scout/common";
+    import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
 
-    type PreviewTeam = {
-        teamNumber: number;
-        name: string;
-        quickOpr: number | null;
-    };
+    type PreviewTeam =
+        NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
+            quickOpr: number | null;
+        };
 
     export let teams: PreviewTeam[];
     export let focusedTeam: number | null;
     export let eventName: string;
     export let eventCode: string;
     export let season: Season;
+    export let remote: boolean;
 
-    const teamStat = new NonRankStatColumn<PreviewTeam>({
-        id: "team",
-        columnName: "Team",
-        dialogName: "Team",
-        titleName: "Team",
-        sqlExpr: "team_number",
-        color: Color.White,
-        ty: StatType.Team,
-        getNonRankValue: (team) => ({
-            ty: "team",
-            number: team.teamNumber,
-            name: team.name,
-        }),
-    });
+    $: baseStatSet = getTepStatSet(season, remote) as StatSet<PreviewTeam>;
 
-    const oprStat = new NonRankStatColumn<PreviewTeam>({
-        id: "quickOpr",
-        columnName: "np OPR",
-        dialogName: "np OPR",
-        titleName: "Season-Best np OPR",
-        sqlExpr: "quick_opr",
-        color: Color.Purple,
-        ty: StatType.Float,
-        getNonRankValue: (team) =>
-            team.quickOpr == null ? null : { ty: "float", val: team.quickOpr },
-    });
+    function wrapColumn(column: NonRankStatColumn<any>): NonRankStatColumn<PreviewTeam> {
+        return new NonRankStatColumn<PreviewTeam>({
+            id: column.id,
+            columnName: column.columnName,
+            dialogName: column.dialogName,
+            titleName: column.titleName,
+            sqlExpr: column.sqlExpr,
+            color: column.color,
+            ty: column.ty,
+            getNonRankValue: (team) => {
+                try {
+                    return column.getNonRankValue(team as any);
+                } catch (err) {
+                    return null;
+                }
+            },
+        });
+    }
 
-    const previewStats = new StatSet<PreviewTeam>(
-        "eventPreview",
-        [teamStat, oprStat],
-        [
-            new StatSetSection(
-                "Season Preview",
-                [
-                    { val: { id: "team", name: "Team" }, children: [] },
-                    { val: { id: "quickOpr", name: "np OPR" }, children: [] },
-                ],
-                [
-                    { id: "team", name: "Team", color: Color.White, description: null },
-                    { id: "quickOpr", name: "np OPR", color: Color.Purple, description: null },
-                ]
-            ),
-        ]
+    $: statSet = new StatSet<PreviewTeam>(
+        baseStatSet.id,
+        baseStatSet.allStats.map(wrapColumn),
+        baseStatSet.sections
     );
 
-    const defaultStats = ["team", "quickOpr"];
-    const defaultSort = { id: "quickOpr", dir: SortDir.Desc };
+    let defaultStats: string[] = ["team"];
+    let defaultSort = { id: "team", dir: SortDir.Desc };
+    $: descriptor = DESCRIPTORS[season];
+    $: totalPointsKey = descriptor.pensSubtract || remote ? "totalPoints" : "totalPointsNp";
+    $: defaultStatId = `${totalPointsKey}Opr`;
+    $: defaultStats = ["team", defaultStatId];
+    $: defaultSort = { id: defaultStatId, dir: SortDir.Desc };
 
     $: safeEventName = eventName ?? "Event";
     $: underscoreEventName = safeEventName.replace(/\s+/g, "_");
@@ -81,7 +68,7 @@
 
 <LocalStatTableControls
     data={[...teams]}
-    stats={previewStats}
+    stats={statSet}
     {focusedTeam}
     {defaultStats}
     {defaultSort}
