@@ -35,12 +35,15 @@ import { DateTime } from "luxon";
 import { DATA_SOURCE } from "../../db/data-source";
 import { Brackets } from "typeorm";
 import { newMatchesKey, pubsub } from "./pubsub";
+import { TepStatsUnionGQL } from "../dyn/dyn-types-schema";
+import { addTypename } from "../dyn/tep";
 
 const EventPreviewStatGQL = new GraphQLObjectType({
     name: "EventPreviewStat",
     fields: {
         teamNumber: IntTy,
         npOpr: nullTy(FloatTy),
+        stats: { type: TepStatsUnionGQL },
     },
 });
 
@@ -198,32 +201,49 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                 if (!teamNumbers.length) return [];
 
                 let descriptor = DESCRIPTORS[event.season];
-                let totalColumn = descriptor.pensSubtract
-                    ? "opr_total_points"
-                    : "opr_total_points_np";
+                let getQuickOpr = (t: TeamEventParticipation) => {
+                    let val = descriptor.pensSubtract
+                        ? t.opr?.totalPoints ?? null
+                        : t.opr?.totalPointsNp ?? t.opr?.totalPoints ?? null;
+                    return val == null ? null : +val;
+                };
 
-                let rows = await DATA_SOURCE.createQueryBuilder(`tep_${event.season}`, "t")
-                    .leftJoin("event", "e", "e.season = t.season AND e.code = t.event_code")
-                    .select("team_number", "teamNumber")
-                    .addSelect(`max(${totalColumn})`, "npOpr")
-                    .where("team_number IN (:...teamNumbers)", { teamNumbers })
-                    .andWhere("NOT is_remote")
-                    .andWhere("has_stats")
+                let candidateStats = await TeamEventParticipation[event.season]
+                    .createQueryBuilder("t")
+                    .innerJoin(Event, "e", "e.season = t.season AND e.code = t.eventCode")
+                    .where("t.teamNumber IN (:...teamNumbers)", { teamNumbers })
+                    .andWhere("NOT t.isRemote")
+                    .andWhere("t.hasStats")
                     .andWhere("NOT e.modified_rules")
-                    .groupBy("team_number")
-                    .getRawMany();
+                    .getMany();
 
-                let values = new Map<number, number | null>();
-                for (let row of rows) {
-                    let number = +row.teamNumber;
-                    let value = row.npOpr == null ? null : +row.npOpr;
-                    values.set(number, value);
+                let bestStats = new Map<
+                    number,
+                    { row: TeamEventParticipation; quick: number | null }
+                >();
+                for (let row of candidateStats) {
+                    let quick = getQuickOpr(row);
+                    let existing = bestStats.get(row.teamNumber);
+                    if (!existing) {
+                        bestStats.set(row.teamNumber, { row, quick });
+                        continue;
+                    }
+
+                    let existingValue = existing.quick ?? Number.NEGATIVE_INFINITY;
+                    let currentValue = quick ?? Number.NEGATIVE_INFINITY;
+                    if (currentValue > existingValue) {
+                        bestStats.set(row.teamNumber, { row, quick });
+                    }
                 }
 
-                return teamNumbers.map((teamNumber) => ({
-                    teamNumber,
-                    npOpr: values.get(teamNumber) ?? null,
-                }));
+                return teamNumbers.map((teamNumber) => {
+                    let entry = bestStats.get(teamNumber);
+                    return {
+                        teamNumber,
+                        npOpr: entry?.quick ?? null,
+                        stats: entry ? addTypename(entry.row) : null,
+                    };
+                });
             },
         },
     }),

@@ -42,7 +42,10 @@
     import { unsubscribe, watchEvent } from "./watchEvent";
     import { getClient } from "../../../../../lib/graphql/client";
     import { getDataSync } from "../../../../../lib/graphql/getData";
-    import { EventPageDocument } from "../../../../../lib/graphql/generated/graphql-operations";
+    import {
+        EventPageDocument,
+        type EventPageQuery,
+    } from "../../../../../lib/graphql/generated/graphql-operations";
 
     export let data;
 
@@ -53,28 +56,30 @@
 
     $: stats = event?.teams?.filter((t) => notEmpty(t.stats)) ?? [];
     $: insights = event?.matches?.flatMap(getMatchScores) ?? [];
-    type PreviewStat = { teamNumber: number; npOpr: number | null };
+    type PreviewStat = {
+        teamNumber: number;
+        npOpr: number | null;
+        stats: NonNullable<EventPageQuery["eventByCode"]>["teams"][number]["stats"] | null;
+    };
+    type PreviewTeam =
+        NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
+            quickOpr: number | null;
+        };
     $: previewStats = ((event as any)?.previewStats ?? []) as PreviewStat[];
-    $: previewStatMap = new Map<number, number | null>(
-        previewStats.map((s) => [s.teamNumber, s.npOpr])
-    );
-    $: previewTeams =
-        event?.teams
-            ?.map((team) => {
-                let quickOpr = previewStatMap.get(team.teamNumber) ?? null;
-                return {
-                    teamNumber: team.teamNumber,
-                    name: team.team.name,
-                    quickOpr,
-                };
-            })
-            .sort((a, b) => {
-                if (a.quickOpr == null && b.quickOpr == null) return a.teamNumber - b.teamNumber;
-                if (a.quickOpr == null) return 1;
-                if (b.quickOpr == null) return -1;
-                let diff = b.quickOpr - a.quickOpr;
-                return diff == 0 ? a.teamNumber - b.teamNumber : diff;
-            }) ?? [];
+    $: previewStatMap = new Map<number, PreviewStat>(previewStats.map((s) => [s.teamNumber, s]));
+    $: previewTeams = (event?.teams ?? [])
+        .map((team) => ({
+            ...team,
+            quickOpr: previewStatMap.get(team.teamNumber)?.npOpr ?? null,
+            stats: previewStatMap.get(team.teamNumber)?.stats ?? team.stats,
+        }))
+        .sort((a, b) => {
+            if (a.quickOpr == null && b.quickOpr == null) return a.teamNumber - b.teamNumber;
+            if (a.quickOpr == null) return 1;
+            if (b.quickOpr == null) return -1;
+            let diff = (b.quickOpr ?? 0) - (a.quickOpr ?? 0);
+            return diff == 0 ? a.teamNumber - b.teamNumber : diff;
+        }) as PreviewTeam[];
 
     $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
 
@@ -206,6 +211,7 @@
                     eventName={event.name}
                     eventCode={event.code}
                     {season}
+                    remote={event.remote}
                 />
             </TabContent>
 
