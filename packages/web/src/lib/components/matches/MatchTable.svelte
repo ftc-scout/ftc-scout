@@ -33,6 +33,7 @@
         remote: boolean;
     };
     export let focusedTeam: number | null = null;
+    export let showNonPenaltyScores = false;
 
     $: timeZone = event.timezone;
     $: remote = event.remote;
@@ -118,6 +119,7 @@
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
                         {teamCount}
+                        {showNonPenaltyScores}
                     />
                 {/each}
                 {#if finals.length}
@@ -131,6 +133,7 @@
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
+                        {showNonPenaltyScores}
                     />
                 {/each}
                 {#if semis.length}
@@ -144,6 +147,7 @@
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
+                        {showNonPenaltyScores}
                     />
                 {/each}
                 {#if quals.length && (finals.length || semis.length || doubleElim.length)}
@@ -157,6 +161,7 @@
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
+                        {showNonPenaltyScores}
                     />
                 {/each}
             {/if}

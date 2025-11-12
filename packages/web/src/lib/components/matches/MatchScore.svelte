@@ -41,6 +41,7 @@
 
     export let match: FullMatchFragment;
     export let timeZone: string;
+    export let showNonPenaltyScores = false;
 
     $: winner = computeWinner(match.scores);
 
@@ -62,6 +63,14 @@
     $: tip = matchTimeTip(match, timeZone, $tippyTheme);
 
     let show: ShowMatchFn = getContext(SHOW_MATCH_SCORE);
+
+    function scoreValue(score: any): number {
+        if (!score || !("totalPoints" in score)) return 0;
+        if (showNonPenaltyScores && "totalPointsNp" in score && score.totalPointsNp != null) {
+            return score.totalPointsNp;
+        }
+        return score.totalPoints;
+    }
 </script>
 
 <td
@@ -92,11 +101,11 @@
                     </div>
                 {/if}
 
-                {match.scores.red.totalPoints}
+                {scoreValue(match.scores.red)}
             </div>
             <div class="minus">-</div>
             <div class="right" class:winner={winner == Alliance.Blue} class:tie={winner == "Tie"}>
-                {match.scores.blue.totalPoints}
+                {scoreValue(match.scores.blue)}
 
                 {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
                     <div class="dots blue">
@@ -107,7 +116,7 @@
                 {/if}
             </div>
         {:else}
-            <b>{match.scores.totalPoints}</b>
+            <b>{scoreValue(match.scores)}</b>
         {/if}
     </div>
 </td>

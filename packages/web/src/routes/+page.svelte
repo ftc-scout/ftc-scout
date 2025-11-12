@@ -97,7 +97,7 @@
 
             {#if wr}
                 <a href="/events/{wr.event.season}/{wr.event.code}/matches">{wr.event.name}</a>
-                <MatchTable matches={[wr]} event={wr.event} />
+                <MatchTable matches={[wr]} event={wr.event} showNonPenaltyScores />
             {:else}
                 <SkeletonRow header card={false} rows={2} />
             {/if}
