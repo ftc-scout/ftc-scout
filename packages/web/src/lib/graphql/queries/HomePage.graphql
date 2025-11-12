@@ -24,4 +24,16 @@ query HomePage($season: Int!) {
             name
         }
     }
+    tradWorldRecordWithPenalties(season: $season) {
+        ...FullMatch
+        event {
+            season
+            code
+            started
+            published
+            timezone
+            remote
+            name
+        }
+    }
 }

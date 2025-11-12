@@ -22,9 +22,11 @@
     $: events = $homeStore?.data?.eventsOnDate;
 
     $: wr = $homeStore?.data.tradWorldRecord;
+    $: wrWithPens = $homeStore?.data.tradWorldRecordWithPenalties;
 
     let tippy = createTippy({});
     $: np = DESCRIPTORS[CURRENT_SEASON].pensSubtract ? "" : "no penalty ";
+    const penaltiesTip = "Top score in a FIRST sponsored event (penalties included).";
 </script>
 
 <Head title="FTCScout" />
@@ -98,6 +100,31 @@
             {#if wr}
                 <a href="/events/{wr.event.season}/{wr.event.code}/matches">{wr.event.name}</a>
                 <MatchTable matches={[wr]} event={wr.event} showNonPenaltyScores />
+            {:else}
+                <SkeletonRow header card={false} rows={2} />
+            {/if}
+        </div>
+
+        <div class="wr">
+            <h2>
+                World Record (with penalties)
+                <span
+                    class="help"
+                    use:tippy={{
+                        content: penaltiesTip,
+                        theme: $tippyTheme,
+                    }}
+                >
+                    <Fa icon={faQuestionCircle} />
+                </span>
+            </h2>
+            <hr />
+
+            {#if wrWithPens}
+                <a href="/events/{wrWithPens.event.season}/{wrWithPens.event.code}/matches">
+                    {wrWithPens.event.name}
+                </a>
+                <MatchTable matches={[wrWithPens]} event={wrWithPens.event} />
             {:else}
                 <SkeletonRow header card={false} rows={2} />
             {/if}
@@ -278,6 +305,10 @@
         font-weight: bold;
         display: block;
         margin-bottom: var(--md-gap);
+    }
+
+    .wr + .wr {
+        margin-top: var(--vl-gap);
     }
 
     .help {
