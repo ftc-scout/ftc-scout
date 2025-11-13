@@ -16,6 +16,7 @@
         faHashtag,
         faLink,
         faLocationDot,
+        faRankingStar,
         faMedal,
         faTrophy,
         faVideo,
@@ -61,10 +62,10 @@
         npOpr: number | null;
         stats: NonNullable<EventPageQuery["eventByCode"]>["teams"][number]["stats"] | null;
     };
-    type PreviewTeam =
-        NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
-            quickOpr: number | null;
-        };
+    type PreviewTeam = NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
+        quickOpr: number | null;
+    };
+    type LeagueRankingGroup = NonNullable<EventPageQuery["eventByCode"]>["leagueRankings"][number];
     $: previewStats = ((event as any)?.previewStats ?? []) as PreviewStat[];
     $: previewStatMap = new Map<number, PreviewStat>(previewStats.map((s) => [s.teamNumber, s]));
     $: previewTeams = (event?.teams ?? [])
@@ -82,6 +83,18 @@
         }) as PreviewTeam[];
 
     $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
+    $: leagueRankingGroups = (event?.leagueRankings ?? []) as LeagueRankingGroup[];
+    $: leagueRankingRows = leagueRankingGroups
+        .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
+        .filter(notEmpty);
+    $: leagueRankingSaveId =
+        event && leagueRankingGroups.length
+            ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
+                  leagueRankingGroups[0]?.league.code ?? "parent"
+              }`
+            : null;
+    $: isLeagueTournament = event?.type === "LeagueTournament";
+    $: showLeagueRankingsTab = !!isLeagueTournament;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
@@ -183,6 +196,7 @@
                 ],
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
+                [faRankingStar, "League Rankings", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
                 [faHashtag, "Teams", "teams", (event?.teams?.length ?? 0) > 0],
@@ -223,6 +237,24 @@
                     data={stats}
                     {focusedTeam}
                 />
+            </TabContent>
+
+            <TabContent name="league-rankings">
+                {#if leagueRankingRows.length}
+                    <Rankings
+                        {season}
+                        remote={event.remote}
+                        eventName={event.name}
+                        data={leagueRankingRows}
+                        {focusedTeam}
+                        saveIdOverride={leagueRankingSaveId}
+                    />
+                {:else}
+                    <div class="empty">
+                        <b>No league rankings have been published yet.</b>
+                        <p>Please check back later.</p>
+                    </div>
+                {/if}
             </TabContent>
 
             <TabContent name="insights">
