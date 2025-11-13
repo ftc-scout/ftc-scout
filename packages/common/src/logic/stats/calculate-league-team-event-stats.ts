@@ -291,84 +291,153 @@ function calculateOprs(
     }
 }
 
+type RankSums = {
+    rp: number;
+    tb1: number;
+    tb2: number;
+};
+
 function calculateRanks(
     teps: Record<number, Tep>,
     matches: LeagueFrontendMatch[],
     descriptor: Descriptor,
     include: IncludePredicate
 ) {
+    let rankSums: Record<number, RankSums> = {};
+    for (let team of Object.keys(teps)) {
+        rankSums[+team] = { rp: 0, tb1: 0, tb2: 0 };
+    }
+
+    const recordRankSum = (stats: Tep, field: keyof RankSums, matchesOverride?: number) => {
+        let matchesUsed = matchesOverride ?? stats.qualMatchesPlayed ?? 0;
+        let value: number | null | undefined;
+        switch (field) {
+            case "rp":
+                value = stats.rp;
+                break;
+            case "tb1":
+                value = stats.tb1;
+                break;
+            case "tb2":
+                value = stats.tb2;
+                break;
+        }
+        let average = Number.isFinite(value ?? NaN) ? value ?? 0 : 0;
+        rankSums[stats.teamNumber][field] = matchesUsed == 0 ? 0 : average * matchesUsed;
+    };
+
+    const setTieBreakers = (
+        stats: Tep,
+        tb1: number | null | undefined,
+        tb2: number | null | undefined
+    ) => {
+        stats.tb1 = tb1 ?? 0;
+        stats.tb2 = tb2 ?? 0;
+        recordRankSum(stats, "tb1");
+        recordRankSum(stats, "tb2");
+    };
+
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
 
+        let matchesUsed = stats.qualMatchesPlayed ?? 0;
         switch (descriptor.rankings.rp) {
-            case "TotalPoints":
-                stats.rp = stats.tot.totalPoints;
+            case "TotalPoints": {
+                let total = stats.tot.totalPoints ?? 0;
+                stats.rp = matchesUsed == 0 ? 0 : total / matchesUsed;
                 break;
+            }
             case "Record":
-                stats.rp =
-                    stats.qualMatchesPlayed == 0
-                        ? 0
-                        : (2 * stats.wins + stats.ties) / stats.qualMatchesPlayed;
+                stats.rp = matchesUsed == 0 ? 0 : (2 * stats.wins + stats.ties) / matchesUsed;
                 break;
-            case "DecodeRP":
-                stats.rp =
-                    stats.qualMatchesPlayed == 0
-                        ? 0
-                        : (3 * stats.wins +
-                              stats.ties +
-                              stats.tot.movementRp +
-                              stats.tot.goalRp +
-                              stats.tot.patternRp) /
-                          stats.qualMatchesPlayed;
+            case "DecodeRP": {
+                let total =
+                    3 * stats.wins +
+                    stats.ties +
+                    (stats.tot.movementRp ?? 0) +
+                    (stats.tot.goalRp ?? 0) +
+                    (stats.tot.patternRp ?? 0);
+                stats.rp = matchesUsed == 0 ? 0 : total / matchesUsed;
                 break;
+            }
         }
+
+        recordRankSum(stats, "rp", matchesUsed);
     }
+
+    let losingScoreTotals: LosingScoreResult | null = null;
+    const applyLosingScore = (stats: Tep) => {
+        if (!losingScoreTotals) {
+            losingScoreTotals = calcLosingScoreTb(teps, matches, include);
+        }
+        let totals = losingScoreTotals[stats.teamNumber];
+        let sum = totals?.sum ?? 0;
+        let denom = totals?.denom ?? 0;
+        stats.tb1 = denom == 0 ? 0 : sum / denom;
+        stats.tb2 = 0;
+        rankSums[stats.teamNumber].tb1 = sum;
+        rankSums[stats.teamNumber].tb2 = 0;
+    };
 
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
 
         switch (descriptor.rankings.tb) {
-            case "AutoEndgameTot":
-                stats.tb1 = stats.tot.autoPoints;
-                stats.tb2 = stats.tot.egPoints;
+            case "AutoEndgameTot": {
+                setTieBreakers(stats, stats.avg.autoPoints, stats.avg.egPoints);
                 break;
+            }
+            case "AutoEndgameAvg": {
+                setTieBreakers(stats, stats.avg.autoPoints, stats.avg.egPoints);
+                break;
+            }
             case "AutoAscentAvg":
-                stats.tb1 = stats.avg.autoPoints;
-                stats.tb2 = stats.avg.dcParkPoints;
-                break;
-            case "AutoEndgameAvg":
-                stats.tb1 = stats.avg.autoPoints;
-                stats.tb2 = stats.avg.egPoints;
-                break;
-            case "LosingScore":
-                calcLosingScoreTb(teps, matches, include);
+                setTieBreakers(stats, stats.avg.autoPoints, stats.avg.dcParkPoints);
                 break;
             case "AvgNpBase":
-                stats.tb1 = stats.avg.totalPointsNp;
-                stats.tb2 = stats.avg.dcBasePoints;
+                setTieBreakers(stats, stats.avg.totalPointsNp, stats.avg.dcBasePoints);
+                break;
+            case "LosingScore":
+                applyLosingScore(stats);
                 break;
         }
     }
 
     let ranked = Object.entries(teps)
         .filter(([_, s]) => s.hasStats)
-        .sort(([_1, s1], [_2, s2]) => s2.tb2 - s1.tb2)
-        .sort(([_1, s1], [_2, s2]) => s2.tb1 - s1.tb1)
-        .sort(([_1, s1], [_2, s2]) => s2.rp - s1.rp);
+        .sort(([teamA], [teamB]) => compareRank(+teamA, +teamB, rankSums));
 
     for (let rank = 0; rank < ranked.length; rank++) {
         teps[+ranked[rank][0]].rank = rank + 1;
     }
 }
 
+function compareRank(teamA: number, teamB: number, rankSums: Record<number, RankSums>) {
+    let a = rankSums[teamA];
+    let b = rankSums[teamB];
+
+    let rpDiff = b.rp / 10 - a.rp / 10;
+    if (rpDiff !== 0) return rpDiff;
+
+    let tb1Diff = b.tb1 / 10 - a.tb1 / 10;
+    if (tb1Diff !== 0) return tb1Diff;
+
+    let tb2Diff = b.tb2 / 10 - a.tb2 / 10;
+    if (tb2Diff !== 0) return tb2Diff;
+
+    return 0;
+}
+
+type LosingScoreResult = Record<number, { sum: number; denom: number }>;
+
 function calcLosingScoreTb(
     teps: Record<number, Tep>,
     matches: LeagueFrontendMatch[],
     include: IncludePredicate
-) {
-    let tbs = {} as Record<number, number[]>;
+): LosingScoreResult {
+    let scoresByTeam = {} as Record<number, number[]>;
     for (let team of Object.keys(teps)) {
-        tbs[+team] = [];
+        scoresByTeam[+team] = [];
     }
 
     for (let m of matches) {
@@ -379,12 +448,13 @@ function calcLosingScoreTb(
             if (t.surrogate) continue;
             if (!include(t.teamNumber, m)) continue;
 
-            tbs[t.teamNumber].push(t.dq ? 0 : lowestScore);
+            scoresByTeam[t.teamNumber].push(t.dq ? 0 : lowestScore);
         }
     }
 
+    let results: LosingScoreResult = {};
     for (let team of Object.keys(teps)) {
-        let scores = tbs[+team].sort((a, b) => b - a);
+        let scores = scoresByTeam[+team].sort((a, b) => b - a);
 
         let denom: number;
         if (scores.length == 5 || scores.length == 6) {
@@ -397,8 +467,8 @@ function calcLosingScoreTb(
 
         let usable = scores.slice(0, Math.min(scores.length, denom));
         let sum = usable.reduce((a, b) => a + b, 0);
-
-        teps[+team].tb1 = denom == 0 ? 0 : sum / denom;
-        teps[+team].tb2 = 0;
+        results[+team] = { sum, denom };
     }
+
+    return results;
 }

@@ -129,6 +129,32 @@ export async function recomputeLeagueRankings(
         }
     );
 
+    let allMatchStats = calculateLeagueTeamEventStats(
+        season,
+        leagueCode,
+        league.remote,
+        frontendMatches,
+        teamNumbers,
+        {
+            includeMatch: (_teamNumber, _match) => true,
+        }
+    );
+
+    let totalsByTeam = new Map(allMatchStats.map((s) => [s.teamNumber, s]));
+    stats = stats.map((s) => {
+        let totals = totalsByTeam.get(s.teamNumber);
+        if (totals) {
+            s.qualMatchesPlayed = totals.qualMatchesPlayed;
+            s.tot = totals.tot;
+            s.avg = totals.avg;
+            s.min = totals.min;
+            s.max = totals.max;
+            s.dev = totals.dev;
+            s.opr = totals.opr;
+        }
+        return s;
+    });
+
     let repo = DATA_SOURCE.getRepository(LeagueRankingSchemas[season]);
     await repo
         .createQueryBuilder()

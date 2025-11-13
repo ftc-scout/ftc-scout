@@ -25,6 +25,7 @@
         "rankingScore",
         "tb1",
         "played",
+        ...(remote ? [] : ["eventRecord"]),
         totalPoints + "Avg",
         ...(remote ? [] : [totalPoints + "Opr"]),
         totalPoints + "Max",
