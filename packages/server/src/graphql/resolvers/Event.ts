@@ -199,46 +199,34 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             resolve: async (event) => {
                 if (!event.leagueCode || event.type != EventType.LeagueTournament) return [];
 
-                let childLeagues = await League.find({
-                    where: { season: event.season, parentLeagueCode: event.leagueCode },
-                    order: { name: "ASC" },
-                });
-                if (!childLeagues.length) {
-                    let parentWhere: FindOptionsWhere<League> = {
-                        season: event.season,
-                        code: event.leagueCode,
-                    };
-                    if (event.regionCode) {
-                        parentWhere.regionCode = event.regionCode;
-                    }
-                    let parent = await League.findOne({ where: parentWhere });
-                    if (parent) childLeagues = [parent];
-                }
-                if (!childLeagues.length) return [];
+                let parentWhere: FindOptionsWhere<League> = {
+                    season: event.season,
+                    code: event.leagueCode,
+                };
+                if (event.regionCode) parentWhere.regionCode = event.regionCode;
+                let parentLeague = await League.findOne({ where: parentWhere });
+                if (!parentLeague) return [];
 
                 let repo = LeagueRanking[event.season as Season];
                 if (!repo) {
-                    return childLeagues.map((league) => ({ league, teams: [] }));
+                    return [{ league: parentLeague, teams: [] }];
                 }
 
-                let groups = [];
-                for (let league of childLeagues) {
-                    if (!league.regionCode) {
-                        groups.push({ league, teams: [] });
-                        continue;
-                    }
-                    let rows = await repo.find({
-                        where: {
-                            season: event.season as Season,
-                            leagueCode: league.code,
-                            regionCode: league.regionCode,
-                        },
-                        order: { rank: "ASC" },
-                    });
-                    groups.push({ league, teams: rows });
+                let regionCode = parentLeague.regionCode ?? event.regionCode ?? null;
+                if (!regionCode) {
+                    return [{ league: parentLeague, teams: [] }];
                 }
 
-                return groups;
+                let rows = await repo.find({
+                    where: {
+                        season: event.season as Season,
+                        leagueCode: parentLeague.code,
+                        regionCode,
+                    },
+                    order: { rank: "ASC" },
+                });
+
+                return [{ league: parentLeague, teams: rows }];
             },
         },
         previewStats: {
