@@ -131,6 +131,11 @@ function calculateRecords(matches: FrontendMatch[], teps: Record<number, Tep>) {
             let r = teps[t.teamNumber];
             r.qualMatchesPlayed++;
             r.hasStats = true;
+            if (t.dq) {
+                r.dqs++;
+                r.losses++;
+                continue;
+            }
             if (t.alliance == winningAlliance) {
                 r.wins++;
             } else if (winningAlliance == null) {
@@ -138,7 +143,6 @@ function calculateRecords(matches: FrontendMatch[], teps: Record<number, Tep>) {
             } else {
                 r.losses++;
             }
-            if (t.dq) r.dqs++;
         }
     }
 }
@@ -193,7 +197,7 @@ function calculateGroupStats(
             for (let c of descriptor.tepColumns()) {
                 if (c.tradOnly && remote) continue;
 
-                dataPoints[t.teamNumber][c.apiName].push(c.make(s, t.station));
+                dataPoints[t.teamNumber][c.apiName].push(t.dq ? 0 : c.make(s, t.station));
             }
         }
     }
@@ -328,20 +332,17 @@ function calcLosingScoreTb(teps: Record<number, Tep>, matches: FrontendMatch[]) 
     }
 
     for (let m of matches) {
-        // TODO: this will be wrong once dq = 0 is implemented
         let lowestScore = Math.min(m.scores!.red.totalPointsNp, m.scores!.blue.totalPointsNp);
 
         for (let t of m.teams) {
             if (t.surrogate) continue;
 
-            tbs[t.teamNumber].push(t.dq ? -1 : lowestScore);
+            tbs[t.teamNumber].push(t.dq ? 0 : lowestScore);
         }
     }
 
     for (let team of Object.keys(teps)) {
-        let scores = tbs[+team];
-        let dqs = scores.filter((s) => s == -1).length;
-        let realScores = scores.filter((s) => s != -1).sort((a, b) => b - a); // Sort desc
+        let scores = tbs[+team].sort((a, b) => b - a);
 
         let denom: number;
         if (scores.length == 5 || scores.length == 6) {
@@ -351,10 +352,11 @@ function calcLosingScoreTb(teps: Record<number, Tep>, matches: FrontendMatch[]) 
         } else {
             denom = scores.length;
         }
-        let taken = Math.max(0, denom - dqs);
 
-        teps[+team].tb1 =
-            denom == 0 ? 0 : realScores.slice(0, taken).reduce((a, b) => a + b, 0) / denom;
+        let usable = scores.slice(0, Math.min(scores.length, denom));
+        let sum = usable.reduce((a, b) => a + b, 0);
+
+        teps[+team].tb1 = denom == 0 ? 0 : sum / denom;
         teps[+team].tb2 = 0;
     }
 }
