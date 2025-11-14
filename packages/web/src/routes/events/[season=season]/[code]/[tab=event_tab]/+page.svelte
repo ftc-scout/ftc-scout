@@ -83,6 +83,16 @@
         }) as PreviewTeam[];
 
     $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
+    $: eventHasMatches = (event?.matches?.length ?? 0) > 0;
+    $: scheduledEventDate = event?.end ?? event?.start ?? null;
+    $: eventHasPassedScheduledDate = scheduledEventDate
+        ? Date.now() > new Date(scheduledEventDate).getTime()
+        : false;
+    $: shouldShowPreviewTab =
+        (event?.teams?.length ?? 0) > 0 &&
+        hasPreviewData &&
+        !eventHasMatches &&
+        !eventHasPassedScheduledDate;
     $: leagueRankingGroups = (event?.leagueRankings ?? []) as LeagueRankingGroup[];
     $: leagueRankingRows = leagueRankingGroups
         .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
@@ -188,12 +198,7 @@
 
         <TabbedCard
             tabs={[
-                [
-                    faChartLine,
-                    "Preview",
-                    "preview",
-                    (event?.teams?.length ?? 0) > 0 && !event?.started && hasPreviewData,
-                ],
+                [faChartLine, "Preview", "preview", shouldShowPreviewTab],
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
                 [faRankingStar, "League Rankings", "league-rankings", showLeagueRankingsTab],
