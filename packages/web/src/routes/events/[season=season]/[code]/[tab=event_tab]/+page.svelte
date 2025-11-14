@@ -62,10 +62,9 @@
         npOpr: number | null;
         stats: NonNullable<EventPageQuery["eventByCode"]>["teams"][number]["stats"] | null;
     };
-    type PreviewTeam =
-        NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
-            quickOpr: number | null;
-        };
+    type PreviewTeam = NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
+        quickOpr: number | null;
+    };
     $: previewStats = ((event as any)?.previewStats ?? []) as PreviewStat[];
     $: previewStatMap = new Map<number, PreviewStat>(previewStats.map((s) => [s.teamNumber, s]));
     $: previewTeams = (event?.teams ?? [])
@@ -83,6 +82,28 @@
         }) as PreviewTeam[];
 
     $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
+    $: eventHasMatches = (event?.matches?.length ?? 0) > 0;
+    $: scheduledEventDate = event?.end ?? event?.start ?? null;
+    $: eventHasPassedScheduledDate = scheduledEventDate
+        ? Date.now() > new Date(scheduledEventDate).getTime()
+        : false;
+    $: shouldShowPreviewTab =
+        (event?.teams?.length ?? 0) > 0 &&
+        hasPreviewData &&
+        !eventHasMatches &&
+        !eventHasPassedScheduledDate;
+    $: leagueRankingGroups = (event?.leagueRankings ?? []) as LeagueRankingGroup[];
+    $: leagueRankingRows = leagueRankingGroups
+        .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
+        .filter(notEmpty);
+    $: leagueRankingSaveId =
+        event && leagueRankingGroups.length
+            ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
+                  leagueRankingGroups[0]?.league.code ?? "parent"
+              }`
+            : null;
+    $: isLeagueTournament = event?.type === "LeagueTournament";
+    $: showLeagueRankingsTab = !!isLeagueTournament;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
@@ -176,12 +197,7 @@
 
         <TabbedCard
             tabs={[
-                [
-                    faChartLine,
-                    "Preview",
-                    "preview",
-                    (event?.teams?.length ?? 0) > 0 && !event?.started && hasPreviewData,
-                ],
+                [faChartLine, "Preview", "preview", shouldShowPreviewTab],
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
                 [faLightbulb, "Insights", "insights", !!insights.length],
