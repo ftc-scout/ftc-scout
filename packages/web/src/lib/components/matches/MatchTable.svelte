@@ -34,6 +34,7 @@
     };
     export let focusedTeam: number | null = null;
     export let showNonPenaltyScores = false;
+    export let showHeartLegend = true;
 
     $: timeZone = event.timezone;
     $: remote = event.remote;
@@ -192,7 +193,7 @@
     </div>
 {/if}
 
-{#if doubleElim.length > 0}
+{#if showHeartLegend && doubleElim.length > 0}
     <div style:margin-top="var(--md-gap)" style="display: flex; gap: var(--vl-gap)">
         <div><Fa icon={faHeart} style="color: var(--red-team-color)" /> Elimination Remaining</div>
         <div>

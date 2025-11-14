@@ -82,52 +82,63 @@
             {/if}
         </div>
 
-        <div class="wr">
-            <h2>
-                World Record
-                <span
-                    class="help"
-                    use:tippy={{
-                        content: `Top ${np}score in a FIRST sponsored event.`,
-                        theme: $tippyTheme,
-                    }}
-                >
-                    <Fa icon={faQuestionCircle} />
-                </span>
-            </h2>
-            <hr />
+        <div class="wr wr-merged">
+            <div class="wr-section">
+                <h2>
+                    World Record
+                    <span
+                        class="help"
+                        use:tippy={{
+                            content: `Top ${np}score in a FIRST sponsored event.`,
+                            theme: $tippyTheme,
+                        }}
+                    >
+                        <Fa icon={faQuestionCircle} />
+                    </span>
+                </h2>
+                <hr />
 
-            {#if wr}
-                <a href="/events/{wr.event.season}/{wr.event.code}/matches">{wr.event.name}</a>
-                <MatchTable matches={[wr]} event={wr.event} showNonPenaltyScores />
-            {:else}
-                <SkeletonRow header card={false} rows={2} />
-            {/if}
-        </div>
+                {#if wr}
+                    <a href="/events/{wr.event.season}/{wr.event.code}/matches">{wr.event.name}</a>
+                    <MatchTable
+                        matches={[wr]}
+                        event={wr.event}
+                        showNonPenaltyScores
+                        showHeartLegend={false}
+                    />
+                {:else}
+                    <SkeletonRow header card={false} rows={2} />
+                {/if}
+            </div>
 
-        <div class="wr">
-            <h2>
-                World Record (with penalties)
-                <span
-                    class="help"
-                    use:tippy={{
-                        content: penaltiesTip,
-                        theme: $tippyTheme,
-                    }}
-                >
-                    <Fa icon={faQuestionCircle} />
-                </span>
-            </h2>
-            <hr />
+            <div class="wr-section">
+                <h2>
+                    World Record (with penalties)
+                    <span
+                        class="help"
+                        use:tippy={{
+                            content: penaltiesTip,
+                            theme: $tippyTheme,
+                        }}
+                    >
+                        <Fa icon={faQuestionCircle} />
+                    </span>
+                </h2>
+                <hr />
 
-            {#if wrWithPens}
-                <a href="/events/{wrWithPens.event.season}/{wrWithPens.event.code}/matches">
-                    {wrWithPens.event.name}
-                </a>
-                <MatchTable matches={[wrWithPens]} event={wrWithPens.event} />
-            {:else}
-                <SkeletonRow header card={false} rows={2} />
-            {/if}
+                {#if wrWithPens}
+                    <a href="/events/{wrWithPens.event.season}/{wrWithPens.event.code}/matches">
+                        {wrWithPens.event.name}
+                    </a>
+                    <MatchTable
+                        matches={[wrWithPens]}
+                        event={wrWithPens.event}
+                        showHeartLegend={false}
+                    />
+                {:else}
+                    <SkeletonRow header card={false} rows={2} />
+                {/if}
+            </div>
         </div>
     </Card>
 
@@ -286,6 +297,15 @@
         border-radius: 8px;
         border: 1px solid var(--sep-color);
         padding: var(--lg-pad);
+    }
+
+    .wr-merged {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .wr-section + .wr-section {
+        margin-top: var(--lg-gap);
     }
 
     .wr h2 {
