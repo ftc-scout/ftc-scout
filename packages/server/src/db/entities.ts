@@ -15,6 +15,7 @@ import { League } from "./entities/League";
 import { LeagueTeam } from "./entities/LeagueTeam";
 import { LeagueRankingSchemas } from "./entities/dyn/league-ranking";
 import { BestName } from "./entities/BestName";
+import { AdvancementScore } from "./entities/AdvancementScore";
 
 export const DEV_ENTITIES: MixedList<string | Function | EntitySchema<any>> = [FtcApiReq];
 
@@ -27,6 +28,7 @@ export const ENTITIES: MixedList<string | Function | EntitySchema<any>> = [
     LeagueTeam,
     Match,
     TeamMatchParticipation,
+    AdvancementScore,
     ...Object.values(MatchScoreSchemas),
     ...Object.values(TeamEventParticipationSchemas),
     ...Object.values(LeagueRankingSchemas),

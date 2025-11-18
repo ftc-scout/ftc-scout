@@ -27,6 +27,7 @@ import { recomputeLeagueRankings } from "./recompute-league-rankings";
 import { exit } from "process";
 import { IS_DEV } from "../../constants";
 import { newMatchesKey, pubsub } from "../../graphql/resolvers/pubsub";
+import { computeAdvancementForEvent } from "./compute-advancement";
 
 const IGNORED_MATCHES = [
     //cSpell:disable
@@ -153,6 +154,10 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                     leagueCode: event.leagueCode,
                     regionCode: event.regionCode ?? null,
                 });
+            }
+
+            if (season >= 2025) {
+                await computeAdvancementForEvent(season, event.code);
             }
 
             console.info(`Loaded ${i + 1}/${events.length}.`);
