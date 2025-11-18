@@ -20,7 +20,8 @@
     import IconSidebarItem from "./IconSidebarItem.svelte";
     import { EMAIL, DISCORD, STATUS, GITHUB, DONATIONS } from "../../constants";
     import { CURRENT_SEASON } from "@ftc-scout/common";
-    import Sponsor from "./Sponsor.svelte";
+    // Currently disabled due to the ongoing allegations against Hack Club and HC's extremely problematic responses.  https://www.chiefdelphi.com/t/hack-club-allegations-of-gross-mishandling-of-minors-pii/508249
+    //import Sponsor from "./Sponsor.svelte";
 </script>
 
 <b>
@@ -63,7 +64,8 @@
 
 <hr />
 
-<Sponsor />
+<!-- Currently disabled due to the ongoing allegations against Hack Club and HC's extremely problematic responses.  https://www.chiefdelphi.com/t/hack-club-allegations-of-gross-mishandling-of-minors-pii/508249 -->
+<!-- <Sponsor /> -->
 
 <style>
     hr,
