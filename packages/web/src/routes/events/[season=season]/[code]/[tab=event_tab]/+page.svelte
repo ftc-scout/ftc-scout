@@ -34,6 +34,7 @@
     import FocusedTeam from "$lib/components/stats/FocusedTeam.svelte";
     import Teams from "./Teams.svelte";
     import Rankings from "./Rankings.svelte";
+    import Advancement from "./Advancement.svelte";
     import Awards from "./Awards.svelte";
     import Preview from "./Preview.svelte";
     import { isNonCompetition } from "$lib/util/event-type";
@@ -97,6 +98,10 @@
     $: leagueRankingRows = leagueRankingGroups
         .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
         .filter(notEmpty);
+    $: advancementRows = (event?.advancement ?? []).map((a) => ({
+        ...a,
+        team: event?.teams?.find((t) => t.teamNumber == a.teamNumber)?.team,
+    }));
     $: leagueRankingSaveId =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
@@ -204,6 +209,7 @@
                 [faRankingStar, "League Rankings", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
+                [faChartLine, "Advancement", "advancement", !!advancementRows.length],
                 [faHashtag, "Teams", "teams", (event?.teams?.length ?? 0) > 0],
             ]}
             bind:selectedTab
@@ -240,6 +246,16 @@
                     remote={event.remote}
                     eventName={event.name}
                     data={stats}
+                    {focusedTeam}
+                />
+            </TabContent>
+
+            <TabContent name="advancement">
+                <Advancement
+                    {season}
+                    remote={event.remote}
+                    eventName={event.name}
+                    data={advancementRows}
                     {focusedTeam}
                 />
             </TabContent>

@@ -26,6 +26,7 @@
     export let rankTy: RankTy;
     export let showRank: boolean;
     export let includeSkipRankTys: boolean = false;
+    export let hideFiltersAndStats: boolean = false;
 
     export let shownStats: NonRankStatColumn<T>[];
     export let currentSort: { id: string; dir: SortDir };
@@ -77,37 +78,41 @@
 />
 <FilterModal bind:shown={filtersShown} root={filter} {stats} on:new-filter />
 
-<div class="controls" class:extras={!isDefaultStats || filter != null}>
-    <Button icon={faEdit} on:click={() => (chooseStatsModalShown = true)}>Statistics</Button>
-    {#if !isDefaultStats}
-        <Button icon={faXmark} on:click={() => dispatch("reset-stats")}>Reset Stats</Button>
-    {/if}
+{#if !hideFiltersAndStats}
+    <div class="controls" class:extras={!isDefaultStats || filter != null}>
+        <Button icon={faEdit} on:click={() => (chooseStatsModalShown = true)}>Statistics</Button>
+        {#if !isDefaultStats}
+            <Button icon={faXmark} on:click={() => dispatch("reset-stats")}>Reset Stats</Button>
+        {/if}
 
-    <Button icon={faFilter} on:click={() => (filtersShown = true)}>Filters</Button>
+        <Button icon={faFilter} on:click={() => (filtersShown = true)}>Filters</Button>
 
-    {#if filter != null}
-        <Button icon={faXmark} on:click={() => dispatch("new-filter", null)}>Clear Filters</Button>
-        <Select
-            bind:value={rankAfterFilters}
-            options={[
-                { value: "no", name: "Pre Filter Rank" },
-                { value: "yes", name: "Post Filter Rank" },
-            ]}
-        />
-    {/if}
-    {#if includeSkipRankTys}
-        <Select
-            bind:value={skip}
-            options={[
-                { value: "skip", name: "Rank Best Results" },
-                { value: "keep", name: "Rank All Results" },
-            ]}
-        />
-    {/if}
-    <div>
-        <ExportCsv {data} {shownStats} {csv} />
+        {#if filter != null}
+            <Button icon={faXmark} on:click={() => dispatch("new-filter", null)}
+                >Clear Filters</Button
+            >
+            <Select
+                bind:value={rankAfterFilters}
+                options={[
+                    { value: "no", name: "Pre Filter Rank" },
+                    { value: "yes", name: "Post Filter Rank" },
+                ]}
+            />
+        {/if}
+        {#if includeSkipRankTys}
+            <Select
+                bind:value={skip}
+                options={[
+                    { value: "skip", name: "Rank Best Results" },
+                    { value: "keep", name: "Rank All Results" },
+                ]}
+            />
+        {/if}
+        <div>
+            <ExportCsv {data} {shownStats} {csv} />
+        </div>
     </div>
-</div>
+{/if}
 
 <StatTable
     {data}
