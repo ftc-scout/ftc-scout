@@ -89,6 +89,20 @@ export const Descriptor2025 = new Descriptor({
         rp: "DecodeRP",
         tb: "AvgNpBase",
     },
+    rankingPoints: [
+        {
+            id: "movementRp",
+            name: "Movement Ranking Point",
+        },
+        {
+            id: "goalRp",
+            name: "Goal Ranking Point",
+        },
+        {
+            id: "patternRp",
+            name: "Pattern Ranking Point",
+        },
+    ],
     firstDate: new Date("2025-09-06"),
     lastDate: new Date("2026-09-01"),
     kickoff: new Date("2025-09-06"),
