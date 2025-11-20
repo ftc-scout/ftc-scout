@@ -75,11 +75,11 @@ color: #fff;
     }
 
     .red {
-        background: var(--red-team-text-color);
+        background: var(--red-stat-color);
     }
 
     .blue {
-        background: var(--blue-team-text-color);
+        background: var(--blue-stat-color);
     }
 
     .inactive {
