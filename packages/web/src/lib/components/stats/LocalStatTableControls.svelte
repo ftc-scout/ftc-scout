@@ -71,6 +71,7 @@
     $: isDefaultStats = calcIsDefaultStats(defaultStats, $shownStats);
 
     export let hideRankStats: string[] = [];
+    export let hideFiltersAndStats: boolean = false;
     $: rankingByEquiv = hideRankStats.indexOf($currentSort.id) != -1;
     $: rowsDroppedByFilter = rankedData.length != data.length;
     $: showRank = !rankingByEquiv || (rowsDroppedByFilter && $rankTy != RankTy.NoFilter);
@@ -174,6 +175,7 @@
     bind:rankTy={$rankTy}
     {showRank}
     {csv}
+    {hideFiltersAndStats}
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
     on:toggle-show-stat={(e) => toggleShowStat(e.detail)}

@@ -80,5 +80,18 @@ query EventPage($season: Int!, $code: String!) {
                 }
             }
         }
+        advancement {
+            season
+            eventCode
+            teamNumber
+            qualPoints
+            isQualFinal
+            allianceSelectionPoints
+            isAllianceSelectionFinal
+            playoffPoints
+            awardPoints
+            totalPoints
+            rank
+        }
     }
 }

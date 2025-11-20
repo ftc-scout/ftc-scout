@@ -41,6 +41,8 @@ import { addTypename } from "../dyn/tep";
 import { League } from "../../db/entities/League";
 import { LeagueRanking } from "../../db/entities/dyn/league-ranking";
 import { LeagueRankingGroupGQL } from "./League";
+import { AdvancementScoreGQL } from "./AdvancementScore";
+import { AdvancementScore } from "../../db/entities/AdvancementScore";
 
 const EventPreviewStatGQL = new GraphQLObjectType({
     name: "EventPreviewStat",
@@ -228,6 +230,14 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
 
                 return [{ league: parentLeague, teams: rows }];
             },
+        },
+        advancement: {
+            type: list(nn(AdvancementScoreGQL)),
+            resolve: (event) =>
+                AdvancementScore.find({
+                    where: { season: event.season, eventCode: event.code },
+                    order: { rank: "ASC" },
+                }),
         },
         previewStats: {
             type: list(nn(EventPreviewStatGQL)),
