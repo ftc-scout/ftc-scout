@@ -201,7 +201,7 @@
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
                 [faLightbulb, "Insights", "insights", !!insights.length],
-                [faMedal, "Awards", "awards", !!event.awards.length],
+                [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
                 [faHashtag, `Teams (${event.teams.length})`, "teams", !!event.teams.length],
             ]}
             bind:selectedTab
