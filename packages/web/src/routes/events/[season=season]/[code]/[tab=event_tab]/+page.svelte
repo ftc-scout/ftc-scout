@@ -57,7 +57,9 @@
 
     $: season = +$page.params.season as Season;
 
-    $: stats = event?.teams?.filter((t) => notEmpty(t.stats)) ?? [];
+    $: rankingTeams = (event?.teams ?? []).filter(notEmpty);
+    $: rankingTeamsWithStats = rankingTeams.filter((t) => notEmpty(t.stats));
+    $: showTeamsTab = (event?.teams?.length ?? 0) > 0 && rankingTeamsWithStats.length == 0;
     $: insights = event?.matches?.flatMap(getMatchScores) ?? [];
     type PreviewStat = {
         teamNumber: number;
@@ -109,8 +111,8 @@
                   leagueRankingGroups[0]?.league.code ?? "parent"
               }`
             : null;
-    $: isLeagueTournament = event?.type === "LeagueTournament";
-    $: showLeagueRankingsTab = !!isLeagueTournament;
+    // $: isLeagueTournament = event?.type === "LeagueTournament";
+    $: showLeagueRankingsTab = false; // !!isLeagueTournament;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
@@ -206,12 +208,12 @@
             tabs={[
                 [faChartLine, "Preview", "preview", shouldShowPreviewTab],
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
-                [faTrophy, "Rankings", "rankings", !!stats.length],
+                [faTrophy, "Rankings", "rankings", !!rankingTeamsWithStats.length],
                 [faRankingStar, "League Rankings", "league-rankings", showLeagueRankingsTab],
                 [faLightbulb, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", !!event.awards.length],
                 [faChartLine, "Advancement", "advancement", !!advancementRows.length],
-                [faHashtag, `Teams (${event.teams.length})`, "teams", !!event.teams.length],
+                [faHashtag, "Teams", "teams", showTeamsTab],
             ]}
             bind:selectedTab
         >
@@ -246,7 +248,7 @@
                     {season}
                     remote={event.remote}
                     eventName={event.name}
-                    data={stats}
+                    data={rankingTeams}
                     {focusedTeam}
                 />
             </TabContent>

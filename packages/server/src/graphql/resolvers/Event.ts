@@ -43,6 +43,15 @@ import { LeagueRanking } from "../../db/entities/dyn/league-ranking";
 import { LeagueRankingGroupGQL } from "./League";
 import { AdvancementScoreGQL } from "./AdvancementScore";
 import { AdvancementScore } from "../../db/entities/AdvancementScore";
+import { getAdvancement } from "../../ftc-api/get-advancement";
+
+const EventAdvancementInfoGQL = new GraphQLObjectType({
+    name: "EventAdvancementInfo",
+    fields: {
+        slots: nullTy(IntTy),
+        advancesTo: nullTy(StrTy),
+    },
+});
 
 const EventPreviewStatGQL = new GraphQLObjectType({
     name: "EventPreviewStat",
@@ -238,6 +247,10 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                     where: { season: event.season, eventCode: event.code },
                     order: { rank: "ASC" },
                 }),
+        },
+        advancementInfo: {
+            type: EventAdvancementInfoGQL,
+            resolve: (event) => getAdvancement(event.season, event.code),
         },
         previewStats: {
             type: list(nn(EventPreviewStatGQL)),
