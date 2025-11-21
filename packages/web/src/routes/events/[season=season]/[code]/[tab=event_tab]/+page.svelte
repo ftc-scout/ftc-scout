@@ -211,8 +211,13 @@
                 [faTrophy, "Rankings", "rankings", !!rankingTeamsWithStats.length],
                 [faRankingStar, "League Rankings", "league-rankings", showLeagueRankingsTab],
                 [faLightbulb, "Insights", "insights", !!insights.length],
-                [faMedal, "Awards", "awards", !!event.awards.length],
-                [faChartLine, "Advancement", "advancement", !!advancementRows.length],
+                [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
+                [
+                    faChartLine,
+                    "Advancement",
+                    "advancement",
+                    !!advancementRows.length && !!rankingTeamsWithStats.length,
+                ],
                 [faHashtag, "Teams", "teams", showTeamsTab],
             ]}
             bind:selectedTab

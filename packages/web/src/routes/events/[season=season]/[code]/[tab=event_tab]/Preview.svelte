@@ -10,10 +10,9 @@
     } from "@ftc-scout/common";
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
 
-    type PreviewTeam =
-        NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
-            quickOpr: number | null;
-        };
+    type PreviewTeam = NonNullable<EventPageQuery["eventByCode"]>["teams"][number] & {
+        quickOpr: number | null;
+    };
 
     export let teams: PreviewTeam[];
     export let focusedTeam: number | null;
@@ -54,7 +53,13 @@
     $: descriptor = DESCRIPTORS[season];
     $: totalPointsKey = descriptor.pensSubtract || remote ? "totalPoints" : "totalPointsNp";
     $: defaultStatId = `${totalPointsKey}Opr`;
-    $: defaultStats = ["team", defaultStatId];
+    $: defaultStats = [
+        "team",
+        defaultStatId,
+        "autoPointsOpr",
+        "dcPointsOpr",
+        ...(descriptor.hasEndgame ? ["endgamePointsOpr"] : []),
+    ];
     $: defaultSort = { id: defaultStatId, dir: SortDir.Desc };
 
     $: safeEventName = eventName ?? "Event";
