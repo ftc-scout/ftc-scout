@@ -268,17 +268,26 @@ export class TepComponent {
             sqlExpr: `${group}${titleCase(this.dbName)}`,
             ty: TEP_GROUP_DATA_TYS[group],
             getNonRankValue: this.tradOnly
-                ? (d: any) =>
-                      this.apiName in d.stats[group]
-                          ? {
-                                ty: TEP_GROUP_DATA_TYS[group],
-                                val: d.stats[group][this.apiName],
-                            }
-                          : null
-                : (d: any) => ({
-                      ty: TEP_GROUP_DATA_TYS[group],
-                      val: d.stats[group][this.apiName],
-                  }),
+                ? (d: any) => {
+                      const groupStats = d.stats?.[group];
+                      if (!groupStats || !(this.apiName in groupStats)) return null;
+                      const val = groupStats[this.apiName];
+                      if (val == null) return null;
+                      return {
+                          ty: TEP_GROUP_DATA_TYS[group],
+                          val,
+                      };
+                  }
+                : (d: any) => {
+                      const groupStats = d.stats?.[group];
+                      if (!groupStats) return null;
+                      const val = groupStats[this.apiName];
+                      if (val == null) return null;
+                      return {
+                          ty: TEP_GROUP_DATA_TYS[group],
+                          val,
+                      };
+                  },
         });
     }
 }

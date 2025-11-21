@@ -87,7 +87,11 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 titleName: "Event Ranking",
                 sqlExpr: "rank",
                 ty: StatType.Rank,
-                getNonRankValue: (d: any) => ({ ty: "rank", val: d.stats.rank }),
+                getNonRankValue: (d: any) => {
+                    const stats = d.stats;
+                    if (!stats || stats.rank == null) return null;
+                    return { ty: "rank", val: stats.rank };
+                },
             }),
             new NonRankStatColumn({
                 color: Color.Red,
@@ -97,10 +101,14 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 titleName: "Ranking Score",
                 sqlExpr: "rp",
                 ty: StatType.Float,
-                getNonRankValue: (d: any) => ({
-                    ty: StatType.Float,
-                    val: d.stats.rp,
-                }),
+                getNonRankValue: (d: any) => {
+                    const stats = d.stats;
+                    if (!stats || stats.rp == null) return null;
+                    return {
+                        ty: StatType.Float,
+                        val: stats.rp,
+                    };
+                },
             }),
             new NonRankStatColumn({
                 color: Color.LightBlue,
@@ -110,7 +118,11 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 titleName: "Tie Breaker Points",
                 sqlExpr: "tb1",
                 ty: StatType.Float,
-                getNonRankValue: (d: any) => ({ ty: "float", val: d.stats.tb1 }),
+                getNonRankValue: (d: any) => {
+                    const stats = d.stats;
+                    if (!stats || stats.tb1 == null) return null;
+                    return { ty: "float", val: stats.tb1 };
+                },
             }),
             ...(descriptor.rankings.tb == "LosingScore"
                 ? []
@@ -123,7 +135,11 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Tie Breaker Points 2",
                           sqlExpr: "tb2",
                           ty: StatType.Float,
-                          getNonRankValue: (d: any) => ({ ty: "float", val: d.stats.tb2 }),
+                          getNonRankValue: (d: any) => {
+                              const stats = d.stats;
+                              if (!stats || stats.tb2 == null) return null;
+                              return { ty: "float", val: stats.tb2 };
+                          },
                       }),
                   ]),
             new NonRankStatColumn({
@@ -134,7 +150,10 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                 titleName: "Matches Played",
                 sqlExpr: "qualMatchesPlayed",
                 ty: StatType.Int,
-                getNonRankValue: (d: any) => ({ ty: "int", val: d.stats.qualMatchesPlayed }),
+                getNonRankValue: (d: any) => {
+                    const val = d?.stats?.qualMatchesPlayed;
+                    return val == null ? null : { ty: "int", val };
+                },
             }),
             ...(remote
                 ? []
@@ -147,8 +166,11 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Wins",
                           sqlExpr: "wins",
                           ty: StatType.Int,
-                          getNonRankValue: (d: any) =>
-                              "wins" in d.stats ? { ty: "int", val: d.stats.wins } : null,
+                          getNonRankValue: (d: any) => {
+                              const stats = d.stats;
+                              if (!stats || !("wins" in stats) || stats.wins == null) return null;
+                              return { ty: "int", val: stats.wins };
+                          },
                       }),
                       new NonRankStatColumn({
                           color: Color.Green,
@@ -158,8 +180,12 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Losses",
                           sqlExpr: "losses",
                           ty: StatType.Int,
-                          getNonRankValue: (d: any) =>
-                              "losses" in d.stats ? { ty: "int", val: d.stats.losses } : null,
+                          getNonRankValue: (d: any) => {
+                              const stats = d.stats;
+                              if (!stats || !("losses" in stats) || stats.losses == null)
+                                  return null;
+                              return { ty: "int", val: stats.losses };
+                          },
                       }),
                       new NonRankStatColumn({
                           color: Color.Green,
@@ -169,8 +195,11 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Ties",
                           sqlExpr: "ties",
                           ty: StatType.Int,
-                          getNonRankValue: (d: any) =>
-                              "ties" in d.stats ? { ty: "int", val: d.stats.ties } : null,
+                          getNonRankValue: (d: any) => {
+                              const stats = d.stats;
+                              if (!stats || !("ties" in stats) || stats.ties == null) return null;
+                              return { ty: "int", val: stats.ties };
+                          },
                       }),
                       new NonRankStatColumn({
                           color: Color.Green,
@@ -180,15 +209,18 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                           titleName: "Record",
                           sqlExpr: "(wins * 2 + ties / NULLIF(qual_matches_played, 0))",
                           ty: StatType.Record,
-                          getNonRankValue: (d: any) =>
-                              "wins" in d.stats
-                                  ? {
-                                        ty: "record",
-                                        wins: d.stats.wins,
-                                        losses: d.stats.losses,
-                                        ties: d.stats.ties,
-                                    }
-                                  : null,
+                          getNonRankValue: (d: any) => {
+                              const stats = d.stats;
+                              if (!stats || !("wins" in stats)) return null;
+                              if (stats.wins == null || stats.losses == null || stats.ties == null)
+                                  return null;
+                              return {
+                                  ty: "record",
+                                  wins: stats.wins,
+                                  losses: stats.losses,
+                                  ties: stats.ties,
+                              };
+                          },
                       }),
                   ]),
         ];
