@@ -84,6 +84,10 @@ query EventPage($season: Int!, $code: String!) {
             season
             eventCode
             teamNumber
+            team {
+                number
+                name
+            }
             qualPoints
             isQualFinal
             allianceSelectionPoints

@@ -84,8 +84,33 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         });
         qualRows = teps.map((t) => ({ teamNumber: t.teamNumber, rank: t.rank }));
     }
-    // Deduplicate teams, get total count
-    let teamCount = new Set(qualRows.map((q) => q.teamNumber)).size;
+
+    // Filter out teams that are not in the TEP list for this event (specifically for League Tournaments)
+    // For non-league tournaments, qualRows comes from TEP anyway, so this is a no-op.
+    // For League Tournaments, qualRows comes from LeagueRanking, which might include teams not at this event.
+    if (event.type == EventType.LeagueTournament) {
+        let eventTeps = await DATA_SOURCE.getRepository(
+            TeamEventParticipationSchemas[season]
+        ).findBy({
+            season,
+            eventCode,
+        });
+        let eventTeamNumbers = new Set(eventTeps.map((t) => t.teamNumber));
+        qualRows = qualRows.filter((q) => eventTeamNumbers.has(q.teamNumber));
+    }
+
+    // Team Count: Count teams that have played at least one match at the event
+    let teamsWithMatches = await DATA_SOURCE.getRepository(Match)
+        .createQueryBuilder("match")
+        .leftJoinAndSelect("match.teams", "teampart")
+        .where("match.eventSeason = :season", { season })
+        .andWhere("match.eventCode = :eventCode", { eventCode })
+        .andWhere("match.hasBeenPlayed = true")
+        .select("teampart.teamNumber")
+        .distinct(true)
+        .getRawMany();
+
+    let teamCount = teamsWithMatches.length;
 
     // Alliance selection
     let alliances = await getAlliances(season, eventCode);
@@ -261,11 +286,13 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     for (let teamNumber of teamNumbers) {
         let rankEntry = qualRows.find((q) => q.teamNumber == teamNumber);
         let qualPoints: number | null = null;
-        if (rankEntry && teamCount > 0 && allQualsPlayed) {
+        // Calculate qual points if we have a rank and a team count (even if not final)
+        if (rankEntry && teamCount > 0) {
             let qp = qualPoints2025(rankEntry.rank, teamCount);
             qualPoints = Number.isFinite(qp) ? qp : null;
         }
-        let isQualFinal = !!qualPoints && allQualsPlayed;
+        // Treat quals as final once all qual matches are played or playoff matches are scheduled.
+        let isQualFinal = !!qualPoints && (allQualsPlayed || anyPlayoffMatch);
 
         let sel = alliancePoints.has(teamNumber) ? alliancePoints.get(teamNumber)! : null;
         let isAllianceSelectionFinal = anyPlayoffMatch;
@@ -320,13 +347,17 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     });
 
     await DATA_SOURCE.transaction(async (em) => {
+        // Delete existing scores for teams that are no longer in the list (e.g. filtered out)
+        await em
+            .createQueryBuilder()
+            .delete()
+            .from(AdvancementScore)
+            .where("season = :season", { season })
+            .andWhere("eventCode = :eventCode", { eventCode })
+            .execute();
+
         for (let r of rows) {
-            let existing = await em.findOne(AdvancementScore, {
-                where: { season, eventCode, teamNumber: r.teamNumber },
-            });
-            if (!existing) {
-                existing = AdvancementScore.createEmpty(season, eventCode, r.teamNumber);
-            }
+            let existing = AdvancementScore.createEmpty(season, eventCode, r.teamNumber);
             existing.qualPoints = r.qualPoints;
             existing.isQualFinal = r.isQualFinal;
             existing.allianceSelectionPoints = r.allianceSelectionPoints;

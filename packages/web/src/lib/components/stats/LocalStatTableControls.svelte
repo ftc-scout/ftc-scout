@@ -143,7 +143,8 @@
         dir: SortDir,
         filter: FilterGroup | null
     ): StatData<T>[] {
-        let sorted = data
+        // Sort against a shallow copy to avoid mutating immutable inputs (e.g. frozen store data)
+        let sorted = [...data]
             .sort(statSortFn(stats.getStat(defaultSort.id), defaultSort.dir))
             .sort(statSortFn(sorter, dir))
             .map((s) => ({
