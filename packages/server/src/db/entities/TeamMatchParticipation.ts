@@ -38,6 +38,7 @@ export class TeamMatchParticipation extends BaseEntity {
     @PrimaryColumn("enum", { enum: Station, enumName: "station_enum" })
     station!: Station;
 
+    @ManyToOne(() => Match, (match) => match.teams)
     match!: Match;
 
     @ManyToOne(() => Team, (team) => team.matches)

@@ -100,10 +100,7 @@
     $: leagueRankingRows = leagueRankingGroups
         .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
         .filter(notEmpty);
-    $: advancementRows = (event?.advancement ?? []).map((a) => ({
-        ...a,
-        team: event?.teams?.find((t) => t.teamNumber == a.teamNumber)?.team,
-    }));
+    $: advancementRows = (event?.advancement ?? []) as any[];
     $: leagueRankingSaveId =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
@@ -211,12 +208,7 @@
                 [faRankingStar, "League Rankings", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
-                [
-                    faChartLine,
-                    "Advancement",
-                    "advancement",
-                    !!advancementRows.length && !!rankingTeamsWithStats.length,
-                ],
+                [faChartLine, "Advancement", "advancement", !!advancementRows.length],
                 [faHashtag, "Teams", "teams", showTeamsTab],
             ]}
             bind:selectedTab
