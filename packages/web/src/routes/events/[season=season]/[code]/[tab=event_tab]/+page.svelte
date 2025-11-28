@@ -107,8 +107,8 @@
                   leagueRankingGroups[0]?.league.code ?? "parent"
               }`
             : null;
-    // $: isLeagueTournament = event?.type === "LeagueTournament";
-    $: showLeagueRankingsTab = false; // !!isLeagueTournament;
+    $: isLeagueTournament = event?.type === "LeagueTournament";
+    $: showLeagueRankingsTab = !!isLeagueTournament;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
@@ -205,7 +205,7 @@
                 [faChartLine, "Preview", "preview", shouldShowPreviewTab],
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!rankingTeamsWithStats.length],
-                [faRankingStar, "League Rankings", "league-rankings", showLeagueRankingsTab],
+                [faRankingStar, "Leagues", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
                 [faChartLine, "Advancement", "advancement", !!advancementRows.length],
