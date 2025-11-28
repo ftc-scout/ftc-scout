@@ -1,13 +1,17 @@
 <script lang="ts">
     import LocalStatTableControls from "$lib/components/stats/LocalStatTableControls.svelte";
+    import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import {
         Color,
         NonRankStatColumn,
         SortDir,
         StatSet,
         StatType,
+        getTepStatSet,
         type Season,
     } from "@ftc-scout/common";
+
+    type EventTeam = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
 
     interface AdvancementScore {
         season: number;
@@ -21,13 +25,8 @@
         awardPoints?: number | null;
         totalPoints?: number | null;
         rank?: number | null;
-        team?:
-            | {
-                  number: number;
-                  name: string;
-              }
-            | null
-            | undefined;
+        team?: EventTeam["team"] | null | undefined;
+        stats?: EventTeam["stats"] | null | undefined;
     }
 
     export let season: Season;
@@ -116,6 +115,7 @@
     ];
 
     const stats = new StatSet<AdvancementScore>("advancement", columns, []);
+    $: viewStats = getTepStatSet(season, remote) as StatSet<AdvancementScore>;
 
     $: defaultStats = [
         "eventRank",
@@ -141,6 +141,7 @@
     {data}
     {focusedTeam}
     {stats}
+    {viewStats}
     {defaultStats}
     defaultSort={{ id: "eventRank", dir: SortDir.Asc }}
     hideRankStats={["eventRank"]}
