@@ -36,6 +36,10 @@
 
     export let csv: { filename: string; title: string };
 
+    export let viewStats: StatSet<T> | null = null;
+
+    $: detailStats = viewStats ?? stats;
+
     let dispatch = createEventDispatcher();
 
     let viewStatsModalShown = false;
@@ -69,7 +73,7 @@
     $: computeRankTy(skip, rankAfterFilters);
 </script>
 
-<ViewStatsModal bind:shown={viewStatsModalShown} {stats} data={viewStatsData?.data} />
+<ViewStatsModal bind:shown={viewStatsModalShown} stats={detailStats} data={viewStatsData?.data} />
 <ChooseStatsModal
     bind:shown={chooseStatsModalShown}
     selectedStats={shownStats.map((s) => s.id)}

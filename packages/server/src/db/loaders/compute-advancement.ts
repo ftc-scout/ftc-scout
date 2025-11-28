@@ -296,15 +296,21 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
 
         let sel = alliancePoints.has(teamNumber) ? alliancePoints.get(teamNumber)! : null;
         let isAllianceSelectionFinal = anyPlayoffMatch;
-        if (!isAllianceSelectionFinal && sel == null) {
-            sel = null; // N/A while in progress
-        }
-        if (isAllianceSelectionFinal && sel == null) {
-            sel = 0; // unselected after final selection
+        if (qualPoints == null) {
+            sel = null;
+        } else {
+            if (!isAllianceSelectionFinal && sel == null) {
+                sel = null; // N/A while in progress
+            }
+            if (isAllianceSelectionFinal && sel == null) {
+                sel = 0; // unselected after final selection
+            }
         }
 
         let playoff = playoffPts.has(teamNumber) ? playoffPts.get(teamNumber)! : null;
-        if (playoffsComplete && playoff == null) {
+        if (qualPoints == null) {
+            playoff = null;
+        } else if (playoffsComplete && playoff == null) {
             playoff = 0; // playoffs finished; unplaced teams get 0
         }
         let award: number | null = awardPts.has(teamNumber) ? awardPts.get(teamNumber)! : null;

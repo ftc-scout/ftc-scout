@@ -77,6 +77,7 @@
     $: showRank = !rankingByEquiv || (rowsDroppedByFilter && $rankTy != RankTy.NoFilter);
 
     export let csv: { filename: string; title: string };
+    export let viewStats: StatSet<T> | null = null;
 
     function changeSort(id: string) {
         let oldDir = $currentSort.id == id ? $currentSort.dir : null;
@@ -176,6 +177,7 @@
     bind:rankTy={$rankTy}
     {showRank}
     {csv}
+    viewStats={viewStats ?? stats}
     {hideFiltersAndStats}
     on:change_sort={(e) => changeSort(e.detail)}
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}

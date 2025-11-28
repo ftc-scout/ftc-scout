@@ -87,10 +87,12 @@
 
     $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
     $: eventHasMatches = (event?.matches?.length ?? 0) > 0;
+    $: eventHasPlayedMatch = event?.matches?.some((m) => !!m.scores) ?? false;
     $: scheduledEventDate = event?.end ?? event?.start ?? null;
     $: eventHasPassedScheduledDate = scheduledEventDate
         ? Date.now() > new Date(scheduledEventDate).getTime()
         : false;
+    $: eventHasStarted = event?.start ? Date.now() >= new Date(event.start).getTime() : false;
     $: shouldShowPreviewTab =
         (event?.teams?.length ?? 0) > 0 &&
         hasPreviewData &&
@@ -101,6 +103,17 @@
         .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
         .filter(notEmpty);
     $: advancementRows = (event?.advancement ?? []) as any[];
+    $: rankingTeamMap = new Map(rankingTeams.map((t) => [t.teamNumber, t]));
+    $: advancementRowsWithStats = advancementRows.map((row) => {
+        const rankingTeam = rankingTeamMap.get(row.teamNumber);
+        return {
+            ...row,
+            team: rankingTeam?.team ?? row.team,
+            stats: rankingTeam?.stats ?? null,
+        };
+    });
+    $: showAdvancementTab =
+        !!advancementRowsWithStats.length && eventHasStarted && eventHasPlayedMatch;
     $: leagueRankingSaveId =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
@@ -208,7 +221,7 @@
                 [faRankingStar, "Leagues", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
-                [faChartLine, "Advancement", "advancement", !!advancementRows.length],
+                [faChartLine, "Advancement", "advancement", showAdvancementTab],
                 [faHashtag, "Teams", "teams", showTeamsTab],
             ]}
             bind:selectedTab
@@ -254,7 +267,7 @@
                     {season}
                     remote={event.remote}
                     eventName={event.name}
-                    data={advancementRows}
+                    data={advancementRowsWithStats}
                     {focusedTeam}
                 />
             </TabContent>
