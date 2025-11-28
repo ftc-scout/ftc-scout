@@ -237,14 +237,21 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let eliminated = [...allianceResults.values()].filter((r) => r.eliminatedAt != null);
         eliminated.sort((a, b) => (a.eliminatedAt ?? 0) - (b.eliminatedAt ?? 0));
 
-        let placements: number[] = [];
-        if (alive.length == 1) {
-            placements.push(alive[0].allianceNum);
-        }
-        placements.push(...eliminated.map((r) => r.allianceNum).reverse());
+        let allianceCount = alive.length + eliminated.length;
+        let placementByAlliance = new Map<number, number>();
 
-        function setPlacement(allianceNum: number, placement: 1 | 2 | 3 | 4) {
-            let points = PLAYOFF_POINTS_2025[placement];
+        eliminated.forEach((r, idx) => {
+            placementByAlliance.set(r.allianceNum, allianceCount - idx);
+        });
+
+        // Champion only known once playoffs are complete
+        if (playoffsComplete && alive.length == 1) {
+            placementByAlliance.set(alive[0].allianceNum, 1);
+        }
+
+        function setPlacement(allianceNum: number, placement: number) {
+            if (placement < 1 || placement > 4) return;
+            let points = PLAYOFF_POINTS_2025[placement as 1 | 2 | 3 | 4];
             let alliance = alliances?.find((a) => a.number == allianceNum);
             if (!alliance) return;
             [
@@ -258,10 +265,10 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             });
         }
 
-        if (placements[0] != null) setPlacement(placements[0], 1);
-        if (placements[1] != null) setPlacement(placements[1], 2);
-        if (placements[2] != null) setPlacement(placements[2], 3);
-        if (placements[3] != null) setPlacement(placements[3], 4);
+        for (let [allianceNum, placement] of placementByAlliance.entries()) {
+            if ((placement == 1 || placement == 2) && !playoffsComplete) continue;
+            setPlacement(allianceNum, placement);
+        }
 
         if (playoffsComplete) {
             alliances?.forEach((a) => {
