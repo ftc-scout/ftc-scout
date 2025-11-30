@@ -115,18 +115,22 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     // Alliance selection
     let alliances = await getAlliances(season, eventCode);
     let alliancePoints = new Map<number, number>();
+    let allianceTeams = new Set<number>();
     if (alliances) {
         for (let alliance of alliances) {
-            let leadPts = ALLIANCE_SELECTION_BASE_2025 - alliance.number;
-            if (alliance.captain != null) alliancePoints.set(alliance.captain, leadPts);
-            let draft1Pts = ALLIANCE_SELECTION_BASE_2025 - alliance.number;
-            if (alliance.round1 != null) alliancePoints.set(alliance.round1, draft1Pts);
-            if (alliance.round2 != null)
-                alliancePoints.set(alliance.round2, ALLIANCE_SELECTION_BASE_2025 - alliance.number);
-            if (alliance.round3 != null)
-                alliancePoints.set(alliance.round3, ALLIANCE_SELECTION_BASE_2025 - alliance.number);
-            if (alliance.backup != null)
-                alliancePoints.set(alliance.backup, ALLIANCE_SELECTION_BASE_2025 - alliance.number);
+            let pts = ALLIANCE_SELECTION_BASE_2025 - alliance.number;
+            [
+                alliance.captain,
+                alliance.round1,
+                alliance.round2,
+                alliance.round3,
+                alliance.backup,
+            ].forEach((n) => {
+                if (typeof n === "number") {
+                    alliancePoints.set(n, pts);
+                    allianceTeams.add(n);
+                }
+            });
         }
     }
 
@@ -249,9 +253,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             placementByAlliance.set(alive[0].allianceNum, 1);
         }
 
-        function setPlacement(allianceNum: number, placement: number) {
-            if (placement < 1 || placement > 4) return;
-            let points = PLAYOFF_POINTS_2025[placement as 1 | 2 | 3 | 4];
+        function applyPlayoffPoints(allianceNum: number, points: number) {
             let alliance = alliances?.find((a) => a.number == allianceNum);
             if (!alliance) return;
             [
@@ -263,6 +265,16 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             ].forEach((n) => {
                 if (typeof n === "number") playoffPts.set(n, points);
             });
+        }
+
+        function setPlacement(allianceNum: number, placement: number) {
+            if (placement < 1) return;
+            if (placement > 4) {
+                applyPlayoffPoints(allianceNum, 0);
+                return;
+            }
+            let points = PLAYOFF_POINTS_2025[placement as 1 | 2 | 3 | 4];
+            applyPlayoffPoints(allianceNum, points);
         }
 
         for (let [allianceNum, placement] of placementByAlliance.entries()) {
@@ -289,6 +301,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     });
     awards.forEach((a) => teamNumbers.add(a.teamNumber));
 
+    let allianceSelectionFinal = anyPlayoffMatch || allianceTeams.size > 0;
     let rows: TeamRow[] = [];
     for (let teamNumber of teamNumbers) {
         let rankEntry = qualRows.find((q) => q.teamNumber == teamNumber);
@@ -302,7 +315,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let isQualFinal = !!qualPoints && (allQualsPlayed || anyPlayoffMatch);
 
         let sel = alliancePoints.has(teamNumber) ? alliancePoints.get(teamNumber)! : null;
-        let isAllianceSelectionFinal = anyPlayoffMatch;
+        let isAllianceSelectionFinal = allianceSelectionFinal;
         if (qualPoints == null) {
             sel = null;
         } else {
@@ -317,6 +330,8 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let playoff = playoffPts.has(teamNumber) ? playoffPts.get(teamNumber)! : null;
         if (qualPoints == null) {
             playoff = null;
+        } else if (!allianceTeams.has(teamNumber) && allianceSelectionFinal) {
+            playoff = 0; // not selected for playoffs once alliances are final
         } else if (playoffsComplete && playoff == null) {
             playoff = 0; // playoffs finished; unplaced teams get 0
         }
