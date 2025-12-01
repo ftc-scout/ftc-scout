@@ -96,6 +96,8 @@ query EventPage($season: Int!, $code: String!) {
             awardPoints
             totalPoints
             rank
+            advanced
+            isAdvancementEligible
         }
     }
 }
