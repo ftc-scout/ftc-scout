@@ -216,6 +216,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             let redScore = scoreFor(m.id, Alliance.Red);
             let blueScore = scoreFor(m.id, Alliance.Blue);
             if (redScore == null || blueScore == null) continue;
+            if (redScore == blueScore) continue;
 
             let redWins = redScore > blueScore;
             let winner = redWins ? redAlliance : blueAlliance;
