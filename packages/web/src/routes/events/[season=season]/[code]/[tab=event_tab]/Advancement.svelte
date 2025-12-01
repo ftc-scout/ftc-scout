@@ -25,6 +25,8 @@
         awardPoints?: number | null;
         totalPoints?: number | null;
         rank?: number | null;
+        advanced: boolean;
+        isAdvancementEligible: boolean;
         team?: EventTeam["team"] | null | undefined;
         stats?: EventTeam["stats"] | null | undefined;
     }

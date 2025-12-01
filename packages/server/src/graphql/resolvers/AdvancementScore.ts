@@ -20,6 +20,8 @@ export const AdvancementScoreGQL = new GraphQLObjectType({
         awardPoints: nullTy(IntTy),
         totalPoints: nullTy(IntTy),
         rank: nullTy(IntTy),
+        advanced: BoolTy,
+        isAdvancementEligible: BoolTy,
         team: {
             type: TeamGQL,
             resolve: dataLoaderResolverSingle<AdvancementScore, Team, number, { number: number }>(
