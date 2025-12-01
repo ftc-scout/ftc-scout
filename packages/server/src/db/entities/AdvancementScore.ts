@@ -44,6 +44,12 @@ export class AdvancementScore extends BaseEntity {
     @Column("int", { nullable: true })
     rank!: number | null;
 
+    @Column("bool", { default: true })
+    isAdvancementEligible!: boolean;
+
+    @Column("bool", { default: false })
+    advanced!: boolean;
+
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
@@ -63,6 +69,8 @@ export class AdvancementScore extends BaseEntity {
             awardPoints: null,
             totalPoints: null,
             rank: null,
+            isAdvancementEligible: true,
+            advanced: false,
         } satisfies DeepPartial<AdvancementScore>);
     }
 }

@@ -19,6 +19,7 @@ import { getAlliances } from "../../ftc-api/get-alliances";
 import { LeagueRankingSchemas } from "../entities/dyn/league-ranking";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { MatchScoreSchemas } from "../entities/dyn/match-score";
+import { Team } from "../entities/Team";
 import { In } from "typeorm";
 
 const SUPPORTED_EVENT_TYPES: EventType[] = [
@@ -39,6 +40,8 @@ type TeamRow = {
     awardPoints: number | null;
     totalPoints: number | null;
     rank: number | null;
+    isAdvancementEligible: boolean;
+    advanced: boolean;
 };
 
 export async function computeAdvancementForEvent(season: Season, eventCode: string) {
@@ -302,6 +305,48 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     });
     awards.forEach((a) => teamNumbers.add(a.teamNumber));
 
+    const teamNumberList = [...teamNumbers];
+    const QUALIFYING_EVENT_TYPES: EventType[] = [EventType.Qualifier, EventType.LeagueTournament];
+
+    const teamRegionMap = new Map<number, string | null>();
+    const qualEventCounts = new Map<number, number>();
+    const previouslyAdvanced = new Set<number>();
+
+    if (teamNumberList.length > 0) {
+        let teams = await Team.createQueryBuilder("team")
+            .select(["team.number", "team.regionCode"])
+            .where("team.number IN (:...teamNumbers)", { teamNumbers: teamNumberList })
+            .getMany();
+        teams.forEach((t) => teamRegionMap.set(t.number, t.regionCode ?? null));
+
+        let qualCountRows = await DATA_SOURCE.getRepository(TeamEventParticipationSchemas[season])
+            .createQueryBuilder("tep")
+            .innerJoin(Event, "e", "tep.season = e.season AND tep.eventCode = e.code")
+            .where("tep.season = :season", { season })
+            .andWhere("tep.teamNumber IN (:...teamNumbers)", { teamNumbers: teamNumberList })
+            .andWhere("e.type IN (:...types)", { types: QUALIFYING_EVENT_TYPES })
+            .andWhere("e.end < :eventStart", { eventStart: event.start })
+            .select("tep.teamNumber", "teamNumber")
+            .addSelect("COUNT(DISTINCT tep.eventCode)", "cnt")
+            .groupBy("tep.teamNumber")
+            .getRawMany();
+        qualCountRows.forEach((row: any) => {
+            qualEventCounts.set(Number(row.teamNumber), Number(row.cnt));
+        });
+
+        let priorAdvRows = await DATA_SOURCE.getRepository(AdvancementScore)
+            .createQueryBuilder("as")
+            .innerJoin(Event, "e", "as.season = e.season AND as.eventCode = e.code")
+            .where("as.season = :season", { season })
+            .andWhere("as.teamNumber IN (:...teamNumbers)", { teamNumbers: teamNumberList })
+            .andWhere("as.advanced = true")
+            .andWhere("e.type IN (:...types)", { types: QUALIFYING_EVENT_TYPES })
+            .andWhere("e.end < :eventStart", { eventStart: event.start })
+            .select("as.teamNumber", "teamNumber")
+            .getRawMany();
+        priorAdvRows.forEach((row: any) => previouslyAdvanced.add(Number(row.teamNumber)));
+    }
+
     let allianceSelectionFinal = anyPlayoffMatch || allianceTeams.size > 0;
     let rows: TeamRow[] = [];
     for (let teamNumber of teamNumbers) {
@@ -352,7 +397,19 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             awardPoints: award,
             totalPoints: total,
             rank: null,
+            isAdvancementEligible: true,
+            advanced: false,
         });
+    }
+
+    for (let r of rows) {
+        let regionOk =
+            event.regionCode == null ||
+            !teamRegionMap.has(r.teamNumber) ||
+            teamRegionMap.get(r.teamNumber) === event.regionCode;
+        let playedCountOk = (qualEventCounts.get(r.teamNumber) ?? 0) < 3;
+        let notPreviouslyAdvanced = !previouslyAdvanced.has(r.teamNumber);
+        r.isAdvancementEligible = regionOk && playedCountOk && notPreviouslyAdvanced;
     }
 
     // Rank teams using tie-break order (first five only)
@@ -369,6 +426,17 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             return (b.qualPoints ?? 0) - (a.qualPoints ?? 0);
         return 0;
     });
+
+    if (
+        (event.advancementSlots ?? 0) > 0 &&
+        QUALIFYING_EVENT_TYPES.includes(event.type as EventType)
+    ) {
+        let eligibleRows = rows.filter((r) => r.isAdvancementEligible);
+        let advSlots = Math.min(event.advancementSlots ?? 0, eligibleRows.length);
+        for (let i = 0; i < advSlots; i++) {
+            eligibleRows[i].advanced = true;
+        }
+    }
 
     rows.forEach((r, i) => {
         r.totalPoints = r.totalPoints ?? 0;
@@ -395,6 +463,8 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             existing.awardPoints = r.awardPoints;
             existing.totalPoints = r.totalPoints;
             existing.rank = (r as any).rank ?? null;
+            existing.isAdvancementEligible = r.isAdvancementEligible;
+            existing.advanced = r.advanced;
             await em.save(existing);
         }
     });
