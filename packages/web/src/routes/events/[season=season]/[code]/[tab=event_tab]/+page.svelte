@@ -218,7 +218,7 @@
                 [faChartLine, "Preview", "preview", shouldShowPreviewTab],
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!rankingTeamsWithStats.length],
-                [faRankingStar, "Leagues", "league-rankings", showLeagueRankingsTab],
+                [faRankingStar, "League", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
                 [faChartLine, "Advancement", "advancement", showAdvancementTab],
