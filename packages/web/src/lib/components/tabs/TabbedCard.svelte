@@ -106,7 +106,7 @@
         border-top-left-radius: 0;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 825px) {
         .tab:not(.selected) .maybe-hide {
             display: none;
         }
