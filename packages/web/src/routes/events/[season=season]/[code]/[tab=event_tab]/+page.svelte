@@ -85,7 +85,7 @@
     $: eventHasMatches = (event?.matches?.length ?? 0) > 0;
     $: scheduledEventDate = event?.end ?? event?.start ?? null;
     $: eventHasPassedScheduledDate = scheduledEventDate
-        ? Date.now() > new Date(scheduledEventDate).getTime()
+        ? Date.now() > new Date(scheduledEventDate).getTime() + 86400000
         : false;
     $: shouldShowPreviewTab =
         (event?.teams?.length ?? 0) > 0 &&
