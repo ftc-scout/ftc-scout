@@ -90,7 +90,7 @@
     $: eventHasPlayedMatch = event?.matches?.some((m) => !!m.scores) ?? false;
     $: scheduledEventDate = event?.end ?? event?.start ?? null;
     $: eventHasPassedScheduledDate = scheduledEventDate
-        ? Date.now() > new Date(scheduledEventDate).getTime()
+        ? Date.now() > new Date(scheduledEventDate).getTime() + 86400000
         : false;
     $: eventHasStarted = event?.start ? Date.now() >= new Date(event.start).getTime() : false;
     $: shouldShowPreviewTab =
