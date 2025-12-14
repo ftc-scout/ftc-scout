@@ -208,7 +208,9 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
         leagueRankings: {
             type: list(nn(LeagueRankingGroupGQL)),
             resolve: async (event) => {
-                if (!event.leagueCode || event.type != EventType.LeagueTournament) return [];
+                let isLeagueEvent =
+                    event.type == EventType.LeagueTournament || event.type == EventType.LeagueMeet;
+                if (!event.leagueCode || !isLeagueEvent) return [];
 
                 let parentWhere: FindOptionsWhere<League> = {
                     season: event.season,
