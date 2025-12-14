@@ -120,8 +120,8 @@
                   leagueRankingGroups[0]?.league.code ?? "parent"
               }`
             : null;
-    $: isLeagueTournament = event?.type === "LeagueTournament";
-    $: showLeagueRankingsTab = !!isLeagueTournament;
+    $: isLeagueEvent = event?.type === "LeagueTournament" || event?.type === "LeagueMeet";
+    $: showLeagueRankingsTab = !!isLeagueEvent;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
