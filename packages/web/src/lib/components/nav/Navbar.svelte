@@ -3,6 +3,7 @@
     import Hamburger from "./Hamburger.svelte";
     import Logo from "./Logo.svelte";
     import Searchbar from "./search/Searchbar.svelte";
+    import UserMenu from "./UserMenu.svelte";
 </script>
 
 <nav>
@@ -13,6 +14,7 @@
 
     <div class="right">
         <Searchbar />
+        <UserMenu />
         <DarkModeToggle />
     </div>
 </nav>

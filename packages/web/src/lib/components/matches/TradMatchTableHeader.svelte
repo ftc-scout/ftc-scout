@@ -5,6 +5,7 @@
             <div>Score</div>
         </th><th class="r">Red Alliance</th>
         <th class="b">Blue Alliance</th>
+        <th class="v">Video</th>
     </tr>
 </thead>
 
@@ -15,12 +16,12 @@
 
     tr {
         display: grid;
-        grid-template-columns: 10.75em 1fr 1fr;
+        grid-template-columns: 10.75em 1fr 1fr 3em;
     }
 
     @media (max-width: 1000px) {
         tr {
-            grid-template-columns: 9.75em 1fr 1fr;
+            grid-template-columns: 9.75em 1fr 1fr 3em;
         }
     }
 
@@ -52,7 +53,13 @@
     .b {
         background-color: var(--blue-team-color);
         color: var(--team-text-color);
+    }
 
+    .v {
+        background-color: var(--theme-color);
+        color: var(--theme-text-color);
         border-top-right-radius: 7px;
+        font-size: 0.8em;
+        padding: var(--sm-pad);
     }
 </style>
