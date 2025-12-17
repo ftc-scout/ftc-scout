@@ -9,14 +9,17 @@ import {
     DateTimeTy,
     DateTy,
     EventTypeOption,
+    FloatTy,
     IntTy,
     RegionOption,
     Season,
     StrTy,
+    DESCRIPTORS,
     fuzzySearch,
     getEventTypes,
     getRegionCodes,
     groupBy,
+    EventType,
     list,
     listTy,
     nn,
@@ -31,8 +34,33 @@ import { TeamEventParticipation } from "../../db/entities/dyn/team-event-partici
 import { LocationGQL } from "../objs/Location";
 import { DateTime } from "luxon";
 import { DATA_SOURCE } from "../../db/data-source";
-import { Brackets } from "typeorm";
+import { Brackets, FindOptionsWhere } from "typeorm";
 import { newMatchesKey, pubsub } from "./pubsub";
+import { TepStatsUnionGQL } from "../dyn/dyn-types-schema";
+import { addTypename } from "../dyn/tep";
+import { League } from "../../db/entities/League";
+import { LeagueRanking } from "../../db/entities/dyn/league-ranking";
+import { LeagueRankingGroupGQL } from "./League";
+import { AdvancementScoreGQL } from "./AdvancementScore";
+import { AdvancementScore } from "../../db/entities/AdvancementScore";
+import { getAdvancement } from "../../ftc-api/get-advancement";
+
+const EventAdvancementInfoGQL = new GraphQLObjectType({
+    name: "EventAdvancementInfo",
+    fields: {
+        slots: nullTy(IntTy),
+        advancesTo: nullTy(StrTy),
+    },
+});
+
+const EventPreviewStatGQL = new GraphQLObjectType({
+    name: "EventPreviewStat",
+    fields: {
+        teamNumber: IntTy,
+        npOpr: nullTy(FloatTy),
+        stats: { type: TepStatsUnionGQL },
+    },
+});
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Event",
@@ -176,6 +204,111 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                         : { eventSeason: e.season, eventCode: e.code },
                 singleSeasonScoreAwareMatchLoader
             ),
+        },
+        leagueRankings: {
+            type: list(nn(LeagueRankingGroupGQL)),
+            resolve: async (event) => {
+                let isLeagueEvent =
+                    event.type == EventType.LeagueTournament || event.type == EventType.LeagueMeet;
+                if (!event.leagueCode || !isLeagueEvent) return [];
+
+                let parentWhere: FindOptionsWhere<League> = {
+                    season: event.season,
+                    code: event.leagueCode,
+                };
+                if (event.regionCode) parentWhere.regionCode = event.regionCode;
+                let parentLeague = await League.findOne({ where: parentWhere });
+                if (!parentLeague) return [];
+
+                let repo = LeagueRanking[event.season as Season];
+                if (!repo) {
+                    return [{ league: parentLeague, teams: [] }];
+                }
+
+                let regionCode = parentLeague.regionCode ?? event.regionCode ?? null;
+                if (!regionCode) {
+                    return [{ league: parentLeague, teams: [] }];
+                }
+
+                let rows = await repo.find({
+                    where: {
+                        season: event.season as Season,
+                        leagueCode: parentLeague.code,
+                        regionCode,
+                    },
+                    order: { rank: "ASC" },
+                });
+
+                return [{ league: parentLeague, teams: rows }];
+            },
+        },
+        advancement: {
+            type: list(nn(AdvancementScoreGQL)),
+            resolve: (event) =>
+                AdvancementScore.find({
+                    where: { season: event.season, eventCode: event.code },
+                    order: { rank: "ASC" },
+                }),
+        },
+        advancementInfo: {
+            type: EventAdvancementInfoGQL,
+            resolve: (event) => getAdvancement(event.season, event.code),
+        },
+        previewStats: {
+            type: list(nn(EventPreviewStatGQL)),
+            resolve: async (event) => {
+                let roster = await TeamEventParticipation[event.season].find({
+                    where: { season: event.season, eventCode: event.code },
+                    select: ["teamNumber"],
+                });
+                let teamNumbers = roster.map((r) => r.teamNumber);
+                if (!teamNumbers.length) return [];
+
+                let descriptor = DESCRIPTORS[event.season];
+                let getQuickOpr = (t: TeamEventParticipation) => {
+                    let val = descriptor.pensSubtract
+                        ? t.opr?.totalPoints ?? null
+                        : t.opr?.totalPointsNp ?? t.opr?.totalPoints ?? null;
+                    return val == null ? null : +val;
+                };
+
+                let candidateStats = await TeamEventParticipation[event.season]
+                    .createQueryBuilder("t")
+                    .innerJoin(Event, "e", "e.season = t.season AND e.code = t.eventCode")
+                    .where("t.teamNumber IN (:...teamNumbers)", { teamNumbers })
+                    .andWhere("NOT t.isRemote")
+                    .andWhere("t.hasStats")
+                    .andWhere("NOT e.modified_rules")
+                    .getMany();
+
+                let bestStats = new Map<
+                    number,
+                    { row: TeamEventParticipation; quick: number | null }
+                >();
+                for (let row of candidateStats) {
+                    let quick = getQuickOpr(row);
+                    let existing = bestStats.get(row.teamNumber);
+                    if (!existing) {
+                        bestStats.set(row.teamNumber, { row, quick });
+                        continue;
+                    }
+
+                    let existingValue = existing.quick ?? Number.NEGATIVE_INFINITY;
+                    let currentValue = quick ?? Number.NEGATIVE_INFINITY;
+                    if (currentValue > existingValue) {
+                        bestStats.set(row.teamNumber, { row, quick });
+                    }
+                }
+
+                return teamNumbers.map((teamNumber) => {
+                    let entry = bestStats.get(teamNumber);
+                    return {
+                        teamNumber,
+                        npOpr: entry?.quick ?? null,
+                        stats: entry ? addTypename(entry.row) : null,
+                    };
+                });
+            },
         },
     }),
 });
