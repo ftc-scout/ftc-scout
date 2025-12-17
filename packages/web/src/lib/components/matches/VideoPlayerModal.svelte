@@ -39,7 +39,7 @@
             <iframe
                 src={embedUrl}
                 title="YouTube video player"
-                frameborder="0"
+                style="border: 0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen
             />

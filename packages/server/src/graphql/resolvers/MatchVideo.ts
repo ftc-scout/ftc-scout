@@ -1,4 +1,4 @@
-import { BoolTy, IntTy, StrTy, list, nn } from "@ftc-scout/common";
+import { BoolTy, IntTy, Season, StrTy, list, nn } from "@ftc-scout/common";
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
 import { MatchVideo } from "../../db/entities/MatchVideo";
 import { GQLContext } from "../context";
@@ -40,7 +40,11 @@ export const MatchVideoQueries: Record<string, GraphQLFieldConfig<any, GQLContex
             }: { eventSeason: number; eventCode: string; matchId: number }
         ) => {
             return MatchVideo.find({
-                where: { eventSeason, eventCode, matchId } as any,
+                where: {
+                    eventSeason: eventSeason as Season,
+                    eventCode,
+                    matchId,
+                },
                 relations: ["createdBy"],
             });
         },
@@ -90,7 +94,7 @@ export const MatchVideoMutations: Record<string, GraphQLFieldConfig<any, GQLCont
             }
 
             const video = await MatchVideo.create({
-                eventSeason: eventSeason as any,
+                eventSeason: eventSeason as Season,
                 eventCode,
                 matchId,
                 youtubeUrl,
