@@ -12,3 +12,4 @@ export const CACHE_REQ = process.env.CACHE_REQ === "1" && IS_DEV;
 
 export const FRONTEND_CODE = process.env.FRONTEND_CODE;
 export const DB_TIMEOUT = process.env.DB_TIMEOUT;
+export const SESSION_SECRET = process.env.SESSION_SECRET || "ftcscout-dev-secret-change-in-production";
