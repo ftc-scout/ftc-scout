@@ -33,6 +33,8 @@
         remote: boolean;
     };
     export let focusedTeam: number | null = null;
+    export let showNonPenaltyScores = false;
+    export let showHeartLegend = true;
 
     $: timeZone = event.timezone;
     $: remote = event.remote;
@@ -118,6 +120,7 @@
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
                         {teamCount}
+                        {showNonPenaltyScores}
                     />
                 {/each}
                 {#if finals.length}
@@ -131,6 +134,7 @@
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
+                        {showNonPenaltyScores}
                     />
                 {/each}
                 {#if semis.length}
@@ -144,6 +148,7 @@
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
+                        {showNonPenaltyScores}
                     />
                 {/each}
                 {#if quals.length && (finals.length || semis.length || doubleElim.length)}
@@ -157,6 +162,7 @@
                         {timeZone}
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
+                        {showNonPenaltyScores}
                     />
                 {/each}
             {/if}
@@ -187,7 +193,7 @@
     </div>
 {/if}
 
-{#if doubleElim.length > 0}
+{#if showHeartLegend && doubleElim.length > 0}
     <div style:margin-top="var(--md-gap)" style="display: flex; gap: var(--vl-gap)">
         <div><Fa icon={faHeart} style="color: var(--red-team-color)" /> Elimination Remaining</div>
         <div>
