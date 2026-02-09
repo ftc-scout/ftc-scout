@@ -63,7 +63,6 @@
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
         border: 1px solid transparent;
-        border-bottom: 1px solid var(--sep-color);
 
         transform: translate(0, 1px);
 
