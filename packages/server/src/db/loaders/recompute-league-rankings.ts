@@ -60,6 +60,18 @@ export async function recomputeLeagueRankings(
         return;
     }
 
+    let strictTeamNumbers = new Set(
+        (
+            await LeagueTeam.find({
+                where: {
+                    season,
+                    leagueCode: league.code,
+                    regionCode: regionCondition(league.regionCode),
+                },
+            })
+        ).map((t) => t.teamNumber)
+    );
+
     let matches = await DATA_SOURCE.getRepository(Match)
         .createQueryBuilder("m")
         .where("m.event_season = :season", { season })
@@ -140,6 +152,10 @@ export async function recomputeLeagueRankings(
         }
     );
 
+    stats = stats
+        .filter((s) => strictTeamNumbers.size === 0 || strictTeamNumbers.has(s.teamNumber))
+        .sort((a, b) => a.rank - b.rank)
+        .map((s, i) => ({ ...s, rank: i + 1 }));
     let totalsByTeam = new Map(allMatchStats.map((s) => [s.teamNumber, s]));
     stats = stats.map((s) => {
         let totals = totalsByTeam.get(s.teamNumber);
@@ -410,9 +426,14 @@ function makeMatchKey(match: LeagueFrontendMatch) {
 
 async function eventsForLeague(season: Season, league: League) {
     let childLeagues = await League.find({
-        where: { season, parentLeagueCode: league.code },
+        where: [
+            { season, parentLeagueCode: league.parentLeagueCode ?? "" }, // Get all league tournaments if current League is a child league (Tournament)
+            { season, parentLeagueCode: league.code, regionCode: league.regionCode }, // Get all league tournaments if current League is the parent league
+            { season, code: league.parentLeagueCode ?? "", regionCode: league.regionCode }, // Get all League meets
+        ],
         select: ["code", "regionCode"],
     });
+
     let includedLeagues = childLeagues.length
         ? childLeagues.map<LeagueIdentifier>((l) => ({
               code: l.code,
