@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "prepare": "husky install",
+        "prepare": "husky install || true",
         "pretty": "prettier --write .",
         "common:watch": "npm run watch -w packages/common",
         "common:build": "npm run build -w packages/common",
