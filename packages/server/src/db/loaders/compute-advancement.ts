@@ -44,6 +44,10 @@ type TeamRow = {
     rank: number | null;
     isAdvancementEligible: boolean;
     advanced: boolean;
+    averageNPMatchPoints?: number;
+    averageAutoPoints?: number;
+    highestNPMatchPoints?: number;
+    secondHighestNPMatchPoints?: number;
 };
 
 type QualRow = { teamNumber: number; rank: number; qualMatchesPlayed?: number };
@@ -53,6 +57,8 @@ type DivisionTeamInfo = {
     isQualFinal: boolean;
     allianceSelectionPoints: number | null;
     isAllianceSelectionFinal: boolean;
+    qualScoresNP: number[];
+    autoScores: number[];
 };
 
 const ADVANCEMENT_JUDGED_AWARD_TYPES_2025 = new Set<AwardType>([
@@ -290,6 +296,14 @@ function sortRowsByTiebreak2025(rows: TeamRow[]) {
             return (b.allianceSelectionPoints ?? 0) - (a.allianceSelectionPoints ?? 0);
         if ((b.qualPoints ?? 0) != (a.qualPoints ?? 0))
             return (b.qualPoints ?? 0) - (a.qualPoints ?? 0);
+        if ((b.averageNPMatchPoints ?? 0) != (a.averageNPMatchPoints ?? 0))
+            return (b.averageNPMatchPoints ?? 0) - (a.averageNPMatchPoints ?? 0);
+        if ((b.averageAutoPoints ?? 0) != (a.averageAutoPoints ?? 0))
+            return (b.averageAutoPoints ?? 0) - (a.averageAutoPoints ?? 0);
+        if ((b.highestNPMatchPoints ?? 0) != (a.highestNPMatchPoints ?? 0))
+            return (b.highestNPMatchPoints ?? 0) - (a.highestNPMatchPoints ?? 0);
+        if ((b.secondHighestNPMatchPoints ?? 0) != (a.secondHighestNPMatchPoints ?? 0))
+            return (b.secondHighestNPMatchPoints ?? 0) - (a.secondHighestNPMatchPoints ?? 0);
         return 0;
     });
 }
@@ -691,6 +705,45 @@ async function computeDivisionParentTeamInfo(
             }
         }
 
+        let matchScoresPerTeam = new Map<number, number[]>();
+        let autoScoresPerTeam = new Map<number, number[]>();
+        if (hasQuals) {
+            let qualMatchIds = qualMatches.map((m) => m.id);
+            let tmps = await TeamMatchParticipation.findBy({
+                season,
+                eventCode: divEvent.code,
+                matchId: In(qualMatchIds),
+            });
+            let scores = await DATA_SOURCE.getRepository(MatchScoreSchemas[season]).findBy({
+                season,
+                eventCode: divEvent.code,
+                matchId: In(qualMatchIds),
+            });
+
+            scores.forEach((s) => {
+                let matchId = s.matchId;
+                let alliance = s.alliance;
+                let score = s.totalPointsNp ?? 0;
+                let autoScore = (s.autoPoints as number) ?? 0;
+
+                let teamsInAlliance = tmps
+                    .filter((t) => t.matchId === matchId && t.alliance === alliance)
+                    .map((t) => t.teamNumber);
+
+                teamsInAlliance.forEach((teamNumber) => {
+                    if (!matchScoresPerTeam.has(teamNumber)) {
+                        matchScoresPerTeam.set(teamNumber, []);
+                    }
+                    matchScoresPerTeam.get(teamNumber)!.push(score);
+
+                    if (!autoScoresPerTeam.has(teamNumber)) {
+                        autoScoresPerTeam.set(teamNumber, []);
+                    }
+                    autoScoresPerTeam.get(teamNumber)!.push(autoScore);
+                });
+            });
+        }
+
         for (let q of qualRows) {
             let qualPoints: number | null = null;
             if (q && teamCount > 0) {
@@ -707,6 +760,8 @@ async function computeDivisionParentTeamInfo(
                 isQualFinal,
                 allianceSelectionPoints: sel,
                 isAllianceSelectionFinal,
+                qualScoresNP: matchScoresPerTeam.get(q.teamNumber) ?? [],
+                autoScores: autoScoresPerTeam.get(q.teamNumber) ?? [],
             });
         }
     }
@@ -778,6 +833,8 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 isQualFinal: false,
                 allianceSelectionPoints: null,
                 isAllianceSelectionFinal: false,
+                qualScoresNP: [],
+                autoScores: [],
             };
 
             let qualPoints = info.qualPoints;
@@ -820,6 +877,16 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 rank: null,
                 isAdvancementEligible: true,
                 advanced: false,
+                averageNPMatchPoints: info.qualScoresNP.length
+                    ? info.qualScoresNP.reduce((a, b) => a + b, 0) / info.qualScoresNP.length
+                    : 0,
+                highestNPMatchPoints: info.qualScoresNP.length ? Math.max(...info.qualScoresNP) : 0,
+                secondHighestNPMatchPoints: info.qualScoresNP.length
+                    ? [...info.qualScoresNP].sort((a, b) => b - a)[1] ?? 0
+                    : 0,
+                averageAutoPoints: info.autoScores.length
+                    ? info.autoScores.reduce((a, b) => a + b, 0) / info.autoScores.length
+                    : 0,
             });
         }
 
