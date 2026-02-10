@@ -195,9 +195,6 @@ async function getQualRowsForEvent(season: Season, event: Event): Promise<QualRo
         teamNumber: t.teamNumber,
         rank: t.rank,
         qualMatchesPlayed: (t as any).qualMatchesPlayed ?? undefined,
-        averageNPMatchPoints: (t as any).avg.totalPointsNp,
-        averageAutoPoints: (t as any).avg.autoPoints,
-        highestNPMatchPoints: (t as any).max.totalPointsNp,
     }));
 }
 
@@ -943,6 +940,45 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         teamNumberList
     );
 
+    let matchScoresPerTeam = new Map<number, number[]>();
+    let autoScoresPerTeam = new Map<number, number[]>();
+    if (hasQuals) {
+        let qualMatchIds = qualMatches.map((m) => m.id);
+        let tmps = await TeamMatchParticipation.findBy({
+            season,
+            eventCode: eventCode,
+            matchId: In(qualMatchIds),
+        });
+        let scores = await DATA_SOURCE.getRepository(MatchScoreSchemas[season]).findBy({
+            season,
+            eventCode: eventCode,
+            matchId: In(qualMatchIds),
+        });
+
+        scores.forEach((s) => {
+            let matchId = s.matchId;
+            let alliance = s.alliance;
+            let score = s.totalPointsNp ?? 0;
+            let autoScore = (s.autoPoints as number) ?? 0;
+
+            let teamsInAlliance = tmps
+                .filter((t) => t.matchId === matchId && t.alliance === alliance)
+                .map((t) => t.teamNumber);
+
+            teamsInAlliance.forEach((teamNumber) => {
+                if (!matchScoresPerTeam.has(teamNumber)) {
+                    matchScoresPerTeam.set(teamNumber, []);
+                }
+                matchScoresPerTeam.get(teamNumber)!.push(score);
+
+                if (!autoScoresPerTeam.has(teamNumber)) {
+                    autoScoresPerTeam.set(teamNumber, []);
+                }
+                autoScoresPerTeam.get(teamNumber)!.push(autoScore);
+            });
+        });
+    }
+
     let allianceSelectionFinal = anyPlayoffMatch || allianceTeams.size > 0;
     let rows: TeamRow[] = [];
     for (let teamNumber of teamNumbers) {
@@ -972,7 +1008,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let rawAward: number | null = awardPts.has(teamNumber) ? awardPts.get(teamNumber)! : null;
         let award = normalizeAwardPoints(awardsLoaded, rawAward);
         let total = sumTotalPoints(qualPoints, sel, playoff, award);
-        let qualRow = qualRows.find((q) => q.teamNumber === teamNumber);
 
         rows.push({
             teamNumber,
@@ -986,10 +1021,20 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             rank: null,
             isAdvancementEligible: true,
             advanced: false,
-            averageNPMatchPoints: qualRow?.averageNPMatchPoints ?? 0,
-            averageAutoPoints: qualRow?.averageAutoPoints ?? 0,
-            highestNPMatchPoints: qualRow?.highestNPMatchPoints ?? 0,
-            secondHighestNPMatchPoints: 0, // TODO: add second highest NP match points to qual rows and include here, this is less straightforward, since it isnt already calculated.
+            averageNPMatchPoints: matchScoresPerTeam.has(teamNumber)
+                ? matchScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b, 0) /
+                  matchScoresPerTeam.get(teamNumber)!.length
+                : 0,
+            highestNPMatchPoints: matchScoresPerTeam.has(teamNumber)
+                ? Math.max(...matchScoresPerTeam.get(teamNumber)!)
+                : 0,
+            secondHighestNPMatchPoints: matchScoresPerTeam.has(teamNumber)
+                ? [...matchScoresPerTeam.get(teamNumber)!].sort((a, b) => b - a)[1] ?? 0
+                : 0,
+            averageAutoPoints: autoScoresPerTeam.has(teamNumber)
+                ? autoScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b, 0) /
+                  autoScoresPerTeam.get(teamNumber)!.length
+                : 0,
         });
     }
 
