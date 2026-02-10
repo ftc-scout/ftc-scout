@@ -50,7 +50,14 @@ type TeamRow = {
     secondHighestNPMatchPoints?: number;
 };
 
-type QualRow = { teamNumber: number; rank: number; qualMatchesPlayed?: number };
+type QualRow = {
+    teamNumber: number;
+    rank: number;
+    qualMatchesPlayed?: number;
+    averageNPMatchPoints?: number;
+    averageAutoPoints?: number;
+    highestNPMatchPoints?: number;
+};
 
 type DivisionTeamInfo = {
     qualPoints: number | null;
@@ -188,6 +195,9 @@ async function getQualRowsForEvent(season: Season, event: Event): Promise<QualRo
         teamNumber: t.teamNumber,
         rank: t.rank,
         qualMatchesPlayed: (t as any).qualMatchesPlayed ?? undefined,
+        averageNPMatchPoints: (t as any).avg.totalPointsNp,
+        averageAutoPoints: (t as any).avg.autoPoints,
+        highestNPMatchPoints: (t as any).max.totalPointsNp,
     }));
 }
 
@@ -525,6 +535,7 @@ async function computeParentFinalistsPlayoffPoints(
     if (finalists.length !== 2) return;
 
     // Resolve finalist team sets from their division champion alliances.
+
     let finalistTeams = finalists.map((f) => {
         let alliance = f.alliances?.find((a) => a.number === f.championAllianceNum) ?? null;
         return {
@@ -961,6 +972,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let rawAward: number | null = awardPts.has(teamNumber) ? awardPts.get(teamNumber)! : null;
         let award = normalizeAwardPoints(awardsLoaded, rawAward);
         let total = sumTotalPoints(qualPoints, sel, playoff, award);
+        let qualRow = qualRows.find((q) => q.teamNumber === teamNumber);
 
         rows.push({
             teamNumber,
@@ -974,6 +986,10 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             rank: null,
             isAdvancementEligible: true,
             advanced: false,
+            averageNPMatchPoints: qualRow?.averageNPMatchPoints ?? 0,
+            averageAutoPoints: qualRow?.averageAutoPoints ?? 0,
+            highestNPMatchPoints: qualRow?.highestNPMatchPoints ?? 0,
+            secondHighestNPMatchPoints: 0, // TODO: add second highest NP match points to qual rows and include here, this is less straightforward, since it isnt already calculated.
         });
     }
 
