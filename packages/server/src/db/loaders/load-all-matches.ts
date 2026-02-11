@@ -60,6 +60,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
 
     let events = await eventsToFetch(season, loadType);
     let leaguesToRecompute = new Map<string, LeagueKey>();
+    let advancementToRecompute = new Set<string>();
 
     console.info(`Got ${events.length} events to fetch.`);
 
@@ -157,7 +158,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
             }
 
             if (season >= 2025) {
-                await computeAdvancementForEvent(season, event.code);
+                advancementToRecompute.add(event.code);
             }
 
             console.info(`Loaded ${i + 1}/${events.length}.`);
@@ -171,8 +172,16 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
         }
     }
 
+    console.info("Leagues to recompute:", leaguesToRecompute.size);
     for (let { leagueCode, regionCode } of leaguesToRecompute.values()) {
+        console.info(`Recomputing league ${leagueCode} (${regionCode}).`);
         await recomputeLeagueRankings(season, leagueCode, regionCode);
+    }
+
+    console.info("Advancements to recompute:", advancementToRecompute.size);
+    for (let eventCode of advancementToRecompute) {
+        console.info(`Recomputing advancement for event ${eventCode}.`);
+        await computeAdvancementForEvent(season, eventCode);
     }
 
     await DataHasBeenLoaded.create({
