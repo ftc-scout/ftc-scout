@@ -942,6 +942,80 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
 
     let matchScoresPerTeam = new Map<number, number[]>();
     let autoScoresPerTeam = new Map<number, number[]>();
+
+    if (event.leagueCode) {
+        let leagueMeets = await Event.findBy({
+            season,
+            leagueCode: event.leagueCode,
+            type: "LeagueMeet",
+        });
+
+        for (let meet of leagueMeets) {
+            let matches = await Match.findBy({
+                eventSeason: season,
+                eventCode: meet.code,
+                tournamentLevel: TournamentLevel.Quals,
+            });
+
+            let matchIds = matches.map((m) => m.id);
+            let tmps = await TeamMatchParticipation.findBy({
+                season,
+                eventCode: meet.code,
+                matchId: In(matchIds),
+            });
+            let scores = await DATA_SOURCE.getRepository(MatchScoreSchemas[season]).findBy({
+                season,
+                eventCode: meet.code,
+                matchId: In(matchIds),
+            });
+
+            scores.forEach((s) => {
+                let matchId = s.matchId;
+                let alliance = s.alliance;
+                let score = s.totalPointsNp ?? 0;
+                let autoScore = (s.autoPoints as number) ?? 0;
+
+                let teamsInAlliance = tmps
+                    .filter((t) => t.matchId === matchId && t.alliance === alliance)
+                    .map((t) => t.teamNumber);
+
+                teamsInAlliance.forEach((teamNumber) => {
+                    if (!matchScoresPerTeam.has(teamNumber)) {
+                        matchScoresPerTeam.set(teamNumber, []);
+                    }
+                    matchScoresPerTeam.get(teamNumber)!.push(score);
+
+                    if (!autoScoresPerTeam.has(teamNumber)) {
+                        autoScoresPerTeam.set(teamNumber, []);
+                    }
+                    autoScoresPerTeam.get(teamNumber)!.push(autoScore);
+                });
+            });
+        }
+
+        matchScoresPerTeam.forEach((scores, teamNumber) => {
+            if (!scores) return;
+            let amountOfScores = scores.length;
+            if (amountOfScores < 10) {
+                let padding = new Array(10 - amountOfScores).fill(0);
+                matchScoresPerTeam.set(teamNumber, scores.concat(padding));
+            } else if (amountOfScores > 10) {
+                matchScoresPerTeam.set(teamNumber, scores.slice(0, 10));
+            }
+        });
+
+        autoScoresPerTeam.forEach((scores, teamNumber) => {
+            if (!scores) return;
+            let amountOfScores = scores.length;
+            if (amountOfScores < 10) {
+                let padding = new Array(10 - amountOfScores).fill(0);
+                autoScoresPerTeam.set(teamNumber, scores.concat(padding));
+            } else if (amountOfScores > 10) {
+                autoScoresPerTeam.set(teamNumber, scores.slice(0, 10));
+            }
+        });
+    }
+
     if (hasQuals) {
         let qualMatchIds = qualMatches.map((m) => m.id);
         let tmps = await TeamMatchParticipation.findBy({
