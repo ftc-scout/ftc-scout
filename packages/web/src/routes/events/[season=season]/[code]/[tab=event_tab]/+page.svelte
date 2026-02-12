@@ -20,6 +20,7 @@
         faMedal,
         faTrophy,
         faVideo,
+        faRocket,
     } from "@fortawesome/free-solid-svg-icons";
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import { prettyPrintURL } from "$lib/printers/url";
@@ -225,7 +226,7 @@
                 [faRankingStar, "League", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
-                [faChartLine, "Advancement", "advancement", showAdvancementTab],
+                [faRocket, "Advancement", "advancement", showAdvancementTab],
                 [faHashtag, "Teams", "teams", showTeamsTab],
             ]}
             bind:selectedTab
