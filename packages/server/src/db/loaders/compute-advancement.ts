@@ -1000,7 +1000,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 let padding = new Array(10 - amountOfScores).fill(0);
                 matchScoresPerTeam.set(teamNumber, scores.concat(padding));
             } else if (amountOfScores > 10) {
-                matchScoresPerTeam.set(teamNumber, scores.slice(0, 10));
+                matchScoresPerTeam.set(teamNumber, scores.sort((a, b) => b - a).slice(0, 10));
             }
         });
 
@@ -1011,7 +1011,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 let padding = new Array(10 - amountOfScores).fill(0);
                 autoScoresPerTeam.set(teamNumber, scores.concat(padding));
             } else if (amountOfScores > 10) {
-                autoScoresPerTeam.set(teamNumber, scores.slice(0, 10));
+                autoScoresPerTeam.set(teamNumber, scores.sort((a, b) => b - a).slice(0, 10));
             }
         });
     }
