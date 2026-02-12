@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "prepare": "husky install || true",
+        "prepare": "husky install",
         "pretty": "prettier --write .",
         "common:watch": "npm run watch -w packages/common",
         "common:build": "npm run build -w packages/common",
@@ -27,7 +27,8 @@
         "husky": "^8.0.0",
         "lint-staged": "^13.2.2",
         "prettier": "^2.8.8",
-        "prettier-plugin-svelte": "^2.10.1"
+        "prettier-plugin-svelte": "^2.10.1",
+        "typescript": "^5.1.3"
     },
     "workspaces": [
         "packages/common",
@@ -36,7 +37,6 @@
     ],
     "dependencies": {
         "graphql": "^16.7.1",
-        "graphql-fields": "^2.0.3",
-        "typescript": "^5.1.3"
+        "graphql-fields": "^2.0.3"
     }
 }
