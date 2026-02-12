@@ -87,7 +87,6 @@
 
     $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
     $: eventHasMatches = (event?.matches?.length ?? 0) > 0;
-    $: eventHasPlayedMatch = event?.matches?.some((m) => !!m.scores) ?? false;
     $: scheduledEventDate = event?.end ?? event?.start ?? null;
     $: eventHasPassedScheduledDate = scheduledEventDate
         ? Date.now() > new Date(scheduledEventDate).getTime() + 86400000
@@ -112,8 +111,13 @@
             stats: rankingTeam?.stats ?? null,
         };
     });
+    $: amountNonNullStats = advancementRowsWithStats.filter(
+        (r) => r.totalPoints != null && r.totalPoints > 0
+    ).length;
     $: showAdvancementTab =
-        !!advancementRowsWithStats.length && eventHasStarted && eventHasPlayedMatch;
+        !!advancementRowsWithStats.length &&
+        eventHasStarted &&
+        amountNonNullStats / advancementRowsWithStats.length > 0.5;
     $: leagueRankingSaveId =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
