@@ -25,6 +25,13 @@ query EventPage($season: Int!, $code: String!) {
                 ...FullStats
             }
         }
+        previewStats {
+            teamNumber
+            npOpr
+            stats {
+                ...FullStats
+            }
+        }
         awards {
             season
             eventCode
@@ -42,6 +49,55 @@ query EventPage($season: Int!, $code: String!) {
             season
             code
             name
+        }
+        leagueRankings {
+            league {
+                season
+                code
+                name
+                remote
+                regionCode
+                parentLeagueCode
+                parentLeagueName
+                location
+            }
+            teams {
+                season
+                leagueCode
+                regionCode
+                teamNumber
+                team {
+                    number
+                    name
+                    location {
+                        city
+                        state
+                        country
+                    }
+                }
+                stats {
+                    ...FullStats
+                }
+            }
+        }
+        advancement {
+            season
+            eventCode
+            teamNumber
+            team {
+                number
+                name
+            }
+            qualPoints
+            isQualFinal
+            allianceSelectionPoints
+            isAllianceSelectionFinal
+            playoffPoints
+            awardPoints
+            totalPoints
+            rank
+            advanced
+            isAdvancementEligible
         }
     }
 }
