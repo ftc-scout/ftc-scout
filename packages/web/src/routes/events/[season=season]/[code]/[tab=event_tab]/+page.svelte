@@ -14,6 +14,7 @@
         faCalendarAlt,
         faChartLine,
         faHashtag,
+        faLightbulb,
         faLink,
         faLocationDot,
         faRankingStar,
