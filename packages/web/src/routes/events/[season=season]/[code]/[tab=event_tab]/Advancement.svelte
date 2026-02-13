@@ -150,3 +150,8 @@
     {csv}
     hideFiltersAndStats={true}
 />
+
+<div style:margin-top="var(--sm-gap)">
+    <div><b>N/A</b>: no scores available.</div>
+    <div><b>*</b>: Not final. This team is still eligible to earn points in this category.</div>
+</div>

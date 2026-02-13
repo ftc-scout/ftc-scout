@@ -20,6 +20,7 @@
         faMedal,
         faTrophy,
         faVideo,
+        faRocket,
     } from "@fortawesome/free-solid-svg-icons";
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import { prettyPrintURL } from "$lib/printers/url";
@@ -87,7 +88,6 @@
 
     $: hasPreviewData = previewTeams.some((team) => team.quickOpr != null);
     $: eventHasMatches = (event?.matches?.length ?? 0) > 0;
-    $: eventHasPlayedMatch = event?.matches?.some((m) => !!m.scores) ?? false;
     $: scheduledEventDate = event?.end ?? event?.start ?? null;
     $: eventHasPassedScheduledDate = scheduledEventDate
         ? Date.now() > new Date(scheduledEventDate).getTime() + 86400000
@@ -112,8 +112,13 @@
             stats: rankingTeam?.stats ?? null,
         };
     });
+    $: amountNonNullStats = advancementRowsWithStats.filter(
+        (r) => r.totalPoints != null && r.totalPoints > 0
+    ).length;
     $: showAdvancementTab =
-        !!advancementRowsWithStats.length && eventHasStarted && eventHasPlayedMatch;
+        !!advancementRowsWithStats.length &&
+        eventHasStarted &&
+        amountNonNullStats / advancementRowsWithStats.length > 0.5;
     $: leagueRankingSaveId =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
@@ -221,7 +226,7 @@
                 [faRankingStar, "League", "league-rankings", showLeagueRankingsTab],
                 [faBolt, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
-                [faChartLine, "Advancement", "advancement", showAdvancementTab],
+                [faRocket, "Advancement", "advancement", showAdvancementTab],
                 [faHashtag, "Teams", "teams", showTeamsTab],
             ]}
             bind:selectedTab
