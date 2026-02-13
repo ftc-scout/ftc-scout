@@ -13,6 +13,7 @@
         faBolt,
         faCalendarAlt,
         faHashtag,
+        faLightbulb,
         faLink,
         faLocationDot,
         faMedal,
@@ -145,7 +146,7 @@
             tabs={[
                 [faBolt, "Matches", "matches", !!event.matches.length],
                 [faTrophy, "Rankings", "rankings", !!stats.length],
-                [faBolt, "Insights", "insights", !!insights.length],
+                [faLightbulb, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", !!event.awards.length],
                 [faHashtag, "Teams", "teams", !!event.teams.length],
             ]}
