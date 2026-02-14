@@ -87,9 +87,7 @@ export function getClient(
     });
 
     let newClient = new ApolloClient({
-        devtools: {
-            enabled: true,
-        },
+        connectToDevTools: IS_DEV,
         link,
         cache,
     });

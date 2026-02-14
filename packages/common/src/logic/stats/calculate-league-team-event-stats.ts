@@ -153,6 +153,13 @@ function calculateRecords(
             if (t.surrogate) continue;
             if (!include(t.teamNumber, m)) continue;
 
+            if (t.dq) {
+                teps[t.teamNumber].hasStats = true;
+                teps[t.teamNumber].dqs++;
+                teps[t.teamNumber].losses++;
+                continue;
+            }
+
             let r = teps[t.teamNumber];
             r.qualMatchesPlayed++;
             r.hasStats = true;
