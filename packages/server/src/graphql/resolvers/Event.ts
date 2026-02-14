@@ -50,6 +50,7 @@ const EventAdvancementInfoGQL = new GraphQLObjectType({
     fields: {
         slots: nullTy(IntTy),
         advancesTo: nullTy(StrTy),
+        fcmpReserved: nullTy(IntTy),
     },
 });
 
