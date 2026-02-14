@@ -91,15 +91,6 @@
                 <div class="feature-text">Free physical debit cards</div>
             </div>
         </div>
-        <div class="raffle-section">
-            <div class="raffle-content">
-                <div class="raffle-icon">🎁</div>
-                <div class="raffle-text">
-                    Enter our free raffle for a
-                    <span class="raffle-highlight">13-inch MacBook Air</span>!
-                </div>
-            </div>
-        </div>
     </a>
 
     <!-- Light Theme Banner -->
@@ -146,15 +137,6 @@
                     </svg>
                 </div>
                 <div class="feature-text">Free physical debit cards</div>
-            </div>
-        </div>
-        <div class="raffle-section">
-            <div class="raffle-content">
-                <div class="raffle-icon">🎁</div>
-                <div class="raffle-text">
-                    Enter our free raffle for a
-                    <span class="raffle-highlight">13-inch MacBook Air</span>!
-                </div>
             </div>
         </div>
     </a>
@@ -330,47 +312,6 @@
     }
 
     .light .feature-text {
-        color: #1c1c1e;
-    }
-
-    /* Raffle Section */
-    .raffle-section {
-        position: relative;
-        padding: 8px 12px;
-        height: 100%;
-        border-top: 1px solid rgba(128, 128, 128, 0.2);
-        z-index: 2;
-    }
-    .raffle-content {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .raffle-icon {
-        width: 20px;
-        height: 20px;
-        background: linear-gradient(135deg, #ff6b6b, #ffd93d);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-shrink: 0;
-        font-size: 12px;
-    }
-    .raffle-text {
-        flex: 1;
-        font-size: 11px;
-        font-weight: 600;
-        line-height: 1.3;
-    }
-    .raffle-highlight {
-        color: #fe8c2b;
-        font-weight: bold;
-    }
-    .dark .raffle-text {
-        color: #ffffff;
-    }
-    .light .raffle-text {
         color: #1c1c1e;
     }
 

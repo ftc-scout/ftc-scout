@@ -177,7 +177,7 @@
 
             <section>
                 <code class="route">
-                    /events/search?region=<span class="var">RegionOption</span
+                    /events/search/<span class="var">:season</span>?region=<span class="var">RegionOption</span
                     >&ZeroWidthSpace;&type=<span class="var">EventType</span
                     >&ZeroWidthSpace;&hasMatches=<span class="var">Boolean</span
                     >&ZeroWidthSpace;&start=<span class="var">Date</span>&ZeroWidthSpace;&end=<span
