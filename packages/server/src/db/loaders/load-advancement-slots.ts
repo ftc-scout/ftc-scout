@@ -40,10 +40,14 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
                     ev.advancesTo = adv.advancesTo;
                     dirty = true;
                 }
+                if (ev.fcmpReserved !== adv.fcmpReserved) {
+                    ev.fcmpReserved = adv.fcmpReserved;
+                    dirty = true;
+                }
                 if (dirty) {
                     await ev.save();
                     console.info(
-                        `Updated advancement info for ${ev.code} -> slots=${adv.slots}, advancesTo=${adv.advancesTo}`
+                        `Updated advancement info for ${ev.code} -> slots=${adv.slots}, advancesTo=${adv.advancesTo}, fcmpReserved=${adv.fcmpReserved}`
                     );
                 }
             })
