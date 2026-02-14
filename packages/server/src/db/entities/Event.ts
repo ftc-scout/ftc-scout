@@ -94,6 +94,9 @@ export class Event extends BaseEntity {
     @Column({ type: "varchar", nullable: true })
     advancesTo!: string | null;
 
+    @Column("int", { nullable: true })
+    fcmpReserved!: number | null;
+
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 

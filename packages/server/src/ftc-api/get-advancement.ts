@@ -4,6 +4,7 @@ import { getFromFtcApi } from "./get-from-ftc-api";
 export type AdvancementInfo = {
     slots: number | null;
     advancesTo: string | null;
+    fcmpReserved: number | null;
 };
 
 export async function getAdvancement(
@@ -15,9 +16,11 @@ export async function getAdvancement(
 
     let slots = resp?.["slots"];
     let advancesTo = resp?.["advancesTo"] ?? null;
+    let fcmpReserved = resp?.["fcmpReserved"] ?? null;
 
     return {
         slots: typeof slots === "number" && slots > 0 ? slots : null,
         advancesTo,
+        fcmpReserved: typeof fcmpReserved === "number" && fcmpReserved > 0 ? fcmpReserved : null,
     };
 }
