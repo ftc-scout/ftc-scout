@@ -1,13 +1,19 @@
-import { DESCRIPTORS, Descriptor, FloatTy, IntTy, nn, notEmpty } from "@ftc-scout/common";
+import { DESCRIPTORS, Descriptor, FloatTy, IntTy, Season, nn, notEmpty } from "@ftc-scout/common";
 import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
 import { TeamEventParticipation } from "../../db/entities/dyn/team-event-participation";
+import { LeagueRanking } from "../../db/entities/dyn/league-ranking";
+
+type TepLike = (TeamEventParticipation | LeagueRanking) & {
+    season: Season;
+    isRemote: boolean;
+};
 
 export function makeTepTypes(descriptor: Descriptor): GraphQLObjectType[] {
     let l = [make(descriptor, false), descriptor.hasRemote ? make(descriptor, true) : null];
     return l.filter(notEmpty);
 }
 
-export function addTypename(tep: TeamEventParticipation): TeamEventParticipation {
+export function addTypename<T extends TepLike>(tep: T): T {
     let suffix = DESCRIPTORS[tep.season].typeSuffix(tep.isRemote);
     let __typename = `TeamEventStats${tep.season}${suffix}`;
     return { ...tep, __typename };

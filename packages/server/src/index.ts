@@ -8,6 +8,7 @@ import compression from "compression";
 import { apiLoggerMiddleware } from "./db/entities/ApiReq";
 import { SERVER_PORT, SYNC_API } from "./constants";
 import { ApolloServer } from "@apollo/server";
+import { ApolloServerPluginLandingPageLocalDefault } from "@apollo/server/plugin/landingPage/default";
 import { expressMiddleware } from "@apollo/server/express4";
 import { GQL_SCHEMA } from "./graphql/schema";
 import { fetchPriorSeasons, watchApi } from "./ftc-api/watch";
@@ -58,6 +59,10 @@ async function main() {
         schema: GQL_SCHEMA,
         cache: serverCache,
         plugins: [
+            ApolloServerPluginLandingPageLocalDefault({
+                footer: false,
+                embed: { runTelemetry: false, endpointIsEditable: false },
+            }),
             ApolloServerPluginDrainHttpServer({ httpServer }),
             responseCachePlugin(serverCache),
             {

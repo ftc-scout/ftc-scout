@@ -40,7 +40,7 @@
     --pill-border-radius: 999999px;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1025px) {
     :root {
         /* --- Sizes --- */
         --navbar-size: 60px;
@@ -60,7 +60,7 @@
         --sm-font-size: 11px;
         --md-font-size: 14px;
         --lg-font-size: 18px;
-        --vl-font-size: 21px;
+        --vl-font-size: 19px;
         --xl-font-size: 28px;
     }
 }

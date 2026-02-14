@@ -5,6 +5,7 @@ import { DATA_SOURCE } from "../data-source";
 import { getEventAwards } from "../../ftc-api/get-event-awards";
 import { Award } from "../entities/Award";
 import { LoadType } from "../../ftc-api/watch";
+import { computeAdvancementForEvent } from "./compute-advancement";
 
 export async function loadAllAwards(season: Season, loadType: LoadType) {
     console.info(`Loading awards for season ${season}. (${loadType})`);
@@ -26,6 +27,10 @@ export async function loadAllAwards(season: Season, loadType: LoadType) {
             .map((a) => Award.fromApi(season, a))
             .filter(notEmpty);
         await Award.save(dbAwards, { chunk: 100 });
+
+        if (season >= 2025) {
+            await Promise.all(chunk.map((e) => computeAdvancementForEvent(season, e.code)));
+        }
 
         console.info(`Loaded ${Math.min(i + chunkSize, events.length) + 1}/${events.length}.`);
     }
