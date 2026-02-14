@@ -255,7 +255,7 @@
                 [faBolt, "Matches", "matches", (event?.matches?.length ?? 0) > 0],
                 [faTrophy, "Rankings", "rankings", !!rankingTeamsWithStats.length],
                 [faRankingStar, "League", "league-rankings", showLeagueRankingsTab],
-                [faBolt, "Insights", "insights", !!insights.length],
+                [faLightbulb, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
                 [faRocket, "Advancement", "advancement", showAdvancementTab],
                 [faHashtag, "Teams", "teams", showTeamsTab],
