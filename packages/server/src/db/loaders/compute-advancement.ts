@@ -1,20 +1,17 @@
 import {
-    ALLIANCE_SELECTION_BASE_2025,
-    INSPIRE_POINTS_2025,
-    OTHER_AWARD_POINTS_2025,
-    PLAYOFF_POINTS_2025,
     Alliance,
     Season,
     TournamentLevel,
     EventType,
-    qualPoints2025,
+    type AdvancementPointsConfig,
 } from "@ftc-scout/common";
+import { ADVANCEMENT_CONFIGS } from "@ftc-scout/common";
 import { AdvancementScore } from "../entities/AdvancementScore";
 import { Event } from "../entities/Event";
 import { DATA_SOURCE } from "../data-source";
 import { TeamEventParticipationSchemas } from "../entities/dyn/team-event-participation";
 import { Match } from "../entities/Match";
-import { Award, AwardType } from "../entities/Award";
+import { Award } from "../entities/Award";
 import { getAlliances, type AllianceApi } from "../../ftc-api/get-alliances";
 import { LeagueRankingSchemas } from "../entities/dyn/league-ranking";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
@@ -68,36 +65,16 @@ type DivisionTeamInfo = {
     autoScores: number[];
 };
 
-const ADVANCEMENT_JUDGED_AWARD_TYPES_2025 = new Set<AwardType>([
-    AwardType.Inspire,
-    AwardType.JudgesChoice,
-    AwardType.Control,
-    AwardType.Motivate,
-    AwardType.Reach,
-    AwardType.Sustain,
-    AwardType.Design,
-    AwardType.Innovate,
-    AwardType.Connect,
-    AwardType.Think,
-]);
-
-function isJudgedAwardForAdvancement2025(type: AwardType): boolean {
-    return ADVANCEMENT_JUDGED_AWARD_TYPES_2025.has(type);
-}
-
 function allianceTeamNumbers(a: AllianceApi): number[] {
     return [a.captain, a.round1, a.round2, a.round3, a.backup].filter(
         (n): n is number => typeof n === "number"
     );
 }
 
-function awardPointsForDivisionPlacement(placement: number): number | null {
-    if (placement === 2) return 10;
-    if (placement === 3) return 5;
-    return 0;
-}
-
-function computeAwardPointsMap(awards: Award[]): {
+function computeAwardPointsMap(
+    awards: Award[],
+    config: AdvancementPointsConfig
+): {
     awardsLoaded: boolean;
     awardPts: Map<number, number>;
 } {
@@ -105,14 +82,8 @@ function computeAwardPointsMap(awards: Award[]): {
     let awardPts = new Map<number, number>();
 
     for (let aw of awards) {
-        if (!isJudgedAwardForAdvancement2025(aw.type)) continue;
-
-        let inc = 0;
-        if (aw.type == AwardType.Inspire) {
-            inc = INSPIRE_POINTS_2025[aw.placement as 1 | 2 | 3] ?? 0;
-        } else {
-            inc = OTHER_AWARD_POINTS_2025[aw.placement as 1 | 2 | 3] ?? 0;
-        }
+        let inc = config.getAwardPoints(aw.type, aw.placement as 1 | 2 | 3);
+        if (inc === 0) continue;
 
         let existing = awardPts.get(aw.teamNumber) ?? 0;
         awardPts.set(aw.teamNumber, Math.max(existing, inc));
@@ -121,7 +92,10 @@ function computeAwardPointsMap(awards: Award[]): {
     return { awardsLoaded, awardPts };
 }
 
-function computeAllianceSelectionFromAlliances(alliances: AllianceApi[] | null): {
+function computeAllianceSelectionFromAlliances(
+    alliances: AllianceApi[] | null,
+    config: AdvancementPointsConfig
+): {
     alliancePoints: Map<number, number>;
     allianceTeams: Set<number>;
 } {
@@ -130,7 +104,7 @@ function computeAllianceSelectionFromAlliances(alliances: AllianceApi[] | null):
     if (!alliances) return { alliancePoints, allianceTeams };
 
     for (let alliance of alliances) {
-        let pts = ALLIANCE_SELECTION_BASE_2025 - alliance.number;
+        let pts = config.calculateAllianceSelectionPoints(alliance.number);
         allianceTeamNumbers(alliance).forEach((n) => {
             alliancePoints.set(n, pts);
             allianceTeams.add(n);
@@ -291,26 +265,20 @@ function applyEligibilityToRows(
     }
 }
 
-function sortRowsByTiebreak2025(rows: TeamRow[]) {
+function sortRowsByTiebreak(rows: TeamRow[], config: AdvancementPointsConfig) {
     rows.sort((a, b) => {
-        if ((b.totalPoints ?? 0) != (a.totalPoints ?? 0))
-            return (b.totalPoints ?? 0) - (a.totalPoints ?? 0);
-        if ((b.awardPoints ?? 0) != (a.awardPoints ?? 0))
-            return (b.awardPoints ?? 0) - (a.awardPoints ?? 0);
-        if ((b.playoffPoints ?? 0) != (a.playoffPoints ?? 0))
-            return (b.playoffPoints ?? 0) - (a.playoffPoints ?? 0);
-        if ((b.allianceSelectionPoints ?? 0) != (a.allianceSelectionPoints ?? 0))
-            return (b.allianceSelectionPoints ?? 0) - (a.allianceSelectionPoints ?? 0);
-        if ((b.qualPoints ?? 0) != (a.qualPoints ?? 0))
-            return (b.qualPoints ?? 0) - (a.qualPoints ?? 0);
-        if ((b.averageNPMatchPoints ?? 0) != (a.averageNPMatchPoints ?? 0))
-            return (b.averageNPMatchPoints ?? 0) - (a.averageNPMatchPoints ?? 0);
-        if ((b.averageAutoPoints ?? 0) != (a.averageAutoPoints ?? 0))
-            return (b.averageAutoPoints ?? 0) - (a.averageAutoPoints ?? 0);
-        if ((b.highestNPMatchPoints ?? 0) != (a.highestNPMatchPoints ?? 0))
-            return (b.highestNPMatchPoints ?? 0) - (a.highestNPMatchPoints ?? 0);
-        if ((b.secondHighestNPMatchPoints ?? 0) != (a.secondHighestNPMatchPoints ?? 0))
-            return (b.secondHighestNPMatchPoints ?? 0) - (a.secondHighestNPMatchPoints ?? 0);
+        if (!config.tieBreakKeys) return 0;
+
+        for (let key of config.tieBreakKeys) {
+            // Use the enum value directly as a property key
+            let aVal = a[key] ?? 0;
+            let bVal = b[key] ?? 0;
+
+            if (bVal !== aVal) {
+                return bVal - aVal;
+            }
+        }
+
         return 0;
     });
 }
@@ -466,7 +434,8 @@ async function computeNormalPlayoffPoints(
     season: Season,
     eventCode: string,
     alliances: AllianceApi[] | null,
-    playoffMatches: Match[]
+    playoffMatches: Match[],
+    config: AdvancementPointsConfig
 ): Promise<{ playoffPts: Map<number, number>; playoffsComplete: boolean }> {
     let playoffPts = new Map<number, number>();
     if (!alliances || alliances.length === 0 || playoffMatches.length === 0) {
@@ -490,7 +459,7 @@ async function computeNormalPlayoffPoints(
 
         let points = 0;
         if (placement >= 1 && placement <= 4) {
-            points = PLAYOFF_POINTS_2025[placement as 1 | 2 | 3 | 4] ?? 0;
+            points = config.getPlayoffPoints(placement as 1 | 2 | 3 | 4);
         }
         applyPlayoffPointsToAlliance(alliances, allianceNum, points, playoffPts);
     }
@@ -509,12 +478,13 @@ async function computeNormalPlayoffPoints(
 function applyDivisionPlayoffPoints(
     alliances: AllianceApi[] | null,
     placementByAlliance: Map<number, number>,
-    playoffPts: Map<number, number>
+    playoffPts: Map<number, number>,
+    config: AdvancementPointsConfig
 ) {
     for (let [allianceNum, placement] of placementByAlliance.entries()) {
-        if (placement === 1) continue; // Division winner gets 40/20 from parent finals.
-        let pts = awardPointsForDivisionPlacement(placement);
-        if (pts == null) continue;
+        if (placement === 1) continue;
+        if (placement !== 2 && placement !== 3) continue;
+        let pts = config.getDivisionPlayoffPoints(placement as 2 | 3);
         applyPlayoffPointsToAlliance(alliances, allianceNum, pts, playoffPts);
     }
 }
@@ -527,11 +497,10 @@ async function computeParentFinalistsPlayoffPoints(
         alliances: AllianceApi[] | null;
         championAllianceNum: number;
     }[],
-    playoffPts: Map<number, number>
+    playoffPts: Map<number, number>,
+    config: AdvancementPointsConfig
 ) {
     if (finalists.length !== 2) return;
-
-    // Resolve finalist team sets from their division champion alliances.
 
     let finalistTeams = finalists.map((f) => {
         let alliance = f.alliances?.find((a) => a.number === f.championAllianceNum) ?? null;
@@ -641,8 +610,8 @@ async function computeParentFinalistsPlayoffPoints(
         (f) => f.divisionEventCode === loser.divisionEventCode
     )!.teamSet;
 
-    winnerTeamSet.forEach((t) => playoffPts.set(t, 40));
-    loserTeamSet.forEach((t) => playoffPts.set(t, 20));
+    winnerTeamSet.forEach((t) => playoffPts.set(t, config.getPlayoffPoints(1)));
+    loserTeamSet.forEach((t) => playoffPts.set(t, config.getPlayoffPoints(2)));
 }
 
 function calculateScoresPerTeam(
@@ -678,7 +647,8 @@ function calculateScoresPerTeam(
 async function computeDivisionParentTeamInfo(
     season: Season,
     parentEvent: Event,
-    divisionEvents: Event[]
+    divisionEvents: Event[],
+    config: AdvancementPointsConfig
 ): Promise<{
     teamInfoByTeam: Map<number, DivisionTeamInfo>;
     playoffPtsByTeam: Map<number, number>;
@@ -714,7 +684,7 @@ async function computeDivisionParentTeamInfo(
 
         // Alliance selection points
         let { alliancePoints, allianceTeams: thisDivisionAllianceTeams } =
-            computeAllianceSelectionFromAlliances(alliances);
+            computeAllianceSelectionFromAlliances(alliances, config);
         thisDivisionAllianceTeams.forEach((t) => allianceTeams.add(t));
         let allianceSelectionFinal = anyPlayoffMatch || thisDivisionAllianceTeams.size > 0;
 
@@ -732,7 +702,7 @@ async function computeDivisionParentTeamInfo(
                 playoffMatches
             );
 
-            applyDivisionPlayoffPoints(alliances, placementByAlliance, playoffPtsByTeam);
+            applyDivisionPlayoffPoints(alliances, placementByAlliance, playoffPtsByTeam, config);
 
             if (aliveAlliances.length === 1) {
                 finalists.push({
@@ -764,7 +734,7 @@ async function computeDivisionParentTeamInfo(
         for (let q of qualRows) {
             let qualPoints: number | null = null;
             if (q && teamCount > 0) {
-                let qp = qualPoints2025(q.rank, teamCount);
+                let qp = config.calculateQualPoints(q.rank, teamCount);
                 qualPoints = Number.isFinite(qp) ? qp : null;
             }
 
@@ -787,7 +757,8 @@ async function computeDivisionParentTeamInfo(
         season,
         parentEvent.code,
         finalists,
-        playoffPtsByTeam
+        playoffPtsByTeam,
+        config
     );
 
     return { teamInfoByTeam, playoffPtsByTeam, allianceTeams };
@@ -795,6 +766,9 @@ async function computeDivisionParentTeamInfo(
 
 export async function computeAdvancementForEvent(season: Season, eventCode: string) {
     if (season < 2025) return;
+
+    let config = ADVANCEMENT_CONFIGS[season];
+    if (!config) return;
 
     let event = await Event.findOneBy({ season, code: eventCode });
     if (!event) return;
@@ -826,10 +800,10 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
 
     if (divisionEvents.length === 2) {
         let { teamInfoByTeam, playoffPtsByTeam, allianceTeams } =
-            await computeDivisionParentTeamInfo(season, event, divisionEvents);
+            await computeDivisionParentTeamInfo(season, event, divisionEvents, config);
 
         let awards = await Award.findBy({ season, eventCode });
-        let { awardsLoaded, awardPts } = computeAwardPointsMap(awards);
+        let { awardsLoaded, awardPts } = computeAwardPointsMap(awards, config);
 
         let teamNumbers = new Set<number>();
         for (let t of teamInfoByTeam.keys()) teamNumbers.add(t);
@@ -908,7 +882,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         }
 
         applyEligibilityToRows(event, teamRegionMap, qualEventCounts, previouslyAdvanced, rows);
-        sortRowsByTiebreak2025(rows);
+        sortRowsByTiebreak(rows, config);
         assignAdvancedSlots(event, rows);
         finalizeRowRanks(rows);
         await saveAdvancementRows(season, eventCode, rows);
@@ -921,16 +895,20 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     let teamCount = await getTeamCountFromPlayedMatches(season, eventCode);
 
     let alliances = await getAlliances(season, eventCode);
-    let { alliancePoints, allianceTeams } = computeAllianceSelectionFromAlliances(alliances);
+    let { alliancePoints, allianceTeams } = computeAllianceSelectionFromAlliances(
+        alliances,
+        config
+    );
 
     let awards = await Award.findBy({ season, eventCode });
-    let { awardsLoaded, awardPts } = computeAwardPointsMap(awards);
+    let { awardsLoaded, awardPts } = computeAwardPointsMap(awards, config);
 
     let { playoffPts, playoffsComplete } = await computeNormalPlayoffPoints(
         season,
         eventCode,
         alliances,
-        playoffMatches
+        playoffMatches,
+        config
     );
 
     let teamNumbers = new Set<number>();
@@ -1026,7 +1004,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let rankEntry = qualRows.find((q) => q.teamNumber == teamNumber);
         let qualPoints: number | null = null;
         if (rankEntry && teamCount > 0) {
-            let qp = qualPoints2025(rankEntry.rank, teamCount);
+            let qp = config.calculateQualPoints(rankEntry.rank, teamCount);
             qualPoints = Number.isFinite(qp) ? qp : null;
         }
         let isQualFinal = !!qualPoints && (allQualsPlayed || anyPlayoffMatch);
@@ -1080,7 +1058,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     }
 
     applyEligibilityToRows(event, teamRegionMap, qualEventCounts, previouslyAdvanced, rows);
-    sortRowsByTiebreak2025(rows);
+    sortRowsByTiebreak(rows, config);
     assignAdvancedSlots(event, rows);
     finalizeRowRanks(rows);
     await saveAdvancementRows(season, eventCode, rows);
