@@ -20,6 +20,7 @@ import { useServer } from "graphql-ws/lib/use/ws";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { setupSiteMap } from "./sitemap/setupSitemap";
 import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
+import { responseCachePlugin } from "./graphql/plugins/response-cache-plugin";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -46,15 +47,19 @@ async function main() {
 
     const serverCleanup = useServer({ schema: GQL_SCHEMA }, wsServer);
 
+    // Create shared cache for both APQ and response caching
+    const serverCache = new InMemoryLRUCache({
+        maxSize: Math.pow(2, 20) * 100, // ~100MiB
+        ttl: 120, // Default 2 minutes for APQ
+    });
+
     let apolloServer = new ApolloServer({
         introspection: true,
         schema: GQL_SCHEMA,
-        cache: new InMemoryLRUCache({
-            maxSize: Math.pow(2, 20) * 100, // ~100MiB
-            ttl: 120, // 2 minutes
-        }),
+        cache: serverCache,
         plugins: [
             ApolloServerPluginDrainHttpServer({ httpServer }),
+            responseCachePlugin(serverCache),
             {
                 async serverWillStart() {
                     return {
