@@ -119,7 +119,7 @@
     $: showAdvancementTab =
         !!advancementRowsWithStats.length &&
         eventHasStarted &&
-        amountNonNullStats / advancementRowsWithStats.length > 0.5;
+        amountNonNullStats / advancementRowsWithStats.length > 0.01;
     $: leagueRankingSaveId =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${

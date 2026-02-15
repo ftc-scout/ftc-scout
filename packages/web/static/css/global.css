@@ -204,7 +204,7 @@ body.dark {
 
     --text-color: #dfe2e6;
     --secondary-text-color: #b7b7b8;
-    --grayed-out-text-color: #a0a0a0;
+    --grayed-out-text-color: #535353;
     --theme-text-color: #ffffff;
     --sidebar-text-color: var(--text-color);
 
@@ -288,7 +288,7 @@ body.dark .render-light {
 
         --text-color: #dfe2e6;
         --secondary-text-color: #b7b7b8;
-        --grayed-out-text-color: #a0a0a0;
+        --grayed-out-text-color: #bbbbbb;
         --theme-text-color: #ffffff;
         --sidebar-text-color: var(--text-color);
 
