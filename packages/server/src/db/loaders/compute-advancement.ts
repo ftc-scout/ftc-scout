@@ -4,6 +4,9 @@ import {
     TournamentLevel,
     EventType,
     type AdvancementPointsConfig,
+    AdvancementEligibility,
+    getAdvancementEligibility,
+    isEligible,
 } from "@ftc-scout/common";
 import { ADVANCEMENT_CONFIGS } from "@ftc-scout/common";
 import { AdvancementScore } from "../entities/AdvancementScore";
@@ -38,8 +41,10 @@ type TeamRow = {
     playoffPoints: number | null;
     awardPoints: number | null;
     totalPoints: number | null;
+    advancementRank: number | null;
     rank: number | null;
     isAdvancementEligible: boolean;
+    eligibility: AdvancementEligibility;
     advanced: boolean;
     averageNPMatchPoints?: number;
     averageAutoPoints?: number;
@@ -222,7 +227,7 @@ async function loadEligibilityData(
         .innerJoin(Event, "e", "tep.season = e.season AND tep.eventCode = e.code")
         .where("tep.season = :season", { season })
         .andWhere("tep.teamNumber IN (:...teamNumbers)", { teamNumbers: teamNumberList })
-        .andWhere("e.type IN (:...types)", { types: QUALIFYING_EVENT_TYPES })
+        .andWhere("e.type = :type", { type: event.type })
         .andWhere("e.end < :eventStart", { eventStart: event.start })
         .select("tep.teamNumber", "teamNumber")
         .addSelect("COUNT(DISTINCT tep.eventCode)", "cnt")
@@ -238,7 +243,7 @@ async function loadEligibilityData(
         .where("as.season = :season", { season })
         .andWhere("as.teamNumber IN (:...teamNumbers)", { teamNumbers: teamNumberList })
         .andWhere("as.advanced = true")
-        .andWhere("e.type IN (:...types)", { types: QUALIFYING_EVENT_TYPES })
+        .andWhere("e.type = :type", { type: event.type })
         .andWhere("e.end < :eventStart", { eventStart: event.start })
         .select("as.teamNumber", "teamNumber")
         .getRawMany();
@@ -261,7 +266,9 @@ function applyEligibilityToRows(
             teamRegionMap.get(r.teamNumber) === event.regionCode;
         let playedCountOk = (qualEventCounts.get(r.teamNumber) ?? 0) < 3;
         let notPreviouslyAdvanced = !previouslyAdvanced.has(r.teamNumber);
-        r.isAdvancementEligible = regionOk && playedCountOk && notPreviouslyAdvanced;
+
+        r.eligibility = getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
+        r.isAdvancementEligible = isEligible(r.eligibility);
     }
 }
 
@@ -295,9 +302,18 @@ function assignAdvancedSlots(event: Event, rows: TeamRow[]) {
 }
 
 function finalizeRowRanks(rows: TeamRow[]) {
-    rows.forEach((r, i) => {
+    let rankCounter = 0;
+    let advancementRankCounter = 0;
+    rows.forEach((r) => {
         r.totalPoints = r.totalPoints ?? 0;
-        r.rank = i + 1;
+        if (r.isAdvancementEligible) {
+            advancementRankCounter++;
+            r.advancementRank = advancementRankCounter;
+        } else {
+            r.advancementRank = null;
+        }
+        rankCounter++;
+        r.rank = rankCounter;
     });
 }
 
@@ -321,7 +337,9 @@ async function saveAdvancementRows(season: Season, eventCode: string, rows: Team
             existing.awardPoints = r.awardPoints;
             existing.totalPoints = r.totalPoints;
             existing.rank = (r as any).rank ?? null;
+            existing.advancementRank = r.advancementRank;
             existing.isAdvancementEligible = r.isAdvancementEligible;
+            existing.eligibility = r.eligibility;
             existing.advanced = r.advanced;
             await em.save(existing);
         }
@@ -764,6 +782,22 @@ async function computeDivisionParentTeamInfo(
     return { teamInfoByTeam, playoffPtsByTeam, allianceTeams };
 }
 
+function getTeamAdvancementEligibility(
+    teamNumber: number,
+    teamRegionMap: Map<number, string | null>,
+    _qualEventCounts: Map<number, number>,
+    previouslyAdvanced: Set<number>,
+    event: Event
+): AdvancementEligibility {
+    let regionOk =
+        event.regionCode == null ||
+        !teamRegionMap.has(teamNumber) ||
+        teamRegionMap.get(teamNumber) === event.regionCode;
+    let playedCountOk = true; // This is not reliable -> (qualEventCounts.get(teamNumber) ?? 0) < 3;
+    let notPreviouslyAdvanced = !previouslyAdvanced.has(teamNumber);
+    return getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
+}
+
 export async function computeAdvancementForEvent(season: Season, eventCode: string) {
     if (season < 2025) return;
 
@@ -856,6 +890,14 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
 
             let total = sumTotalPoints(qualPoints, sel, playoff, award);
 
+            let eligibility = getTeamAdvancementEligibility(
+                teamNumber,
+                teamRegionMap,
+                qualEventCounts,
+                previouslyAdvanced,
+                event
+            );
+
             rows.push({
                 teamNumber,
                 qualPoints,
@@ -866,7 +908,9 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 awardPoints: award,
                 totalPoints: total,
                 rank: null,
-                isAdvancementEligible: true,
+                advancementRank: null,
+                isAdvancementEligible: isEligible(eligibility),
+                eligibility,
                 advanced: false,
                 averageNPMatchPoints: info.qualScoresNP.length
                     ? info.qualScoresNP.reduce((a, b) => a + b, 0) / info.qualScoresNP.length
@@ -1028,6 +1072,14 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let award = normalizeAwardPoints(awardsLoaded, rawAward);
         let total = sumTotalPoints(qualPoints, sel, playoff, award);
 
+        let eligibility = getTeamAdvancementEligibility(
+            teamNumber,
+            teamRegionMap,
+            qualEventCounts,
+            previouslyAdvanced,
+            event
+        );
+
         rows.push({
             teamNumber,
             qualPoints,
@@ -1038,7 +1090,9 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             awardPoints: award,
             totalPoints: total,
             rank: null,
-            isAdvancementEligible: true,
+            advancementRank: null,
+            isAdvancementEligible: isEligible(eligibility),
+            eligibility,
             advanced: false,
             averageNPMatchPoints: matchScoresPerTeam.has(teamNumber)
                 ? matchScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b, 0) /
@@ -1061,5 +1115,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     sortRowsByTiebreak(rows, config);
     assignAdvancedSlots(event, rows);
     finalizeRowRanks(rows);
+
     await saveAdvancementRows(season, eventCode, rows);
 }

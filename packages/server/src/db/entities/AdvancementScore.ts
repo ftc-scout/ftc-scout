@@ -1,4 +1,4 @@
-import { Season } from "@ftc-scout/common";
+import { Season, AdvancementEligibility } from "@ftc-scout/common";
 import {
     BaseEntity,
     Column,
@@ -44,8 +44,17 @@ export class AdvancementScore extends BaseEntity {
     @Column("int", { nullable: true })
     rank!: number | null;
 
+    @Column("int", { nullable: true })
+    advancementRank!: number | null;
+
     @Column("bool", { default: true })
     isAdvancementEligible!: boolean;
+
+    @Column({
+        type: "varchar",
+        default: AdvancementEligibility.Eligible,
+    })
+    eligibility!: AdvancementEligibility;
 
     @Column("bool", { default: false })
     advanced!: boolean;
@@ -65,10 +74,12 @@ export class AdvancementScore extends BaseEntity {
             isQualFinal: false,
             allianceSelectionPoints: null,
             isAllianceSelectionFinal: false,
+            eligibility: AdvancementEligibility.Eligible,
             playoffPoints: null,
             awardPoints: null,
             totalPoints: null,
             rank: null,
+            advancementRank: null,
             isAdvancementEligible: true,
             advanced: false,
         } satisfies DeepPartial<AdvancementScore>);
