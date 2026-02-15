@@ -1047,7 +1047,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     for (let teamNumber of teamNumbers) {
         let rankEntry = qualRows.find((q) => q.teamNumber == teamNumber);
         let qualPoints: number | null = null;
-        if (rankEntry && teamCount > 0) {
+        if (rankEntry && teamCount > 0 && rankEntry.rank != null && rankEntry.rank > 0) {
             let qp = config.calculateQualPoints(rankEntry.rank, teamCount);
             qualPoints = Number.isFinite(qp) ? qp : null;
         }
