@@ -31,6 +31,9 @@ export class DataHasBeenLoaded extends BaseEntity {
     @Column({ default: false })
     leagues!: boolean;
 
+    @Column({ default: false })
+    advancement!: boolean;
+
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
@@ -59,5 +62,9 @@ export class DataHasBeenLoaded extends BaseEntity {
 
     static async slotsHaveBeenLoaded(season: Season): Promise<boolean> {
         return (await DataHasBeenLoaded.findOneBy({ season }))?.slots ?? false;
+    }
+
+    static async advancementHaveBeenLoaded(season: Season): Promise<boolean> {
+        return (await DataHasBeenLoaded.findOneBy({ season }))?.advancement ?? false;
     }
 }
