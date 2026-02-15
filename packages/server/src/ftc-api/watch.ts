@@ -1,4 +1,4 @@
-import { CURRENT_SEASON, PAST_SEASONS } from "@ftc-scout/common";
+import { ALL_SEASONS, CURRENT_SEASON } from "@ftc-scout/common";
 import { DataHasBeenLoaded } from "../db/entities/DataHasBeenLoaded";
 import { loadAllTeams } from "../db/loaders/load-all-teams";
 import { loadAllEvents } from "../db/loaders/load-all-events";
@@ -15,7 +15,8 @@ export const LoadType = {
 export type LoadType = (typeof LoadType)[keyof typeof LoadType];
 
 export async function fetchPriorSeasons() {
-    for (let season of PAST_SEASONS) {
+    // Also load current season for mid-season deployments
+    for (let season of ALL_SEASONS) {
         console.info(`Checking load of season ${season}.`);
         if (!(await DataHasBeenLoaded.teamsHaveBeenLoaded(season))) {
             await loadAllTeams(season);
