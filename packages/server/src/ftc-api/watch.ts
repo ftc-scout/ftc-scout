@@ -7,8 +7,6 @@ import { loadAllAwards } from "../db/loaders/load-all-awards";
 import { loadFutureEvents } from "../db/loaders/load-future-events";
 import { loadAllLeagues } from "../db/loaders/load-all-leagues";
 import { loadAdvancementSlots } from "../db/loaders/load-advancement-slots";
-import { computeAdvancementForEvent } from "../db/loaders/compute-advancement";
-import { Event } from "../db/entities/Event";
 
 export const LoadType = {
     Full: "Full",
@@ -35,32 +33,20 @@ export async function fetchPriorSeasons() {
         } else {
             console.info(`Matches already loaded.`);
         }
-        if (!(await DataHasBeenLoaded.awardsHaveBeenLoaded(season))) {
-            await loadAllAwards(season, LoadType.Full);
-        } else {
-            console.info(`Awards already loaded.`);
-        }
         if (!(await DataHasBeenLoaded.slotsHaveBeenLoaded(season))) {
             await loadAdvancementSlots(season, LoadType.Full);
         } else {
             console.info(`Advancement slots already loaded.`);
         }
+        if (!(await DataHasBeenLoaded.awardsHaveBeenLoaded(season))) {
+            await loadAllAwards(season, LoadType.Full);
+        } else {
+            console.info(`Awards already loaded.`);
+        }
         if (!(await DataHasBeenLoaded.leaguesHaveBeenLoaded(season))) {
             await loadAllLeagues(season, { recomputeRankings: true });
         } else {
             console.info(`Leagues already loaded.`);
-        }
-        if (!(await DataHasBeenLoaded.advancementHaveBeenLoaded(season))) {
-            let events = await Event.findBy({ season });
-            await Promise.all(events.map((e) => computeAdvancementForEvent(season, e.code)));
-
-            let data =
-                (await DataHasBeenLoaded.findOneBy({ season })) ||
-                DataHasBeenLoaded.create({ season });
-            if (data) {
-                data.advancement = true;
-                await data.save();
-            }
         }
     }
 }
