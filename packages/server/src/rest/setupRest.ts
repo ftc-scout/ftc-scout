@@ -20,6 +20,7 @@ import { DATA_SOURCE } from "../db/data-source";
 import { frontendMSFromDB } from "../graphql/dyn/match-score";
 import { FindOptionsWhere } from "typeorm";
 import { getQuickStats } from "../graphql/resolvers/Team";
+import { AdvancementScore } from "../db/entities/AdvancementScore";
 
 const pre = "/rest/v1/";
 
@@ -55,6 +56,7 @@ export function setupRest(app: Express) {
     app.get(pre + "events/:season(\\d+)/:code/matches", eventMatches);
     app.get(pre + "events/:season(\\d+)/:code/awards", eventAwards);
     app.get(pre + "events/:season(\\d+)/:code/teams", eventTeams);
+    app.get(pre + "events/:season(\\d+)/:code/advancement", eventAdvancement);
     app.get(pre + "events/search/:season(\\d+)", eventSearch);
 }
 
@@ -438,4 +440,41 @@ async function eventSearch(req: Request<{ season: string }>, res: Response) {
     }
 
     res.send(entities);
+}
+
+async function eventAdvancement(req: Request<{ season: string; code: string }>, res: Response) {
+    let season = +req.params.season;
+    let eventCode = req.params.code;
+
+    if (!isSeason(season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    let event = await Event.findOneBy({ season, code: eventCode });
+
+    if (!event) {
+        res.status(404).send(`No event in season ${season} with code ${eventCode}.`);
+        return;
+    }
+
+    let advancement = await AdvancementScore.find({
+        where: { season, eventCode },
+        order: { rank: "ASC" },
+    });
+
+    let advancesToEvent = null;
+    if (event.advancesTo) {
+        advancesToEvent = await Event.findOneBy({ season, code: event.advancesTo });
+    }
+
+    res.send({
+        advancementInfo: {
+            slots: event.advancementSlots,
+            advancesTo: event.advancesTo,
+            fcmpReserved: event.fcmpReserved,
+            advancesToEvent: advancesToEvent,
+        },
+        teams: advancement,
+    });
 }
