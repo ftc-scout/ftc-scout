@@ -7,14 +7,14 @@ const QUAL_ALPHA = 1.07;
 
 const ALLIANCE_SELECTION_BASE = 21;
 
-const PLAYOFF_POINTS: Record<1 | 2 | 3 | 4, number> = {
+const PLAYOFF_POINTS: Record<number, number> = {
     1: 40,
     2: 20,
     3: 10,
     4: 5,
 };
 
-const DIVISION_PLAYOFF_POINTS: Record<2 | 3, number> = {
+const DIVISION_PLAYOFF_POINTS: Record<number, number> = {
     2: 10,
     3: 5,
 };
@@ -81,11 +81,11 @@ export const DecodeAdvancementConfig: AdvancementPointsConfig = {
         return ALLIANCE_SELECTION_BASE - position;
     },
 
-    getPlayoffPoints: (placement: 1 | 2 | 3 | 4): number => {
+    getPlayoffPoints: (placement: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8): number => {
         return PLAYOFF_POINTS[placement] ?? 0;
     },
 
-    getDivisionPlayoffPoints: (placement: 2 | 3): number => {
+    getDivisionPlayoffPoints: (placement: 2 | 3 | 4 | 5 | 6 | 7 | 8): number => {
         return DIVISION_PLAYOFF_POINTS[placement] ?? 0;
     },
 

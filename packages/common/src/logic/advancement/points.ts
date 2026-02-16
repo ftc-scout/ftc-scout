@@ -5,9 +5,9 @@ export interface AdvancementPointsConfig {
 
     calculateAllianceSelectionPoints: (position: number) => number;
 
-    getPlayoffPoints: (placement: 1 | 2 | 3 | 4) => number;
+    getPlayoffPoints: (placement: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8) => number;
 
-    getDivisionPlayoffPoints: (placement: 2 | 3) => number;
+    getDivisionPlayoffPoints: (placement: 2 | 3 | 4 | 5 | 6 | 7 | 8) => number;
 
     getAwardPoints: (awardType: string, placement: 1 | 2 | 3) => number;
 

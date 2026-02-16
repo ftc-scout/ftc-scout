@@ -476,8 +476,8 @@ async function computeNormalPlayoffPoints(
         if ((placement === 1 || placement === 2) && !playoffsComplete) continue;
 
         let points = 0;
-        if (placement >= 1 && placement <= 4) {
-            points = config.getPlayoffPoints(placement as 1 | 2 | 3 | 4);
+        if (placement >= 1 && placement <= 8) {
+            points = config.getPlayoffPoints(placement as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8);
         }
         applyPlayoffPointsToAlliance(alliances, allianceNum, points, playoffPts);
     }
@@ -501,8 +501,7 @@ function applyDivisionPlayoffPoints(
 ) {
     for (let [allianceNum, placement] of placementByAlliance.entries()) {
         if (placement === 1) continue;
-        if (placement !== 2 && placement !== 3) continue;
-        let pts = config.getDivisionPlayoffPoints(placement as 2 | 3);
+        let pts = config.getDivisionPlayoffPoints(placement as 2 | 3 | 4 | 5 | 6 | 7 | 8);
         applyPlayoffPointsToAlliance(alliances, allianceNum, pts, playoffPts);
     }
 }
