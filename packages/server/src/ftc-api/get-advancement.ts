@@ -5,6 +5,7 @@ export type AdvancementInfo = {
     slots: number | null;
     advancesTo: string | null;
     fcmpReserved: number | null;
+    advancesToEvent: string | null;
 };
 
 export async function getAdvancement(
@@ -22,5 +23,6 @@ export async function getAdvancement(
         slots: typeof slots === "number" && slots > 0 ? slots : null,
         advancesTo,
         fcmpReserved: typeof fcmpReserved === "number" && fcmpReserved > 0 ? fcmpReserved : null,
+        advancesToEvent: season && advancesTo ? `${season}/${advancesTo}` : null,
     };
 }

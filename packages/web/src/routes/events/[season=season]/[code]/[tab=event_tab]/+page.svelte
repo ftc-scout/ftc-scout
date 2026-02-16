@@ -130,12 +130,17 @@
     $: showLeagueRankingsTab = !!isLeagueEvent;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
-    $: advancesToStripped = event?.advancementInfo?.advancesTo
+    $: advancesToStripped = event.advancementInfo?.advancesToEvent
+        ? event.advancementInfo.advancesToEvent.name
+        : event?.advancementInfo?.advancesTo
         ? event?.advancementInfo?.advancesTo
               .split(" & ")
               .filter((s) => !s.toLowerCase().includes("championship"))
               .join(" & ")
         : "";
+    $: advancesToLink = event.advancementInfo?.advancesToEvent
+        ? `/events/${event.advancementInfo.advancesToEvent.season}/${event.advancementInfo.advancesToEvent.code}/matches`
+        : null;
 
     function gotoTab(tab: string) {
         if (browser) {
@@ -225,23 +230,41 @@
             {#if event.advancementInfo && (event.advancementInfo.fcmpReserved || event.advancementInfo.advancesTo)}
                 <div class="advancement-info">
                     <table class="advancement-table">
-                        {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
+                        <thead>
                             <tr>
-                                <td>FIRST Championship</td>
-                                <td>{event.advancementInfo.fcmpReserved}</td>
+                                <td>Advances To</td>
+                                <td>Teams Advancing</td>
                             </tr>
-                        {/if}
-                        {#if event.advancementInfo.advancesTo && event.advancementInfo.slots}
-                            {@const regionalSlots =
-                                event.advancementInfo.slots -
-                                (event.advancementInfo.fcmpReserved ?? 0)}
-                            {#if regionalSlots > 0}
+                        </thead>
+                        <tbody>
+                            {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
                                 <tr>
-                                    <td>{advancesToStripped}</td>
-                                    <td>{regionalSlots}</td>
+                                    <td>FIRST Championship</td>
+                                    <td>{event.advancementInfo.fcmpReserved}</td>
                                 </tr>
                             {/if}
-                        {/if}
+                            {#if event.advancementInfo.advancesTo && event.advancementInfo.slots}
+                                {@const regionalSlots =
+                                    event.advancementInfo.slots -
+                                    (event.advancementInfo.fcmpReserved ?? 0)}
+                                {#if regionalSlots > 0}
+                                    <tr>
+                                        <td>
+                                            {#if advancesToLink}
+                                                <a
+                                                    href={advancesToLink}
+                                                    rel="noreferrer"
+                                                    class="norm-link">{advancesToStripped}</a
+                                                >
+                                            {:else}
+                                                {advancesToStripped}
+                                            {/if}
+                                        </td>
+                                        <td>{regionalSlots}</td>
+                                    </tr>
+                                {/if}
+                            {/if}
+                        </tbody>
                     </table>
                 </div>
             {/if}
@@ -369,11 +392,25 @@
 
     .advancement-table {
         width: 100%;
+        border-radius: 8px;
+        overflow: hidden;
         border-collapse: collapse;
     }
 
-    .advancement-table tr {
-        border-bottom: 1px solid var(--border-color);
+    .advancement-table thead {
+        padding: var(--md-gap);
+        border-radius: 10px;
+        font-weight: 600;
+        background-color: rgba(15, 143, 132, 0.5);
+    }
+
+    .advancement-table tbody tr:nth-child(even) {
+        background-color: var(--zebra-stripe-opacity);
+    }
+
+    .advancement-table tr > td {
+        border-bottom: none;
+        padding: var(--md-gap);
     }
 
     .advancement-table tr:last-child {
@@ -381,13 +418,11 @@
     }
 
     .advancement-table td {
-        padding: var(--sm-gap) 0;
         color: var(--text-secondary);
     }
 
     .advancement-table td:last-child {
         text-align: right;
-        font-weight: 600;
         color: var(--text-primary);
     }
 </style>

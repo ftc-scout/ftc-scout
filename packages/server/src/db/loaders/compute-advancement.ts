@@ -30,7 +30,12 @@ const SUPPORTED_EVENT_TYPES: EventType[] = [
     EventType.FIRSTChampionship,
 ];
 
-const QUALIFYING_EVENT_TYPES: EventType[] = [EventType.Qualifier, EventType.LeagueTournament];
+const QUALIFYING_EVENT_TYPES: EventType[] = [
+    EventType.Qualifier,
+    EventType.LeagueTournament,
+    EventType.SuperQualifier,
+    EventType.Championship,
+];
 
 type TeamRow = {
     teamNumber: number;

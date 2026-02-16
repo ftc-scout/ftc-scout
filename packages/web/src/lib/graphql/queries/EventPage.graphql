@@ -104,6 +104,11 @@ query EventPage($season: Int!, $code: String!) {
         advancementInfo {
             slots
             advancesTo
+            advancesToEvent {
+                season
+                code
+                name
+            }
             fcmpReserved
         }
     }

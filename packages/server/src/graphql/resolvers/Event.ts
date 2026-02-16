@@ -45,15 +45,6 @@ import { AdvancementScoreGQL } from "./AdvancementScore";
 import { AdvancementScore } from "../../db/entities/AdvancementScore";
 import { getAdvancement } from "../../ftc-api/get-advancement";
 
-const EventAdvancementInfoGQL = new GraphQLObjectType({
-    name: "EventAdvancementInfo",
-    fields: {
-        slots: nullTy(IntTy),
-        advancesTo: nullTy(StrTy),
-        fcmpReserved: nullTy(IntTy),
-    },
-});
-
 const EventPreviewStatGQL = new GraphQLObjectType({
     name: "EventPreviewStat",
     fields: {
@@ -312,6 +303,25 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             },
         },
     }),
+});
+
+const EventAdvancementInfoGQL = new GraphQLObjectType({
+    name: "EventAdvancementInfo",
+    fields: {
+        slots: nullTy(IntTy),
+        advancesTo: nullTy(StrTy),
+        fcmpReserved: nullTy(IntTy),
+        advancesToEvent: {
+            type: EventGQL,
+            resolve: async (parent) => {
+                if (!parent.advancesToEvent) return null;
+                let [seasonStr, code] = parent.advancesToEvent.split("/");
+                let season = parseInt(seasonStr) as Season;
+                if (isNaN(season)) return null;
+                return Event.findOne({ where: { season, code } });
+            },
+        },
+    },
 });
 
 export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {

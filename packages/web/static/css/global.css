@@ -116,7 +116,7 @@ body {
 
     --theme-color-vs: 44, 102, 110;
     --theme-color-opacity: 0.75;
-    --inline-theme-color: var(--theme-color);
+    --inline-theme-color: #2c666e;
 
     --hover-color: #f0f0f0;
     --tab-hover-color: #fbfbfb;
@@ -126,6 +126,7 @@ body {
 
     --zebra-stripe-color: rgb(245, 245, 245);
     --zebra-stripe-opacity: rgba(0, 0, 0, 0.0396);
+    --inverted-zebra-stripe-opacity: rgba(0, 0, 0, 0.04);
 
     --fade-shadow: rgba(0, 0, 0, 0.2);
 
@@ -197,6 +198,7 @@ body.dark {
 
     --zebra-stripe-color: #353535;
     --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
+    --inverted-zebra-stripe-opacity: rgba(0, 0, 0, 0.041);
 
     --fade-shadow: rgba(255, 255, 255, 0.15);
 
@@ -281,6 +283,7 @@ body.dark .render-light {
 
         --zebra-stripe-color: #353535;
         --zebra-stripe-opacity: rgba(255, 255, 255, 0.041);
+        --inverted-zebra-stripe-opacity: rgba(0, 0, 0, 0.041);
 
         --fade-shadow: rgba(255, 255, 255, 0.15);
 
