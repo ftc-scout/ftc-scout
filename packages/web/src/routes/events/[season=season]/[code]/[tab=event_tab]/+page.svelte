@@ -14,7 +14,6 @@
         faCalendarAlt,
         faChartLine,
         faHashtag,
-        faLightbulb,
         faLink,
         faLocationDot,
         faRankingStar,
@@ -130,16 +129,20 @@
     $: showLeagueRankingsTab = !!isLeagueEvent;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
-    $: advancesToStripped = event.advancementInfo?.advancesToEvent
-        ? event.advancementInfo.advancesToEvent.name
-        : event?.advancementInfo?.advancesTo
-        ? event?.advancementInfo?.advancesTo
-              .split(" & ")
-              .filter((s) => !s.toLowerCase().includes("championship"))
-              .join(" & ")
+    $: advancesToStripped = event.advancementInfo
+        ? event.advancementInfo?.advancesToEvent
+            ? event.advancementInfo.advancesToEvent.name
+            : event?.advancementInfo?.advancesTo
+            ? event?.advancementInfo?.advancesTo
+                  .split(" & ")
+                  .filter((s) => !s.toLowerCase().includes("championship"))
+                  .join(" & ")
+            : ""
         : "";
-    $: advancesToLink = event.advancementInfo?.advancesToEvent
-        ? `/events/${event.advancementInfo.advancesToEvent.season}/${event.advancementInfo.advancesToEvent.code}/matches`
+    $: advancesToLink = event.advancementInfo
+        ? event.advancementInfo?.advancesToEvent
+            ? `/events/${event.advancementInfo.advancesToEvent.season}/${event.advancementInfo.advancesToEvent.code}/matches`
+            : null
         : null;
 
     function gotoTab(tab: string) {
