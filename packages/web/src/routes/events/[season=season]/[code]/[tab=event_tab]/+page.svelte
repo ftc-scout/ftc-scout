@@ -229,49 +229,36 @@
                 <Location {...event.location} />
             </InfoIconRow>
 
-            <DataFromFirst />
-
-            {#if event.advancementInfo && (event.advancementInfo.fcmpReserved || event.advancementInfo.advancesTo)}
-                <div class="advancement-info">
-                    <table class="advancement-table">
-                        <thead>
-                            <tr>
-                                <td>Advances To</td>
-                                <td>Teams Advancing</td>
-                            </tr>
-                        </thead>
-                        <tbody>
+            {#if event.advancementInfo && event.advancementInfo.slots}
+                <InfoIconRow icon={faRocket}>
+                    {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
+                        {event.advancementInfo.fcmpReserved}
+                        {event.advancementInfo.fcmpReserved === 1
+                            ? "team advances"
+                            : "teams advance"} to FIRST Championship
+                    {/if}
+                    {#if event.advancementInfo.advancesTo}
+                        {@const regionalSlots =
+                            event.advancementInfo.slots - (event.advancementInfo.fcmpReserved ?? 0)}
+                        {#if regionalSlots > 0}
                             {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
-                                <tr>
-                                    <td>FIRST Championship</td>
-                                    <td>{event.advancementInfo.fcmpReserved}</td>
-                                </tr>
+                                <br />
                             {/if}
-                            {#if event.advancementInfo.advancesTo && event.advancementInfo.slots}
-                                {@const regionalSlots =
-                                    event.advancementInfo.slots -
-                                    (event.advancementInfo.fcmpReserved ?? 0)}
-                                {#if regionalSlots > 0}
-                                    <tr>
-                                        <td>
-                                            {#if advancesToLink}
-                                                <a
-                                                    href={advancesToLink}
-                                                    rel="noreferrer"
-                                                    class="norm-link">{advancesToStripped}</a
-                                                >
-                                            {:else}
-                                                {advancesToStripped}
-                                            {/if}
-                                        </td>
-                                        <td>{regionalSlots}</td>
-                                    </tr>
-                                {/if}
+                            {regionalSlots}
+                            {regionalSlots === 1 ? "team advances" : "teams advance"} to
+                            {#if advancesToLink}
+                                <a href={advancesToLink} rel="noreferrer" class="norm-link"
+                                    >{advancesToStripped}</a
+                                >
+                            {:else}
+                                {advancesToStripped}
                             {/if}
-                        </tbody>
-                    </table>
-                </div>
+                        {/if}
+                    {/if}
+                </InfoIconRow>
             {/if}
+
+            <DataFromFirst />
         </Card>
 
         <RelatedEvents relatedEvents={event.relatedEvents} thisEventName={event.name} {season} />
@@ -386,47 +373,5 @@
         align-items: center;
         gap: var(--md-gap);
         text-align: center;
-    }
-
-    .advancement-info {
-        margin-top: var(--md-gap);
-        padding-top: var(--md-gap);
-        border-top: 1px solid var(--border-color);
-    }
-
-    .advancement-table {
-        width: 100%;
-        border-radius: 8px;
-        overflow: hidden;
-        border-collapse: collapse;
-    }
-
-    .advancement-table thead {
-        padding: var(--md-gap);
-        border-radius: 10px;
-        font-weight: 600;
-        background-color: rgba(15, 143, 132, 0.5);
-    }
-
-    .advancement-table tbody tr:nth-child(even) {
-        background-color: var(--zebra-stripe-opacity);
-    }
-
-    .advancement-table tr > td {
-        border-bottom: none;
-        padding: var(--md-gap);
-    }
-
-    .advancement-table tr:last-child {
-        border-bottom: none;
-    }
-
-    .advancement-table td {
-        color: var(--text-secondary);
-    }
-
-    .advancement-table td:last-child {
-        text-align: right;
-        color: var(--text-primary);
     }
 </style>
