@@ -285,7 +285,7 @@
                 [faLightbulb, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
                 [faRocket, "Advancement", "advancement", showAdvancementTab],
-                [faHashtag, "Teams", "teams", showTeamsTab],
+                [faHashtag, "Teams (${event.teams.length})", "teams", showTeamsTab],
             ]}
             bind:selectedTab
         >
