@@ -130,7 +130,7 @@
     $: showLeagueRankingsTab = !!isLeagueEvent;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
-    $: advancesToStripped = event.advancementInfo
+    $: advancesToStripped = event?.advancementInfo
         ? event.advancementInfo?.advancesToEvent
             ? event.advancementInfo.advancesToEvent.name
             : event?.advancementInfo?.advancesTo
@@ -140,7 +140,7 @@
                   .join(" & ")
             : ""
         : "";
-    $: advancesToLink = event.advancementInfo
+    $: advancesToLink = event?.advancementInfo
         ? event.advancementInfo?.advancesToEvent
             ? `/events/${event.advancementInfo.advancesToEvent.season}/${event.advancementInfo.advancesToEvent.code}/matches`
             : null
