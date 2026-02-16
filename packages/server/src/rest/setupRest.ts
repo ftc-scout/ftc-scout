@@ -463,18 +463,5 @@ async function eventAdvancement(req: Request<{ season: string; code: string }>, 
         order: { rank: "ASC" },
     });
 
-    let advancesToEvent = null;
-    if (event.advancesTo) {
-        advancesToEvent = await Event.findOneBy({ season, code: event.advancesTo });
-    }
-
-    res.send({
-        advancementInfo: {
-            slots: event.advancementSlots,
-            advancesTo: event.advancesTo,
-            fcmpReserved: event.fcmpReserved,
-            advancesToEvent: advancesToEvent,
-        },
-        teams: advancement,
-    });
+    res.send(advancement);
 }
