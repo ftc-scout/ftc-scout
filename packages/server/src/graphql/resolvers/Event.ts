@@ -314,11 +314,22 @@ const EventAdvancementInfoGQL = new GraphQLObjectType({
         advancesToEvent: {
             type: EventGQL,
             resolve: async (parent) => {
-                if (!parent.advancesToEvent) return null;
-                let [seasonStr, code] = parent.advancesToEvent.split("/");
+                if (!parent.advancesTo) return null;
+                let seasonStr = parent.season;
+                let code = parent.advancesTo;
                 let season = parseInt(seasonStr) as Season;
                 if (isNaN(season)) return null;
                 return Event.findOne({ where: { season, code } });
+            },
+        },
+        advancesFrom: {
+            type: list(nn(EventGQL)),
+            resolve: async (parent) => {
+                let seasonStr = parent.season;
+                let code = parent.eventCode;
+                let season = parseInt(seasonStr) as Season;
+                if (isNaN(season)) return [];
+                return Event.find({ where: { season, advancesTo: code } });
             },
         },
     },

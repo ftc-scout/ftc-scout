@@ -11,6 +11,7 @@ import { loadAdvancementSlots } from "../db/loaders/load-advancement-slots";
 export const LoadType = {
     Full: "Full",
     Partial: "Partial",
+    Future: "Future",
 };
 export type LoadType = (typeof LoadType)[keyof typeof LoadType];
 
@@ -87,7 +88,10 @@ export async function watchApi() {
         await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Full), MINS_PER_HOUR);
         await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Partial), 5);
         await runJob(async () => await loadFutureEvents(CURRENT_SEASON), MINS_PER_DAY / 2);
-
+        await runJob(
+            async () => await loadAdvancementSlots(CURRENT_SEASON, LoadType.Future),
+            MINS_PER_HOUR * 3
+        );
         cycleCount += 1;
         setTimeout(run, MS_PER_MIN);
     };

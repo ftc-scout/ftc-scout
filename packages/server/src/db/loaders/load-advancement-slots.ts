@@ -75,10 +75,12 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
         qb.andWhere("e.advancesTo IS NOT NULL");
         if (loadType === LoadType.Full) {
             qb.andWhere("e.start < now()").andWhere("e.start > now() - interval '30 days'");
-        } else {
+        } else if (loadType === LoadType.Partial) {
             qb.andWhere("(e.advancementSlots IS NULL OR e.advancementSlots <= 0)")
                 .andWhere("e.start <= now()")
                 .andWhere(`"end" >= now() - interval '10 days'`);
+        } else if (loadType === LoadType.Future) {
+            qb.andWhere("e.start > now()");
         }
     }
 
