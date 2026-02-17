@@ -259,30 +259,6 @@
             {/if}
 
             <DataFromFirst />
-
-            {#if event.advancementInfo && (event.advancementInfo.fcmpReserved || event.advancementInfo.advancesTo)}
-                <div class="advancement-info">
-                    <table class="advancement-table">
-                        {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
-                            <tr>
-                                <td>FIRST Championship</td>
-                                <td>{event.advancementInfo.fcmpReserved}</td>
-                            </tr>
-                        {/if}
-                        {#if event.advancementInfo.advancesTo && event.advancementInfo.slots}
-                            {@const regionalSlots =
-                                event.advancementInfo.slots -
-                                (event.advancementInfo.fcmpReserved ?? 0)}
-                            {#if regionalSlots > 0}
-                                <tr>
-                                    <td>{advancesToStripped}</td>
-                                    <td>{regionalSlots}</td>
-                                </tr>
-                            {/if}
-                        {/if}
-                    </table>
-                </div>
-            {/if}
         </Card>
 
         <RelatedEvents relatedEvents={event.relatedEvents} thisEventName={event.name} {season} />
