@@ -427,12 +427,11 @@ function calculateRanks(
         }
     }
 
-    let ranked = Object.entries(teps)
-        // .filter(([_, s]) => s.hasStats)
-        .sort(([teamA], [teamB]) => compareRank(+teamA, +teamB, rankSums));
+    let ranked = Object.entries(teps).sort(([teamA], [teamB]) =>
+        compareRank(+teamA, +teamB, rankSums)
+    );
 
     for (let rank = 0; rank < ranked.length; rank++) {
-        console.log(`Rank ${rank + 1}: Team ${ranked[rank][0]} (rp: ${teps[+ranked[rank][0]].rp}`);
         teps[+ranked[rank][0]].rank = rank + 1;
     }
 }
