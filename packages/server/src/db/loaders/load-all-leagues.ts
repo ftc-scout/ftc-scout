@@ -4,6 +4,8 @@ import { League } from "../entities/League";
 import { DATA_SOURCE } from "../data-source";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
 import { recomputeLeagueRankings } from "./recompute-league-rankings";
+import { LeagueTeam } from "../entities/LeagueTeam";
+import { getLeagueMembership } from "../../ftc-api/get-league-membership";
 
 type LoadAllLeaguesOptions = {
     markMatchesStale?: boolean;
@@ -26,8 +28,22 @@ export async function loadAllLeagues(season: Season, opts: LoadAllLeaguesOptions
         ).values(),
     ];
 
+    let leagueMembers = (
+        await Promise.all(
+            deduped.map(async (league) =>
+                LeagueTeam.fromApi(
+                    await getLeagueMembership(season, league.code, league.regionCode),
+                    league
+                )
+            )
+        )
+    ).flat();
+
     await DATA_SOURCE.transaction(async (em) => {
         await em.getRepository(League).upsert(deduped, ["season", "code", "regionCode"]);
+        await em
+            .getRepository(LeagueTeam)
+            .upsert(leagueMembers, ["season", "leagueCode", "regionCode", "teamNumber"]);
 
         let status =
             (await em.getRepository(DataHasBeenLoaded).findOne({ where: { season } })) ??

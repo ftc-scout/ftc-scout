@@ -8,16 +8,7 @@ import {
     UpdateDateColumn,
 } from "typeorm";
 import { Season } from "@ftc-scout/common";
-
-export type LeagueApi = {
-    region: string | null;
-    code: string | null;
-    name: string | null;
-    remote: boolean | null;
-    parentLeagueCode: string | null;
-    parentLeagueName: string | null;
-    location: string | null;
-};
+import { LeagueApi } from "@ftc-scout/common";
 
 @Entity()
 export class League extends BaseEntity {

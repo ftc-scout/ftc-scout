@@ -3,6 +3,7 @@ export * from "./ftc-api-types/Event";
 export * from "./ftc-api-types/match-scores/MatchScores";
 export * from "./ftc-api-types/Match";
 export * from "./ftc-api-types/Team";
+export * from "./ftc-api-types/League";
 export * from "./logic/AdvancementEligibility";
 export * from "./logic/Alliance";
 export * from "./logic/descriptors/descriptor-list";

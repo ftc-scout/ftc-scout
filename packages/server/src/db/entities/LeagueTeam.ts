@@ -1,13 +1,13 @@
 import {
     BaseEntity,
-    Column,
     CreateDateColumn,
     DeepPartial,
     Entity,
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { Season } from "@ftc-scout/common";
+import { LeagueMembershipFtcApi, Season } from "@ftc-scout/common";
+import { League } from "./League";
 
 @Entity()
 export class LeagueTeam extends BaseEntity {
@@ -17,8 +17,8 @@ export class LeagueTeam extends BaseEntity {
     @PrimaryColumn({ type: "varchar" })
     leagueCode!: string;
 
-    @Column({ type: "varchar", nullable: true })
-    regionCode!: string | null;
+    @PrimaryColumn({ type: "varchar" })
+    regionCode!: string;
 
     @PrimaryColumn("int")
     teamNumber!: number;
@@ -29,17 +29,16 @@ export class LeagueTeam extends BaseEntity {
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
 
-    static createFromTeam(
-        season: Season,
-        leagueCode: string,
-        teamNumber: number,
-        regionCode: string | null
-    ): LeagueTeam {
-        return LeagueTeam.create({
-            season,
-            leagueCode,
-            regionCode,
-            teamNumber,
-        } satisfies DeepPartial<LeagueTeam>);
+    static fromApi(participation: LeagueMembershipFtcApi | null, league: League): LeagueTeam[] {
+        return participation
+            ? participation.members.map((member) =>
+                  LeagueTeam.create({
+                      season: league.season,
+                      leagueCode: league.code,
+                      teamNumber: member,
+                      regionCode: league.regionCode,
+                  } as DeepPartial<LeagueTeam>)
+              )
+            : [];
     }
 }

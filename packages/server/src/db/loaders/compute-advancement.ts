@@ -20,7 +20,7 @@ import { LeagueRankingSchemas } from "../entities/dyn/league-ranking";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { MatchScore, MatchScoreSchemas } from "../entities/dyn/match-score";
 import { Team } from "../entities/Team";
-import { In } from "typeorm";
+import { In, IsNull } from "typeorm";
 
 const SUPPORTED_EVENT_TYPES: EventType[] = [
     EventType.Qualifier,
@@ -310,6 +310,9 @@ function finalizeRowRanks(rows: TeamRow[]) {
     let rankCounter = 0;
     let advancementRankCounter = 0;
     rows.forEach((r) => {
+        console.log(
+            `Finalizing row for team ${r.teamNumber}: qualPoints=${r.qualPoints}, allianceSelectionPoints=${r.allianceSelectionPoints}, playoffPoints=${r.playoffPoints}, awardPoints=${r.awardPoints}`
+        );
         r.totalPoints = r.totalPoints ?? 0;
         if (r.isAdvancementEligible) {
             advancementRankCounter++;
@@ -802,6 +805,10 @@ function getTeamAdvancementEligibility(
     return getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
 }
 
+function regionCondition(regionCode: string | null) {
+    return regionCode == null ? IsNull() : regionCode;
+}
+
 export async function computeAdvancementForEvent(season: Season, eventCode: string) {
     if (season < 2025) return;
 
@@ -977,13 +984,30 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
 
     let matchScoresPerTeam = new Map<number, number[]>();
     let autoScoresPerTeam = new Map<number, number[]>();
+    let leagueRankings: Map<number, number> = new Map();
 
     if (event.leagueCode) {
         let leagueMeets = await Event.findBy({
             season,
-            leagueCode: event.leagueCode,
             type: "LeagueMeet",
+            regionCode: regionCondition(event.regionCode),
         });
+
+        // load all league rankings from database
+        let leagueRankingsRaw = await DATA_SOURCE.getRepository(LeagueRankingSchemas[season])
+            .findBy({
+                leagueCode: event.leagueCode,
+                teamNumber: In(teamNumberList),
+            })
+            .then((rows) => rows.sort((a, b) => a.rank - b.rank));
+
+        let rank = 0;
+        for (let r of leagueRankingsRaw) {
+            rank++;
+            leagueRankings.set(r.teamNumber, rank);
+        }
+
+        console.log("League rankings:", leagueRankings);
 
         for (let meet of leagueMeets) {
             let matches = await Match.findBy({
@@ -1051,7 +1075,11 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     for (let teamNumber of teamNumbers) {
         let rankEntry = qualRows.find((q) => q.teamNumber == teamNumber);
         let qualPoints: number | null = null;
-        if (rankEntry && teamCount > 0 && rankEntry.rank != null && rankEntry.rank > 0) {
+        let leagueRanking = leagueRankings.get(teamNumber);
+        if (leagueRanking && teamCount > 0) {
+            let qp = config.calculateQualPoints(leagueRanking, teamCount);
+            qualPoints = Number.isFinite(qp) ? qp : null;
+        } else if (rankEntry && teamCount > 0 && rankEntry.rank != null && rankEntry.rank > 0) {
             let qp = config.calculateQualPoints(rankEntry.rank, teamCount);
             qualPoints = Number.isFinite(qp) ? qp : null;
         }

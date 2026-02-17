@@ -17,6 +17,7 @@ type BaseColumns = {
     isRemote: boolean;
     rank: number;
     rp: number;
+    leagueRp: number;
     tb1: number;
     tb2: number;
     wins: number;
@@ -56,6 +57,7 @@ function makeLeagueRankingSchema(descriptor: Descriptor): EntitySchema<LeagueRan
             },
             isRemote: { type: "bool" },
             rank: { type: "int" },
+            leagueRp: { type: "float", nullable: true },
             rp: { type: "float" },
             tb1: { type: "float" },
             tb2: { type: "float" },

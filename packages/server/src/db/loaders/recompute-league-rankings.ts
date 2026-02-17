@@ -15,7 +15,16 @@ import { LeagueTeam } from "../entities/LeagueTeam";
 import { Event } from "../entities/Event";
 import { Match } from "../entities/Match";
 import { LeagueRankingSchemas } from "../entities/dyn/league-ranking";
-import { FindOptionsWhere, IsNull } from "typeorm";
+import { FindOptionsWhere, In, IsNull, Not } from "typeorm";
+
+/*This seems to be a mistake in the ftc-events logic, where league meets
+ * not in the league were/are being counted towards league rankings, even though they shouldn't be.
+ *
+ * Temporarily adding all league meets in the region to the rankings calculation until we can confirm whether this is intentional or not, and fix if it's not.
+ *
+ * Well this is a feature now, since this is normal in Romania and allowed somehow
+ * */
+const COUNT_NON_LEAGUE_LEAGUE_MEETS = true;
 
 type MatchContribution = {
     matchId: number;
@@ -53,11 +62,25 @@ export async function recomputeLeagueRankings(
         season,
         league
     );
-    let eventCodesToFetch = [...new Set([...leagueMeetCodes, ...tournamentCodes])];
+    let allEventCodes = [...new Set([...leagueMeetCodes, ...tournamentCodes])];
+    let allEventCodesLeague = [...new Set([...leagueMeetCodes, ...tournamentCodes])];
 
-    if (!eventCodesToFetch.length) {
+    if (!allEventCodes.length) {
         await clearLeagueRankings(season, leagueCode, leagueRegion);
         return;
+    }
+
+    if (COUNT_NON_LEAGUE_LEAGUE_MEETS) {
+        let allLeaugeMeetsInRegion = await Event.find({
+            where: {
+                season,
+                type: EventType.LeagueMeet,
+                code: Not(In(leagueMeetCodes.length ? leagueMeetCodes : [""])),
+                regionCode: regionCondition(leagueRegion),
+            },
+        });
+        let allLeagueMeetCodesInRegion = allLeaugeMeetsInRegion.map((e) => e.code);
+        allEventCodes = allEventCodes.concat(allLeagueMeetCodesInRegion);
     }
 
     let strictTeamNumbers = new Set(
@@ -75,8 +98,11 @@ export async function recomputeLeagueRankings(
     let matches = await DATA_SOURCE.getRepository(Match)
         .createQueryBuilder("m")
         .where("m.event_season = :season", { season })
-        .andWhere("m.event_code IN (:...codes)", { codes: eventCodesToFetch })
+        .andWhere("m.event_code IN (:...codes)", { codes: allEventCodes })
         .andWhere("m.has_been_played")
+        .andWhere("m.tournament_level = :tournamentLevel", {
+            tournamentLevel: TournamentLevel.Quals,
+        })
         .leftJoinAndMapMany(
             "m.scores",
             `match_score_${season}`,
@@ -96,11 +122,14 @@ export async function recomputeLeagueRankings(
         return;
     }
 
-    let frontendMatches: LeagueFrontendMatch[] = matches.map((m) => ({
-        id: m.id,
-        ...m.toFrontend(),
-        eventCode: m.eventCode,
-    }));
+    let allFrontendMatches = matches.map(
+        (m) =>
+            ({
+                id: m.id,
+                ...m.toFrontend(),
+                eventCode: m.eventCode,
+            } as LeagueFrontendMatch)
+    );
 
     let leagueTeamWhere: FindOptionsWhere<LeagueTeam>[] = includedLeagues.map((l) => ({
         season,
@@ -112,16 +141,24 @@ export async function recomputeLeagueRankings(
               where: leagueTeamWhere,
           })
         : [];
-    let eventTeamNumbers = frontendMatches
+    let eventTeamNumbers = allFrontendMatches
+        .filter((m) => allEventCodesLeague.includes(m.eventCode))
         .flatMap((m) => m.teams.map((t) => t.teamNumber))
         .filter((n): n is number => n != null);
-    let teamNumbers = [...new Set(eventTeamNumbers)];
-    if (!teamNumbers.length && leagueTeams.length) {
+
+    let teamNumbers: number[] = [];
+    if (leagueTeams.length) {
         teamNumbers = leagueTeams.map((t) => t.teamNumber);
+    } else {
+        teamNumbers = [...new Set(eventTeamNumbers)];
     }
 
     let descriptor = DESCRIPTORS[season];
-    let selections = buildMatchSelections(frontendMatches, descriptor, new Set(tournamentCodes));
+    let selections = buildMatchSelections(allFrontendMatches, descriptor, new Set(tournamentCodes));
+
+    selections = new Map(
+        [...selections.entries()].filter(([teamNumber]) => teamNumbers.includes(teamNumber))
+    );
 
     const includeMatch: TeamEventStatsOptions["includeMatch"] = (teamNumber, match) => {
         let matchesForTeam = selections.get(teamNumber);
@@ -133,7 +170,7 @@ export async function recomputeLeagueRankings(
         season,
         leagueCode,
         league.remote,
-        frontendMatches,
+        allFrontendMatches,
         teamNumbers,
         {
             includeMatch,
@@ -145,10 +182,11 @@ export async function recomputeLeagueRankings(
         season,
         leagueCode,
         league.remote,
-        frontendMatches,
+        allFrontendMatches,
         teamNumbers,
         {
-            includeMatch: (_teamNumber, _match) => true,
+            includeMatch: (teamNumber, match) =>
+                teamNumbers.includes(teamNumber) && match.eventCode != "filler",
         }
     );
 
@@ -161,6 +199,7 @@ export async function recomputeLeagueRankings(
         let totals = totalsByTeam.get(s.teamNumber);
         if (totals) {
             s.qualMatchesPlayed = totals.qualMatchesPlayed;
+            s.leagueRp = totals.rp;
             s.tot = totals.tot;
             s.avg = totals.avg;
             s.min = totals.min;
@@ -250,8 +289,6 @@ function buildMatchSelections(
             continue;
         }
 
-        if (match.tournamentLevel != TournamentLevel.Quals || !hasScores) continue;
-
         for (let participant of match.teams) {
             if (participant.surrogate) continue;
             let metric = computeContribution(descriptor, match, participant);
@@ -267,6 +304,9 @@ function buildMatchSelections(
     for (let [teamNumber, metrics] of contributions.entries()) {
         metrics.sort(compareContributions);
         let selected = metrics.slice(0, 10).map((m) => m.matchKey);
+        for (let i = 1; i <= 10 && selected.length < 10; i++) {
+            selected.push(makeMatchKey({ eventCode: "filler", id: i } as LeagueFrontendMatch));
+        }
         selections.set(teamNumber, new Set(selected));
     }
 

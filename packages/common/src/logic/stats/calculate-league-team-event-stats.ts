@@ -29,6 +29,7 @@ type Tep = {
     hasStats: boolean;
     rank: number;
     rp: number;
+    leagueRp: number;
     tb1: number;
     tb2: number;
     wins: number;
@@ -36,6 +37,7 @@ type Tep = {
     ties: number;
     dqs: number;
     qualMatchesPlayed: number;
+    emptyMatchesPlayed: number;
     tot: AnyObject;
     avg: AnyObject;
     min: AnyObject;
@@ -81,6 +83,7 @@ export function calculateLeagueTeamEventStats(
                 hasStats: false,
                 rank: 0,
                 rp: 0,
+                leagueRp: 0,
                 tb1: 0,
                 tb2: 0,
                 wins: 0,
@@ -88,6 +91,7 @@ export function calculateLeagueTeamEventStats(
                 ties: 0,
                 dqs: 0,
                 qualMatchesPlayed: 0,
+                emptyMatchesPlayed: 0,
                 tot: { ...emptyGroup },
                 avg: { ...emptyGroup },
                 min: { ...emptyGroup },
@@ -153,14 +157,16 @@ function calculateRecords(
             if (t.surrogate) continue;
             if (!include(t.teamNumber, m)) continue;
 
+            let r = teps[t.teamNumber];
+            if (!r) continue;
+
             if (t.dq) {
-                teps[t.teamNumber].hasStats = true;
-                teps[t.teamNumber].dqs++;
-                teps[t.teamNumber].losses++;
+                r.hasStats = true;
+                r.dqs++;
+                r.losses++;
                 continue;
             }
 
-            let r = teps[t.teamNumber];
             r.qualMatchesPlayed++;
             r.hasStats = true;
             if (t.dq) {
@@ -175,6 +181,14 @@ function calculateRecords(
             } else {
                 r.losses++;
             }
+        }
+    }
+
+    for (let t of Object.values(teps)) {
+        for (let i = 1; i <= 10; i++) {
+            if (!include(t.teamNumber, { eventCode: "filler", id: i } as LeagueFrontendMatch))
+                continue;
+            t.emptyMatchesPlayed++;
         }
     }
 }
@@ -316,7 +330,10 @@ function calculateRanks(
     }
 
     const recordRankSum = (stats: Tep, field: keyof RankSums, matchesOverride?: number) => {
-        let matchesUsed = matchesOverride ?? stats.qualMatchesPlayed ?? 0;
+        let matchesUsed =
+            matchesOverride ?? (stats.emptyMatchesPlayed && stats.qualMatchesPlayed)
+                ? stats.qualMatchesPlayed + stats.emptyMatchesPlayed
+                : stats.qualMatchesPlayed ?? 0;
         let value: number | null | undefined;
         switch (field) {
             case "rp":
@@ -369,7 +386,7 @@ function calculateRanks(
             }
         }
 
-        recordRankSum(stats, "rp", matchesUsed);
+        recordRankSum(stats, "rp");
     }
 
     let losingScoreTotals: LosingScoreResult | null = null;
@@ -411,10 +428,11 @@ function calculateRanks(
     }
 
     let ranked = Object.entries(teps)
-        .filter(([_, s]) => s.hasStats)
+        // .filter(([_, s]) => s.hasStats)
         .sort(([teamA], [teamB]) => compareRank(+teamA, +teamB, rankSums));
 
     for (let rank = 0; rank < ranked.length; rank++) {
+        console.log(`Rank ${rank + 1}: Team ${ranked[rank][0]} (rp: ${teps[+ranked[rank][0]].rp}`);
         teps[+ranked[rank][0]].rank = rank + 1;
     }
 }
