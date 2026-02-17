@@ -310,9 +310,6 @@ function finalizeRowRanks(rows: TeamRow[]) {
     let rankCounter = 0;
     let advancementRankCounter = 0;
     rows.forEach((r) => {
-        console.log(
-            `Finalizing row for team ${r.teamNumber}: qualPoints=${r.qualPoints}, allianceSelectionPoints=${r.allianceSelectionPoints}, playoffPoints=${r.playoffPoints}, awardPoints=${r.awardPoints}`
-        );
         r.totalPoints = r.totalPoints ?? 0;
         if (r.isAdvancementEligible) {
             advancementRankCounter++;
@@ -1006,8 +1003,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             rank++;
             leagueRankings.set(r.teamNumber, rank);
         }
-
-        console.log("League rankings:", leagueRankings);
 
         for (let meet of leagueMeets) {
             let matches = await Match.findBy({
