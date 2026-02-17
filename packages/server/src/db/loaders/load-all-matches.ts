@@ -75,22 +75,6 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 getTeams(season, event.code),
             ]);
 
-            let leagueTeams: LeagueTeam[] = [];
-            if (event.leagueCode) {
-                let seen = new Set<number>();
-                leagueTeams = teams
-                    .map((team) => team.teamNumber)
-                    .filter((num): num is number => num != null)
-                    .filter((num) => {
-                        if (seen.has(num)) return false;
-                        seen.add(num);
-                        return true;
-                    })
-                    .map((num) =>
-                        LeagueTeam.createFromTeam(season, event.leagueCode!, num, event.regionCode)
-                    );
-            }
-
             let allDbMatches: Match[] = [];
             let allDbScores: MatchScore[] = [];
             let allDbTmps: TeamMatchParticipation[] = [];
@@ -133,9 +117,6 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 await em.save(allDbTmps, { chunk: 500 });
                 await em.getRepository(MatchScoreSchemas[season]).save(allDbScores, { chunk: 100 });
                 await em.getRepository(TepSchemas[season]).save(allDbTeps, { chunk: 100 });
-                if (leagueTeams.length) {
-                    await em.getRepository(LeagueTeam).save(leagueTeams, { chunk: 200 });
-                }
             });
 
             let updatedScores = allDbScores.filter((m) => "updatedAt" in m);

@@ -44,6 +44,7 @@
     export let season: Season;
     export let remote: boolean;
     export let eventName: string;
+    export let eventCode: string;
     export let data: AdvancementScore[];
     export let focusedTeam: number | null;
     export let saveIdOverride: string | null = null;
@@ -365,6 +366,15 @@
     }
 </script>
 
+<div class="warning">
+    <strong>Eligibility data may be incomplete or inaccurate</strong>, because of lack off official
+    data on team eligibility from FIRST. Please verify with the event organizers. For more
+    information about this issue, see
+    <a href="https://github.com/FIRST-Tech-Challenge/scorekeeper/issues/915" target="_blank"
+        >this GitHub issue</a
+    >.
+</div>
+
 <AdvancementStatTableControls
     data={rankedData}
     {stats}
@@ -420,6 +430,15 @@
         </div>
     </div>
 </div>
+<div class="warning">
+    <strong>Note:</strong> Advancement results are not official, we do our best to calculate it
+    accurately based on the data we have, but there may be errors or missing information . For
+    official advancement results, please refer to
+    <a
+        href={`https://ftc-events.firstinspires.org/2025/${eventCode}/advancementpoints`}
+        target="_blank">FIRST's official advancement report</a
+    > for official data.
+</div>
 
 <style>
     .legend {
@@ -462,6 +481,14 @@
     .legend-desc {
         color: var(--secondary-text-color);
         font-size: var(--sm-font-size);
+    }
+
+    .warning {
+        background-color: var(--alert-bar-color);
+        color: var(--alert-bar-text-color);
+        padding: var(--lg-gap);
+        border-radius: var(--lg-gap);
+        margin-bottom: var(--lg-gap);
     }
 
     @media (max-width: 600px) {

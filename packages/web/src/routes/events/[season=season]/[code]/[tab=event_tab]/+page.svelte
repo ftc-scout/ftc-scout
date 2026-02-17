@@ -342,6 +342,7 @@
                     remote={event.remote}
                     eventName={event.name}
                     data={advancementRowsWithStats}
+                    eventCode={event.code}
                     {focusedTeam}
                 />
             </TabContent>
