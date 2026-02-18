@@ -114,7 +114,7 @@ export function awardCodeFromFtcApi(award: AwardFtcApi): [AwardType, number] | n
         case 10: // Dean's List
             if (award.name.includes(" Finalists")) {
                 return [AwardType.DeansListFinalist, awardTop(award, 100)];
-            } else if (award.name.includes(" Semifinalists")) {
+            } else if (award.name.includes(" Semi-Finalists")) {
                 return [AwardType.DeansListSemiFinalist, awardTop(award, 100)];
             } else if (award.name.includes(" Winners")) {
                 return [AwardType.DeansListWinner, awardTop(award, 100)];
