@@ -367,7 +367,7 @@
 </script>
 
 <div class="warning">
-    <strong>Eligibility data may be incomplete or inaccurate</strong>, because of lack off official
+    <strong>Eligibility data may be incomplete or inaccurate</strong>, because of lack of official
     data on team eligibility from FIRST. Please verify with the event organizers. For more
     information about this issue, see
     <a href="https://github.com/FIRST-Tech-Challenge/scorekeeper/issues/915" target="_blank"
