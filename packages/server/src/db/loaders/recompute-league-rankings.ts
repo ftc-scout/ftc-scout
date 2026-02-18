@@ -8,6 +8,7 @@ import {
     TeamEventStatsOptions,
     calculateLeagueTeamEventStats,
     type LeagueFrontendMatch,
+    FrontendMatch,
 } from "@ftc-scout/common";
 import { DATA_SOURCE } from "../data-source";
 import { League } from "../entities/League";
@@ -370,16 +371,16 @@ function getAllianceScore(
     return match.scores;
 }
 
-function getWinningAlliance(match: LeagueFrontendMatch): Alliance | null {
+export function getWinningAlliance(match: FrontendMatch): Alliance | null {
     if (!hasAllianceScores(match.scores)) return null;
     if (match.scores.red.totalPoints > match.scores.blue.totalPoints) return Alliance.Red;
     if (match.scores.blue.totalPoints > match.scores.red.totalPoints) return Alliance.Blue;
     return null;
 }
 
-function computeRankingPoints(
+export function computeRankingPoints(
     descriptor: Descriptor,
-    participant: LeagueFrontendMatch["teams"][number],
+    participant: FrontendMatch["teams"][number],
     allianceScore: Record<string, any>,
     winningAlliance: Alliance | null
 ) {

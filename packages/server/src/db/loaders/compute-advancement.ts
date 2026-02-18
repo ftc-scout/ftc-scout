@@ -7,6 +7,8 @@ import {
     AdvancementEligibility,
     getAdvancementEligibility,
     isEligible,
+    FrontendMatch,
+    DESCRIPTORS,
 } from "@ftc-scout/common";
 import { ADVANCEMENT_CONFIGS } from "@ftc-scout/common";
 import { AdvancementScore } from "../entities/AdvancementScore";
@@ -21,6 +23,7 @@ import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { MatchScore, MatchScoreSchemas } from "../entities/dyn/match-score";
 import { Team } from "../entities/Team";
 import { In, IsNull } from "typeorm";
+import { computeRankingPoints, getWinningAlliance } from "./recompute-league-rankings";
 
 const SUPPORTED_EVENT_TYPES: EventType[] = [
     EventType.Qualifier,
@@ -639,29 +642,68 @@ async function computeParentFinalistsPlayoffPoints(
 function calculateScoresPerTeam(
     scores: MatchScore[],
     tmps: TeamMatchParticipation[],
-    matchScoresPerTeam: Map<number, number[]>,
-    autoScoresPerTeam: Map<number, number[]>
+    matchScoresPerTeam: Map<number, { score: number; rp: number }[]>,
+    autoScoresPerTeam: Map<number, { score: number; rp: number }[]>
 ) {
+    if (scores.length === 0) return;
+    let descriptor = DESCRIPTORS[scores[0].season];
+
+    let matchScorePairs = new Map<string, MatchScore[]>();
     scores.forEach((s) => {
-        let matchId = s.matchId;
-        let alliance = s.alliance;
-        let score = s.totalPointsNp ?? 0;
-        let autoScore = (s.autoPoints as number) ?? 0;
+        let key = `${s.eventCode}-${s.matchId}`;
+        if (!matchScorePairs.has(key)) {
+            matchScorePairs.set(key, []);
+        }
+        matchScorePairs.get(key)!.push(s);
+    });
 
-        let teamsInAlliance = tmps
-            .filter((t) => t.matchId === matchId && t.alliance === alliance)
-            .map((t) => t.teamNumber);
+    matchScorePairs.forEach((doubleScores, _key) => {
+        let redScore = doubleScores.find((s) => s.alliance === Alliance.Red);
+        let blueScore = doubleScores.find((s) => s.alliance === Alliance.Blue);
+        let frontendMatch = {
+            tournamentLevel: TournamentLevel.Quals,
+            teams: tmps.filter((t) => t.matchId === doubleScores[0].matchId),
+            scores: {
+                red: redScore,
+                blue: blueScore,
+            },
+        } as FrontendMatch;
+        let winningAlliance = getWinningAlliance(frontendMatch);
 
-        teamsInAlliance.forEach((teamNumber) => {
-            if (!matchScoresPerTeam.has(teamNumber)) {
-                matchScoresPerTeam.set(teamNumber, []);
-            }
-            matchScoresPerTeam.get(teamNumber)!.push(score);
+        doubleScores.forEach((s) => {
+            let alliance = s.alliance;
+            let score = s.totalPointsNp ?? 0;
+            let autoScore = (s.autoPoints as number) ?? 0;
 
-            if (!autoScoresPerTeam.has(teamNumber)) {
-                autoScoresPerTeam.set(teamNumber, []);
-            }
-            autoScoresPerTeam.get(teamNumber)!.push(autoScore);
+            let teamsInAlliance = frontendMatch.teams.filter((t) => t.alliance === alliance);
+
+            teamsInAlliance.forEach((team) => {
+                let teamNumber = team.teamNumber;
+                let dq = team.dq ?? false;
+                let noShow = !team.onField ?? false;
+                if (team.surrogate) return;
+
+                let rp =
+                    dq || noShow
+                        ? 0
+                        : (computeRankingPoints(descriptor, team, s, winningAlliance) as number);
+
+                if (!matchScoresPerTeam.has(teamNumber)) {
+                    matchScoresPerTeam.set(teamNumber, []);
+                }
+                matchScoresPerTeam.get(teamNumber)!.push({
+                    score: dq || noShow ? 0 : score,
+                    rp,
+                });
+
+                if (!autoScoresPerTeam.has(teamNumber)) {
+                    autoScoresPerTeam.set(teamNumber, []);
+                }
+                autoScoresPerTeam.get(teamNumber)!.push({
+                    score: dq || noShow ? 0 : autoScore,
+                    rp,
+                });
+            });
         });
     });
 }
@@ -735,8 +777,8 @@ async function computeDivisionParentTeamInfo(
             }
         }
 
-        let matchScoresPerTeam = new Map<number, number[]>();
-        let autoScoresPerTeam = new Map<number, number[]>();
+        let matchScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
+        let autoScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
         if (hasQuals) {
             let qualMatchIds = qualMatches.map((m) => m.id);
             let tmps = await TeamMatchParticipation.findBy({
@@ -769,8 +811,8 @@ async function computeDivisionParentTeamInfo(
                 isQualFinal,
                 allianceSelectionPoints: sel,
                 isAllianceSelectionFinal,
-                qualScoresNP: matchScoresPerTeam.get(q.teamNumber) ?? [],
-                autoScores: autoScoresPerTeam.get(q.teamNumber) ?? [],
+                qualScoresNP: matchScoresPerTeam.get(q.teamNumber)?.map((s) => s.score) ?? [],
+                autoScores: autoScoresPerTeam.get(q.teamNumber)?.map((s) => s.score) ?? [],
             });
         }
     }
@@ -979,8 +1021,8 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         teamNumberList
     );
 
-    let matchScoresPerTeam = new Map<number, number[]>();
-    let autoScoresPerTeam = new Map<number, number[]>();
+    let matchScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
+    let autoScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
     let leagueRankings: Map<number, number> = new Map();
 
     if (event.leagueCode) {
@@ -1033,7 +1075,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 let padding = new Array(10 - amountOfScores).fill(0);
                 matchScoresPerTeam.set(teamNumber, scores.concat(padding));
             } else if (amountOfScores > 10) {
-                matchScoresPerTeam.set(teamNumber, scores.sort((a, b) => b - a).slice(0, 10));
+                matchScoresPerTeam.set(teamNumber, scores.sort((a, b) => b.rp - a.rp).slice(0, 10));
             }
         });
 
@@ -1044,7 +1086,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 let padding = new Array(10 - amountOfScores).fill(0);
                 autoScoresPerTeam.set(teamNumber, scores.concat(padding));
             } else if (amountOfScores > 10) {
-                autoScoresPerTeam.set(teamNumber, scores.sort((a, b) => b - a).slice(0, 10));
+                autoScoresPerTeam.set(teamNumber, scores.sort((a, b) => b.rp - a.rp).slice(0, 10));
             }
         });
     }
@@ -1122,17 +1164,18 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             eligibility,
             advanced: false,
             averageNPMatchPoints: matchScoresPerTeam.has(teamNumber)
-                ? matchScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b, 0) /
+                ? matchScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b.score, 0) /
                   matchScoresPerTeam.get(teamNumber)!.length
                 : 0,
             highestNPMatchPoints: matchScoresPerTeam.has(teamNumber)
-                ? Math.max(...matchScoresPerTeam.get(teamNumber)!)
+                ? Math.max(...matchScoresPerTeam.get(teamNumber)!.map((s) => s.score))
                 : 0,
             secondHighestNPMatchPoints: matchScoresPerTeam.has(teamNumber)
-                ? [...matchScoresPerTeam.get(teamNumber)!].sort((a, b) => b - a)[1] ?? 0
+                ? [...matchScoresPerTeam.get(teamNumber)!].sort((a, b) => b.score - a.score)[1]
+                      ?.score ?? 0
                 : 0,
             averageAutoPoints: autoScoresPerTeam.has(teamNumber)
-                ? autoScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b, 0) /
+                ? autoScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b.score, 0) /
                   autoScoresPerTeam.get(teamNumber)!.length
                 : 0,
         });
