@@ -93,6 +93,7 @@ query EventPage($season: Int!, $code: String!) {
             allianceSelectionPoints
             isAllianceSelectionFinal
             playoffPoints
+            isPlayoffPointsFinal
             awardPoints
             totalPoints
             rank

@@ -26,6 +26,7 @@ export const AdvancementScoreGQL = new GraphQLObjectType({
         allianceSelectionPoints: nullTy(IntTy),
         isAllianceSelectionFinal: BoolTy,
         playoffPoints: nullTy(IntTy),
+        isPlayoffPointsFinal: BoolTy,
         awardPoints: nullTy(IntTy),
         totalPoints: nullTy(IntTy),
         rank: nullTy(IntTy),

@@ -30,6 +30,7 @@
         allianceSelectionPoints?: number | null;
         isAllianceSelectionFinal?: boolean;
         playoffPoints?: number | null;
+        isPlayoffPointsFinal?: boolean;
         awardPoints?: number | null;
         totalPoints?: number | null;
         advancementRank?: number | null;
@@ -236,7 +237,13 @@
             (d) => d.allianceSelectionPoints,
             (d) => d.isAllianceSelectionFinal
         ),
-        makeCol("playoffPoints", "Playoff Points", Color.Purple, (d) => d.playoffPoints),
+        makeCol(
+            "playoffPoints",
+            "Playoff Points",
+            Color.Purple,
+            (d) => d.playoffPoints,
+            (d) => d.isPlayoffPointsFinal
+        ),
         makeCol("awardPoints", "Award Points", Color.Blue, (d) => d.awardPoints),
     ];
 

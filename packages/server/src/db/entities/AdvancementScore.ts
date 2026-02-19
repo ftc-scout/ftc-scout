@@ -35,6 +35,9 @@ export class AdvancementScore extends BaseEntity {
     @Column("int", { nullable: true })
     playoffPoints!: number | null;
 
+    @Column("bool", { default: false })
+    isPlayoffPointsFinal!: boolean;
+
     @Column("int", { nullable: true })
     awardPoints!: number | null;
 
@@ -76,6 +79,7 @@ export class AdvancementScore extends BaseEntity {
             isAllianceSelectionFinal: false,
             eligibility: AdvancementEligibility.Eligible,
             playoffPoints: null,
+            isPlayoffPointsFinal: false,
             awardPoints: null,
             totalPoints: null,
             rank: null,
