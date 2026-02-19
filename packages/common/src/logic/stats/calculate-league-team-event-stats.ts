@@ -324,9 +324,9 @@ function calculateRanks(
     descriptor: Descriptor,
     include: IncludePredicate
 ) {
-    let rankSums: Record<number, RankSums> = {};
+    let rankAverages: Record<number, RankSums> = {};
     for (let team of Object.keys(teps)) {
-        rankSums[+team] = { rp: 0, tb1: 0, tb2: 0 };
+        rankAverages[+team] = { rp: 0, tb1: 0, tb2: 0 };
     }
 
     const recordRankSum = (stats: Tep, field: keyof RankSums, matchesOverride?: number) => {
@@ -334,6 +334,8 @@ function calculateRanks(
             matchesOverride ?? (stats.emptyMatchesPlayed && stats.qualMatchesPlayed)
                 ? stats.qualMatchesPlayed + stats.emptyMatchesPlayed
                 : stats.qualMatchesPlayed ?? 0;
+        let emptyMatchesUsed = stats.emptyMatchesPlayed ?? 0;
+        let normalMatchesUsed = matchesUsed - emptyMatchesUsed;
         let value: number | null | undefined;
         switch (field) {
             case "rp":
@@ -347,7 +349,8 @@ function calculateRanks(
                 break;
         }
         let average = Number.isFinite(value ?? NaN) ? value ?? 0 : 0;
-        rankSums[stats.teamNumber][field] = matchesUsed == 0 ? 0 : average * matchesUsed;
+        rankAverages[stats.teamNumber][field] =
+            matchesUsed == 0 ? 0 : average * (normalMatchesUsed / matchesUsed);
     };
 
     const setTieBreakers = (
@@ -399,8 +402,8 @@ function calculateRanks(
         let denom = totals?.denom ?? 0;
         stats.tb1 = denom == 0 ? 0 : sum / denom;
         stats.tb2 = 0;
-        rankSums[stats.teamNumber].tb1 = sum;
-        rankSums[stats.teamNumber].tb2 = 0;
+        rankAverages[stats.teamNumber].tb1 = sum;
+        rankAverages[stats.teamNumber].tb2 = 0;
     };
 
     for (let stats of Object.values(teps)) {
@@ -428,7 +431,7 @@ function calculateRanks(
     }
 
     let ranked = Object.entries(teps).sort(([teamA], [teamB]) =>
-        compareRank(+teamA, +teamB, rankSums)
+        compareRank(+teamA, +teamB, rankAverages)
     );
 
     for (let rank = 0; rank < ranked.length; rank++) {
