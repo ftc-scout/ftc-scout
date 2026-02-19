@@ -413,8 +413,16 @@ async function computeElimPlacementsByAlliance(
         let blueAlliance = allianceNumberForColor(m.id, Alliance.Blue);
         if (redAlliance == null || blueAlliance == null) continue;
 
-        let redScore = scoreFor(m.id, Alliance.Red);
-        let blueScore = scoreFor(m.id, Alliance.Blue);
+        let allTmps = tmps.filter((t) => t.matchId === m.id);
+
+        let redTmps = allTmps.filter((t) => t.alliance === Alliance.Red);
+        let blueTmps = allTmps.filter((t) => t.alliance === Alliance.Blue);
+
+        let redDq = redTmps.some((t) => t.noShow || t.dq);
+        let blueDq = blueTmps.some((t) => t.noShow || t.dq);
+
+        let redScore = redDq ? 0 : scoreFor(m.id, Alliance.Red);
+        let blueScore = blueDq ? 0 : scoreFor(m.id, Alliance.Blue);
         if (redScore == null || blueScore == null) continue;
         if (redScore == blueScore) continue;
 
