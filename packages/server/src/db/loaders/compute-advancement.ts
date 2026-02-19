@@ -667,11 +667,17 @@ async function computeParentFinalistsPlayoffPoints(
     );
 }
 
+interface ScoreWithRpAndTb {
+    score: number;
+    rp: number;
+    tb1: number;
+    tb2: number;
+}
 function calculateScoresPerTeam(
     scores: MatchScore[],
     tmps: TeamMatchParticipation[],
-    matchScoresPerTeam: Map<number, { score: number; rp: number }[]>,
-    autoScoresPerTeam: Map<number, { score: number; rp: number }[]>
+    matchScoresPerTeam: Map<number, ScoreWithRpAndTb[]>,
+    autoScoresPerTeam: Map<number, ScoreWithRpAndTb[]>
 ) {
     if (scores.length === 0) return;
     let descriptor = DESCRIPTORS[scores[0].season];
@@ -703,33 +709,59 @@ function calculateScoresPerTeam(
             let score = s.totalPointsNp ?? 0;
             let autoScore = (s.autoPoints as number) ?? 0;
 
+            if (score === 0) {
+                console.log("Found 0 score for match", s.matchId, "alliance", alliance);
+            }
+
             let teamsInAlliance = frontendMatch.teams.filter((t) => t.alliance === alliance);
 
             teamsInAlliance.forEach((team) => {
                 let teamNumber = team.teamNumber;
                 let dq = team.dq ?? false;
-                let noShow = !team.onField ?? false;
                 if (team.surrogate) return;
 
-                let rp =
-                    dq || noShow
-                        ? 0
-                        : (computeRankingPoints(descriptor, team, s, winningAlliance) as number);
+                let tb1 = 0;
+                let tb2 = 0;
+
+                switch (descriptor.rankings.tb) {
+                    case "AutoEndgameTot":
+                    case "AutoEndgameAvg":
+                        tb1 = s.autoPoints ?? 0;
+                        tb2 = s.egPoints ?? 0;
+                        break;
+                    case "AutoAscentAvg":
+                        tb1 = s.autoPoints ?? 0;
+                        tb2 = s.ascentPoints ?? 0;
+                        break;
+                    case "AvgNpBase":
+                        tb1 = s.totalPointsNp ?? 0;
+                        tb2 = s.dcBasePoints ?? 0;
+                        break;
+                }
+
+                let rp = dq
+                    ? 0
+                    : (computeRankingPoints(descriptor, team, s, winningAlliance) as number);
 
                 if (!matchScoresPerTeam.has(teamNumber)) {
                     matchScoresPerTeam.set(teamNumber, []);
                 }
+
                 matchScoresPerTeam.get(teamNumber)!.push({
-                    score: dq || noShow ? 0 : score,
+                    score: dq ? 0 : score,
                     rp,
+                    tb1,
+                    tb2,
                 });
 
                 if (!autoScoresPerTeam.has(teamNumber)) {
                     autoScoresPerTeam.set(teamNumber, []);
                 }
                 autoScoresPerTeam.get(teamNumber)!.push({
-                    score: dq || noShow ? 0 : autoScore,
+                    score: dq ? 0 : autoScore,
                     rp,
+                    tb1,
+                    tb2,
                 });
             });
         });
@@ -815,8 +847,8 @@ async function computeDivisionParentTeamInfo(
             }
         }
 
-        let matchScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
-        let autoScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
+        let matchScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
+        let autoScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
         if (hasQuals) {
             let qualMatchIds = qualMatches.map((m) => m.id);
             let tmps = await TeamMatchParticipation.findBy({
@@ -1060,8 +1092,8 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         teamNumberList
     );
 
-    let matchScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
-    let autoScoresPerTeam = new Map<number, { score: number; rp: number }[]>();
+    let matchScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
+    let autoScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
     let leagueRankings: Map<number, number> = new Map();
 
     if (event.leagueCode) {
@@ -1114,7 +1146,16 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 let padding = new Array(10 - amountOfScores).fill(0);
                 matchScoresPerTeam.set(teamNumber, scores.concat(padding));
             } else if (amountOfScores > 10) {
-                matchScoresPerTeam.set(teamNumber, scores.sort((a, b) => b.rp - a.rp).slice(0, 10));
+                matchScoresPerTeam.set(
+                    teamNumber,
+                    scores
+                        .sort((a, b) => {
+                            if (b.rp !== a.rp) return b.rp - a.rp;
+                            if (b.tb1 !== a.tb1) return b.tb1 - a.tb1;
+                            return b.tb2 - a.tb2;
+                        })
+                        .slice(0, 10)
+                );
             }
         });
 
