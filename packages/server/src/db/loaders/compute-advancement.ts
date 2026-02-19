@@ -709,10 +709,6 @@ function calculateScoresPerTeam(
             let score = s.totalPointsNp ?? 0;
             let autoScore = (s.autoPoints as number) ?? 0;
 
-            if (score === 0) {
-                console.log("Found 0 score for match", s.matchId, "alliance", alliance);
-            }
-
             let teamsInAlliance = frontendMatch.teams.filter((t) => t.alliance === alliance);
 
             teamsInAlliance.forEach((team) => {
