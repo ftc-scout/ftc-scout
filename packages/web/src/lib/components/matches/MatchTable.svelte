@@ -54,9 +54,9 @@
     $: teamCount = new Set(matches.flatMap((m) => m.teams.map((t) => t.teamNumber))).size;
     function allianceCountFromTeams(teamCount: number): number {
         if (teamCount <= 0) return 0;
-        if (teamCount < 10) return 2;
-        if (teamCount < 20) return 4;
-        if (teamCount < 40) return 6;
+        if (teamCount <= 10) return 2;
+        if (teamCount <= 20) return 4;
+        if (teamCount <= 40) return 6;
         return 8;
     }
     $: allianceCount = allianceCountFromTeams(teamCount);

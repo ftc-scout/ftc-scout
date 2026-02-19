@@ -95,7 +95,8 @@
         <DeLives
             alliance={Alliance.Red}
             alreadyLost={hasAlreadyLost(match.series, allianceCount, Alliance.Red)}
-            lostThis={winner == Alliance.Blue}
+            lostThis={(winner == Alliance.Blue && !blues.some((t) => t.dq)) ||
+                (reds.some((t) => t.dq) && !blues.some((t) => t.dq))}
         />
     {/if}
 
@@ -118,7 +119,8 @@
         <DeLives
             alliance={Alliance.Blue}
             alreadyLost={hasAlreadyLost(match.series, allianceCount, Alliance.Blue)}
-            lostThis={winner == Alliance.Red}
+            lostThis={(winner == Alliance.Red && !reds.some((t) => t.dq)) ||
+                (blues.some((t) => t.dq) && !reds.some((t) => t.dq))}
         />
     {/if}
 
