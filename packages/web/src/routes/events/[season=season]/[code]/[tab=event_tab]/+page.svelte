@@ -103,6 +103,25 @@
     $: leagueRankingRows = leagueRankingGroups
         .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
         .filter(notEmpty);
+    $: eventTeamNumbers = new Set(rankingTeams.map((t) => t.teamNumber));
+    $: leagueRankingRowsFiltered = leagueRankingRows
+        .filter((row) => eventTeamNumbers.has(row.teamNumber))
+        .map((row, index) => {
+            if (row.stats) {
+                return {
+                    ...row,
+                    stats: {
+                        ...row.stats,
+                        rank: index + 1,
+                    },
+                };
+            }
+            return { ...row };
+        });
+    let showOnlyEventTeams = false;
+    $: displayedLeagueRankingRows = showOnlyEventTeams
+        ? leagueRankingRowsFiltered
+        : leagueRankingRows;
     $: advancementRows = (event?.advancement ?? []) as any[];
     $: rankingTeamMap = new Map(rankingTeams.map((t) => [t.teamNumber, t]));
     $: advancementRowsWithStats = advancementRows.map((row) => {
@@ -120,12 +139,15 @@
         !!advancementRowsWithStats.length &&
         eventHasStarted &&
         amountNonNullStats / advancementRowsWithStats.length > 0.01;
-    $: leagueRankingSaveId =
+    $: leagueRankingSaveIdBase =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
                   leagueRankingGroups[0]?.league.code ?? "parent"
               }`
             : null;
+    $: leagueRankingSaveId = leagueRankingSaveIdBase
+        ? `${leagueRankingSaveIdBase}${showOnlyEventTeams ? "-filtered" : ""}`
+        : null;
     $: isLeagueEvent = event?.type === "LeagueTournament" || event?.type === "LeagueMeet";
     $: showLeagueRankingsTab = !!isLeagueEvent;
 
@@ -164,6 +186,7 @@
 
     $: if (event && !event.remote) watchEvent(event, refresh);
     onMount(() => {
+        console.table(leagueRankingRowsFiltered);
         return unsubscribe;
     });
 
@@ -325,11 +348,27 @@
 
             <TabContent name="league-rankings">
                 {#if leagueRankingRows.length}
+                    <div class="league-rankings-controls">
+                        <button
+                            class="filter-button"
+                            class:active={!showOnlyEventTeams}
+                            on:click={() => (showOnlyEventTeams = false)}
+                        >
+                            All Teams ({leagueRankingRows.length})
+                        </button>
+                        <button
+                            class="filter-button"
+                            class:active={showOnlyEventTeams}
+                            on:click={() => (showOnlyEventTeams = true)}
+                        >
+                            Event Teams Only ({leagueRankingRowsFiltered.length})
+                        </button>
+                    </div>
                     <Rankings
                         {season}
                         remote={event.remote}
                         eventName={event.name}
-                        data={leagueRankingRows}
+                        data={displayedLeagueRankingRows}
                         {focusedTeam}
                         saveIdOverride={leagueRankingSaveId}
                     />
@@ -404,5 +443,48 @@
         text-align: right;
         font-weight: 600;
         color: var(--text-primary);
+    }
+
+    .league-rankings-controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: var(--sm-gap);
+        margin-bottom: var(--lg-gap);
+        padding: var(--sm-gap);
+        background-color: var(--bg-secondary);
+        border-radius: 6px;
+    }
+
+    .filter-button {
+        padding: var(--md-gap) var(--lg-gap);
+        background-color: var(--bg-primary);
+        color: var(--text-secondary);
+        border: 2px solid var(--border-color);
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: var(--md-font-size);
+        transition: all 0.2s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .filter-button.active {
+        background-color: var(--theme-color);
+        color: white;
+    }
+
+    .filter-button.active::before {
+        opacity: 1;
+    }
+
+    .filter-button:active {
+        transform: translateY(0);
+    }
+
+    @media (max-width: 550px) {
+        .league-rankings-controls {
+            grid-template-columns: 1fr;
+        }
     }
 </style>
