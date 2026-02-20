@@ -29,7 +29,7 @@ type Tep = {
     hasStats: boolean;
     rank: number;
     rp: number;
-    leagueRp: number;
+    avgRp: number;
     tb1: number;
     tb2: number;
     wins: number;
@@ -83,7 +83,7 @@ export function calculateLeagueTeamEventStats(
                 hasStats: false,
                 rank: 0,
                 rp: 0,
-                leagueRp: 0,
+                avgRp: 0,
                 tb1: 0,
                 tb2: 0,
                 wins: 0,
@@ -159,13 +159,6 @@ function calculateRecords(
 
             let r = teps[t.teamNumber];
             if (!r) continue;
-
-            if (t.dq) {
-                r.hasStats = true;
-                r.dqs++;
-                r.losses++;
-                continue;
-            }
 
             r.qualMatchesPlayed++;
             r.hasStats = true;
@@ -329,13 +322,7 @@ function calculateRanks(
         rankAverages[+team] = { rp: 0, tb1: 0, tb2: 0 };
     }
 
-    const recordRankSum = (stats: Tep, field: keyof RankSums, matchesOverride?: number) => {
-        let matchesUsed =
-            matchesOverride ?? (stats.emptyMatchesPlayed && stats.qualMatchesPlayed)
-                ? stats.qualMatchesPlayed + stats.emptyMatchesPlayed
-                : stats.qualMatchesPlayed ?? 0;
-        let emptyMatchesUsed = stats.emptyMatchesPlayed ?? 0;
-        let normalMatchesUsed = matchesUsed - emptyMatchesUsed;
+    const recordRankSum = (stats: Tep, field: keyof RankSums) => {
         let value: number | null | undefined;
         switch (field) {
             case "rp":
@@ -349,8 +336,7 @@ function calculateRanks(
                 break;
         }
         let average = Number.isFinite(value ?? NaN) ? value ?? 0 : 0;
-        rankAverages[stats.teamNumber][field] =
-            matchesUsed == 0 ? 0 : average * (normalMatchesUsed / matchesUsed);
+        rankAverages[stats.teamNumber][field] = average ?? 0;
     };
 
     const setTieBreakers = (
@@ -367,7 +353,7 @@ function calculateRanks(
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
 
-        let matchesUsed = stats.qualMatchesPlayed ?? 0;
+        let matchesUsed = (stats.qualMatchesPlayed ?? 0) + (stats.emptyMatchesPlayed ?? 0);
         switch (descriptor.rankings.rp) {
             case "TotalPoints": {
                 let total = stats.tot.totalPoints ?? 0;

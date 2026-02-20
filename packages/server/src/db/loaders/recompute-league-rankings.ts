@@ -155,7 +155,12 @@ export async function recomputeLeagueRankings(
     }
 
     let descriptor = DESCRIPTORS[season];
-    let selections = buildMatchSelections(allFrontendMatches, descriptor, new Set(tournamentCodes));
+    let selections = buildMatchSelections(
+        allFrontendMatches,
+        descriptor,
+        new Set(tournamentCodes),
+        teamNumbers
+    );
 
     selections = new Map(
         [...selections.entries()].filter(([teamNumber]) => teamNumbers.includes(teamNumber))
@@ -200,7 +205,7 @@ export async function recomputeLeagueRankings(
         let totals = totalsByTeam.get(s.teamNumber);
         if (totals) {
             s.qualMatchesPlayed = totals.qualMatchesPlayed;
-            s.leagueRp = totals.rp;
+            s.avgRp = totals.rp;
             s.tot = totals.tot;
             s.avg = totals.avg;
             s.min = totals.min;
@@ -232,6 +237,7 @@ export async function recomputeLeagueRankings(
             isRemote: s.isRemote,
             rank: s.rank,
             rp: s.rp,
+            avgRp: s.avgRp,
             tb1: s.tb1,
             tb2: s.tb2,
             wins: s.wins,
@@ -269,10 +275,16 @@ async function clearLeagueRankings(season: Season, leagueCode: string, regionCod
 function buildMatchSelections(
     frontendMatches: LeagueFrontendMatch[],
     descriptor: Descriptor,
-    tournamentEventCodes: Set<string>
+    tournamentEventCodes: Set<string>,
+    teamNumbers?: number[]
 ) {
     let contributions = new Map<number, MatchContribution[]>();
     let autoSelections = new Map<number, Set<string>>();
+
+    for (let teamNumber of teamNumbers ?? []) {
+        autoSelections.set(teamNumber, new Set());
+        contributions.set(teamNumber, []);
+    }
 
     for (let match of frontendMatches) {
         let isTournamentEvent = tournamentEventCodes.has(match.eventCode);
