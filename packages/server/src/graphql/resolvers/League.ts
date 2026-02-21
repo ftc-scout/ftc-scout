@@ -1,4 +1,4 @@
-import { BoolTy, IntTy, StrTy, list, nn, nullTy } from "@ftc-scout/common";
+import { BoolTy, IntTy, StrTy, list, nn, nullTy, FloatTy } from "@ftc-scout/common";
 import { GraphQLObjectType } from "graphql";
 import { dataLoaderResolverSingle } from "../utils";
 import { Team } from "../../db/entities/Team";
@@ -29,6 +29,7 @@ export const LeagueRankingEntryGQL = new GraphQLObjectType({
         leagueCode: StrTy,
         regionCode: StrTy,
         teamNumber: IntTy,
+        avgRp: FloatTy,
         stats: {
             type: TepStatsUnionGQL,
             resolve: (entry: LeagueRankingRow) => (entry.hasStats ? addTypename(entry) : null),

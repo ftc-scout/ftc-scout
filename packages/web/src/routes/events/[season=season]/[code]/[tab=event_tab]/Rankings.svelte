@@ -15,15 +15,17 @@
     export let data: DataTy[];
     export let focusedTeam: number | null;
     export let saveIdOverride: string | null = null;
+    export let leagueMode: boolean = false;
 
     $: descriptor = DESCRIPTORS[season];
-    $: stats = getTepStatSet(season, remote);
+    $: stats = getTepStatSet(season, remote, leagueMode);
     $: totalPoints = descriptor.pensSubtract || remote ? "totalPoints" : "totalPointsNp";
     $: defaultStats = [
         "eventRank",
         "team",
         "rankingScore",
         "tb1",
+        ...(leagueMode ? ["avgRp"] : []),
         "played",
         ...(remote ? [] : ["eventRecord"]),
         totalPoints + "Avg",
@@ -31,7 +33,9 @@
         totalPoints + "Max",
     ];
 
-    $: defaultSaveId = `eventPageTep${season}${remote ? "Remote" : "Trad"}`;
+    $: defaultSaveId = `eventPageTep${season}${remote ? "Remote" : "Trad"}${
+        leagueMode ? "League" : ""
+    }`;
     $: saveId = saveIdOverride ?? defaultSaveId;
 
     $: underscoreEventName = eventName.replace(" ", "_");

@@ -4,6 +4,7 @@
         currentSort: Writable<{ id: string; dir: SortDir }>;
         filter: Writable<FilterGroup | null>;
         rankTy: Writable<RankTy>;
+        statsId: string; // Track which stats object this state is for
     };
     let savedState: Record<string, State<any>> = {};
 
@@ -13,12 +14,15 @@
         defaultStats: string[],
         defaultSort: { id: string; dir: SortDir }
     ): State<T> {
-        if (!(saveId in savedState)) {
+        if (!savedState[saveId] || savedState[saveId].statsId != stats.id) {
             savedState[saveId] = {
-                shownStats: writable(defaultStats.map((s) => stats.getStat(s))),
+                shownStats: writable(
+                    defaultStats.map((s) => stats.getStat(s)).filter((s) => s != null)
+                ),
                 currentSort: writable(defaultSort),
                 filter: writable(null),
                 rankTy: writable(RankTy.NoFilter),
+                statsId: stats.id,
             };
         }
 
@@ -53,12 +57,13 @@
     export let defaultStats: string[];
     export let defaultSort: { id: string; dir: SortDir };
 
-    let { shownStats, currentSort, filter, rankTy } = getSavedState<T>(
+    // Make the state reactive to changes in saveId, stats, and defaultStats
+    $: ({ shownStats, currentSort, filter, rankTy } = getSavedState<T>(
         saveId,
         stats,
         defaultStats,
         defaultSort
-    );
+    ));
 
     function calcIsDefaultStats(def: string[], curr: NonRankStatColumn<T>[]): boolean {
         if (def.length != curr.length) return false;
@@ -155,6 +160,7 @@
                 noFilterSkipRank: 0,
                 data: s,
             }));
+
         assignRanks(sorted, sorter, true);
 
         let filtered = applyFilter(sorted, stats, filter);
@@ -183,5 +189,6 @@
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
     on:toggle-show-stat={(e) => toggleShowStat(e.detail)}
     on:new-filter={(e) => ($filter = e.detail)}
-    on:reset-stats={() => ($shownStats = defaultStats.map((id) => stats.getStat(id)))}
+    on:reset-stats={() =>
+        ($shownStats = defaultStats.map((id) => stats.getStat(id)).filter((s) => s != null))}
 />

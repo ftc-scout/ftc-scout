@@ -141,7 +141,7 @@
         amountNonNullStats / advancementRowsWithStats.length > 0.01;
     $: leagueRankingSaveIdBase =
         event && leagueRankingGroups.length
-            ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
+            ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}League-${
                   leagueRankingGroups[0]?.league.code ?? "parent"
               }`
             : null;
@@ -366,6 +366,7 @@
                     </div>
                     <Rankings
                         {season}
+                        leagueMode={true}
                         remote={event.remote}
                         eventName={event.name}
                         data={displayedLeagueRankingRows}

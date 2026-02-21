@@ -66,6 +66,7 @@ query EventPage($season: Int!, $code: String!) {
                 leagueCode
                 regionCode
                 teamNumber
+                avgRp
                 team {
                     number
                     name

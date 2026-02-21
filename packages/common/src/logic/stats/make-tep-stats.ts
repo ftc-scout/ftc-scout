@@ -58,12 +58,16 @@ export const TEP_GROUP_DESC = {
     [TepStatGroup.Dev]: "The standard deviation of scores in the category.",
 };
 
-let statSetCache: Partial<Record<`${Season}-${boolean}`, StatSet<any>>> = {};
+let statSetCache: Partial<Record<`${Season}-${boolean}-${boolean}`, StatSet<any>>> = {};
 
-export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
-    let key = `${season}-${remote}` as const;
+export function getTepStatSet(
+    season: Season,
+    remote: boolean,
+    league: boolean = false
+): StatSet<any> {
+    let key = `${season}-${remote}-${league}` as const;
     let descriptor = DESCRIPTORS[season];
-    if (!(season in statSetCache)) {
+    if (!(key in statSetCache)) {
         let soloStats = [
             new NonRankStatColumn({
                 color: Color.White,
@@ -124,6 +128,23 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
                     return { ty: "float", val: stats.tb1 };
                 },
             }),
+            ...(league
+                ? [
+                      new NonRankStatColumn({
+                          color: Color.Purple,
+                          id: "avgRp",
+                          columnName: "Avg RP",
+                          dialogName: "Average Ranking Points",
+                          titleName: "Average Ranking Points",
+                          sqlExpr: "avgRp",
+                          ty: StatType.Float,
+                          getNonRankValue: (d: any) => {
+                              const val = d?.avgRp;
+                              return val == null ? null : { ty: "float", val };
+                          },
+                      }),
+                  ]
+                : []),
             ...(descriptor.rankings.tb == "LosingScore"
                 ? []
                 : [
@@ -279,7 +300,7 @@ export function getTepStatSet(season: Season, remote: boolean): StatSet<any> {
         );
 
         statSetCache[key] = new StatSet(
-            `tep${season}${remote ? "Remote" : "Trad"}`,
+            `tep${season}${remote ? "Remote" : "Trad"}${league ? "League" : ""}`,
             [...soloStats, ...groupStats, ...eventStats],
             [soloSection, groupSection, eventSection]
         );
