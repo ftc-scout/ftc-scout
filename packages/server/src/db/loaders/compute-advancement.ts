@@ -303,6 +303,16 @@ function assignAdvancedSlots(event: Event, rows: TeamRow[]) {
     if ((event.advancementSlots ?? 0) <= 0) return;
     if (!QUALIFYING_EVENT_TYPES.includes(event.type as EventType)) return;
 
+    if (!rows.some((r) => r.awardPoints && r.awardPoints > 0)) {
+        return;
+    }
+
+    if (
+        rows.some((r) => !r.isQualFinal || !r.isAllianceSelectionFinal || !r.isPlayoffPointsFinal)
+    ) {
+        return;
+    }
+
     let eligibleRows = rows.filter((r) => r.isAdvancementEligible);
     let advSlots = Math.min(event.advancementSlots ?? 0, eligibleRows.length);
     for (let i = 0; i < advSlots; i++) {
