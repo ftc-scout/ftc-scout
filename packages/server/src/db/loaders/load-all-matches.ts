@@ -130,14 +130,14 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
             });
 
             publishMatchUpdates(updatedMatches);
-            if (event.leagueCode) {
+            if (event.leagueCode && updatedMatches.length > 0) {
                 leaguesToRecompute.set(toLeagueKey(event.leagueCode, event.regionCode ?? null), {
                     leagueCode: event.leagueCode,
                     regionCode: event.regionCode ?? null,
                 });
             }
 
-            if (season >= 2025) {
+            if (season >= 2025 && updatedMatches.length > 0) {
                 advancementToRecompute.add(event.code);
             }
 
@@ -154,13 +154,11 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
 
     console.info("Leagues to recompute:", leaguesToRecompute.size);
     for (let { leagueCode, regionCode } of leaguesToRecompute.values()) {
-        console.info(`Recomputing league ${leagueCode} (${regionCode}).`);
         await recomputeLeagueRankings(season, leagueCode, regionCode);
     }
 
     console.info("Advancements to recompute:", advancementToRecompute.size);
     for (let eventCode of advancementToRecompute) {
-        console.info(`Recomputing advancement for event ${eventCode}.`);
         await computeAdvancementForEvent(season, eventCode);
     }
 

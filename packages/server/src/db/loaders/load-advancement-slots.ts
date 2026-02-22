@@ -3,6 +3,7 @@ import { Event } from "../entities/Event";
 import { getAdvancement } from "../../ftc-api/get-advancement";
 import { LoadType } from "../../ftc-api/watch";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
+import { computeAdvancementForEvent } from "./compute-advancement";
 
 export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
     if (season < Season.FreightFrenzy) {
@@ -17,6 +18,8 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
     console.info(`Loading advancement slots for season ${season}. (${loadType})`);
 
     let events = await eventsToFetch(season, loadType);
+    let advancementToRecompute = new Set<string>();
+
     console.info(`Got ${events.length} events to fetch.`);
 
     const chunkSize = 25;
@@ -49,11 +52,20 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
                     console.info(
                         `Updated advancement info for ${ev.code} -> slots=${adv.slots}, advancesTo=${adv.advancesTo}, fcmpReserved=${adv.fcmpReserved}`
                     );
+                    // Track events with changed advancement info for recomputation
+                    if (season >= 2025) {
+                        advancementToRecompute.add(ev.code);
+                    }
                 }
             })
         );
 
         console.info(`Loaded ${Math.min(i + chunkSize, events.length)}/${events.length}.`);
+    }
+
+    console.info("Advancements to recompute:", advancementToRecompute.size);
+    for (let eventCode of advancementToRecompute) {
+        await computeAdvancementForEvent(season, eventCode);
     }
 
     if (loadType === LoadType.Full) {
