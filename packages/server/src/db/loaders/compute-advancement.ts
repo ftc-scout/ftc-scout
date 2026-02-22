@@ -845,23 +845,24 @@ async function computeDivisionParentTeamInfo(
 
             applyDivisionPlayoffPoints(alliances, placementByAlliance, playoffPtsByTeam, config);
 
-            if (aliveAlliances.length === 1) {
+            let amountAlive = aliveAlliances.length;
+
+            if (amountAlive === 1) {
                 finalists.push({
                     divisionEventCode: divEvent.code,
                     alliances,
                     championAllianceNum: aliveAlliances[0],
                 });
-            } else {
-                let amountAlive = aliveAlliances.length;
-                aliveAlliances.forEach((a) => {
-                    let intermediatePoints = config.getPlayoffPoints(
-                        amountAlive as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
-                    );
-                    allianceTeamNumbers(alliances?.find((al) => al.number === a)!).forEach((n) => {
-                        playoffPtsByTeam.set(n, { points: intermediatePoints, isFinal: false });
-                    });
-                });
             }
+
+            aliveAlliances.forEach((a) => {
+                let intermediatePoints = config.getPlayoffPoints(
+                    amountAlive as 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8
+                );
+                allianceTeamNumbers(alliances?.find((al) => al.number === a)!).forEach((n) => {
+                    playoffPtsByTeam.set(n, { points: intermediatePoints, isFinal: false });
+                });
+            });
         }
 
         let matchScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
