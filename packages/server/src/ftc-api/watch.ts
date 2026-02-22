@@ -90,7 +90,7 @@ export async function watchApi() {
         await runJob(async () => await loadFutureEvents(CURRENT_SEASON), MINS_PER_DAY / 2);
         await runJob(
             async () => await loadAdvancementSlots(CURRENT_SEASON, LoadType.Future),
-            MINS_PER_HOUR * 3
+            MINS_PER_HOUR * 6
         );
         cycleCount += 1;
         setTimeout(run, MS_PER_MIN);
