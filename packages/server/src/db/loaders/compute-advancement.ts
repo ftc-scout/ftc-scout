@@ -945,10 +945,13 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     if (!event) return;
 
     if (event.divisionCode) {
+        console.info(`Computing advancement for division event ${event.code} (${season})...`);
         await computeAdvancementForEvent(season, event.divisionCode);
         return;
     }
     if (!SUPPORTED_EVENT_TYPES.includes(event.type as EventType)) return;
+
+    console.info(`Computing advancement for event ${event.code} (${season})...`);
 
     let divisionEvents = await Event.findBy({ season, divisionCode: event.code });
 

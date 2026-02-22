@@ -59,6 +59,10 @@ export async function recomputeLeagueRankings(
     }
     let leagueRegion = league.regionCode;
 
+    console.info(
+        `Recomputing league rankings for ${leagueCode} (${season}, region: ${leagueRegion})`
+    );
+
     let { leagueMeetCodes, tournamentCodes, includedLeagues } = await eventsForLeague(
         season,
         league
