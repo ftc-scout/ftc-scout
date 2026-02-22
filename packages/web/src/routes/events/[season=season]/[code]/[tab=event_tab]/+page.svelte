@@ -186,7 +186,6 @@
 
     $: if (event && !event.remote) watchEvent(event, refresh);
     onMount(() => {
-        console.table(leagueRankingRowsFiltered);
         return unsubscribe;
     });
 
