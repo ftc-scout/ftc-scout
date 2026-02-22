@@ -338,6 +338,7 @@
             <TabContent name="advancement">
                 <Advancement
                     {season}
+                    fcmpReserved={event.advancementInfo?.fcmpReserved ?? 0}
                     remote={event.remote}
                     eventName={event.name}
                     data={advancementRowsWithStats}

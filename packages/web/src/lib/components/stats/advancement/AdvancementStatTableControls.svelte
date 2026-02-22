@@ -32,6 +32,7 @@
     export let isDefaultStats: boolean;
     export let csv: { filename: string; title: string };
     export let viewStats: StatSet<T> | null = null;
+    export let fcmpSlots: number;
     $: detailStats = viewStats ?? stats;
     let dispatch = createEventDispatcher();
     let viewStatsModalShown = false;
@@ -113,6 +114,7 @@
     {data}
     stats={shownStats}
     {currentSort}
+    {fcmpSlots}
     {focusedTeam}
     {getIsEligible}
     rankStat={showRank ? RANK_STATS[rankTy] : null}

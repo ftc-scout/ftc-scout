@@ -10,17 +10,18 @@
     export let focusedTeam: number | null;
     export let rankStat: StatColumn<T> | null;
     export let isEligible: boolean = true;
+    export let fcmpSlots: number = 0;
 
     let dispatch = createEventDispatcher();
 </script>
 
 <tr class:not-eligible={!isEligible} on:click={() => dispatch("row_click", data)}>
     {#if rankStat}
-        <AdvancementStatCell {data} stat={rankStat} {focusedTeam} />
+        <AdvancementStatCell {data} stat={rankStat} {focusedTeam} {fcmpSlots} />
     {/if}
 
     {#each stats as stat}
-        <AdvancementStatCell {data} {stat} {focusedTeam} />
+        <AdvancementStatCell {data} {stat} {focusedTeam} {fcmpSlots} />
     {/each}
 </tr>
 

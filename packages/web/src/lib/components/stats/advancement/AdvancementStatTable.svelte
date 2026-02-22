@@ -11,6 +11,7 @@
     export let currentSort: { id: string; dir: SortDir };
     export let rankStat: StatColumn<T> | null;
     export let getIsEligible: (data: T) => boolean;
+    export let fcmpSlots: number;
 </script>
 
 <table class:no-data={stats.length == 0}>
@@ -37,6 +38,7 @@
                     data={dataRow}
                     {stats}
                     {focusedTeam}
+                    {fcmpSlots}
                     {rankStat}
                     isEligible={getIsEligible(dataRow.data)}
                     on:row_click

@@ -10,11 +10,16 @@
     export let data: StatData<T>;
     export let stat: StatColumn<T>;
     export let focusedTeam: number | null;
+    export let fcmpSlots = 0;
 
-    $: eventCode = "eventCode" in (data.data as any) ? (data.data as any).eventCode : null;
+    $: genericData = data.data as any;
+    $: eventCode = "eventCode" in genericData ? genericData.eventCode : null;
     $: val = stat.getValue(data);
 
     $: isAdvanced = val?.ty === "string" && typeof val.val === "string" && val.val.includes("✓");
+    $: isAdvancedFcmp =
+        isAdvanced && genericData?.advancementRank && genericData.advancementRank <= fcmpSlots;
+
     $: isIneligible =
         val?.ty === "string" &&
         typeof val.val === "string" &&
@@ -36,6 +41,7 @@
     <td
         class="{stat.color} {val?.ty ?? 'na'}"
         class:advanced={isAdvanced}
+        class:advanced-fcmp={isAdvancedFcmp}
         class:ineligible={isIneligible}
         title={stat.titleName}
     >
@@ -91,7 +97,12 @@
 
     /* Advancement status styling */
     td.advanced {
-        color: #16a34a;
+        color: var(--generic-advanced-color);
+        font-weight: bold;
+    }
+
+    td.advanced-fcmp {
+        color: var(--fcmp-advanced-color);
         font-weight: bold;
     }
 

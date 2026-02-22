@@ -49,6 +49,7 @@
     export let data: AdvancementScore[];
     export let focusedTeam: number | null;
     export let saveIdOverride: string | null = null;
+    export let fcmpReserved: number | null = null;
 
     // State management
     type State = {
@@ -388,6 +389,7 @@
     shownStats={$shownStats}
     currentSort={$currentSort}
     filter={$filter}
+    fcmpSlots={fcmpReserved ?? 0}
     {isDefaultStats}
     {focusedTeam}
     bind:rankTy={$rankTy}
@@ -416,6 +418,10 @@
         <div class="legend-item">
             <span class="legend-label advanced">✓ 1st</span>
             <span class="legend-desc">Officially advanced from this event</span>
+        </div>
+        <div class="legend-item">
+            <span class="legend-label advanced-fcmp">✓ 1st</span>
+            <span class="legend-desc">Allowed to advance to the First Championship (FCMP)</span>
         </div>
         <div class="legend-item">
             <span class="legend-label">Prev Adv</span>
@@ -482,7 +488,11 @@
     }
 
     .legend-label.advanced {
-        color: #16a34a;
+        color: var(--generic-advanced-color);
+    }
+
+    .legend-label.advanced-fcmp {
+        color: var(--fcmp-advanced-color);
     }
 
     .legend-desc {
