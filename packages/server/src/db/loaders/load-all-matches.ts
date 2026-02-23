@@ -137,7 +137,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 });
             }
 
-            if (season >= 2025 && updatedMatches.length > 0) {
+            if (season >= Season.Decode && updatedMatches.length > 0) {
                 advancementToRecompute.add(event.code);
             }
 

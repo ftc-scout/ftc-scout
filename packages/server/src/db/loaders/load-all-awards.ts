@@ -32,7 +32,7 @@ export async function loadAllAwards(season: Season, loadType: LoadType) {
         // Track which events had awards updated or inserted
         let updatedAwards = savedAwards.filter((award) => "updatedAt" in award);
         for (let award of updatedAwards) {
-            if (season >= 2025) {
+            if (season >= Season.Decode) {
                 advancementToRecompute.add(award.eventCode);
             }
         }

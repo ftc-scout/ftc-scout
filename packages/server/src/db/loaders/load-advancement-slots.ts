@@ -55,7 +55,7 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
                         `Updated advancement info for ${ev.code} -> slots=${adv.advancementSlots}, advancesTo=${adv.advancesTo}, fcmpReserved=${adv.fcmpReserved}`
                     );
                     // Track events with changed advancement info for recomputation
-                    if (season >= 2025) {
+                    if (season >= Season.Decode) {
                         advancementToRecompute.add(ev.code);
                     }
                 }
