@@ -15,16 +15,9 @@ export function getAdvancementEligibility(
         return AdvancementEligibility.Eligible;
     }
 
-    const reasons: AdvancementEligibility[] = [];
     if (!regionOk) return AdvancementEligibility.WrongRegion;
-    // if (!regionOk) reasons.push(AdvancementEligibility.WrongRegion);
-    if (!notPreviouslyAdvanced) reasons.push(AdvancementEligibility.AlreadyAdvanced);
-    // if (!playedCountOk) reasons.push(AdvancementEligibility.TooManyEvents);
-    // This is unreliable, better a false ineligibility than a false eligibility
+    if (!notPreviouslyAdvanced) return AdvancementEligibility.AlreadyAdvanced;
 
-    if (reasons.length === 1) {
-        return reasons[0];
-    }
     return AdvancementEligibility.MultipleReasons;
 }
 
