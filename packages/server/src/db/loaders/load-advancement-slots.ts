@@ -1,6 +1,6 @@
 import { Season } from "@ftc-scout/common";
 import { Event } from "../entities/Event";
-import { getAdvancement } from "../../ftc-api/get-advancement";
+import { getAdvancementSlots } from "../../ftc-api/get-advancement-slots";
 import { LoadType } from "../../ftc-api/watch";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
 import { computeAdvancementForEvent } from "./compute-advancement";
@@ -27,16 +27,18 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
         console.info(`Starting chunk starting at ${i}.`);
 
         let chunk = events.slice(i, i + chunkSize);
-        let advancements = await Promise.all(chunk.map((ev) => getAdvancement(season, ev.code)));
+        let advancements = await Promise.all(
+            chunk.map((ev) => getAdvancementSlots(season, ev.code))
+        );
 
         await Promise.all(
             chunk.map(async (ev, idx) => {
                 let adv = advancements[idx];
-                if (!adv || adv.slots == null) return;
+                if (!adv || adv.advancementSlots == null) return;
 
                 let dirty = false;
-                if (ev.advancementSlots !== adv.slots) {
-                    ev.advancementSlots = adv.slots;
+                if (ev.advancementSlots !== adv.advancementSlots) {
+                    ev.advancementSlots = adv.advancementSlots;
                     dirty = true;
                 }
                 if (adv.advancesTo && ev.advancesTo !== adv.advancesTo) {
@@ -50,7 +52,7 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
                 if (dirty) {
                     await ev.save();
                     console.info(
-                        `Updated advancement info for ${ev.code} -> slots=${adv.slots}, advancesTo=${adv.advancesTo}, fcmpReserved=${adv.fcmpReserved}`
+                        `Updated advancement info for ${ev.code} -> slots=${adv.advancementSlots}, advancesTo=${adv.advancesTo}, fcmpReserved=${adv.fcmpReserved}`
                     );
                     // Track events with changed advancement info for recomputation
                     if (season >= 2025) {

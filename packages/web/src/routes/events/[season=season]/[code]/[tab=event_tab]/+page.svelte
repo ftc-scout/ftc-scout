@@ -251,7 +251,7 @@
                 <Location {...event.location} />
             </InfoIconRow>
 
-            {#if event.advancementInfo && event.advancementInfo.slots}
+            {#if event.advancementInfo && event.advancementInfo.advancementSlots}
                 <InfoIconRow icon={faRocket}>
                     {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
                         {event.advancementInfo.fcmpReserved}
@@ -261,7 +261,8 @@
                     {/if}
                     {#if event.advancementInfo.advancesTo}
                         {@const regionalSlots =
-                            event.advancementInfo.slots - (event.advancementInfo.fcmpReserved ?? 0)}
+                            event.advancementInfo.advancementSlots -
+                            (event.advancementInfo.fcmpReserved ?? 0)}
                         {#if regionalSlots > 0}
                             {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
                                 <br />
