@@ -6,6 +6,7 @@ export * from "./ftc-api-types/Team";
 export * from "./ftc-api-types/League";
 export * from "./logic/AdvancementEligibility";
 export * from "./logic/Alliance";
+export * from "./logic/Award";
 export * from "./logic/descriptors/descriptor-list";
 export * from "./logic/descriptors/descriptor";
 export * from "./logic/EventType";

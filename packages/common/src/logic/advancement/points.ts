@@ -1,3 +1,5 @@
+import { AwardType } from "../Award";
+
 export interface AdvancementPointsConfig {
     season: number;
 
@@ -9,7 +11,7 @@ export interface AdvancementPointsConfig {
 
     getDivisionPlayoffPoints: (placement: 2 | 3 | 4 | 5 | 6 | 7 | 8) => number;
 
-    getAwardPoints: (awardType: string, placement: 1 | 2 | 3) => number;
+    getAwardPoints: (awardType: AwardType, placement: 1 | 2 | 3) => number;
 
     tieBreakKeys?: TiebreakKey[];
 }

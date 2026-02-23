@@ -1,4 +1,4 @@
-import { AwardFtcApi, Season } from "@ftc-scout/common";
+import { AwardFtcApi, Season, AwardType } from "@ftc-scout/common";
 import {
     BaseEntity,
     Column,
@@ -8,31 +8,6 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-
-export const AwardType = {
-    DeansListFinalist: "DeansListFinalist",
-    DeansListSemiFinalist: "DeansListSemiFinalist",
-    DeansListWinner: "DeansListWinner",
-    JudgesChoice: "JudgesChoice",
-    DivisionFinalist: "DivisionFinalist",
-    DivisionWinner: "DivisionWinner",
-    ConferenceFinalist: "ConferenceFinalist",
-    Compass: "Compass",
-    Promote: "Promote",
-    Control: "Control",
-    Motivate: "Motivate",
-    Reach: "Reach",
-    Sustain: "Sustain",
-    Design: "Design",
-    Innovate: "Innovate",
-    Connect: "Connect",
-    Think: "Think",
-    TopRanked: "TopRanked",
-    Inspire: "Inspire",
-    Winner: "Winner",
-    Finalist: "Finalist",
-} as const;
-export type AwardType = (typeof AwardType)[keyof typeof AwardType];
 
 @Entity()
 export class Award extends BaseEntity {

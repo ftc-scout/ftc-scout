@@ -1,5 +1,6 @@
 import { AdvancementPointsConfig, TiebreakKey } from "../points";
 import { Season } from "../../Season";
+import { AwardType } from "../../Award";
 
 const QUAL_POINTS_MIN = 2;
 const QUAL_POINTS_MAX = 16;
@@ -32,19 +33,17 @@ const OTHER_AWARD_POINTS: Record<1 | 2 | 3, number> = {
 };
 
 const ADVANCEMENT_JUDGED_AWARD_TYPES = new Set([
-    "Inspire",
-    "JudgesChoice",
-    "Control",
-    "Motivate",
-    "Reach",
-    "Sustain",
-    "Design",
-    "Innovate",
-    "Connect",
-    "Think",
+    AwardType.Inspire,
+    AwardType.JudgesChoice,
+    AwardType.Control,
+    AwardType.Motivate,
+    AwardType.Reach,
+    AwardType.Sustain,
+    AwardType.Design,
+    AwardType.Innovate,
+    AwardType.Connect,
+    AwardType.Think,
 ]);
-
-const INSPIRE_AWARD_TYPE = "Inspire";
 
 function invErf(x: number): number {
     const a = (8 * (Math.PI - 3)) / (3 * Math.PI * (4 - Math.PI));
@@ -89,11 +88,11 @@ export const DecodeAdvancementConfig: AdvancementPointsConfig = {
         return DIVISION_PLAYOFF_POINTS[placement] ?? 0;
     },
 
-    getAwardPoints: (awardType: string, placement: 1 | 2 | 3): number => {
+    getAwardPoints: (awardType: AwardType, placement: 1 | 2 | 3): number => {
         if (!ADVANCEMENT_JUDGED_AWARD_TYPES.has(awardType)) {
             return 0;
         }
-        if (awardType === INSPIRE_AWARD_TYPE) {
+        if (awardType === AwardType.Inspire) {
             return INSPIRE_POINTS[placement] ?? 0;
         }
         return OTHER_AWARD_POINTS[placement] ?? 0;
