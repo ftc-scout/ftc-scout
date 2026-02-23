@@ -103,7 +103,7 @@ query EventPage($season: Int!, $code: String!) {
             eligibility
         }
         advancementInfo {
-            slots
+            advancementSlots
             advancesTo
             advancesToEvent {
                 season
