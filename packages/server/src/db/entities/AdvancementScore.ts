@@ -50,9 +50,6 @@ export class AdvancementScore extends BaseEntity {
     @Column("int", { nullable: true })
     advancementRank!: number | null;
 
-    @Column("bool", { default: true })
-    isAdvancementEligible!: boolean;
-
     @Column({
         type: "varchar",
         default: AdvancementEligibility.Eligible,
@@ -84,7 +81,6 @@ export class AdvancementScore extends BaseEntity {
             totalPoints: null,
             rank: null,
             advancementRank: null,
-            isAdvancementEligible: true,
             advanced: false,
         } satisfies DeepPartial<AdvancementScore>);
     }

@@ -32,7 +32,6 @@ export const AdvancementScoreGQL = new GraphQLObjectType({
         rank: nullTy(IntTy),
         advancementRank: nullTy(IntTy),
         advanced: BoolTy,
-        isAdvancementEligible: BoolTy,
         eligibility: { type: AdvancementEligibilityGQL },
         team: {
             type: TeamGQL,

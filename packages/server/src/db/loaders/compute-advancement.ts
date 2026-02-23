@@ -52,7 +52,6 @@ type TeamRow = {
     totalPoints: number | null;
     advancementRank: number | null;
     rank: number | null;
-    isAdvancementEligible: boolean;
     eligibility: AdvancementEligibility;
     advanced: boolean;
     averageNPMatchPoints?: number;
@@ -277,7 +276,6 @@ function applyEligibilityToRows(
         let notPreviouslyAdvanced = !previouslyAdvanced.has(r.teamNumber);
 
         r.eligibility = getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
-        r.isAdvancementEligible = isEligible(r.eligibility);
     }
 }
 
@@ -307,7 +305,7 @@ function assignAdvancedSlots(event: Event, rows: TeamRow[]) {
         return;
     }
 
-    let eligibleRows = rows.filter((r) => r.isAdvancementEligible);
+    let eligibleRows = rows.filter((r) => isEligible(r.eligibility));
 
     if (
         rows
@@ -336,7 +334,7 @@ function finalizeRowRanks(rows: TeamRow[]) {
     let advancementRankCounter = 0;
     rows.forEach((r) => {
         r.totalPoints = r.totalPoints ?? 0;
-        if (r.isAdvancementEligible) {
+        if (isEligible(r.eligibility)) {
             advancementRankCounter++;
             r.advancementRank = advancementRankCounter;
         } else {
@@ -369,7 +367,6 @@ async function saveAdvancementRows(season: Season, eventCode: string, rows: Team
             existing.totalPoints = r.totalPoints;
             existing.rank = (r as any).rank ?? null;
             existing.advancementRank = r.advancementRank;
-            existing.isAdvancementEligible = r.isAdvancementEligible;
             existing.eligibility = r.eligibility;
             existing.advanced = r.advanced;
             await em.save(existing);
@@ -1051,7 +1048,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 totalPoints: total,
                 rank: null,
                 advancementRank: null,
-                isAdvancementEligible: isEligible(eligibility),
                 eligibility,
                 advanced: false,
                 averageNPMatchPoints: info.qualScoresNP.length
@@ -1262,7 +1258,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             totalPoints: total,
             rank: null,
             advancementRank: null,
-            isAdvancementEligible: isEligible(eligibility),
             eligibility,
             advanced: false,
             averageNPMatchPoints: matchScoresPerTeam.has(teamNumber)

@@ -100,7 +100,6 @@ query EventPage($season: Int!, $code: String!) {
             rank
             advancementRank
             advanced
-            isAdvancementEligible
             eligibility
         }
         advancementInfo {

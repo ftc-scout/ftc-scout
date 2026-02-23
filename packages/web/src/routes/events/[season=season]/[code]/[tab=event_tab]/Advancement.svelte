@@ -16,6 +16,7 @@
         RankTy,
         type StatData,
         type FilterGroup,
+        AdvancementEligibility,
     } from "@ftc-scout/common";
     import { writable, type Writable } from "svelte/store";
 
@@ -36,7 +37,6 @@
         advancementRank?: number | null;
         rank?: number | null;
         advanced: boolean;
-        isAdvancementEligible: boolean;
         eligibility: string;
         team?: EventTeam["team"] | null | undefined;
         stats?: EventTeam["stats"] | null | undefined;
@@ -368,9 +368,8 @@
 
     $: rankedData = sortAndRank(data, stats.getStat($currentSort.id), $currentSort.dir, $filter);
 
-    // Function to get eligibility status for a row
     function getIsEligible(d: AdvancementScore): boolean {
-        return d.isAdvancementEligible;
+        return d.eligibility === AdvancementEligibility.Eligible;
     }
 </script>
 
