@@ -1,4 +1,4 @@
-import { AdvancementPointsConfig, TiebreakKey } from "../points";
+import { AdvancementPointsConfig, AdvancementTiebreakKey } from "../points";
 import { Season } from "../../Season";
 import { AwardType } from "../../Award";
 
@@ -55,15 +55,15 @@ function invErf(x: number): number {
 export const DecodeAdvancementConfig: AdvancementPointsConfig = {
     season: Season.Decode,
     tieBreakKeys: [
-        TiebreakKey.TotalAdvancementPoints,
-        TiebreakKey.JudgedAwardPoints,
-        TiebreakKey.PlayoffAdvancementPoints,
-        TiebreakKey.AllianceSelectionPoints,
-        TiebreakKey.QualificationPhasePoints,
-        TiebreakKey.AverageMatchPointsNp,
-        TiebreakKey.AverageAutoPoints,
-        TiebreakKey.MaxMatchPointsNp,
-        TiebreakKey.SecondMatchPointsNp,
+        AdvancementTiebreakKey.TotalAdvancementPoints,
+        AdvancementTiebreakKey.JudgedAwardPoints,
+        AdvancementTiebreakKey.PlayoffAdvancementPoints,
+        AdvancementTiebreakKey.AllianceSelectionPoints,
+        AdvancementTiebreakKey.QualificationPhasePoints,
+        AdvancementTiebreakKey.AverageMatchPointsNp,
+        AdvancementTiebreakKey.AverageAutoPoints,
+        AdvancementTiebreakKey.MaxMatchPointsNp,
+        AdvancementTiebreakKey.SecondMatchPointsNp,
     ],
 
     calculateQualPoints: (rank: number, teamCount: number): number => {

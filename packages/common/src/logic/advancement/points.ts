@@ -13,10 +13,10 @@ export interface AdvancementPointsConfig {
 
     getAwardPoints: (awardType: AwardType, placement: 1 | 2 | 3) => number;
 
-    tieBreakKeys?: TiebreakKey[];
+    tieBreakKeys?: AdvancementTiebreakKey[];
 }
 
-export enum TiebreakKey {
+export enum AdvancementTiebreakKey {
     TotalAdvancementPoints = "totalPoints",
     JudgedAwardPoints = "awardPoints",
     PlayoffAdvancementPoints = "playoffPoints",
