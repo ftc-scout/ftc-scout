@@ -2,8 +2,6 @@ import { AdvancementPointsConfig, TiebreakKey } from "../points";
 import { Season } from "../../Season";
 import { AwardType } from "../../Award";
 
-const QUAL_POINTS_MIN = 2;
-const QUAL_POINTS_MAX = 16;
 const QUAL_ALPHA = 1.07;
 
 const ALLIANCE_SELECTION_BASE = 21;
@@ -72,8 +70,7 @@ export const DecodeAdvancementConfig: AdvancementPointsConfig = {
         const num = teamCount - 2 * rank + 2;
         const denom = QUAL_ALPHA * teamCount;
         const scale = 7 / invErf(1 / QUAL_ALPHA);
-        const val = Math.ceil(invErf(num / denom) * scale + 9);
-        return Math.min(QUAL_POINTS_MAX, Math.max(QUAL_POINTS_MIN, val));
+        return Math.ceil(invErf(num / denom) * scale + 9);
     },
 
     calculateAllianceSelectionPoints: (position: number): number => {
