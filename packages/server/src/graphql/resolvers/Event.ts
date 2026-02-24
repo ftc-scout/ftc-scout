@@ -245,7 +245,7 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             type: EventAdvancementInfoGQL,
             resolve: (event) => {
                 return {
-                    advancementSlot: event.advancementSlots,
+                    advancementSlots: event.advancementSlots,
                     advancesTo: event.advancesTo,
                     fcmpReserved: event.fcmpReserved,
                     season: event.season,
