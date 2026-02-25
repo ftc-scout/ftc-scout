@@ -9,6 +9,10 @@ import {
     calculateLeagueTeamEventStats,
     type LeagueFrontendMatch,
     FrontendMatch,
+    determineWinner,
+    hasAllianceScores,
+    calculateTiebreakersFromScores,
+    computeRankingPoints as computeRankingPointsShared,
 } from "@ftc-scout/common";
 import { DATA_SOURCE } from "../data-source";
 import { League } from "../entities/League";
@@ -389,9 +393,7 @@ function getAllianceScore(
 
 export function getWinningAlliance(match: FrontendMatch): Alliance | null {
     if (!hasAllianceScores(match.scores)) return null;
-    if (match.scores.red.totalPoints > match.scores.blue.totalPoints) return Alliance.Red;
-    if (match.scores.blue.totalPoints > match.scores.red.totalPoints) return Alliance.Blue;
-    return null;
+    return determineWinner(match.scores.red, match.scores.blue);
 }
 
 export function computeRankingPoints(
@@ -400,29 +402,12 @@ export function computeRankingPoints(
     allianceScore: Record<string, any>,
     winningAlliance: Alliance | null
 ) {
-    switch (descriptor.rankings.rp) {
-        case "TotalPoints":
-            return allianceScore.totalPoints ?? 0;
-        case "Record": {
-            if (winningAlliance == participant.alliance) return 2;
-            if (winningAlliance == null) return 1;
-            return 0;
-        }
-        case "DecodeRP": {
-            let base = 0;
-            if (winningAlliance == participant.alliance) {
-                base = 3;
-            } else if (winningAlliance == null) {
-                base = 1;
-            }
-            return (
-                base +
-                (allianceScore.movementRp ? 1 : 0) +
-                (allianceScore.goalRp ? 1 : 0) +
-                (allianceScore.patternRp ? 1 : 0)
-            );
-        }
-    }
+    return computeRankingPointsShared(
+        descriptor,
+        participant.alliance,
+        allianceScore,
+        winningAlliance
+    );
 }
 
 function computeTieBreakerPoints(
@@ -441,40 +426,7 @@ function computeTieBreakerPoints(
         return { tb1: losingScore, tb2: 0 };
     }
 
-    switch (descriptor.rankings.tb) {
-        case "AutoEndgameTot":
-        case "AutoEndgameAvg":
-            return {
-                tb1: allianceScore.autoPoints ?? 0,
-                tb2: allianceScore.egPoints ?? 0,
-            };
-        case "AutoAscentAvg":
-            return {
-                tb1: allianceScore.autoPoints ?? 0,
-                tb2: allianceScore.dcParkPoints ?? 0,
-            };
-        case "AvgNpBase":
-            return {
-                tb1: allianceScore.totalPointsNp ?? 0,
-                tb2: allianceScore.dcBasePoints ?? 0,
-            };
-        default:
-            return { tb1: 0, tb2: 0 };
-    }
-}
-
-function hasAllianceScores(
-    scores: LeagueFrontendMatch["scores"]
-): scores is { red: any; blue: any } {
-    if (!scores || typeof scores !== "object") return false;
-    return (
-        "red" in scores &&
-        "blue" in scores &&
-        !!(scores as any).red &&
-        !!(scores as any).blue &&
-        (scores as any).red.totalPoints != null &&
-        (scores as any).blue.totalPoints != null
-    );
+    return calculateTiebreakersFromScores(descriptor, allianceScore);
 }
 
 function makeMatchKey(match: LeagueFrontendMatch) {

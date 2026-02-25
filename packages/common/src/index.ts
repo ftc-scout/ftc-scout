@@ -15,6 +15,7 @@ export * from "./logic/Season";
 export * from "./logic/Station";
 export * from "./logic/stats/calculate-team-event-stats";
 export * from "./logic/stats/calculate-league-team-event-stats";
+export * from "./logic/stats/shared-stats-utils";
 export * from "./logic/stats/stat-table";
 export * from "./logic/stats/filter";
 export * from "./logic/stats/make-tep-stats";

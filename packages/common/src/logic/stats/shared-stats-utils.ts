@@ -259,30 +259,80 @@ export function calculateRp<T extends Tep>(
     }
 }
 
-export function calculateTiebreakers<T extends Tep>(
-    stats: T,
-    descriptor: Descriptor
+export function computeRankingPoints(
+    descriptor: Descriptor,
+    participantAlliance: Alliance,
+    allianceScore: {
+        totalPoints?: number | null;
+        movementRp?: number | boolean | null;
+        goalRp?: number | boolean | null;
+        patternRp?: number | boolean | null;
+    },
+    winningAlliance: Alliance | null
+): number {
+    switch (descriptor.rankings.rp) {
+        case "TotalPoints":
+            return allianceScore.totalPoints ?? 0;
+        case "Record": {
+            if (winningAlliance == participantAlliance) return 2;
+            if (winningAlliance == null) return 1;
+            return 0;
+        }
+        case "DecodeRP": {
+            let base = 0;
+            if (winningAlliance == participantAlliance) {
+                base = 3;
+            } else if (winningAlliance == null) {
+                base = 1;
+            }
+            return (
+                base +
+                (allianceScore.movementRp ? 1 : 0) +
+                (allianceScore.goalRp ? 1 : 0) +
+                (allianceScore.patternRp ? 1 : 0)
+            );
+        }
+    }
+}
+
+export function calculateTiebreakersFromScores(
+    descriptor: Descriptor,
+    scoreData: {
+        autoPoints?: number | null;
+        egPoints?: number | null;
+        dcParkPoints?: number | null;
+        ascentPoints?: number | null;
+        totalPointsNp?: number | null;
+        dcBasePoints?: number | null;
+    }
 ): { tb1: number; tb2: number } {
     switch (descriptor.rankings.tb) {
         case "AutoEndgameTot":
         case "AutoEndgameAvg":
             return {
-                tb1: stats.avg.autoPoints ?? 0,
-                tb2: stats.avg.egPoints ?? 0,
+                tb1: scoreData.autoPoints ?? 0,
+                tb2: scoreData.egPoints ?? 0,
             };
         case "AutoAscentAvg":
             return {
-                tb1: stats.avg.autoPoints ?? 0,
-                tb2: stats.avg.dcParkPoints ?? 0,
+                tb1: scoreData.autoPoints ?? 0,
+                tb2: scoreData.dcParkPoints ?? scoreData.ascentPoints ?? 0,
             };
         case "AvgNpBase":
             return {
-                tb1: stats.avg.totalPointsNp ?? 0,
-                tb2: stats.avg.dcBasePoints ?? 0,
+                tb1: scoreData.totalPointsNp ?? 0,
+                tb2: scoreData.dcBasePoints ?? 0,
             };
         default:
             return { tb1: 0, tb2: 0 };
     }
+}
+
+export function calculateTiebreakers<T extends Tep>(
+    stats: T,
+    descriptor: Descriptor
+): { tb1: number; tb2: number } {
+    return calculateTiebreakersFromScores(descriptor, stats.avg);
 }
 
 // Calculate losing score tiebreaker
