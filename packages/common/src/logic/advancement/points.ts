@@ -14,6 +14,8 @@ export interface AdvancementPointsConfig {
     getAwardPoints: (awardType: AwardType, placement: 1 | 2 | 3) => number;
 
     tieBreakKeys?: AdvancementTiebreakKey[];
+
+    maxQualEvents: number;
 }
 
 export enum AdvancementTiebreakKey {

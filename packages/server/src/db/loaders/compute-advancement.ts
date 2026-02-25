@@ -264,6 +264,7 @@ async function loadEligibilityData(
 }
 
 function applyEligibilityToRows(
+    advancementConfig: AdvancementPointsConfig,
     event: Event,
     teamRegionMap: Map<number, string | null>,
     qualEventCounts: Map<number, number>,
@@ -275,7 +276,8 @@ function applyEligibilityToRows(
             event.regionCode == null ||
             !teamRegionMap.has(r.teamNumber) ||
             teamRegionMap.get(r.teamNumber) === event.regionCode;
-        let playedCountOk = (qualEventCounts.get(r.teamNumber) ?? 0) < 3;
+        let playedCountOk =
+            (qualEventCounts.get(r.teamNumber) ?? 0) < advancementConfig.maxQualEvents;
         let notPreviouslyAdvanced = !previouslyAdvanced.has(r.teamNumber);
 
         r.eligibility = getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
@@ -1068,7 +1070,14 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             });
         }
 
-        applyEligibilityToRows(event, teamRegionMap, qualEventCounts, previouslyAdvanced, rows);
+        applyEligibilityToRows(
+            config,
+            event,
+            teamRegionMap,
+            qualEventCounts,
+            previouslyAdvanced,
+            rows
+        );
         sortRowsByTiebreak(rows, config);
         assignAdvancedSlots(event, rows);
         finalizeRowRanks(rows);
@@ -1283,7 +1292,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         });
     }
 
-    applyEligibilityToRows(event, teamRegionMap, qualEventCounts, previouslyAdvanced, rows);
+    applyEligibilityToRows(config, event, teamRegionMap, qualEventCounts, previouslyAdvanced, rows);
     sortRowsByTiebreak(rows, config);
     assignAdvancedSlots(event, rows);
     finalizeRowRanks(rows);

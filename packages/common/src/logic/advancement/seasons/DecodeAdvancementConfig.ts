@@ -94,4 +94,6 @@ export const DecodeAdvancementConfig: AdvancementPointsConfig = {
         }
         return OTHER_AWARD_POINTS[placement] ?? 0;
     },
+
+    maxQualEvents: 3,
 };
