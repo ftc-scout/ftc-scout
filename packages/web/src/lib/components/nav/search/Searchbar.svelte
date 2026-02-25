@@ -105,7 +105,7 @@
         }
 
         let events = fuzzySearch(es, needle, 5, "name", true).slice(0, 10);
-        let eventCodeMatch = es.find((e) => e.code.toLowerCase() == needle.toLowerCase());
+        let eventCodeMatch = es.find((e) => e.code.toLowerCase() == needle.toLowerCase().trim());
         if (eventCodeMatch) {
             events.unshift({ document: eventCodeMatch, distance: 0, highlights: [] });
         }
