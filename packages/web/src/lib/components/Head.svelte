@@ -7,6 +7,10 @@
         "FTCScout is a new way to track and scout FIRST Tech Challenge, providing advanced statistics and data on all aspects of FTC.";
     export let image = "/head/banner.png";
     export let url: string | null = null;
+    export let canonical: string | null = null;
+
+    import { PUBLIC_SERVER_ORIGIN } from "$env/static/public";
+    const endpoint = `http${IS_DEV ? "" : "s"}://${PUBLIC_SERVER_ORIGIN!}`;
 </script>
 
 <svelte:head>
@@ -39,6 +43,10 @@
     <meta property="og:image:type" content="image/png" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={url ?? $page.url.toString()} />
+
+    {#if canonical}
+        <link rel="canonical" href={endpoint + canonical} />
+    {/if}
 
     <slot />
 </svelte:head>

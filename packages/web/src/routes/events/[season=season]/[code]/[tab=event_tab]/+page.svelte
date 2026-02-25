@@ -92,6 +92,7 @@
           }.`
         : "Matches, awards, and statistics for an event."}
     image="https://api.ftcscout.org/banners/events/{$page.params.season}/{$page.params.code}"
+    canonical={`/events/${season}/${$page.params.code}`}
 />
 
 <WidthProvider>
