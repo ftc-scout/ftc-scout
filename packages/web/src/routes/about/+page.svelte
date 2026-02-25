@@ -1,7 +1,7 @@
 <script lang="ts">
     import Card from "$lib/components/Card.svelte";
     import WidthProvider from "$lib/components/WidthProvider.svelte";
-    import Contributor from "./Contributor.svelte";
+    // import Contributor from "./Contributor.svelte";
     import { GITHUB } from "$lib/constants";
     import Head from "$lib/components/Head.svelte";
 </script>
@@ -17,90 +17,6 @@
 
         <div class="rest">
             <p>
-                FTC<i>Scout</i> is a repository of results and statistics on every aspect of FTC. View
-                all a teams events, an event's matches, rankings and awards, the best results and matches
-                for each season, and search for teams and events.
-            </p>
-
-            <p>
-                Started in Los Angeles, California, FTC<i>Scout</i> is the passion project of a
-                group of alumni from team
-                <a href="/teams/16321">16321 X Drive</a>.
-            </p>
-
-            <h2>Why FTC<em>Scout</em>?</h2>
-
-            <p>
-                Although FTC<em>Scout</em> provides similar features to other websites we believe it
-                has several advantages:
-            </p>
-
-            <h3>Feature-full</h3>
-
-            <p>
-                FTC<em>Scout</em> provides more advanced statistics than any other FTC website on
-                the Internet. Although other websites offer many of the features of FTC<em>Scout</em
-                >, we collect them all in one place. Additionally, FTC<em>Scout</em> offers features
-                that no other websites do.
-            </p>
-
-            <p>
-                The rankings page for each event provides statistics for each team for every aspect
-                of the game in six categories: Total, Average, OPR, Min, Max, and Standard
-                Deviation. For Freight Frenzy we tracked 191 statistics.
-            </p>
-
-            <p>
-                As well as viewing these statistics for each team at an event you can also view the
-                data for the whole season using our unparalleled <a href="/records"
-                    >Season Records Page</a
-                >. This page provides the same data as the event rankings page but for every event
-                of the season. In addition you can use our highly capable filtering and sorting
-                options to find even more information. For example here you can see the
-                <a
-                    href="/records/2022/teams?region=USCA&filter=and-team.eq.16321-&sort=autoPointsOpr"
-                >
-                    rankings of X Drive's Autonomous OPRs in California for the Power Play season.
-                </a>
-            </p>
-
-            <p>
-                Finally, starting in the 2022-2023 Power Play season, FTC<em>Scout</em> now provides
-                a visualization of the playing field for every match. To access this feature, just click
-                "View Field Layout" in the score breakdown popup of any match.
-            </p>
-
-            <h3>Fast, Secure, and Accessible</h3>
-            <p>
-                We designed FTC<em>Scout</em> with performance, security, and accessability in mind.
-                FTC<em>Scout</em>
-                pages load fast and with all data at the same time instead of popping in slowly. As a
-                result of optimizations, FTC<em> Scout </em>
-                receives exceptional
-                <a
-                    href="https://en.wikipedia.org/wiki/Google_Lighthouse"
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                    Google Lighthouse
-                </a> scores and A+ security ratings from several auditors.
-            </p>
-            <div class="image-wrap">
-                <img
-                    src="/img/lighthouse.png"
-                    alt="A screenshot of FTCScout's lighthouse scores showing 99% for Performance, 97% for Accessibility, 100% for Best Practices, and 100% for SEO."
-                />
-            </div>
-
-            <h3>Beautiful</h3>
-            <p>
-                Lastly, although this is a matter of opinion, we believe FTC<em>Scout</em> is
-                beautiful. We put a lot of effort into the design of FTC<em>Scout</em> and think that
-                it looks sleek, modern, and is the best looking of the FTC websites.
-            </p>
-
-            <h2>Our Team</h2>
-            <p>
                 FTC<em>Scout</em> was developed by alumni from
                 <a href="/teams/16321">16321 X Drive</a>, and it is FOSS (<a
                     href="https://en.wikipedia.org/wiki/Free_and_open-source_software"
@@ -109,27 +25,67 @@
                 >), so you can contribute your ideas and improvements to it
                 <a href={GITHUB} target="_blank" rel="noreferrer">on our Github</a>.
             </p>
-            <div class="contributors">
-                <Contributor
-                    name="Daniel James"
-                    role="Programmer"
-                    imgSrc="/img/daniel.jpeg"
-                    alt="Daniel James' avatar: a pixel art drawing of a green and tan egg with black lines showing the egg breaking."
-                    href="https://github.com/Dragon-Hatcher"
+            <p>
+                We also have <b>501(c)(3) non-profit status</b>, so if you find FTC<em>Scout</em>
+                useful, or just like tax deductions,
+                <a href="https://donate.ftcscout.org" target="_blank">please consider donating</a>.
+                Our finances are
+                <a href="https://ledger.ftcscout.org" target="_blank">entirely transparent</a>, so
+                you can see purchases appear in the public transaction log the moment they happen.
+            </p>
+
+            <h2 class="head">Features</h2>
+
+            <div class="feature-container">
+                <div>
+                    <h2>Powerful Filtering</h2>
+                    <p>
+                        Use almost any filter you can dream of with our advanced filtering system.
+                        You can nest filters inside one another, and choose from a wide variety of
+                        filter categories.
+                    </p>
+                </div>
+                <img
+                    src="/img/filter_example.jpg"
+                    alt="A screenshot of FTCScout's filtering system, showing a filter for teams that have caused less then 2 penalty points, and have either an OPR above or equal to 55, or an Auto average above or equal to 30."
                 />
-                <Contributor
-                    name="Jonah Reinis"
-                    role="Programmer"
-                    imgSrc="/img/jonah.png"
-                    alt="A photo of Jonah Reinis."
-                    href="https://github.com/Joncode9001"
+            </div>
+            <div class="feature-container revsort">
+                <div>
+                    <h2>Advanced Statistics</h2>
+                    <p>
+                        You can find and sort by almost any metric you like. The number of times a
+                        team has been in a tie? Sure. The standard deviation of their Endgame
+                        points? Absolutely. FTC<em>Scout</em> provides more statistics than any other
+                        FTC score tracker, so you can focus less on stats, and more on scouting.
+                    </p>
+                </div>
+                <img
+                    src="/img/stats_example.jpg"
+                    alt="A screenshot of FTCScout's statistics config menu, showing the various stats available to view."
                 />
-                <Contributor
-                    name="Liv Gilbert-Adler"
-                    role="Web Administrator"
-                    imgSrc="/img/liv.png"
-                    alt="A photo of Liv Gilbert-Adler"
-                    href="https://github.com/9021007"
+            </div>
+            <div class="feature-container">
+                <div>
+                    <h2>Extensive APIs</h2>
+                    <p>
+                        If our existing features aren't enough for you, our API lets you do whatever
+                        you like! The GraphQL API provides access to recursive queries, in-depth
+                        information, and complete access to just about all of our data. Plus, it has
+                        no authentication, so you can get started right away. View more info on the <a
+                            href="/api"
+                            target="_blank">API page</a
+                        >, or try the query in the image
+                        <a
+                            href="https://studio.apollographql.com/sandbox/explorer?endpoint=https%3A%2F%2Fapi.ftcscout.org%2Fgraphql&explorerURLState=N4IgJg9gxgrgtgUwHYBcQC4QEcYIE4CeABMADpJFEoICGcAQgQHLwBG%2BAFEm-ukQIwA2AMwAmfgEoS5SpSR0EAGhmyAzgAcISVRDyrlFWQgBuyFKo6raOpH1EAGUaKllDsoibPS37ovMQq7gC%2BgbI0AO40eGCq3r6yKATqSqHu6gA2NFAIiKipRCE%2BhZSFhSBBQA"
+                            target="_blank">here</a
+                        >. We also have a simpler REST API, which provides easy access to basic data
+                        and stats.
+                    </p>
+                </div>
+                <img
+                    src="/img/api_example.jpg"
+                    alt="A screenshot of a GraphQL query in the GraphiQL interface, showing a query for events and awards of team 16321 in 2022"
                 />
             </div>
         </div>
@@ -147,6 +103,57 @@
         padding: var(--sm-pad);
     }
 
+    .feature-container {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        gap: var(--md-gap);
+        margin: var(--md-gap) 0;
+        border-radius: 8px;
+        padding: var(--md-pad);
+        align-items: center;
+    }
+
+    .feature-container.revsort {
+        flex-direction: row-reverse;
+    }
+
+    .feature-container > img {
+        border: 3px solid var(--text-color);
+        max-width: 50%;
+    }
+
+    .feature-container > div {
+        padding: var(--md-pad);
+        width: 50%;
+    }
+
+    .feature-container > div > h2 {
+        margin: 0;
+    }
+
+    @media screen and (orientation: portrait) {
+        .feature-container {
+            flex-direction: column-reverse;
+            background-color: var(--hover-color);
+        }
+
+        .feature-container.revsort {
+            flex-direction: column-reverse;
+        }
+
+        .feature-container > img {
+            max-width: 100%;
+        }
+
+        .feature-container > div {
+            width: 100%;
+        }
+        .feature-container > div > p {
+            margin-bottom: 0;
+        }
+    }
+
     h1 {
         font-size: var(--vl-font-size);
     }
@@ -156,29 +163,12 @@
         margin: var(--lg-gap) 0 var(--sm-gap) 0;
     }
 
-    h3 {
-        font-size: var(--md-font-size);
-        margin: var(--md-gap) 0 var(--sm-gap) 0;
-    }
-
     p {
         line-height: 1.75;
         margin: var(--md-gap) 0;
     }
 
-    .image-wrap {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
-
     img {
         border-radius: 8px;
-    }
-
-    .contributors {
-        display: flex;
-        align-items: center;
-        justify-content: space-evenly;
     }
 </style>
