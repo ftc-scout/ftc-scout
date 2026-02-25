@@ -105,6 +105,10 @@
         }
 
         let events = fuzzySearch(es, needle, 5, "name", true).slice(0, 10);
+        let eventCodeMatch = es.find((e) => e.code.toLowerCase() == needle.toLowerCase());
+        if (eventCodeMatch) {
+            events.unshift({ document: eventCodeMatch, distance: 0, highlights: [] });
+        }
         let teams = fuzzySearch(ts, needle, 5, "name", true).slice(0, 10);
 
         let bestEvent = Math.min(...events.map((e) => e.distance));
