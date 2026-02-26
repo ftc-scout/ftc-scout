@@ -109,7 +109,6 @@
             (e) =>
                 needle.length >= 4 && e.code.toLowerCase().startsWith(needle.toLowerCase().trim())
         );
-        console.log(eventCodeMatches);
         eventCodeMatches.forEach((e) => {
             events.push({ document: e, distance: e.code.length - needle.length, highlights: [] });
         });
