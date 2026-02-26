@@ -105,10 +105,15 @@
         }
 
         let events = fuzzySearch(es, needle, 5, "name", true).slice(0, 10);
-        let eventCodeMatch = es.find((e) => e.code.toLowerCase() == needle.toLowerCase().trim());
-        if (eventCodeMatch) {
-            events.unshift({ document: eventCodeMatch, distance: 0, highlights: [] });
-        }
+        let eventCodeMatches = es.filter(
+            (e) =>
+                needle.length >= 4 && e.code.toLowerCase().startsWith(needle.toLowerCase().trim())
+        );
+        console.log(eventCodeMatches);
+        eventCodeMatches.forEach((e) => {
+            events.push({ document: e, distance: e.code.length - needle.length, highlights: [] });
+        });
+
         let teams = fuzzySearch(ts, needle, 5, "name", true).slice(0, 10);
 
         let bestEvent = Math.min(...events.map((e) => e.distance));
