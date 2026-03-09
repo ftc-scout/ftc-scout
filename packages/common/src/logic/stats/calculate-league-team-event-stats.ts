@@ -199,6 +199,12 @@ function calculateRanks(
             applyLosingScore(stats);
         } else {
             let { tb1, tb2 } = calculateTiebreakers(stats, descriptor);
+            tb1 =
+                (tb1 / (stats.qualMatchesPlayed + stats.emptyMatchesPlayed)) *
+                stats.qualMatchesPlayed;
+            tb2 =
+                (tb2 / (stats.qualMatchesPlayed + stats.emptyMatchesPlayed)) *
+                stats.qualMatchesPlayed;
             setTieBreakers(stats, tb1, tb2);
         }
     }
