@@ -49,11 +49,14 @@
             let red = (s as any).red as FullMatchScore2025AllianceFragment;
             let blue = (s as any).blue as FullMatchScore2025AllianceFragment;
             return [
-                +red.goalRp + +red.patternRp + +red.movementRp,
-                +blue.goalRp + +blue.patternRp + +blue.movementRp,
+                [red.movementRp, red.goalRp, red.patternRp],
+                [blue.movementRp, blue.goalRp, blue.patternRp],
             ];
         } else {
-            return [0, 0];
+            return [
+                [false, false, false],
+                [false, false, false],
+            ];
         }
     }
     $: rps = calculateRP(match.scores);
@@ -85,23 +88,74 @@
             <div class="left" class:winner={winner == Alliance.Red} class:tie={winner == "Tie"}>
                 <!-- // Help: Season Specific -->
                 {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
-                    <div class="dots red">
-                        {#each new Array(rps[0] + 3 * +(winner == Alliance.Red) + +(winner == "Tie")) as _, i}
-                            <div class="dot" style="right: calc({i} * var(--dot-stride))" />
-                        {/each}
+                    <div class="dots top red">
+                        <div
+                            class="dot"
+                            class:gray={!(winner == Alliance.Red)}
+                            style="right: calc(0 * var(--dot-stride))"
+                        />
+                        <div
+                            class="dot"
+                            class:gray={!(winner == Alliance.Red)}
+                            style="right: calc(1 * var(--dot-stride))"
+                        />
+                        <div
+                            class="dot"
+                            class:gray={!(winner == Alliance.Red || winner == "Tie")}
+                            style="right: calc(2 * var(--dot-stride))"
+                        />
                     </div>
                 {/if}
 
                 {match.scores.red.totalPoints}
+
+                <!-- // Help: Season Specific -->
+                {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
+                    <div class="dots bottom red">
+                        {#each rps[0].reverse() as rp, i}
+                            <div
+                                class="dot"
+                                class:gray={!rp}
+                                style="right: calc({i} * var(--dot-stride))"
+                            />
+                        {/each}
+                    </div>
+                {/if}
             </div>
             <div class="minus">-</div>
             <div class="right" class:winner={winner == Alliance.Blue} class:tie={winner == "Tie"}>
+                <!-- // Help: Season Specific -->
+                {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
+                    <div class="dots top blue">
+                        <div
+                            class="dot"
+                            class:gray={!(winner == Alliance.Blue || winner == "Tie")}
+                            style="left: calc(0 * var(--dot-stride))"
+                        />
+                        <div
+                            class="dot"
+                            class:gray={!(winner == Alliance.Blue)}
+                            style="left: calc(1 * var(--dot-stride))"
+                        />
+                        <div
+                            class="dot"
+                            class:gray={!(winner == Alliance.Blue)}
+                            style="left: calc(2 * var(--dot-stride))"
+                        />
+                    </div>
+                {/if}
+
                 {match.scores.blue.totalPoints}
 
+                <!-- // Help: Season Specific -->
                 {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
-                    <div class="dots blue">
-                        {#each new Array(rps[1] + 3 * +(winner == Alliance.Blue) + +(winner == "Tie")) as _, i}
-                            <div class="dot" style="left: calc({i} * var(--dot-stride))" />
+                    <div class="dots bottom blue">
+                        {#each rps[1] as rp, i}
+                            <div
+                                class="dot"
+                                class:gray={!rp}
+                                style="left: calc({i} * var(--dot-stride))"
+                            />
                         {/each}
                     </div>
                 {/if}
@@ -150,17 +204,26 @@
 
     .dots {
         position: absolute;
-        bottom: 0px;
-        --dot-stride: 8px;
-        --dot-size: 6px;
+        --dot-stride: 10px;
+        --dot-size: 8px;
+        --dot-offset: -2px;
     }
 
     @media (max-width: 1000px) {
         .dots {
             bottom: 1px;
-            --dot-stride: 6px;
-            --dot-size: 4px;
+            --dot-stride: 7px;
+            --dot-size: 5px;
+            --dot-offset: 0px;
         }
+    }
+
+    .top {
+        top: calc(var(--dot-offset) - var(--dot-size));
+    }
+
+    .bottom {
+        bottom: var(--dot-offset);
     }
 
     .left .dots {
@@ -184,6 +247,10 @@
     }
     .blue .dot {
         background: var(--blue-team-text-color);
+    }
+    .gray {
+        background: transparent !important;
+        border: 1px solid gray;
     }
 
     .red {
