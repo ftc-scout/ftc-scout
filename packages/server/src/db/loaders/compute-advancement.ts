@@ -117,16 +117,11 @@ function computeAllianceSelectionFromAlliances(
 } {
     let alliancePoints = new Map<number, number>();
     let allianceTeams = new Set<number>();
-    console.log(
-        `Computing alliance selection points for ${alliances ? alliances.length : 0} alliances...`
-    );
+
     if (!alliances) return { alliancePoints, allianceTeams };
 
     for (let alliance of alliances) {
-        console.log(`Processing alliance ${alliance.number}...`);
         let pts = config.calculateAllianceSelectionPoints(alliance.number);
-        console.log(`Alliance ${alliance.number} gets ${pts} points for alliance selection.`);
-        console.log(alliance);
         allianceTeamNumbers(alliance).forEach((n) => {
             alliancePoints.set(n, pts);
             allianceTeams.add(n);
@@ -1233,22 +1228,15 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         let rankEntry = qualRows.find((q) => q.teamNumber == teamNumber);
         let qualPoints: number | null = null;
         let leagueRanking = leagueRankings.get(teamNumber);
-        console.log(rankEntry);
         if (leagueRanking && teamCount > 0) {
             let qp = config.calculateQualPoints(leagueRanking, teamCount);
             qualPoints = Number.isFinite(qp) ? qp : null;
         } else if (rankEntry && teamCount > 0 && rankEntry.rank != null && rankEntry.rank > 0) {
             let qp = config.calculateQualPoints(rankEntry.rank, teamCount);
-            console.log(
-                `Calculated qual points for team ${teamNumber}: ${qp} (rank: ${rankEntry.rank}, teamCount: ${teamCount})`
-            );
+
             qualPoints = Number.isFinite(qp) ? qp : null;
         }
-        console.log(
-            `Team ${teamNumber}: rankEntry=${
-                rankEntry ? rankEntry.rank : "N/A"
-            }, leagueRanking=${leagueRanking}, qualPoints=${qualPoints}`
-        );
+
         let isQualFinal = !!qualPoints && (allQualsPlayed || anyPlayoffMatch);
 
         let isAllianceSelectionFinal = allianceSelectionFinal;
