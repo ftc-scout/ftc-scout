@@ -149,7 +149,8 @@
         ? `${leagueRankingSaveIdBase}${showOnlyEventTeams ? "-filtered" : ""}`
         : null;
     $: isLeagueEvent = event?.type === "LeagueTournament" || event?.type === "LeagueMeet";
-    $: showLeagueRankingsTab = !!isLeagueEvent;
+    $: showLeagueRankingsTab =
+        !!isLeagueEvent && Number.isFinite(season) && season >= Season.PowerPlay;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
     $: advancesToStripped = event?.advancementInfo

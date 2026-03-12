@@ -15,6 +15,15 @@ type LoadAllLeaguesOptions = {
 export async function loadAllLeagues(season: Season, opts: LoadAllLeaguesOptions = {}) {
     let markMatchesStale = opts.markMatchesStale ?? false;
     let recomputeRankings = opts.recomputeRankings ?? false;
+
+    // Only compute/load leagues for Season.PowerPlay (2022) and newer.
+    if (!Number.isFinite(season) || season < Season.PowerPlay) {
+        console.info(
+            `Skipping leagues for season ${season} — leagues are only computed for ${Season.PowerPlay} and up.`
+        );
+        return;
+    }
+
     console.info(`Loading leagues for season ${season}.`);
 
     let apiLeagues = await getLeagues(season);

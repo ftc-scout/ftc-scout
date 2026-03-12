@@ -49,6 +49,14 @@ export async function recomputeLeagueRankings(
     leagueCode: string,
     regionCode: string | null
 ) {
+    // Only recompute leagues for Season.PowerPlay (2022) and newer.
+    if (!Number.isFinite(season) || season < Season.PowerPlay) {
+        console.info(
+            `Skipping league ranking recompute for ${leagueCode} (${season}) — leagues are only supported for ${Season.PowerPlay} and up.`
+        );
+        return;
+    }
+
     let where: FindOptionsWhere<League>[] =
         regionCode == null
             ? [{ season, code: leagueCode }]
