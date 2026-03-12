@@ -1,14 +1,20 @@
 import { Season } from "@ftc-scout/common";
 import { getFromFtcApi } from "./get-from-ftc-api";
 
+export type TeamInAllianceApi = {
+    teamNumber: number;
+    displayTeamNumber: string;
+    teamName: string;
+};
+
 export type AllianceApi = {
     number: number;
-    captain: number | null;
-    round1: number | null;
-    round2: number | null;
-    round3: number | null;
-    backup: number | null;
-    backupReplaced: number | null;
+    captain: TeamInAllianceApi | null;
+    round1: TeamInAllianceApi | null;
+    round2: TeamInAllianceApi | null;
+    round3: TeamInAllianceApi | null;
+    backup: TeamInAllianceApi | null;
+    backupReplaced: TeamInAllianceApi | null;
 };
 
 export async function getAlliances(
