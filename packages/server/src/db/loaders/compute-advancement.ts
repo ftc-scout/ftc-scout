@@ -1089,10 +1089,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
 
     let qualRows = await getQualRowsForEvent(season, event);
 
-    let teamCount = qualRows.filter(
-        (q) => q.qualMatchesPlayed != null && q.qualMatchesPlayed > 0
-    ).length;
-    // await getTeamCountFromPlayedMatches(season, eventCode);
+    let teamCount = await getTeamCountFromPlayedMatches(season, eventCode);
 
     let alliances = await getAlliances(season, eventCode);
     let { alliancePoints, allianceTeams } = computeAllianceSelectionFromAlliances(
