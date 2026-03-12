@@ -96,5 +96,5 @@ export async function watchApi() {
         setTimeout(run, MS_PER_MIN);
     };
 
-    run();
+    await run();
 }

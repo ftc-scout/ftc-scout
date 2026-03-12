@@ -93,8 +93,9 @@ async function main() {
     });
 
     if (SYNC_API) {
-        await fetchPriorSeasons();
-        await watchApi();
+        fetchPriorSeasons().then(() => {
+            watchApi();
+        });
     }
 }
 
