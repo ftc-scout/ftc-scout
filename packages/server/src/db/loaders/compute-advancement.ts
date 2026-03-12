@@ -1105,9 +1105,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         config
     );
 
-    console.table(alliancePoints);
-    console.table(allianceTeams);
-
     let awards = await Award.findBy({ season, eventCode });
     let { awardsLoaded, awardPts } = computeAwardPointsMap(awards, config);
 
@@ -1229,8 +1226,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
 
         calculateScoresPerTeam(scores, tmps, matchScoresPerTeam, autoScoresPerTeam);
     }
-    console.table(qualRows);
-    console.table(teamNumbers);
 
     let allianceSelectionFinal = anyPlayoffMatch || allianceTeams.size > 0;
     let rows: TeamRow[] = [];
@@ -1319,8 +1314,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     sortRowsByTiebreak(rows, config);
     assignAdvancedSlots(event, rows);
     finalizeRowRanks(rows);
-
-    console.table(rows);
 
     await saveAdvancementRows(season, eventCode, rows);
 }
