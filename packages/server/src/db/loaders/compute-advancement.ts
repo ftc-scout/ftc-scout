@@ -1112,7 +1112,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     qualRows.forEach((q) => teamNumbers.add(q.teamNumber));
     alliances?.forEach((a) => {
         [a.captain, a.round1, a.round2, a.round3, a.backup].forEach((n) => {
-            if (typeof n === "number") teamNumbers.add(n);
+            if (typeof n?.teamNumber === "number") teamNumbers.add(n.teamNumber);
         });
     });
     awards.forEach((a) => teamNumbers.add(a.teamNumber));
