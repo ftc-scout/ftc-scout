@@ -17,6 +17,7 @@ import {
     ManyToOne,
     PrimaryColumn,
     UpdateDateColumn,
+    JoinColumn,
 } from "typeorm";
 import { Match } from "./Match";
 import { Team } from "./Team";
@@ -39,6 +40,11 @@ export class TeamMatchParticipation extends BaseEntity {
     station!: Station;
 
     @ManyToOne(() => Match, (match) => match.teams)
+    @JoinColumn([
+        { name: "season", referencedColumnName: "eventSeason" },
+        { name: "eventCode", referencedColumnName: "eventCode" },
+        { name: "matchId", referencedColumnName: "id" },
+    ])
     match!: Match;
 
     @ManyToOne(() => Team, (team) => team.matches)
