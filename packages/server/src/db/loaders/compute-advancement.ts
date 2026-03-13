@@ -506,13 +506,14 @@ async function computeNormalPlayoffPoints(
         return { playoffPts, playoffsComplete: false };
     }
 
-    let playoffsComplete = playoffMatches.every((m) => m.hasBeenPlayed);
     let { placementByAlliance, aliveAlliances } = await computeElimPlacementsByAlliance(
         season,
         eventCode,
         alliances,
         playoffMatches
     );
+    let playoffsComplete =
+        playoffMatches.every((m) => m.hasBeenPlayed) || aliveAlliances.length <= 1;
 
     if (playoffsComplete && aliveAlliances.length === 1) {
         placementByAlliance.set(aliveAlliances[0]!, { placement: 1, isFinal: true });
