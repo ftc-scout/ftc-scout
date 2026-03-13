@@ -1,4 +1,4 @@
-import { DESCRIPTORS_LIST, Descriptor, type Season } from "@ftc-scout/common";
+import { DESCRIPTORS_LIST, Descriptor, type Season, Season as SeasonEnum } from "@ftc-scout/common";
 import {
     EntitySchema,
     EntitySchemaColumnOptions,
@@ -115,8 +115,11 @@ function getAggregateStatColumns(descriptor: Descriptor): EntitySchema<any> {
     });
 }
 
+export const firstSeasonLeagueRankings = SeasonEnum.PowerPlay;
+
 export let LeagueRankingSchemas = {} as Record<Season, EntitySchema<LeagueRanking>>;
 for (let descriptor of DESCRIPTORS_LIST) {
+    if (descriptor.season < firstSeasonLeagueRankings) continue;
     LeagueRankingSchemas[descriptor.season] = makeLeagueRankingSchema(descriptor);
 }
 
@@ -125,6 +128,7 @@ export let LeagueRanking = {} as Record<Season, Repository<LeagueRanking>>;
 
 export function initLeagueRanking() {
     for (let descriptor of DESCRIPTORS_LIST) {
+        if (descriptor.season < firstSeasonLeagueRankings) continue;
         LeagueRanking[descriptor.season] = DATA_SOURCE.getRepository(
             LeagueRankingSchemas[descriptor.season]
         );
