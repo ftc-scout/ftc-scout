@@ -42,8 +42,8 @@ export class TeamMatchParticipation extends BaseEntity {
     @ManyToOne(() => Match, (match) => match.teams)
     @JoinColumn([
         { name: "season", referencedColumnName: "eventSeason" },
-        { name: "eventCode", referencedColumnName: "eventCode" },
-        { name: "matchId", referencedColumnName: "id" },
+        { name: "event_code", referencedColumnName: "eventCode" },
+        { name: "match_id", referencedColumnName: "id" },
     ])
     match!: Match;
 
