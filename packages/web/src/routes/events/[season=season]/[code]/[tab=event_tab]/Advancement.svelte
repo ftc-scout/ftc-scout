@@ -460,13 +460,6 @@
         border-radius: var(--border-radius);
     }
 
-    .legend-title {
-        font-weight: bold;
-        font-size: var(--md-font-size);
-        margin-bottom: var(--sm-gap);
-        color: var(--primary-text-color);
-    }
-
     .legend-items {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));

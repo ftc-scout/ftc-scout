@@ -418,36 +418,6 @@
         text-align: center;
     }
 
-    .advancement-info {
-        margin-top: var(--md-gap);
-        padding-top: var(--md-gap);
-        border-top: 1px solid var(--border-color);
-    }
-
-    .advancement-table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    .advancement-table tr {
-        border-bottom: 1px solid var(--border-color);
-    }
-
-    .advancement-table tr:last-child {
-        border-bottom: none;
-    }
-
-    .advancement-table td {
-        padding: var(--sm-gap) 0;
-        color: var(--text-secondary);
-    }
-
-    .advancement-table td:last-child {
-        text-align: right;
-        font-weight: 600;
-        color: var(--text-primary);
-    }
-
     .league-rankings-controls {
         display: grid;
         grid-template-columns: 1fr 1fr;
