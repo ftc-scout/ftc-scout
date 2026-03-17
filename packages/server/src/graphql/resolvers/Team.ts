@@ -262,7 +262,7 @@ export const TeamQueries: Record<string, GraphQLFieldConfig<any, any>> = {
                 searchText: string | null;
             }
         ) => {
-            let q = DATA_SOURCE.getRepository(Team).createQueryBuilder("t");
+            let q = DATA_SOURCE.getRepository(Team).createQueryBuilder("t").distinctOn(["number"]);
 
             if (region && region != RegionOption.All) {
                 q.andWhere("t.region_code IN (:...regions)", {
