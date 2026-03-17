@@ -92,18 +92,6 @@
         hasPreviewData &&
         !eventHasMatches &&
         !eventHasPassedScheduledDate;
-    $: leagueRankingGroups = (event?.leagueRankings ?? []) as LeagueRankingGroup[];
-    $: leagueRankingRows = leagueRankingGroups
-        .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
-        .filter(notEmpty);
-    $: leagueRankingSaveId =
-        event && leagueRankingGroups.length
-            ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}-${
-                  leagueRankingGroups[0]?.league.code ?? "parent"
-              }`
-            : null;
-    $: isLeagueTournament = event?.type === "LeagueTournament";
-    $: showLeagueRankingsTab = !!isLeagueTournament;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
 
