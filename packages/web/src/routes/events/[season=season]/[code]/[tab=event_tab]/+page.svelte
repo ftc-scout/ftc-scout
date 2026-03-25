@@ -96,7 +96,7 @@
         };
     });
     $: amountNonNullStats = advancementRowsWithStats.filter(
-        (r) => r.totalPoints != null && r.totalPoints > 0 && r.stats != null
+        (r) => r.totalPoints != null && r.totalPoints > 0
     ).length;
     $: showAdvancementTab =
         !!advancementRowsWithStats.length &&
