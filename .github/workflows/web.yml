@@ -2,7 +2,7 @@ name: Docker Deploy Web
 on:
   push:
     branches:
-      - main
+      - 2026-04-01
     paths:
       - 'packages/common/**'
       - 'packages/server/**'

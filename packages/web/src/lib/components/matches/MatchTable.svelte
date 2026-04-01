@@ -77,6 +77,9 @@
         let m = matches.find((m) => $modalMatchId?.[1] == m.id);
         if (m) show(m);
     }
+
+    import { trialStarted } from "../../../routes/plus/shiny.svelte";
+    import { goto } from "$app/navigation";
 </script>
 
 <ScoreModal
@@ -93,6 +96,19 @@
     {/if}
 
     <tbody>
+        {#if matches.length > 5 && !$trialStarted}
+            <div class="paywall">
+                <div class="paywall-box">
+                    <h2>Unlock Full Match Data</h2>
+                    <p>
+                        Start your free trial of FTCScout Plus to see all matches and scores for
+                        this event.
+                    </p>
+                    <button on:click={() => goto("/plus")}>More Info</button>
+                </div>
+            </div>
+        {/if}
+
         {#if matches.some((m) => !!m.teams)}
             {#if event.remote}
                 {#each Object.values(soloMatches).filter( (ms) => ms.some((m) => m.scores) ) as matches, i}
@@ -200,6 +216,49 @@
 {/if}
 
 <style>
+    .paywall {
+        /* overlay on table */
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(var(--fg-color-vs), 0.5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: var(--lg-gap);
+        z-index: 1;
+        font-size: var(--xl-font-size);
+        font-weight: bold;
+    }
+
+    .paywall-box {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        max-width: 400px;
+        margin-top: 30px;
+        background-color: var(--fg-color);
+        padding: var(--lg-gap);
+    }
+
+    .paywall-box button {
+        margin-top: var(--lg-gap);
+        padding: var(--md-gap) var(--lg-gap);
+        font-size: var(--lg-font-size);
+        background-color: var(--theme-color);
+        color: var(--theme-text-color);
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .paywall-box p {
+        font-size: var(--md-font-size);
+        padding-top: var(--sm-gap);
+    }
+
     table {
         display: block;
 

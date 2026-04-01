@@ -12,7 +12,8 @@
     import { createTippy } from "svelte-tippy";
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
     import Sponsor from "$lib/components/nav/Sponsor.svelte";
-    // import AlertBar from "$lib/components/nav/AlertBar.svelte";
+    import AlertBar from "$lib/components/nav/AlertBar.svelte";
+    import Shiny from "./plus/shiny.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -29,15 +30,12 @@
 
 <Head title="FTCScout" />
 
-<!-- <AlertBar
-    message="Welcome to the FTC World Championships! We're doing our best to keep the site online, but the championships bring extremely large traffic flows to the website. You can check the website status with the arrow to the right..."
-    link="https://uptime.9021007.xyz/status/ftcscout"
-/> -->
+<AlertBar message="Introducing FTCScout Plus: An even newer way to scout." link="/plus" />
 
 <WidthProvider>
     <Card vis={false}>
         <div class="title">
-            <h1>FTC<em>Scout</em></h1>
+            <h1>FTC<em>Scout</em><Shiny /></h1>
             <p>A new way to track and scout <em>FIRST</em> Tech Challenge</p>
         </div>
 

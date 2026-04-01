@@ -1,11 +1,12 @@
 <script lang="ts">
     import { faBinoculars } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
+    import Shiny from "../../../routes/plus/shiny.svelte";
 </script>
 
 <a href="/">
     <Fa icon={faBinoculars} fw size="1.2x" translateX="-0.15" style="font-size: 24px" />
-    <span> FTC<em>Scout</em> </span>
+    <span> FTC<em>Scout</em><Shiny /> </span>
 </a>
 
 <style>
