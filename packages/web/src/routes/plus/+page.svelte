@@ -15,7 +15,7 @@
     }
 </script>
 
-<Head title="FTCScout Plus | FTCScout" description="An ever newer way to scout." />
+<Head title="FTCScout Plus | FTCScout" description="An even newer way to scout." />
 
 <WidthProvider width={"1000px"}>
     <Card>
