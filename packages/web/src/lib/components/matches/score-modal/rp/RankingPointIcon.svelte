@@ -25,7 +25,7 @@
     width: 1em;
     height: 1em;
     display: inline-block;
-    background-image: url(https://ftc-events-cdn.global-prod.ftclive.org/evtwebextFTC/artifact-CfRTbLAy.svg);
+    background-image: url(/img/artifact.svg);
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
@@ -42,7 +42,7 @@ width: 3em;
 height: 1em;
 margin: .06em;
 display: inline-block;
-background-image: url(https://ftc-events-cdn.global-prod.ftclive.org/evtwebextFTC/artifact-CfRTbLAy.svg), url(https://ftc-events-cdn.global-prod.ftclive.org/evtwebextFTC/artifact-CfRTbLAy.svg), url(https://ftc-events-cdn.global-prod.ftclive.org/evtwebextFTC/artifact-CfRTbLAy.svg);
+background-image: url(/img/artifact.svg), url(/img/artifact.svg), url(/img/artifact.svg);
 background-size: .425em .425em, .425em .425em, .425em .425em;
 background-position: left center, center center, right center;
 background-repeat: no-repeat;
