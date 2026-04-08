@@ -2,7 +2,7 @@ import "dotenv/config";
 
 import { DATA_SOURCE } from "./db/data-source";
 import { initDynamicEntities } from "./db/entities/dyn/init";
-import express, { text, Response, Request } from "express";
+import express, { text } from "express";
 import cors from "cors";
 import compression from "compression";
 import { apiLoggerMiddleware } from "./db/entities/ApiReq";
@@ -82,22 +82,6 @@ async function main() {
     app.use("/graphql", apiLoggerMiddleware, expressMiddleware(apolloServer));
 
     app.post("/analytics", text(), handleAnalytics);
-
-    app.get("/g/:query", (req: Request, res: Response) => {
-        let query = req.params.query;
-        if (!query) {
-            res.status(400).send("No query provided");
-            return;
-        }
-        apolloServer
-            .executeOperation({ query })
-            .then((result) => {
-                res.json(result);
-            })
-            .catch((err) => {
-                res.status(500).send(err.toString());
-            });
-    });
 
     setupRest(app);
     setupSiteMap(app);

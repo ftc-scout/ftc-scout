@@ -27,6 +27,7 @@ export function getClient(
     let httpLink = new HttpLink({
         uri: `http${s}://${env.PUBLIC_SERVER_ORIGIN}/graphql`,
         credentials: "omit",
+        useGETForQueries: true,
         headers: { [env.PUBLIC_FRONTEND_CODE!]: "." },
         fetch,
     });
