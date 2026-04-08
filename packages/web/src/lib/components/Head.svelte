@@ -9,8 +9,8 @@
     export let url: string | null = null;
     export let canonical: string | null = null;
 
-    import { PUBLIC_SERVER_ORIGIN } from "$env/static/public";
-    const endpoint = `http${IS_DEV ? "" : "s"}://${PUBLIC_SERVER_ORIGIN!}`;
+    import { env } from "$env/dynamic/public";
+    const endpoint = `http${IS_DEV ? "" : "s"}://${env.PUBLIC_SERVER_ORIGIN}`;
 </script>
 
 <svelte:head>
