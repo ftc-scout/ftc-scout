@@ -20,7 +20,6 @@
             selected={value == o.value}
             value={o.value}
             disabled={disabledValues.some((v) => {
-                console.log(v);
                 return v == o.value;
             })}>{o.name}</option
         >
