@@ -13,6 +13,7 @@ let timeout: NodeJS.Timeout;
 
 export function sendAnalyticsRequest(navigate: AfterNavigate) {
     if (!browser) return;
+    if (!navigator.sendBeacon) return;
 
     let toUrl = navigate.to?.url;
     if (!toUrl) return;

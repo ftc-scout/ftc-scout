@@ -64,6 +64,7 @@
         ? `Information and matches for team ${team.number} ${team.name}.`
         : `Information and matches for team ${$page.params.number}`}
     image="https://api.ftcscout.org/banners/teams/{$page.params.number}"
+    canonical={`/teams/${$page.params.number}`}
 />
 
 <WidthProvider>

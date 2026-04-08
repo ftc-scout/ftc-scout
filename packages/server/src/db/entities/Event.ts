@@ -108,7 +108,7 @@ export class Event extends BaseEntity {
             return null;
         }
 
-        const EVENT_RENAMING: Record<string, string> = {
+        const EDIT_EVENT_BY_CODE: Record<string, string> = {
             FTCCMP1: "FIRST World Championship - Finals Division",
             FTCCMP1FRNK: "FIRST World Championship - Franklin Division",
             FTCCMP1FRAN: "FIRST World Championship - Franklin Division",
@@ -170,6 +170,16 @@ export class Event extends BaseEntity {
             // cspell:enable
         };
 
+        function fixLocations(event_name: string) {
+            const replacements = [["Chinese Taipei", "Taiwan"]];
+            for (const [old_str, new_str] of replacements) {
+                if (event_name.includes(old_str)) {
+                    return event_name.replace(old_str, new_str);
+                }
+            }
+            return event_name;
+        }
+
         const MODIFIED_RULES = [
             // cspell:disable
             "USTXCECCS",
@@ -184,7 +194,7 @@ export class Event extends BaseEntity {
             season,
             code: api.code,
             divisionCode: api.divisionCode ? api.divisionCode : null,
-            name: (EVENT_RENAMING[api.code] ?? api.name).trim(),
+            name: fixLocations(EDIT_EVENT_BY_CODE[api.code] ?? api.name).trim(),
             remote: api.remote,
             hybrid: api.hybrid,
             fieldCount: api.fieldCount,
@@ -197,16 +207,16 @@ export class Event extends BaseEntity {
             districtCode: api.districtCode ? api.districtCode : null,
             venue: api.venue?.trim() ?? null,
             address: api.address?.trim() ?? null,
-            country: api.country,
-            state: api.stateprov,
-            city: api.city,
+            country: fixLocations(api.country),
+            state: fixLocations(api.stateprov),
+            city: fixLocations(api.city),
             website: api.website ? api.website.trim() : null,
             liveStreamURL:
                 api.liveStreamUrl && api.liveStreamUrl.startsWith("https://")
                     ? api.liveStreamUrl.trim()
                     : null,
             webcasts: api.webcasts ? api.webcasts : [],
-            timezone: api.timezone === "Asia/Calcutta"? "Asia/Kolkata" : api.timezone ?? "UTC",
+            timezone: api.timezone === "Asia/Calcutta" ? "Asia/Kolkata" : api.timezone ?? "UTC",
             start: new Date(api.dateStart),
             end: new Date(api.dateEnd),
             modifiedRules: MODIFIED_RULES.indexOf(api.code) != -1,
