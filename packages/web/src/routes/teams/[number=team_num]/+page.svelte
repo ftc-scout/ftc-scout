@@ -45,6 +45,8 @@
 
     $: teamStore = data.team;
     $: team = $teamStore?.data?.teamByNumber!;
+    $: activeSeasons = team?.activeSeasons ?? [];
+    $: inactiveSeasons = ALL_SEASONS.filter((s) => !activeSeasons.includes(s));
 
     $: sortedEvents = [...(team?.events ?? [])].sort(eventSorter);
 
@@ -101,7 +103,7 @@
 
         <Card vis={false}>
             <Form id="season" noscriptSubmit>
-                <SeasonSelect bind:season={$season} nonForm />
+                <SeasonSelect bind:season={$season} nonForm disabledValues={inactiveSeasons} />
             </Form>
         </Card>
 

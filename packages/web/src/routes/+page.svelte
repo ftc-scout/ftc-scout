@@ -7,11 +7,12 @@
     import { prettyPrintDateRange } from "$lib/printers/dateRange";
     import { faBolt, faHashtag, faQuestionCircle } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
-    import { CURRENT_SEASON, DESCRIPTORS } from "@ftc-scout/common";
+    import { CURRENT_SEASON } from "@ftc-scout/common";
     import Head from "$lib/components/Head.svelte";
     import { createTippy } from "svelte-tippy";
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
     import Sponsor from "$lib/components/nav/Sponsor.svelte";
+    import Select from "$lib/components/ui/form/Select.svelte";
     // import AlertBar from "$lib/components/nav/AlertBar.svelte";
 
     export let data;
@@ -22,9 +23,11 @@
     $: events = $homeStore?.data?.eventsOnDate;
 
     $: wr = $homeStore?.data.tradWorldRecord;
+    $: wrWithPens = $homeStore?.data.tradWorldRecordWithPenalties;
 
     let tippy = createTippy({});
-    $: np = DESCRIPTORS[CURRENT_SEASON].pensSubtract ? "" : "no penalty ";
+
+    let wrMode = "wo-penalties";
 </script>
 
 <Head title="FTCScout" />
@@ -80,27 +83,54 @@
             {/if}
         </div>
 
-        <div class="wr">
-            <h2>
-                World Record
-                <span
-                    class="help"
-                    use:tippy={{
-                        content: `Top ${np}score in a FIRST sponsored event.`,
-                        theme: $tippyTheme,
-                    }}
-                >
-                    <Fa icon={faQuestionCircle} />
-                </span>
-            </h2>
-            <hr />
+        <div class="wr wr-merged">
+            <div class="wr-section">
+                <h2>
+                    <Select
+                        bind:value={wrMode}
+                        options={[
+                            { value: "wo-penalties", name: "World Record" },
+                            {
+                                value: "w-penalties",
+                                name: "World Record (including penalty points)",
+                            },
+                        ]}
+                        nonForm
+                        style="font-size: inherit; font-weight: 600; width: max-content;"
+                    />
+                    <span
+                        class="help"
+                        use:tippy={{
+                            content: `Top score in a FIRST-sponsored event. The "true world record" does not include penalty points, but you can view the penalty-inclusive WR using the dropdown menu.`,
+                            theme: $tippyTheme,
+                        }}
+                    >
+                        <Fa icon={faQuestionCircle} />
+                    </span>
+                </h2>
+                <hr />
 
-            {#if wr}
-                <a href="/events/{wr.event.season}/{wr.event.code}/matches">{wr.event.name}</a>
-                <MatchTable matches={[wr]} event={wr.event} />
-            {:else}
-                <SkeletonRow header card={false} rows={2} />
-            {/if}
+                {#if wr && wrMode == "wo-penalties"}
+                    <a href="/events/{wr.event.season}/{wr.event.code}/matches">{wr.event.name}</a>
+                    <MatchTable
+                        matches={[wr]}
+                        event={wr.event}
+                        showNonPenaltyScores
+                        showHeartLegend={false}
+                    />
+                {:else if wrWithPens && wrMode == "w-penalties"}
+                    <a href="/events/{wrWithPens.event.season}/{wrWithPens.event.code}/matches">
+                        {wrWithPens.event.name}
+                    </a>
+                    <MatchTable
+                        matches={[wrWithPens]}
+                        event={wrWithPens.event}
+                        showHeartLegend={false}
+                    />
+                {:else}
+                    <SkeletonRow header card={false} rows={2} />
+                {/if}
+            </div>
         </div>
     </Card>
 
@@ -261,6 +291,15 @@
         padding: var(--lg-pad);
     }
 
+    .wr-merged {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .wr-section + .wr-section {
+        margin-top: var(--lg-gap);
+    }
+
     .wr h2 {
         display: flex;
         align-items: center;
@@ -278,6 +317,10 @@
         font-weight: bold;
         display: block;
         margin-bottom: var(--md-gap);
+    }
+
+    .wr + .wr {
+        margin-top: var(--vl-gap);
     }
 
     .help {
