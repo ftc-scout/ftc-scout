@@ -5,6 +5,7 @@
     export let season: Season;
     export let nonForm = false;
     export let id: string | null = null;
+    export let disabledValues: Season[] = [];
 
     const i = (x: Season) => (seasonStr = "" + x);
     const o = (x: string) => (season = +x as Season);
@@ -18,10 +19,13 @@
 <Select
     bind:value={seasonStr}
     name={"season"}
-    options={DESCRIPTORS_LIST.slice().reverse().map((d) => ({
-        value: d.season + "",
-        name: d.seasonNameWithYear,
-    }))}
+    disabledValues={disabledValues.map((d) => d + "")}
+    options={DESCRIPTORS_LIST.slice()
+        .reverse()
+        .map((d) => ({
+            value: d.season + "",
+            name: d.seasonNameWithYear,
+        }))}
     {nonForm}
     {id}
     on:change
