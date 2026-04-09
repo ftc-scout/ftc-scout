@@ -11,8 +11,10 @@ import { IS_DEV } from "../constants";
 import { browser } from "$app/environment";
 import { DESCRIPTORS_LIST } from "@ftc-scout/common";
 import { GraphQLWsLink } from "@apollo/client/link/subscriptions";
+import { createPersistedQueryLink } from "@apollo/client/link/persisted-queries";
 import { createClient } from "graphql-ws";
 import { getMainDefinition } from "@apollo/client/utilities";
+import { sha256 } from "crypto-hash";
 
 let client: ApolloClient<NormalizedCacheObject> | null = null;
 
@@ -27,7 +29,6 @@ export function getClient(
     let httpLink = new HttpLink({
         uri: `http${s}://${env.PUBLIC_SERVER_ORIGIN}/graphql`,
         credentials: "omit",
-        useGETForQueries: true,
         headers: { [env.PUBLIC_FRONTEND_CODE!]: "." },
         fetch,
     });
@@ -49,6 +50,10 @@ export function getClient(
               httpLink
           )
         : httpLink;
+
+    const linkChain = createPersistedQueryLink({ sha256, useGETForHashedQueries: true }).concat(
+        link
+    );
 
     let cache = new InMemoryCache({
         possibleTypes: {
@@ -89,7 +94,7 @@ export function getClient(
 
     let newClient = new ApolloClient({
         connectToDevTools: IS_DEV,
-        link,
+        link: linkChain,
         cache,
     });
 
