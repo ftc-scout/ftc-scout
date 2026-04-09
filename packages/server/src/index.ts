@@ -21,7 +21,7 @@ import { useServer } from "graphql-ws/lib/use/ws";
 import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHttpServer";
 import { setupSiteMap } from "./sitemap/setupSitemap";
 import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
-// import { responseCachePlugin } from "./graphql/plugins/response-cache-plugin";
+import { responseCachePlugin } from "./graphql/plugins/response-cache-plugin";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -67,6 +67,7 @@ async function main() {
                 footer: false,
                 embed: { runTelemetry: false, endpointIsEditable: false },
             }),
+            responseCachePlugin(serverCache),
             ApolloServerPluginDrainHttpServer({ httpServer }),
             {
                 async serverWillStart() {
