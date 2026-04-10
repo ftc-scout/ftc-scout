@@ -1,7 +1,7 @@
 import { AwardType } from "../graphql/generated/graphql-operations";
 import { prettyPrintOrdinal } from "./number";
 
-export function prettyPrintAwardCategory(type: AwardType): string {
+export function prettyPrintAwardCategory(type: AwardType, season: number | null = null): string {
     switch (type) {
         case AwardType.Compass:
         case AwardType.Connect:
@@ -19,7 +19,7 @@ export function prettyPrintAwardCategory(type: AwardType): string {
         case AwardType.DeansListFinalist:
         case AwardType.DeansListSemiFinalist:
         case AwardType.DeansListWinner:
-            return prettyPrintAwardName(type) + "s";
+            return prettyPrintAwardName(type, season) + "s";
         case AwardType.Winner:
         case AwardType.Finalist:
         case AwardType.DivisionFinalist:
@@ -33,7 +33,7 @@ export function prettyPrintAwardCategory(type: AwardType): string {
     }
 }
 
-export function prettyPrintAwardName(type: AwardType): string {
+export function prettyPrintAwardName(type: AwardType, season: number | null = null): string {
     switch (type) {
         case AwardType.Compass:
             return "Compass Award";
@@ -42,10 +42,19 @@ export function prettyPrintAwardName(type: AwardType): string {
         case AwardType.Control:
             return "Control Award";
         case AwardType.DeansListFinalist:
+            if (season && season >= 2025) {
+                return "FIRST Leadership Award Finalist";
+            }
             return "Dean's List Finalist";
         case AwardType.DeansListSemiFinalist:
+            if (season && season >= 2025) {
+                return "FIRST Leadership Award Semifinalist";
+            }
             return "Dean's List Semifinalist";
         case AwardType.DeansListWinner:
+            if (season && season >= 2025) {
+                return "FIRST Leadership Award Winner";
+            }
             return "Dean's List Winner";
         case AwardType.Design:
             return "Design Award";
@@ -83,12 +92,16 @@ export function prettyPrintAwardName(type: AwardType): string {
     }
 }
 
-export function prettyPrintAwardPlacement(type: AwardType, placement: number): string {
+export function prettyPrintAwardPlacement(
+    type: AwardType,
+    placement: number,
+    season: number | null = null
+): string {
     switch (type) {
         case AwardType.DeansListFinalist:
         case AwardType.DeansListSemiFinalist:
         case AwardType.DeansListWinner:
-            return prettyPrintAwardName(type);
+            return prettyPrintAwardName(type, season);
         case AwardType.ConferenceFinalist:
         case AwardType.DivisionFinalist:
         case AwardType.DivisionWinner:
@@ -105,13 +118,14 @@ export function prettyPrintAwardPlacement(type: AwardType, placement: number): s
 export function prettyPrintAwardPlacementParts(
     type: AwardType,
     placement: number,
-    name: string | null
+    name: string | null,
+    season: number | null = null
 ): [string, string] {
     switch (type) {
         case AwardType.DeansListFinalist:
         case AwardType.DeansListSemiFinalist:
         case AwardType.DeansListWinner:
-            return [prettyPrintAwardName(type), `(${name})`];
+            return [prettyPrintAwardName(type, season), `(${name})`];
         case AwardType.ConferenceFinalist:
         case AwardType.DivisionFinalist:
         case AwardType.DivisionWinner:
