@@ -38,7 +38,7 @@
         <section>
             <h3>
                 {divisionName ?? ""}
-                {prettyPrintAwardCategory(type)}
+                {prettyPrintAwardCategory(type, season)}
             </h3>
 
             <svelte:element this={awardIsNotRanked(type) ? "ul" : "ol"}>

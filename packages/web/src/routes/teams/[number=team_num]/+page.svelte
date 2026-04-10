@@ -134,7 +134,11 @@
                 {#if tep.awards.length}
                     <InfoIconRow icon={faMedal}>
                         {#each tep.awards as award, i}
-                            <Award {award} comma={i != tep.awards.length - 1} />
+                            <Award
+                                {award}
+                                comma={i != tep.awards.length - 1}
+                                season={event.season}
+                            />
                         {/each}
                     </InfoIconRow>
                 {/if}

@@ -8,12 +8,15 @@
         personName?: string | null;
     };
 
+    export let season: number | null = null;
+
     export let comma: boolean;
 
     $: [typeName, placement] = prettyPrintAwardPlacementParts(
         award.type,
         award.placement,
-        award.personName ?? null
+        award.personName ?? null,
+        season ?? null
     );
 </script>
 
