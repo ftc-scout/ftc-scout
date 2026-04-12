@@ -8,8 +8,7 @@
         "build": "tsc",
         "start": "node dist/index.js",
         "dev": "nodemon dist/index.js -w dist -w ../common/dist",
-        "check": "tsc --noEmit",
-        "benchmark:graphql": "node dist/scripts/benchmark-graphql-postgres.js"
+        "check": "tsc --noEmit"
     },
     "dependencies": {
         "@apollo/server": "^4.7.5",

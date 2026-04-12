@@ -10,7 +10,6 @@
         "server:dev": "npm run dev -w packages/server",
         "server:start": "npm run start -w packages/server",
         "server:check": "npm run check -w packages/server",
-        "server:benchmark:graphql": "npm run server:build && npm run benchmark:graphql -w packages/server",
         "web:dev": "npm run dev -w packages/web",
         "web:build": "npm run build -w packages/web",
         "web:preview": "npm run preview -w packages/web",
