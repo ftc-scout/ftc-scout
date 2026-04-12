@@ -16,8 +16,8 @@
                     href="https://hackclub.com/first?utm_source=ftcscout&utm_content=banner&tub_program=ftcscout"
                     >HCB</a
                 >
-                for this season, but we we may be available for future sponsorship. See sponsorship
-                details <a href="/sponsors/info">here</a>.
+                for this season, but we we may be available for future sponsorship. See sponsorship details
+                <a href="/sponsors/info">here</a>.
             </p>
         </div></Card
     >
@@ -38,32 +38,8 @@
         font-size: var(--vl-font-size);
     }
 
-    h2 {
-        font-size: var(--lg-font-size);
-        margin: var(--lg-gap) 0 var(--sm-gap) 0;
-    }
-
-    h3 {
-        font-size: var(--md-font-size);
-        margin: var(--md-gap) 0 var(--sm-gap) 0;
-    }
-
     p {
         line-height: 1.75;
         margin: var(--md-gap) 0;
-    }
-
-    .image-wrap {
-        width: 100%;
-        display: flex;
-        justify-content: center;
-    }
-
-    .statsimg {
-        width: 60%;
-    }
-
-    img {
-        border-radius: 8px;
     }
 </style>

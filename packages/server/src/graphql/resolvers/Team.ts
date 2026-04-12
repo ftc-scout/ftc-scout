@@ -1,4 +1,4 @@
-import { GraphQLFieldConfig, GraphQLObjectType } from "graphql";
+import { GraphQLFieldConfig, GraphQLInt, GraphQLObjectType } from "graphql";
 import { dataLoaderResolverList, dataLoaderResolverSingle } from "../utils";
 import {
     ALL_SEASONS,
@@ -15,6 +15,7 @@ import {
     listTy,
     nn,
     nullTy,
+    CURRENT_SEASON,
 } from "@ftc-scout/common";
 import { Team } from "../../db/entities/Team";
 import { In } from "typeorm";
@@ -152,10 +153,20 @@ export const TeamGQL: GraphQLObjectType = new GraphQLObjectType({
             resolve: (t) => ({ city: t.city, state: t.state, country: t.country }),
         },
         rookieYear: IntTy,
+        activeSeasons: {
+            type: list(GraphQLInt),
+            resolve: async (t) => {
+                let seasons = await DATA_SOURCE.getRepository(TeamMatchParticipation)
+                    .createQueryBuilder("tmp")
+                    .select("DISTINCT season")
+                    .where("team_number = :number", { number: t.number })
+                    .getRawMany();
+                return seasons.map((s) => s.season).concat(CURRENT_SEASON);
+            },
+        },
         website: nullTy(StrTy),
         createdAt: DateTimeTy,
         updatedAt: DateTimeTy,
-
         awards: {
             type: list(nn(AwardGQL)),
             args: { season: nullTy(IntTy) },

@@ -12,6 +12,7 @@ query Team($number: Int!, $season: Int!) {
         schoolName
         sponsors
         rookieYear
+        activeSeasons
         quickStats(season: $season) {
             tot {
                 value

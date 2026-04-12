@@ -16,6 +16,7 @@
     export let timeZone: string;
     export let focusedTeam: number | null;
     export let zebraStripe: boolean;
+    export let showNonPenaltyScores = false;
     export let allianceCount = 0;
 
     $: teams = match.teams;
@@ -89,7 +90,7 @@
 </script>
 
 <tr class:zebraStripe class:isDoubleElim class:new-round={isNewRound}>
-    <MatchScore {match} {timeZone} />
+    <MatchScore {match} {timeZone} {showNonPenaltyScores} />
 
     {#if isDoubleElim}
         <DeLives

@@ -21,6 +21,7 @@
 
     $: scores = match?.scores;
     $: matchDescription = match?.description;
+    $: level = match?.tournamentLevel;
 
     $: trad = scores != null && "red" in scores ? (scores as TradScoresTy) : null;
     $: remote = scores != null && !("red" in scores) ? (scores as RemoteScoresTy) : null;
@@ -38,7 +39,7 @@
         }}
     >
         {#if trad}
-            <TradScores scores={trad} {matchDescription} teams={match.teams} />
+            <TradScores scores={trad} {matchDescription} teams={match.teams} {level} />
         {:else if remote}
             <RemoteScores
                 scores={remote}

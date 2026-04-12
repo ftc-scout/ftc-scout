@@ -58,6 +58,16 @@ export class Team extends BaseEntity {
             return null;
         }
 
+        function fixLocations(event_name: string) {
+            const replacements = [["Chinese Taipei", "Taiwan"]];
+            for (const [old_str, new_str] of replacements) {
+                if (event_name.includes(old_str)) {
+                    return event_name.replace(old_str, new_str);
+                }
+            }
+            return event_name;
+        }
+
         let name = api.nameShort.trim();
         let schoolName: string | null;
         let sponsors: string[];
@@ -84,9 +94,9 @@ export class Team extends BaseEntity {
             name,
             schoolName,
             sponsors,
-            country: api.country ?? "",
-            state: api.stateProv ?? "",
-            city: api.city ?? "",
+            country: fixLocations(api.country ?? ""),
+            state: fixLocations(api.stateProv ?? ""),
+            city: fixLocations(api.city ?? ""),
             rookieYear: api.rookieYear,
             website: api.website,
             regionCode: (api as any).homeRegion ?? null,
