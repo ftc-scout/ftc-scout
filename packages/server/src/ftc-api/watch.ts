@@ -5,10 +5,13 @@ import { loadAllEvents } from "../db/loaders/load-all-events";
 import { loadAllMatches } from "../db/loaders/load-all-matches";
 import { loadAllAwards } from "../db/loaders/load-all-awards";
 import { loadFutureEvents } from "../db/loaders/load-future-events";
+import { loadAllLeagues } from "../db/loaders/load-all-leagues";
+import { loadAdvancementSlots } from "../db/loaders/load-advancement-slots";
 
 export const LoadType = {
     Full: "Full",
     Partial: "Partial",
+    Future: "Future",
 };
 export type LoadType = (typeof LoadType)[keyof typeof LoadType];
 
@@ -30,10 +33,20 @@ export async function fetchPriorSeasons() {
         } else {
             console.info(`Matches already loaded.`);
         }
+        if (!(await DataHasBeenLoaded.slotsHaveBeenLoaded(season))) {
+            await loadAdvancementSlots(season, LoadType.Full);
+        } else {
+            console.info(`Advancement slots already loaded.`);
+        }
         if (!(await DataHasBeenLoaded.awardsHaveBeenLoaded(season))) {
             await loadAllAwards(season, LoadType.Full);
         } else {
             console.info(`Awards already loaded.`);
+        }
+        if (!(await DataHasBeenLoaded.leaguesHaveBeenLoaded(season))) {
+            await loadAllLeagues(season, { recomputeRankings: true });
+        } else {
+            console.info(`Leagues already loaded.`);
         }
     }
 }
@@ -60,15 +73,27 @@ export async function watchApi() {
         console.info(`Syncing. (Cycle ${cycleCount})`);
         await runJob(async () => await loadAllTeams(CURRENT_SEASON), MINS_PER_DAY);
         await runJob(async () => await loadAllEvents(CURRENT_SEASON), MINS_PER_HOUR);
-        await runJob(async () => await loadAllMatches(CURRENT_SEASON, LoadType.Partial), 1);
+        await runJob(
+            async () => await loadAdvancementSlots(CURRENT_SEASON, LoadType.Full),
+            MINS_PER_HOUR
+        );
+        await runJob(async () => await loadAdvancementSlots(CURRENT_SEASON, LoadType.Partial), 5);
         await runJob(async () => await loadAllMatches(CURRENT_SEASON, LoadType.Full), MINS_PER_DAY);
-        await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Partial), 5);
+        await runJob(async () => await loadAllMatches(CURRENT_SEASON, LoadType.Partial), 1);
+        await runJob(
+            async () => await loadAllLeagues(CURRENT_SEASON, { recomputeRankings: true }),
+            MINS_PER_DAY
+        );
         await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Full), MINS_PER_HOUR);
+        await runJob(async () => await loadAllAwards(CURRENT_SEASON, LoadType.Partial), 5);
         await runJob(async () => await loadFutureEvents(CURRENT_SEASON), MINS_PER_DAY / 2);
-
+        await runJob(
+            async () => await loadAdvancementSlots(CURRENT_SEASON, LoadType.Future),
+            MINS_PER_HOUR * 6
+        );
         cycleCount += 1;
         setTimeout(run, MS_PER_MIN);
     };
 
-    run();
+    await run();
 }

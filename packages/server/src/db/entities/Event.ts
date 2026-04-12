@@ -88,6 +88,15 @@ export class Event extends BaseEntity {
     @Column()
     modifiedRules!: boolean;
 
+    @Column("int", { nullable: true })
+    advancementSlots!: number | null;
+
+    @Column({ type: "varchar", nullable: true })
+    advancesTo!: string | null;
+
+    @Column("int", { nullable: true })
+    fcmpReserved!: number | null;
+
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 

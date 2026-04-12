@@ -43,5 +43,67 @@ query EventPage($season: Int!, $code: String!) {
             code
             name
         }
+        leagueRankings {
+            league {
+                season
+                code
+                name
+                remote
+                regionCode
+                parentLeagueCode
+                parentLeagueName
+                location
+            }
+            teams {
+                season
+                leagueCode
+                regionCode
+                teamNumber
+                avgRp
+                team {
+                    number
+                    name
+                    location {
+                        city
+                        state
+                        country
+                    }
+                }
+                stats {
+                    ...FullStats
+                }
+            }
+        }
+        advancement {
+            season
+            eventCode
+            teamNumber
+            team {
+                number
+                name
+            }
+            qualPoints
+            isQualFinal
+            allianceSelectionPoints
+            isAllianceSelectionFinal
+            playoffPoints
+            isPlayoffPointsFinal
+            awardPoints
+            totalPoints
+            rank
+            advancementRank
+            advanced
+            eligibility
+        }
+        advancementInfo {
+            advancementSlots
+            advancesTo
+            advancesToEvent {
+                season
+                code
+                name
+            }
+            fcmpReserved
+        }
     }
 }

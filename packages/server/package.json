@@ -40,6 +40,7 @@
         "@types/luxon": "^3.3.0",
         "@types/md5": "^2.3.3",
         "@types/node": "^20.2.5",
+        "@types/pg": "^8.20.0",
         "@types/ua-parser-js": "^0.7.37",
         "nodemon": "^2.0.22"
     }
