@@ -51,6 +51,8 @@
         gap: var(--md-gap);
         align-items: center;
         justify-content: left;
+        max-width: 1000px;
+        margin: 0 auto;
     }
 
     .tab {
