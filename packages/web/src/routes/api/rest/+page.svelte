@@ -179,7 +179,7 @@
                 <code class="route">
                     /events/<span class="var">:season</span>/<span class="var">:code</span>/preview
                 </code>
-                <p>Get the best opr of each team at the event.</p>
+                <p>Get the stats of each team from their best event.</p>
                 <p>
                     Returns <code>[]</code> when the event is finished.
                 </p>
