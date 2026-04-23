@@ -10,6 +10,7 @@ import {
     fuzzySearch,
     getEventTypes,
     getRegionCodes,
+    DESCRIPTORS,
 } from "@ftc-scout/common";
 import { Award } from "../db/entities/Award";
 import { TeamMatchParticipation } from "../db/entities/TeamMatchParticipation";
@@ -18,8 +19,9 @@ import { DateTime } from "luxon";
 import { Match } from "../db/entities/Match";
 import { DATA_SOURCE } from "../db/data-source";
 import { frontendMSFromDB } from "../graphql/dyn/match-score";
-import { FindOptionsWhere } from "typeorm";
+import { FindOptionsWhere, In } from "typeorm";
 import { getQuickStats } from "../graphql/resolvers/Team";
+import { addTypename } from "../graphql/dyn/tep";
 
 const pre = "/rest/v1/";
 
@@ -55,6 +57,7 @@ export function setupRest(app: Express) {
     app.get(pre + "events/:season(\\d+)/:code/matches", eventMatches);
     app.get(pre + "events/:season(\\d+)/:code/awards", eventAwards);
     app.get(pre + "events/:season(\\d+)/:code/teams", eventTeams);
+    app.get(pre + "events/:season(\\d+)/:code/preview", eventPreview);
     app.get(pre + "events/search/:season(\\d+)", eventSearch);
 }
 
@@ -438,4 +441,87 @@ async function eventSearch(req: Request<{ season: string }>, res: Response) {
     }
 
     res.send(entities);
+}
+
+async function eventPreview(req: Request<{ season: string; code: string }>, res: Response) {
+    let season = +req.params.season;
+    let code = req.params.code;
+
+    if (!isSeason(season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    let event = await Event.findOneBy({ season, code });
+
+    if (!event) {
+        res.status(404).send(`No event in season ${season} with code ${code}.`);
+        return;
+    }
+
+    let roster = await TeamEventParticipation[event.season].find({
+        where: { season: event.season, eventCode: event.code },
+        select: ["teamNumber"],
+    });
+    let teamNumbers = roster.map((r) => r.teamNumber);
+    if (!teamNumbers.length) {
+        res.send([]);
+        return;
+    }
+
+    let descriptor = DESCRIPTORS[event.season];
+    let getQuickOpr = (t: TeamEventParticipation) => {
+        let val = descriptor.pensSubtract
+            ? t.opr?.totalPoints ?? null
+            : t.opr?.totalPointsNp ?? t.opr?.totalPoints ?? null;
+        return val == null ? null : +val;
+    };
+
+    let candidateStats = await TeamEventParticipation[event.season]
+        .createQueryBuilder("t")
+        .innerJoin(Event, "e", "e.season = t.season AND e.code = t.eventCode")
+        .where("t.teamNumber IN (:...teamNumbers)", { teamNumbers })
+        .andWhere("NOT t.isRemote")
+        .andWhere("t.hasStats")
+        .andWhere("NOT e.modified_rules")
+        .getMany();
+
+    let bestStats = new Map<
+        number,
+        { row: TeamEventParticipation; quick: number | null; eventCode: string }
+    >();
+    for (let row of candidateStats) {
+        let quick = getQuickOpr(row);
+        let eventCode = row.eventCode;
+        let existing = bestStats.get(row.teamNumber);
+        if (!existing) {
+            bestStats.set(row.teamNumber, { row, quick, eventCode });
+            continue;
+        }
+
+        let existingValue = existing.quick ?? Number.NEGATIVE_INFINITY;
+        let currentValue = quick ?? Number.NEGATIVE_INFINITY;
+        if (currentValue > existingValue) {
+            bestStats.set(row.teamNumber, { row, quick, eventCode });
+        }
+    }
+
+    let eventCodes = new Set(candidateStats.map((r) => r.eventCode));
+    let events = await Event.findBy({
+        season: event.season,
+        code: In([...eventCodes]),
+    });
+    let eventMap = new Map(events.map((e) => [e.code, e]));
+
+    res.send(
+        teamNumbers.map((teamNumber) => {
+            let entry = bestStats.get(teamNumber);
+            return {
+                teamNumber,
+                npOpr: entry?.quick ?? null,
+                stats: entry ? addTypename(entry.row) : null,
+                event: eventMap.get(entry?.eventCode ?? "") ?? null,
+            };
+        })
+    );
 }
