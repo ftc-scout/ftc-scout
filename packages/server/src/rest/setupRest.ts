@@ -459,13 +459,18 @@ async function eventPreview(req: Request<{ season: string; code: string }>, res:
         return;
     }
 
+    if (event.published) {
+        res.status(204).send(`Event ${code} in season ${season} has already finished.`);
+        return;
+    }
+
     let roster = await TeamEventParticipation[event.season].find({
         where: { season: event.season, eventCode: event.code },
         select: ["teamNumber"],
     });
     let teamNumbers = roster.map((r) => r.teamNumber);
     if (!teamNumbers.length) {
-        res.send([]);
+        res.status(404).send(`No teams found for event ${event.code} in season ${event.season}.`);
         return;
     }
 
