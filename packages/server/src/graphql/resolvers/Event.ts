@@ -185,7 +185,7 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             type: list(nn(EventPreviewStatGQL)),
             resolve: async (event) => {
                 if (event.published) {
-                    return [];
+                    return null;
                 }
 
                 let roster = await TeamEventParticipation[event.season].find({
