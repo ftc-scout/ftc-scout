@@ -25,6 +25,7 @@ import {
 import { exit } from "process";
 import { IS_DEV } from "../../constants";
 import { newMatchesKey, pubsub } from "../../graphql/resolvers/pubsub";
+import { In, Not } from "typeorm";
 
 const IGNORED_MATCHES = [
     //cSpell:disable
@@ -85,6 +86,27 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 allDbScores.push(...dbScores);
                 allDbTmps.push(...dbTmps);
             }
+
+            // Remove deleted matches (matches that are in the db but not in the api)
+            let matchIds = matches.map((m) => m.matchNumber);
+            let dbMatchesToDelete = await DATA_SOURCE.getRepository(Match).find({
+                where: {
+                    eventSeason: season,
+                    eventCode: event.code,
+                    tournamentLevel: "Quals",
+                    id: Not(In(matchIds)),
+                },
+            });
+
+            if (dbMatchesToDelete.length) {
+                console.info(
+                    `Deleting ${dbMatchesToDelete.length} matches that are no longer in the API for event ${event.code}...`
+                );
+            }
+
+            await DATA_SOURCE.transaction(async (em) => {
+                await em.remove(dbMatchesToDelete);
+            });
 
             // We can't just use the teams list because it sometimes misses teams?
             // Ex. team 23512 here https://ftc-events.firstinspires.org/2023/USCANOCMPSI/qualifications
