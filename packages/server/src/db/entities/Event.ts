@@ -115,6 +115,10 @@ export class Event extends BaseEntity {
             FTCCMP1JEMI: "FIRST World Championship - Jemison Division",
             FTCCMP1EDIS: "FIRST World Championship - Edison Division",
             FTCCMP1OCHO: "FIRST World Championship - Ochoa Division",
+            FTCCMP1JACK: "FIRST World Championship - Jackson Division",
+            FTCCMP1GOOD: "FIRST World Championship - Goodall Division",
+            FTCCMP1LOVE: "FIRST World Championship - Lovelace Division",
+            FTCCMP1ROSS: "FIRST World Championship - Ross Division",
 
             // Old event division weren't named nicely. cspell:disable
             "19MICMP2": "FIRST in Michigan FTC State Championship - Warren",
