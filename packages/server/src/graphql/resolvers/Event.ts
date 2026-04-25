@@ -23,6 +23,7 @@ import {
     listTy,
     nn,
     nullTy,
+    wr,
 } from "@ftc-scout/common";
 import { TeamMatchParticipationGQL } from "./TeamMatchParticipation";
 import { TeamMatchParticipation } from "../../db/entities/TeamMatchParticipation";
@@ -182,7 +183,7 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             ),
         },
         previewStats: {
-            type: list(nn(EventPreviewStatGQL)),
+            ...nullTy(wr(list(nn(EventPreviewStatGQL)))),
             resolve: async (event) => {
                 if (event.published) {
                     return null;
