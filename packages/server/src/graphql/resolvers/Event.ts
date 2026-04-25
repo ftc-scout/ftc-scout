@@ -9,10 +9,12 @@ import {
     DateTimeTy,
     DateTy,
     EventTypeOption,
+    FloatTy,
     IntTy,
     RegionOption,
     Season,
     StrTy,
+    DESCRIPTORS,
     fuzzySearch,
     getEventTypes,
     getRegionCodes,
@@ -31,8 +33,10 @@ import { TeamEventParticipation } from "../../db/entities/dyn/team-event-partici
 import { LocationGQL } from "../objs/Location";
 import { DateTime } from "luxon";
 import { DATA_SOURCE } from "../../db/data-source";
-import { Brackets } from "typeorm";
+import { Brackets, In } from "typeorm";
 import { newMatchesKey, pubsub } from "./pubsub";
+import { TepStatsUnionGQL } from "../dyn/dyn-types-schema";
+import { addTypename } from "../dyn/tep";
 
 export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
     name: "Event",
@@ -177,7 +181,86 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                 singleSeasonScoreAwareMatchLoader
             ),
         },
+        previewStats: {
+            type: list(nn(EventPreviewStatGQL)),
+            resolve: async (event) => {
+                if (event.published) {
+                    return null;
+                }
+
+                let roster = await TeamEventParticipation[event.season].find({
+                    where: { season: event.season, eventCode: event.code },
+                    select: ["teamNumber"],
+                });
+                let teamNumbers = roster.map((r) => r.teamNumber);
+                if (!teamNumbers.length) return [];
+
+                let descriptor = DESCRIPTORS[event.season];
+                let getQuickOpr = (t: TeamEventParticipation) => {
+                    let val = descriptor.pensSubtract
+                        ? t.opr?.totalPoints ?? null
+                        : t.opr?.totalPointsNp ?? t.opr?.totalPoints ?? null;
+                    return val == null ? null : +val;
+                };
+
+                let candidateStats = await TeamEventParticipation[event.season]
+                    .createQueryBuilder("t")
+                    .innerJoin(Event, "e", "e.season = t.season AND e.code = t.eventCode")
+                    .where("t.teamNumber IN (:...teamNumbers)", { teamNumbers })
+                    .andWhere("NOT t.isRemote")
+                    .andWhere("t.hasStats")
+                    .andWhere("NOT e.modified_rules")
+                    .getMany();
+
+                let bestStats = new Map<
+                    number,
+                    { row: TeamEventParticipation; quick: number | null; eventCode: string }
+                >();
+                for (let row of candidateStats) {
+                    let quick = getQuickOpr(row);
+                    let eventCode = row.eventCode;
+                    let existing = bestStats.get(row.teamNumber);
+                    if (!existing) {
+                        bestStats.set(row.teamNumber, { row, quick, eventCode });
+                        continue;
+                    }
+
+                    let existingValue = existing.quick ?? Number.NEGATIVE_INFINITY;
+                    let currentValue = quick ?? Number.NEGATIVE_INFINITY;
+                    if (currentValue > existingValue) {
+                        bestStats.set(row.teamNumber, { row, quick, eventCode });
+                    }
+                }
+
+                let eventCodes = new Set(candidateStats.map((r) => r.eventCode));
+                let events = await Event.findBy({
+                    season: event.season,
+                    code: In([...eventCodes]),
+                });
+                let eventMap = new Map(events.map((e) => [e.code, e]));
+
+                return teamNumbers.map((teamNumber) => {
+                    let entry = bestStats.get(teamNumber);
+                    return {
+                        teamNumber,
+                        npOpr: entry?.quick ?? null,
+                        stats: entry ? addTypename(entry.row) : null,
+                        event: eventMap.get(entry?.eventCode ?? "") ?? null,
+                    };
+                });
+            },
+        },
     }),
+});
+
+const EventPreviewStatGQL = new GraphQLObjectType({
+    name: "EventPreviewStat",
+    fields: {
+        teamNumber: IntTy,
+        npOpr: nullTy(FloatTy),
+        stats: { type: TepStatsUnionGQL },
+        event: { type: EventGQL },
+    },
 });
 
 export const EventQueries: Record<string, GraphQLFieldConfig<any, any>> = {
