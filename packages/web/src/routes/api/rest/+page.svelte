@@ -177,37 +177,19 @@
 
             <section>
                 <code class="route">
-                    /events/<span class="var">:season</span>/<span class="var">:code</span>/preview
+                    /events/search/<span class="var">:season</span>?region=<span class="var">RegionOption</span
+                    >&ZeroWidthSpace;&type=<span class="var">EventType</span
+                    >&ZeroWidthSpace;&hasMatches=<span class="var">Boolean</span
+                    >&ZeroWidthSpace;&start=<span class="var">Date</span>&ZeroWidthSpace;&end=<span
+                        class=":var">Date</span
+                    >&ZeroWidthSpace;&limit=<span class="var">Int</span
+                    >&ZeroWidthSpace;&searchText=<span class="var">String</span>
                 </code>
-                <p>Get the stats of each team from their best event.</p>
+                <p>Get a list of events. This is the correct query to get a list of all events.</p>
                 <p>
-                    Returns <code>[]</code> when the event is finished.
+                    Returns all scalar fields of the <code>Event</code> GraphQL type except for
+                    <code>hasMatches</code>.
                 </p>
-                <p>
-                    Returns all scalar fields of the <code>EventPreviewStat</code> GraphQL type.
-                </p>
-                <p>
-                    <b>Does</b> <code class="resp-code">404</code> if the event does not exist.
-                </p>
-                <section>
-                    <code class="route">
-                        /events/search/<span class="var">:season</span>?region=<span class="var"
-                            >RegionOption</span
-                        >&ZeroWidthSpace;&type=<span class="var">EventType</span
-                        >&ZeroWidthSpace;&hasMatches=<span class="var">Boolean</span
-                        >&ZeroWidthSpace;&start=<span class="var">Date</span
-                        >&ZeroWidthSpace;&end=<span class=":var">Date</span
-                        >&ZeroWidthSpace;&limit=<span class="var">Int</span
-                        >&ZeroWidthSpace;&searchText=<span class="var">String</span>
-                    </code>
-                    <p>
-                        Get a list of events. This is the correct query to get a list of all events.
-                    </p>
-                    <p>
-                        Returns all scalar fields of the <code>Event</code> GraphQL type except for
-                        <code>hasMatches</code>.
-                    </p>
-                </section>
             </section>
         </div>
     </Card>
