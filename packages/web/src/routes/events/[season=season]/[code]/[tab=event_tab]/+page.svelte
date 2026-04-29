@@ -126,6 +126,49 @@
 
         data = { event: getDataSync(getClient(fetch), EventPageDocument, args) };
     }
+
+    type EventLivestreamDay = {
+        day: string | Date;
+        liveStreamURL?: string | null;
+        webcasts?: string[] | null;
+        label?: string | null;
+    };
+
+    let showAllLivestreams = false;
+
+    $: livestreamsByDay = (event?.livestreamsByDay ?? []) as EventLivestreamDay[];
+
+    function getDateOnly(date: string | Date): Date {
+        const d = date instanceof Date ? date : new Date(date);
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+    }
+
+    function formatLivestreamDay(day: string | Date): string {
+        try {
+            const dateObj = day instanceof Date ? day : new Date(day);
+            return dateObj.toLocaleDateString(undefined, {
+                month: "short",
+                day: "numeric",
+                year: "numeric",
+            });
+        } catch {
+            return String(day);
+        }
+    }
+
+    $: todayDate = new Date();
+    $: todayDateOnly = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate());
+
+    $: currentDayLivestream = livestreamsByDay.find((ls) => {
+        const lsDateOnly = getDateOnly(ls.day);
+        return lsDateOnly.getTime() === todayDateOnly.getTime();
+    });
+
+    $: sortedLivestreams = [...livestreamsByDay].sort((a, b) => {
+        const aDate = getDateOnly(a.day).getTime();
+        const bDate = getDateOnly(b.day).getTime();
+        return aDate - bDate;
+    });
 </script>
 
 <Head
@@ -165,16 +208,80 @@
             {/if}
 
             {#if event.liveStreamURL}
-                <InfoIconRow icon={faVideo}>
-                    <a
-                        href={event.liveStreamURL}
-                        target="_blank"
-                        rel="noreferrer"
-                        class="norm-link"
-                    >
-                        {prettyPrintURL(event.liveStreamURL)}
-                    </a>
-                </InfoIconRow>
+                {#if event.livestreamsByDay && event.livestreamsByDay.length > 0}
+                    <InfoIconRow icon={faVideo}>
+                        <div class="livestream-block">
+                            {#if currentDayLivestream}
+                                <div class="livestream-row">
+                                    {#if currentDayLivestream.liveStreamURL}
+                                        <a
+                                            href={currentDayLivestream.liveStreamURL}
+                                            target="_blank"
+                                            rel="noreferrer"
+                                            class="norm-link"
+                                        >
+                                            {prettyPrintURL(currentDayLivestream.liveStreamURL)}
+                                        </a>
+                                    {/if}
+                                    <span class="livestream-day"
+                                        >[{formatLivestreamDay(currentDayLivestream.day)}]</span
+                                    >
+                                    {#if sortedLivestreams.length > 1}
+                                        <button
+                                            class="livestream-inline-toggle"
+                                            type="button"
+                                            on:click={() =>
+                                                (showAllLivestreams = !showAllLivestreams)}
+                                            aria-expanded={showAllLivestreams}
+                                        >
+                                            {showAllLivestreams ? "Hide" : "Show all"}
+                                        </button>
+                                    {/if}
+                                </div>
+                            {/if}
+
+                            {#if showAllLivestreams}
+                                <div class="livestream-list">
+                                    {#each sortedLivestreams as livestream (livestream.day)}
+                                        {@const isCurrentDay =
+                                            getDateOnly(livestream.day).getTime() ===
+                                            todayDateOnly.getTime()}
+                                        {#if !isCurrentDay}
+                                            <div class="livestream-row">
+                                                {#if livestream.liveStreamURL}
+                                                    <a
+                                                        href={livestream.liveStreamURL}
+                                                        target="_blank"
+                                                        rel="noreferrer"
+                                                        class="norm-link"
+                                                    >
+                                                        {prettyPrintURL(livestream.liveStreamURL)}
+                                                    </a>
+                                                {:else}
+                                                    <span>No livestream URL</span>
+                                                {/if}
+                                                <span class="livestream-day"
+                                                    >[{formatLivestreamDay(livestream.day)}]</span
+                                                >
+                                            </div>
+                                        {/if}
+                                    {/each}
+                                </div>
+                            {/if}
+                        </div>
+                    </InfoIconRow>
+                {:else}
+                    <InfoIconRow icon={faVideo}>
+                        <a
+                            href={event.liveStreamURL}
+                            target="_blank"
+                            rel="noreferrer"
+                            class="norm-link"
+                        >
+                            {prettyPrintURL(event.liveStreamURL)}
+                        </a>
+                    </InfoIconRow>
+                {/if}
             {/if}
 
             <InfoIconRow icon={faLocationDot}>
@@ -266,5 +373,51 @@
         align-items: center;
         gap: var(--md-gap);
         text-align: center;
+    }
+
+    .livestream-block {
+        display: flex;
+        flex-direction: column;
+        gap: var(--sm-gap);
+        padding: var(--sm-gap) 0;
+    }
+
+    .livestream-inline-toggle {
+        background: none;
+        border: none;
+        color: var(--secondary-text-color);
+        cursor: pointer;
+        padding: 0.2rem 0.4rem;
+        font-size: 0.9em;
+        transition: all 0.15s ease;
+        margin-left: 0.5rem;
+    }
+
+    .livestream-inline-toggle:hover {
+        color: var(--text);
+    }
+
+    .livestream-list {
+        display: flex;
+        flex-direction: column;
+        gap: var(--xs-gap);
+        border-top: 2px solid var(--sep-color);
+        padding-top: var(--md-gap);
+    }
+
+    .livestream-row {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 0.5rem;
+        line-height: 1.4;
+        border-left: 3px solid transparent;
+        border-radius: 2px;
+        transition: all 0.15s ease;
+    }
+
+    .livestream-day {
+        margin-left: 0.3rem;
+        color: var(--secondary-text-color);
     }
 </style>
