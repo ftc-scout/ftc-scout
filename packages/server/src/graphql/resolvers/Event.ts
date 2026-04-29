@@ -70,7 +70,11 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                     Array.isArray(e.livestreamsByDay) &&
                     e.livestreamsByDay.length > 0
                 ) {
-                    return e.livestreamsByDay;
+                    return e.livestreamsByDay.map((ls) => ({
+                        day: DateTime.fromISO(ls.day as any).toJSDate(),
+                        liveStreamURL: ls.liveStreamURL,
+                        webcasts: ls.webcasts ?? [],
+                    }));
                 }
 
                 if (e.liveStreamURL) {
@@ -299,7 +303,6 @@ const EventLivestreamDayGQL: GraphQLObjectType = new GraphQLObjectType({
         day: DateTy,
         liveStreamURL: nullTy(StrTy),
         webcasts: listTy(StrTy),
-        label: nullTy(StrTy),
     },
 });
 
