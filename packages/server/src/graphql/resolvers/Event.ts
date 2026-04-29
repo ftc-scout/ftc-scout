@@ -62,6 +62,35 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
         },
         website: nullTy(StrTy),
         liveStreamURL: nullTy(StrTy),
+        livestreamsByDay: {
+            type: list(nn(EventLivestreamDayGQL)),
+            resolve: (e) => {
+                if (
+                    e.livestreamsByDay &&
+                    Array.isArray(e.livestreamsByDay) &&
+                    e.livestreamsByDay.length > 0
+                ) {
+                    return e.livestreamsByDay;
+                }
+
+                if (e.liveStreamURL) {
+                    for (let day of [e.start, e.end]) {
+                        if (day) {
+                            return [
+                                {
+                                    day,
+                                    liveStreamURL: e.liveStreamURL,
+                                    webcasts: e.webcasts,
+                                    label: null,
+                                },
+                            ];
+                        }
+                    }
+                }
+
+                return [];
+            },
+        },
         webcasts: listTy(StrTy),
         timezone: StrTy,
         start: DateTy,
@@ -261,6 +290,16 @@ const EventPreviewStatGQL = new GraphQLObjectType({
         npOpr: nullTy(FloatTy),
         stats: { type: TepStatsUnionGQL },
         event: { type: EventGQL },
+    },
+});
+
+const EventLivestreamDayGQL: GraphQLObjectType = new GraphQLObjectType({
+    name: "EventLivestreamDay",
+    fields: {
+        day: DateTy,
+        liveStreamURL: nullTy(StrTy),
+        webcasts: listTy(StrTy),
+        label: nullTy(StrTy),
     },
 });
 

@@ -11,6 +11,14 @@ import {
 import { EventFtcApi, EventType, RegionCode, Season, eventTypeFromFtcApi } from "@ftc-scout/common";
 import { Match } from "./Match";
 
+export type EventLivestreamDay = {
+    day: Date;
+    liveStreamURL?: string | null;
+    webcasts?: string[] | null;
+};
+
+type EventLivestreamOverrides = Partial<Record<Season, Record<string, EventLivestreamDay[]>>>;
+
 @Entity()
 export class Event extends BaseEntity {
     @PrimaryColumn("smallint")
@@ -72,6 +80,9 @@ export class Event extends BaseEntity {
 
     @Column({ type: "varchar", nullable: true })
     liveStreamURL!: string | null;
+
+    @Column("json", { nullable: true })
+    livestreamsByDay!: EventLivestreamDay[] | null;
 
     @Column("json")
     webcasts!: string[];
@@ -194,6 +205,141 @@ export class Event extends BaseEntity {
             NE: RegionCode.USNE,
         };
 
+        const EVENT_LIVESTREAM_OVERRIDES: EventLivestreamOverrides = {
+            [Season.Decode]: {
+                FTCCMP1: [
+                    {
+                        day: new Date("2026-04-29"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=llW0_BOPt_E",
+                    },
+                    {
+                        day: new Date("2026-04-30"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=SuBzmIbCyFE",
+                    },
+                    {
+                        day: new Date("2026-05-01"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=zNKWz-nAI7E",
+                    },
+                    {
+                        day: new Date("2026-05-02"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=abjNLBFk1N8",
+                    },
+                    {
+                        day: new Date("2026-05-03"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=6PZDgfPz14Y",
+                    },
+                ],
+                FTCCMP1EDIS: [
+                    {
+                        day: new Date("2026-04-29"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=SEbooZaBoIs",
+                    },
+                    {
+                        day: new Date("2026-04-30"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=v_KlA02le9g",
+                    },
+                    {
+                        day: new Date("2026-05-01"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=ATn3vKK9Cac",
+                    },
+                    {
+                        day: new Date("2026-05-02"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=WQUBVjbh-hM",
+                    },
+                ],
+                FTCCMP1FRAN: [
+                    {
+                        day: new Date("2026-04-29"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=MeaiooVeA70",
+                    },
+                    {
+                        day: new Date("2026-04-30"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=76X4pB5eljY",
+                    },
+                    {
+                        day: new Date("2026-05-01"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=U3-l-scDglY",
+                    },
+                    {
+                        day: new Date("2026-05-02"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=iCMhB5nhEZU",
+                    },
+                ],
+                FTCCMP1GOOD: [
+                    {
+                        day: new Date("2026-04-29"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=ws7CKWmZ2J4",
+                    },
+                    {
+                        day: new Date("2026-04-30"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=ZEzRZXUkgEI",
+                    },
+                    {
+                        day: new Date("2026-05-01"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=nNWYRvkSHvw",
+                    },
+                    {
+                        day: new Date("2026-05-02"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=H920hSVJw7E",
+                    },
+                ],
+                FTCCMP1JACK: [
+                    {
+                        day: new Date("2026-04-29"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=njxbmoGyvQE",
+                    },
+                    {
+                        day: new Date("2026-04-30"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=Yd5q_PokJ0Y",
+                    },
+                    {
+                        day: new Date("2026-05-01"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=C5hddvlYfKQ",
+                    },
+                    {
+                        day: new Date("2026-05-02"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=56Elss5raPo",
+                    },
+                ],
+                FTCCMP1LOVE: [
+                    {
+                        day: new Date("2026-04-29"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=lalSiHiXbxc",
+                    },
+                    {
+                        day: new Date("2026-04-30"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=KbMURIWFcMg",
+                    },
+                    {
+                        day: new Date("2026-05-01"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=imScd0Dv9IA",
+                    },
+                    {
+                        day: new Date("2026-05-02"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=lZNmEpiOSx8",
+                    },
+                ],
+                FTCCMP1ROSS: [
+                    {
+                        day: new Date("2026-04-29"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=WoGngaj3ABk",
+                    },
+                    {
+                        day: new Date("2026-04-30"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=oTLneTQGnsM",
+                    },
+                    {
+                        day: new Date("2026-05-01"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=ps5rsAdW4-Q",
+                    },
+                    {
+                        day: new Date("2026-05-02"),
+                        liveStreamURL: "https://www.youtube.com/watch?v=oG0JzHFcf5A",
+                    },
+                ],
+            },
+        };
+
         return Event.create({
             season,
             code: api.code,
@@ -219,6 +365,7 @@ export class Event extends BaseEntity {
                 api.liveStreamUrl && api.liveStreamUrl.startsWith("https://")
                     ? api.liveStreamUrl.trim()
                     : null,
+            livestreamsByDay: EVENT_LIVESTREAM_OVERRIDES[season]?.[api.code] ?? null,
             webcasts: api.webcasts ? api.webcasts : [],
             timezone: api.timezone === "Asia/Calcutta" ? "Asia/Kolkata" : api.timezone ?? "UTC",
             start: new Date(api.dateStart),
