@@ -14,4 +14,9 @@ fragment BasicEventInfo on Event {
     started
     published
     timezone
+    livestreamsByDay {
+        day
+        liveStreamURL
+        webcasts
+    }
 }

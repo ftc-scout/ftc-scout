@@ -300,6 +300,7 @@
         "website": "https://coloradofirst.org/COFIRST/event/first-tech-challenge-qualifier-southwest-metro/",
         "type": "Qualifier",
         "relatedEvents": [],
+        "livestreamsByDay": [],
         "season": 2022,
         "code": "USCOLIQ",
         "name": "CO Southwest Metro Qualifier",

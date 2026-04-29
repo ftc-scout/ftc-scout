@@ -228,6 +228,7 @@
         "website": null,
         "type": "LeagueMeet",
         "relatedEvents": [],
+        "livestreamsByDay": [],
         "season": 2022,
         "code": "USNJNOM2",
         "name": "NJ 1105-P1-AM   Northern League meet (Saturday)",

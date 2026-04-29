@@ -228,6 +228,7 @@
         "website": null,
         "type": "LeagueMeet",
         "relatedEvents": [],
+        "livestreamsByDay": [],
         "season": 2022,
         "code": "USGADOUGM1",
         "name": "GA Douglasville Meet 1",

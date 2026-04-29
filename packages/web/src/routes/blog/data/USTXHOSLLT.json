@@ -2,6 +2,7 @@
     "event": {
         "__typename": "Event",
         "website": null,
+        "livestreamsByDay": [],
         "type": "LeagueTournament",
         "relatedEvents": [],
         "season": 2021,

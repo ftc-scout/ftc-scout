@@ -223,6 +223,7 @@
         "website": "https://engineering.uiowa.edu/first-tech-challenge-season-events-deadlines",
         "type": "LeagueTournament",
         "relatedEvents": [],
+        "livestreamsByDay": [],
         "season": 2022,
         "code": "USIAMALT",
         "name": "IA Magnetic League Tournament",
