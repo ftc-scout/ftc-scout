@@ -159,16 +159,17 @@
     $: todayDate = new Date();
     $: todayDateOnly = new Date(todayDate.getFullYear(), todayDate.getMonth(), todayDate.getDate());
 
-    $: currentDayLivestream = livestreamsByDay.find((ls) => {
-        const lsDateOnly = getDateOnly(ls.day);
-        return lsDateOnly.getTime() === todayDateOnly.getTime();
-    });
-
     $: sortedLivestreams = [...livestreamsByDay].sort((a, b) => {
         const aDate = getDateOnly(a.day).getTime();
         const bDate = getDateOnly(b.day).getTime();
         return aDate - bDate;
     });
+
+    $: currentDayLivestream =
+        livestreamsByDay.find((ls) => {
+            const lsDateOnly = getDateOnly(ls.day);
+            return lsDateOnly.getTime() === todayDateOnly.getTime();
+        }) ?? sortedLivestreams[0];
 </script>
 
 <Head
