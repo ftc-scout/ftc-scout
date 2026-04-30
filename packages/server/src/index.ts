@@ -1,5 +1,5 @@
+process.setMaxListeners(0);
 import "dotenv/config";
-
 import { DATA_SOURCE } from "./db/data-source";
 import { initDynamicEntities } from "./db/entities/dyn/init";
 import express, { text } from "express";
@@ -24,7 +24,6 @@ import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { responseCachePlugin } from "./graphql/plugins/response-cache-plugin";
 
 async function main() {
-    process.setMaxListeners(0);
     await DATA_SOURCE.initialize();
     initDynamicEntities();
 
