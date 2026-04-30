@@ -165,11 +165,14 @@
         return aDate - bDate;
     });
 
-    $: currentDayLivestream =
-        livestreamsByDay.find((ls) => {
-            const lsDateOnly = getDateOnly(ls.day);
-            return lsDateOnly.getTime() === todayDateOnly.getTime();
-        }) ?? sortedLivestreams[0];
+    $: currentDayLivestream = livestreamsByDay.find((ls) => {
+        const lsDateOnly = getDateOnly(ls.day);
+        return lsDateOnly.getTime() === todayDateOnly.getTime();
+    }) ??
+        sortedLivestreams[0] ?? {
+            day: event.start,
+            liveStreamURL: event?.liveStreamURL ?? null,
+        };
 </script>
 
 <Head
