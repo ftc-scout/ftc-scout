@@ -9,8 +9,8 @@
     export let url: string | null = null;
     export let canonical: string | null = null;
 
-    import { env } from "$env/dynamic/public";
-    const endpoint = `http${IS_DEV ? "" : "s"}://${env.PUBLIC_SERVER_ORIGIN}`;
+    // import { env } from "$env/dynamic/public";
+    // const endpoint = `http${IS_DEV ? "" : "s"}://${env.PUBLIC_SERVER_ORIGIN}`;
 </script>
 
 <svelte:head>
@@ -45,7 +45,7 @@
     <meta property="og:url" content={url ?? $page.url.toString()} />
 
     {#if canonical}
-        <link rel="canonical" href={endpoint + canonical} />
+        <link rel="canonical" href={"https://ftcscout.org" + canonical} />
     {/if}
 
     <slot />
