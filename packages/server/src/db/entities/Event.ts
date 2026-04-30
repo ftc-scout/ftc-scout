@@ -250,11 +250,11 @@ export class Event extends BaseEntity {
                 FTCCMP1FRAN: [
                     {
                         day: new Date("2026-04-29"),
-                        liveStreamURL: "https://www.youtube.com/watch?v=MeaiooVeA70",
+                        liveStreamURL: "https://www.youtube.com/watch?v=76X4pB5eljY",
                     },
                     {
                         day: new Date("2026-04-30"),
-                        liveStreamURL: "https://www.youtube.com/watch?v=76X4pB5eljY",
+                        liveStreamURL: "https://www.youtube.com/watch?v=MeaiooVeA70",
                     },
                     {
                         day: new Date("2026-05-01"),
