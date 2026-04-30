@@ -24,6 +24,7 @@ import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { responseCachePlugin } from "./graphql/plugins/response-cache-plugin";
 
 async function main() {
+    process.setMaxListeners(0);
     await DATA_SOURCE.initialize();
     initDynamicEntities();
 
