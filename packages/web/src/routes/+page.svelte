@@ -13,7 +13,7 @@
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
     import Sponsor from "$lib/components/nav/Sponsor.svelte";
     import Select from "$lib/components/ui/form/Select.svelte";
-    // import AlertBar from "$lib/components/nav/AlertBar.svelte";
+    import AlertBar from "$lib/components/nav/AlertBar.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -32,10 +32,10 @@
 
 <Head title="FTCScout" />
 
-<!-- <AlertBar
-    message="Welcome to the FTC World Championships! We're doing our best to keep the site online, but the championships bring extremely large traffic flows to the website. You can check the website status with the arrow to the right..."
-    link="https://uptime.9021007.xyz/status/ftcscout"
-/> -->
+<AlertBar
+    message="Watch the FTC World Championships live on YouTube!"
+    link="https://www.youtube.com/watch?v=abjNLBFk1N8"
+/>
 
 <WidthProvider>
     <Card vis={false}>

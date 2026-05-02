@@ -12,7 +12,7 @@
     import { serialize, parse } from "cookie";
     import { writable } from "svelte/store";
     import Fa from "svelte-fa";
-    import { faClose, faArrowRight, faWarning } from "@fortawesome/free-solid-svg-icons";
+    import { faClose, faArrowRight, faInfoCircle } from "@fortawesome/free-solid-svg-icons";
     import { ALERT_COOKIE_AGE, ALERT_COOKIE_NAME } from "../../constants";
     import { browser } from "$app/environment";
 
@@ -30,7 +30,7 @@
 </script>
 
 <div class="wrap" class:show={$theme == "show"}>
-    <div><Fa icon={faWarning} /> {message}</div>
+    <div><Fa icon={faInfoCircle} /> {message}</div>
 
     <div>
         {#if link}
@@ -52,7 +52,8 @@
         gap: var(--md-gap);
         padding: var(--md-pad) var(--lg-pad);
 
-        background: var(--alert-bar-color);
+        /* background: var(--alert-bar-color); */
+        background: var(--blue-team-text-color);
         font-size: var(--lg-font-size);
         font-weight: bold;
 
@@ -80,7 +81,8 @@
         display: inline-block;
         cursor: pointer;
         border-radius: var(--pill-border-radius);
-        background: var(--alert-bar-color);
+        /* background: var(--alert-bar-color); */
+        background: var(--blue-team-text-color);
     }
 
     :is(a, button):hover {
