@@ -13,7 +13,7 @@
     import { tippyTheme } from "$lib/components/nav/DarkModeToggle.svelte";
     import Sponsor from "$lib/components/nav/Sponsor.svelte";
     import Select from "$lib/components/ui/form/Select.svelte";
-    import AlertBar from "$lib/components/nav/AlertBar.svelte";
+    // import AlertBar from "$lib/components/nav/AlertBar.svelte";
 
     export let data;
     $: homeStore = data.home;
@@ -32,10 +32,10 @@
 
 <Head title="FTCScout" />
 
-<AlertBar
+<!-- <AlertBar
     message="Watch the FTC World Championships live on YouTube!"
     link="https://www.youtube.com/watch?v=abjNLBFk1N8"
-/>
+/> -->
 
 <WidthProvider>
     <Card vis={false}>
