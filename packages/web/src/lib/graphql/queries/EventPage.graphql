@@ -62,5 +62,36 @@ query EventPage($season: Int!, $code: String!) {
             code
             name
         }
+        leagueRankings {
+            league {
+                season
+                code
+                name
+                remote
+                regionCode
+                parentLeagueCode
+                parentLeagueName
+                location
+            }
+            teams {
+                season
+                leagueCode
+                regionCode
+                teamNumber
+                avgRp
+                team {
+                    number
+                    name
+                    location {
+                        city
+                        state
+                        country
+                    }
+                }
+                stats {
+                    ...FullStats
+                }
+            }
+        }
     }
 }
