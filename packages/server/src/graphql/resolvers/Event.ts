@@ -40,6 +40,8 @@ import { newMatchesKey, pubsub } from "./pubsub";
 import { League } from "../../db/entities/League";
 import { LeagueRanking } from "../../db/entities/dyn/league-ranking";
 import { LeagueRankingGroupGQL } from "./League";
+import { AdvancementScoreGQL } from "./AdvancementScore";
+import { AdvancementScore } from "../../db/entities/AdvancementScore";
 import { TepStatsUnionGQL } from "../dyn/dyn-types-schema";
 import { addTypename } from "../dyn/tep";
 
@@ -256,6 +258,26 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
                 return [{ league: parentLeague, teams: rows }];
             },
         },
+        advancement: {
+            type: list(nn(AdvancementScoreGQL)),
+            resolve: (event) =>
+                AdvancementScore.find({
+                    where: { season: event.season, eventCode: event.code },
+                    order: { rank: "ASC" },
+                }),
+        },
+        advancementInfo: {
+            type: EventAdvancementInfoGQL,
+            resolve: (event) => {
+                return {
+                    advancementSlots: event.advancementSlots,
+                    advancesTo: event.advancesTo,
+                    fcmpReserved: event.fcmpReserved,
+                    season: event.season,
+                    eventCode: event.code,
+                };
+            },
+        },
         previewStats: {
             ...nullTy(wr(list(nn(EventPreviewStatGQL)))),
             resolve: async (event) => {
@@ -326,6 +348,36 @@ export const EventGQL: GraphQLObjectType = new GraphQLObjectType({
             },
         },
     }),
+});
+
+const EventAdvancementInfoGQL = new GraphQLObjectType({
+    name: "EventAdvancementInfo",
+    fields: {
+        advancementSlots: nullTy(IntTy),
+        advancesTo: nullTy(StrTy),
+        fcmpReserved: nullTy(IntTy),
+        advancesToEvent: {
+            type: EventGQL,
+            resolve: async (parent) => {
+                if (!parent.advancesTo) return null;
+                let seasonStr = parent.season;
+                let code = parent.advancesTo;
+                let season = parseInt(seasonStr) as Season;
+                if (isNaN(season)) return null;
+                return Event.findOne({ where: { season, code } });
+            },
+        },
+        advancesFrom: {
+            type: list(nn(EventGQL)),
+            resolve: async (parent) => {
+                let seasonStr = parent.season;
+                let code = parent.eventCode;
+                let season = parseInt(seasonStr) as Season;
+                if (isNaN(season)) return [];
+                return Event.find({ where: { season, advancesTo: code } });
+            },
+        },
+    },
 });
 
 const EventPreviewStatGQL = new GraphQLObjectType({

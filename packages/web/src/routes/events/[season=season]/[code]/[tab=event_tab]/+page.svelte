@@ -21,6 +21,7 @@
         faMedal,
         faTrophy,
         faVideo,
+        faRocket,
     } from "@fortawesome/free-solid-svg-icons";
     import { prettyPrintDateRangeString } from "$lib/printers/dateRange";
     import { prettyPrintURL } from "$lib/printers/url";
@@ -35,6 +36,7 @@
     import FocusedTeam from "$lib/components/stats/FocusedTeam.svelte";
     import Teams from "./Teams.svelte";
     import Rankings from "./Rankings.svelte";
+    import Advancement from "./Advancement.svelte";
     import Awards from "./Awards.svelte";
     import Preview from "./Preview.svelte";
     import { isNonCompetition } from "$lib/util/event-type";
@@ -55,6 +57,7 @@
     $: showTeamsTab = (event?.teams?.length ?? 0) > 0 && rankingTeamsWithStats.length == 0;
     $: insights = event?.matches?.flatMap(getMatchScores) ?? [];
     type LeagueRankingGroup = NonNullable<EventPageQuery["eventByCode"]>["leagueRankings"][number];
+    $: eventHasStarted = event?.start ? Date.now() >= new Date(event.start).getTime() : false;
     $: leagueRankingGroups = (event?.leagueRankings ?? []) as LeagueRankingGroup[];
     $: leagueRankingRows = leagueRankingGroups
         .flatMap((group) => (group?.teams ?? []).filter(notEmpty))
@@ -78,6 +81,23 @@
     $: displayedLeagueRankingRows = showOnlyEventTeams
         ? leagueRankingRowsFiltered
         : leagueRankingRows;
+    $: advancementRows = (event?.advancement ?? []) as any[];
+    $: rankingTeamMap = new Map(rankingTeams.map((t) => [t.teamNumber, t]));
+    $: advancementRowsWithStats = advancementRows.map((row) => {
+        const rankingTeam = rankingTeamMap.get(row.teamNumber);
+        return {
+            ...row,
+            team: rankingTeam?.team ?? row.team,
+            stats: rankingTeam?.stats ?? null,
+        };
+    });
+    $: amountNonNullStats = advancementRowsWithStats.filter(
+        (r) => r.totalPoints != null && r.totalPoints > 0
+    ).length;
+    $: showAdvancementTab =
+        !!advancementRowsWithStats.length &&
+        eventHasStarted &&
+        amountNonNullStats / advancementRowsWithStats.length > 0.01;
     $: leagueRankingSaveIdBase =
         event && leagueRankingGroups.length
             ? `eventPageLeagueTep${season}${event.remote ? "Remote" : "Trad"}League-${
@@ -130,6 +150,21 @@
         !eventHasPassedScheduledDate;
 
     $: errorMessage = `No ${DESCRIPTORS[season].seasonName} event with code ${$page.params.code}`;
+    $: advancesToStripped = event?.advancementInfo
+        ? event.advancementInfo?.advancesToEvent
+            ? event.advancementInfo.advancesToEvent.name
+            : event?.advancementInfo?.advancesTo
+            ? event?.advancementInfo?.advancesTo
+                  .split(" & ")
+                  .filter((s) => !s.toLowerCase().includes("championship"))
+                  .join(" & ")
+            : ""
+        : "";
+    $: advancesToLink = event?.advancementInfo
+        ? event.advancementInfo?.advancesToEvent
+            ? `/events/${event.advancementInfo.advancesToEvent.season}/${event.advancementInfo.advancesToEvent.code}/matches`
+            : null
+        : null;
 
     function gotoTab(tab: string) {
         if (browser) {
@@ -337,6 +372,36 @@
                 <Location {...event.location} />
             </InfoIconRow>
 
+            {#if event.advancementInfo && event.advancementInfo.advancementSlots}
+                <InfoIconRow icon={faRocket}>
+                    {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
+                        {event.advancementInfo.fcmpReserved}
+                        {event.advancementInfo.fcmpReserved === 1
+                            ? "team advances"
+                            : "teams advance"} to FIRST Championship
+                    {/if}
+                    {#if event.advancementInfo.advancesTo}
+                        {@const regionalSlots =
+                            event.advancementInfo.advancementSlots -
+                            (event.advancementInfo.fcmpReserved ?? 0)}
+                        {#if regionalSlots > 0}
+                            {#if event.advancementInfo.fcmpReserved && event.advancementInfo.fcmpReserved > 0}
+                                <br />
+                            {/if}
+                            {regionalSlots}
+                            {regionalSlots === 1 ? "team advances" : "teams advance"} to
+                            {#if advancesToLink}
+                                <a href={advancesToLink} rel="noreferrer" class="norm-link"
+                                    >{advancesToStripped}</a
+                                >
+                            {:else}
+                                {advancesToStripped}
+                            {/if}
+                        {/if}
+                    {/if}
+                </InfoIconRow>
+            {/if}
+
             <DataFromFirst />
         </Card>
 
@@ -350,6 +415,7 @@
                 [faRankingStar, "League", "league-rankings", showLeagueRankingsTab],
                 [faLightbulb, "Insights", "insights", !!insights.length],
                 [faMedal, "Awards", "awards", (event?.awards?.length ?? 0) > 0],
+                [faRocket, "Advancement", "advancement", showAdvancementTab],
                 [faHashtag, `Teams (${event.teams.length})`, "teams", showTeamsTab],
             ]}
             bind:selectedTab
@@ -386,6 +452,18 @@
                     remote={event.remote}
                     eventName={event.name}
                     data={rankingTeams}
+                    {focusedTeam}
+                />
+            </TabContent>
+
+            <TabContent name="advancement">
+                <Advancement
+                    {season}
+                    fcmpReserved={event.advancementInfo?.fcmpReserved ?? 0}
+                    remote={event.remote}
+                    eventName={event.name}
+                    data={advancementRowsWithStats}
+                    eventCode={event.code}
                     {focusedTeam}
                 />
             </TabContent>
