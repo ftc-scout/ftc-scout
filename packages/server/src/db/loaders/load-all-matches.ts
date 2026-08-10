@@ -116,6 +116,16 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 );
             });
 
+            // if all teams are surrogates, or the event has modded rules, then the match is modified rules
+            updatedMatches.forEach((m) => {
+                if (m.teams.every((t) => t.surrogate)) {
+                    m.modifiedRules = true;
+                }
+                if (event.modifiedRules) {
+                    m.modifiedRules = true;
+                }
+            });
+
             publishMatchUpdates(updatedMatches);
 
             console.info(`Loaded ${i + 1}/${events.length}.`);

@@ -97,44 +97,13 @@ async function getWorldRecordMatch(
             "s.season = m.event_season AND s.event_code = m.event_code AND s.match_id = m.id"
         )
         .leftJoin(Event, "e", "e.season = m.event_season AND e.code = m.event_code")
-        .leftJoin(
-            "team_match_participation",
-            "tmp1",
-            `s.season = tmp1.season AND s.event_code = tmp1.event_code AND s.match_id =
-            tmp1.match_id AND s.alliance = tmp1.alliance AND (tmp1.station = 'Solo' OR
-            tmp1.station = 'One')`
-        )
-        .leftJoin(
-            "team_match_participation",
-            "tmp2",
-            `s.season = tmp2.season AND s.event_code = tmp2.event_code AND s.match_id =
-            tmp2.match_id AND s.alliance = tmp2.alliance AND tmp2.station = 'Two'`
-        )
-        .leftJoin(
-            "team_match_participation",
-            "tmp1Opp",
-            `s.season = tmp1Opp.season AND s.event_code = tmp1Opp.event_code AND s.match_id =
-            tmp1Opp.match_id AND s.alliance <> tmp1Opp.alliance AND tmp1Opp.station = 'One'`
-        )
-        .leftJoin(
-            "team_match_participation",
-            "tmp2Opp",
-            `s.season = tmp2Opp.season AND s.event_code = tmp2Opp.event_code AND s.match_id =
-            tmp2Opp.match_id AND s.alliance <> tmp2Opp.alliance AND tmp2Opp.station = 'Two'`
-        )
         .orderBy(orderColumn, "DESC")
         .where("m.has_been_played")
         .andWhere("NOT e.remote")
         .andWhere("e.type <> 'OffSeason'")
         .andWhere("NOT e.modified_rules")
+        .andWhere("NOT m.modified_rules")
         .andWhere('m."event_season" = :season', { season })
-        // Exclude matches where all four teams (both alliances) were surrogates.
-        .andWhere(
-            `NOT (
-                COALESCE(tmp1.surrogate, false) AND COALESCE(tmp2.surrogate, false) AND
-                COALESCE(tmp1Opp.surrogate, false) AND COALESCE(tmp2Opp.surrogate, false)
-            )`
-        )
         .limit(1)
         .getOne();
 

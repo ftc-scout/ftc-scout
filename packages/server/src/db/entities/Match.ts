@@ -16,7 +16,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { Event } from "./Event";
+import { Event, MODIFIED_RULES_EVENTS } from "./Event";
 import { DateTime } from "luxon";
 import { MatchScore } from "./dyn/match-score";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
@@ -57,6 +57,9 @@ export class Match extends BaseEntity {
 
     @Column("smallint")
     series!: number;
+
+    @Column()
+    modifiedRules!: boolean;
 
     get matchNum(): number {
         return this.id % 1000;
@@ -116,6 +119,8 @@ export class Match extends BaseEntity {
                 : null,
             tournamentLevel,
             series,
+            modifiedRules:
+                api.teams.every((t) => t.surrogate) || MODIFIED_RULES_EVENTS.includes(event.code),
         } satisfies DeepPartial<Match>);
     }
 
