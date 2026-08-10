@@ -19,6 +19,12 @@ export type EventLivestreamDay = {
 
 type EventLivestreamOverrides = Partial<Record<Season, Record<string, EventLivestreamDay[]>>>;
 
+export const MODIFIED_RULES_EVENTS = [
+    // cspell:disable
+    "USTXCECCS",
+    // cspell:enable
+];
+
 @Entity()
 export class Event extends BaseEntity {
     @PrimaryColumn("smallint")
@@ -195,12 +201,6 @@ export class Event extends BaseEntity {
             return event_name;
         }
 
-        const MODIFIED_RULES = [
-            // cspell:disable
-            "USTXCECCS",
-            // cspell:enable
-        ];
-
         const MODIFIED_REGION_CODES: Record<string, RegionCode> = {
             NE: RegionCode.USNE,
         };
@@ -370,7 +370,7 @@ export class Event extends BaseEntity {
             timezone: api.timezone === "Asia/Calcutta" ? "Asia/Kolkata" : api.timezone ?? "UTC",
             start: new Date(api.dateStart),
             end: new Date(api.dateEnd),
-            modifiedRules: MODIFIED_RULES.indexOf(api.code) != -1,
+            modifiedRules: MODIFIED_RULES_EVENTS.indexOf(api.code) != -1,
         } satisfies DeepPartial<Event>);
     }
 }
