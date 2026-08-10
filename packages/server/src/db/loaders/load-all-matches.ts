@@ -116,16 +116,6 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 );
             });
 
-            // if all teams are surrogates, or the event has modded rules, then the match is modified rules
-            updatedMatches.forEach((m) => {
-                if (m.teams.every((t) => t.surrogate)) {
-                    m.modifiedRules = true;
-                }
-                if (event.modifiedRules) {
-                    m.modifiedRules = true;
-                }
-            });
-
             publishMatchUpdates(updatedMatches);
 
             console.info(`Loaded ${i + 1}/${events.length}.`);
@@ -166,7 +156,7 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
     if (loadType == LoadType.Full) {
         return DATA_SOURCE.getRepository(Event)
             .createQueryBuilder("e")
-            .select(["e.season", "e.code", "e.remote", "e.timezone"])
+            .select(["e.season", "e.code", "e.remote", "e.timezone", "e.modifiedRules"])
             .distinct(true)
             .leftJoin(Match, "m", "e.season = m.event_season AND e.code = m.event_code")
             .leftJoin(
@@ -182,7 +172,7 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
     } else {
         return DATA_SOURCE.getRepository(Event)
             .createQueryBuilder("e")
-            .select(["e.season", "e.code", "e.remote", "e.timezone"])
+            .select(["e.season", "e.code", "e.remote", "e.timezone", "e.modifiedRules"])
             .distinct(true)
             .where("season = :season", { season })
             .andWhere("start <= (NOW() at time zone timezone)::date")

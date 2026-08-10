@@ -16,7 +16,7 @@ import {
     PrimaryColumn,
     UpdateDateColumn,
 } from "typeorm";
-import { Event, MODIFIED_RULES_EVENTS } from "./Event";
+import { Event } from "./Event";
 import { DateTime } from "luxon";
 import { MatchScore } from "./dyn/match-score";
 import { TeamMatchParticipation } from "./TeamMatchParticipation";
@@ -99,7 +99,6 @@ export class Match extends BaseEntity {
             allMatches
         );
         tournamentLevel = tournamentLevel_;
-
         return Match.create({
             eventSeason: event.season,
             eventCode: event.code,
@@ -119,8 +118,7 @@ export class Match extends BaseEntity {
                 : null,
             tournamentLevel,
             series,
-            modifiedRules:
-                api.teams.every((t) => t.surrogate) || MODIFIED_RULES_EVENTS.includes(event.code),
+            modifiedRules: api.teams.every((t) => t.surrogate) || event.modifiedRules,
         } satisfies DeepPartial<Match>);
     }
 
