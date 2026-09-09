@@ -107,7 +107,8 @@
     on:move_column={(e) => moveColumn(e.detail.oldPos, e.detail.newPos)}
     on:toggle-show-stat={(e) => toggleShowStat(e.detail)}
     on:new-filter={(e) => newFilter(e.detail)}
-    on:reset-stats={() => ($shownStats = defaultStats.map((id) => stats.getStat(id)))}
+    on:reset-stats={() =>
+        ($shownStats = defaultStats.map((id) => stats.getStat(id)).filter((s) => s != null))}
 />
 
 <div>

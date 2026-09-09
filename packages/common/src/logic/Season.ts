@@ -8,6 +8,7 @@ export const Season = {
     CenterStage: 2023,
     IntoTheDeep: 2024,
     Decode: 2025,
+    // BioBuzz: 2026,
 } as const;
 
 export type Season = (typeof Season)[keyof typeof Season];
