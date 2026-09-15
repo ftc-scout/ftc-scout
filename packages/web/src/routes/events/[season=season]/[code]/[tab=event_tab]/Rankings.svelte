@@ -3,29 +3,40 @@
     import { DESCRIPTORS, getTepStatSet, SortDir, type Season } from "@ftc-scout/common";
     import LocalStatTableControls from "$lib/components/stats/LocalStatTableControls.svelte";
 
-    type DataTy = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
+    type EventTeam = NonNullable<EventPageQuery["eventByCode"]>["teams"][number];
+    type LeagueRankingEntry = NonNullable<
+        EventPageQuery["eventByCode"]
+    >["leagueRankings"][number]["teams"][number];
+    type DataTy = EventTeam | LeagueRankingEntry;
 
     export let season: Season;
     export let remote: boolean;
     export let eventName: string;
     export let data: DataTy[];
     export let focusedTeam: number | null;
+    export let saveIdOverride: string | null = null;
+    export let leagueMode: boolean = false;
 
     $: descriptor = DESCRIPTORS[season];
-    $: stats = getTepStatSet(season, remote);
+    $: stats = getTepStatSet(season, remote, leagueMode);
     $: totalPoints = descriptor.pensSubtract || remote ? "totalPoints" : "totalPointsNp";
     $: defaultStats = [
         "eventRank",
         "team",
         "rankingScore",
         "tb1",
+        ...(leagueMode ? ["avgRp"] : []),
         "played",
+        ...(remote ? [] : ["eventRecord"]),
         totalPoints + "Avg",
         ...(remote ? [] : [totalPoints + "Opr"]),
         totalPoints + "Max",
     ];
 
-    $: saveId = `eventPageTep${season}${remote ? "Remote" : "Trad"}`;
+    $: defaultSaveId = `eventPageTep${season}${remote ? "Remote" : "Trad"}${
+        leagueMode ? "League" : ""
+    }`;
+    $: saveId = saveIdOverride ?? defaultSaveId;
 
     $: underscoreEventName = eventName.replace(" ", "_");
     $: filename = `${season}_${underscoreEventName}_Team_Stats`;
