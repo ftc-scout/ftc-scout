@@ -63,11 +63,14 @@
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
         border: 1px solid transparent;
-        border-bottom: 1px solid var(--sep-color);
 
         transform: translate(0, 1px);
 
         cursor: pointer;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
 
     .tab:hover {
@@ -106,7 +109,7 @@
         border-top-left-radius: 0;
     }
 
-    @media (max-width: 650px) {
+    @media (max-width: 825px) {
         .tab:not(.selected) .maybe-hide {
             display: none;
         }
