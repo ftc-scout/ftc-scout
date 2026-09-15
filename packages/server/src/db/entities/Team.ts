@@ -43,6 +43,9 @@ export class Team extends BaseEntity {
     @Column({ type: "varchar", nullable: true })
     website?: string | null;
 
+    @Column({ type: "varchar", nullable: true })
+    regionCode?: string | null;
+
     @CreateDateColumn({ type: "timestamptz" })
     createdAt!: Date;
 
@@ -96,6 +99,7 @@ export class Team extends BaseEntity {
             city: fixLocations(api.city ?? ""),
             rookieYear: api.rookieYear,
             website: api.website,
+            regionCode: (api as any).homeRegion ?? null,
         } satisfies DeepPartial<Team>);
     }
 }

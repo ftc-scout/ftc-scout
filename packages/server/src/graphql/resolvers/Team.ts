@@ -29,7 +29,6 @@ import { TeamEventParticipation } from "../../db/entities/dyn/team-event-partici
 import { TeamEventParticipationGQL } from "./TeamEventParticipation";
 import { RegionOptionGQL } from "./enums";
 import { DATA_SOURCE } from "../../db/data-source";
-import { Event } from "../../db/entities/Event";
 
 const QuickStatGQL = new GraphQLObjectType({
     name: "QuickStat",
@@ -277,11 +276,9 @@ export const TeamQueries: Record<string, GraphQLFieldConfig<any, any>> = {
             let q = DATA_SOURCE.getRepository(Team).createQueryBuilder("t").distinctOn(["number"]);
 
             if (region && region != RegionOption.All) {
-                q.leftJoin(TeamMatchParticipation, "m", "t.number = m.team_number")
-                    .leftJoin(Event, "e", "e.season = m.season AND e.code = m.event_code")
-                    .andWhere("e.region_code IN (:...regions)", {
-                        regions: getRegionCodes(region),
-                    });
+                q.andWhere("t.region_code IN (:...regions)", {
+                    regions: getRegionCodes(region),
+                });
             }
 
             if (limit && (!searchText || searchText.trim() == "")) {
