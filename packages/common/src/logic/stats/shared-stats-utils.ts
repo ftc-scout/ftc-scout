@@ -162,6 +162,7 @@ export function calculateGroupStats<T extends Tep, M extends Match>(
         for (let t of m.teams) {
             if (t.surrogate) continue;
             if (!shouldInclude(t.teamNumber, m)) continue;
+            if (!dataPoints[t.teamNumber]) continue;
             let s = allianceScores[t.alliance];
             if (!s) continue;
 
@@ -230,6 +231,7 @@ export function calculateOprs<T extends Tep, M extends Match>(
     for (let [name, data] of Object.entries(dataPoints)) {
         let oprs = calculateOpr(data);
         for (let [team, opr] of Object.entries(oprs)) {
+            if (!teps[+team]) continue;
             teps[+team].opr[name] = opr;
         }
     }
@@ -391,6 +393,7 @@ export function calcLosingScoreTb<T extends Tep, M extends Match>(
         for (let t of m.teams) {
             if (t.surrogate) continue;
             if (!shouldInclude(t.teamNumber, m)) continue;
+            if (!scoresByTeam[t.teamNumber]) continue;
 
             scoresByTeam[t.teamNumber].push(t.dq ? 0 : lowestScore);
         }

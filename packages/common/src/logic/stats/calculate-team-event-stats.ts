@@ -92,12 +92,14 @@ function calculateRanks(
         stats.rp = calculateRp(stats, descriptor);
     }
 
+    let losingScoreTotals =
+        descriptor.rankings.tb === "LosingScore" ? calcLosingScoreTb(teps, matches) : null;
+
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
 
-        if (descriptor.rankings.tb === "LosingScore") {
-            let result = calcLosingScoreTb(teps, matches);
-            let totals = result[stats.teamNumber];
+        if (losingScoreTotals) {
+            let totals = losingScoreTotals[stats.teamNumber];
             let sum = totals?.sum ?? 0;
             let denom = totals?.denom ?? 0;
             stats.tb1 = denom == 0 ? 0 : sum / denom;
