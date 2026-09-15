@@ -1,5 +1,6 @@
 import { Season } from "../Season";
 import { DESCRIPTORS } from "../descriptors/descriptor-list";
+import { Descriptor } from "../descriptors/descriptor";
 import {
     type Match,
     type Tep,
@@ -81,7 +82,11 @@ function calculateRemoteMatchesPlayed(matches: FrontendMatch[], teps: Record<num
     }
 }
 
-function calculateRanks(teps: Record<number, Tep>, matches: FrontendMatch[], descriptor: any) {
+function calculateRanks(
+    teps: Record<number, Tep>,
+    matches: FrontendMatch[],
+    descriptor: Descriptor
+) {
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
         stats.rp = calculateRp(stats, descriptor);

@@ -194,7 +194,7 @@ export function calculateOprs<T extends Tep, M extends Match>(
 ) {
     if (isRemote || forceAverage) {
         for (let [team, data] of Object.entries(teps)) {
-            teps[+team].opr = data.avg;
+            teps[+team].opr = { ...data.avg };
         }
         return;
     }
@@ -265,6 +265,8 @@ export function calculateRp<T extends Tep>(
                     (stats.tot.pollinator2Rp ?? 0)) /
                 matchesUsed
             );
+        default:
+            return 0;
     }
 }
 
@@ -318,6 +320,8 @@ export function computeRankingPoints(
                 (allianceScore.pollinator2Rp ? 1 : 0)
             );
         }
+        default:
+            return 0;
     }
 }
 
