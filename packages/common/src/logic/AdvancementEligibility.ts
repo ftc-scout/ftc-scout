@@ -1,9 +1,9 @@
 export enum AdvancementEligibility {
-    Eligible = "ELIGIBLE",
-    AlreadyAdvanced = "ALREADY_ADVANCED",
-    WrongRegion = "WRONG_REGION",
-    TooManyEvents = "TOO_MANY_EVENTS",
-    MultipleReasons = "MULTIPLE_REASONS",
+    Eligible = "Eligible",
+    AlreadyAdvanced = "AlreadyAdvanced",
+    WrongRegion = "WrongRegion",
+    TooManyEvents = "TooManyEvents",
+    MultipleReasons = "MultipleReasons",
 }
 
 export function getAdvancementEligibility(
