@@ -17,6 +17,8 @@ const CACHE_CONFIG: Record<string, CacheControlHint> = {
     eventssearch: { maxAge: 300, scope: "PUBLIC" },
     activeteamscount: { maxAge: 600, scope: "PUBLIC" }, // 10 minutes
     teamsregionsearch: { maxAge: 300, scope: "PUBLIC" },
+    combinedsearch: { maxAge: 300, scope: "PUBLIC" },
+    teamssearch: { maxAge: 300, scope: "PUBLIC" },
 };
 
 function generateCacheKey(

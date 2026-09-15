@@ -10,9 +10,9 @@ import {
     SortDir,
     Station,
     TournamentLevel,
+    AwardType,
     makeGQLEnum,
 } from "@ftc-scout/common";
-import { AwardType } from "../../db/entities/Award";
 
 export const AllianceGQL = makeGQLEnum(Alliance, "Alliance");
 export const StationGQL = makeGQLEnum(Station, "Station");
