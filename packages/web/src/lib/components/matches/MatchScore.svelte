@@ -114,7 +114,7 @@
             <div class="right" class:winner={winner == Alliance.Blue} class:tie={winner == "Tie"}>
                 {scoreValue(match.scores.blue)}
 
-                {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
+                {#if hasRpDots}
                     <div class="dots blue">
                         {#each new Array(rps[1] + 3 * +(winner == Alliance.Blue) + +(winner == "Tie")) as _, i}
                             <div class="dot" style="left: calc({i} * var(--dot-stride))" />
