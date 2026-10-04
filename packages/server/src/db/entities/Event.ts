@@ -107,6 +107,12 @@ export class Event extends BaseEntity {
 
     static fromApi(api: EventFtcApi, season: Season): Event | null {
         let type = eventTypeFromFtcApi(api.typeName ?? "");
+
+        // In 2026 all scrimmages have been changed to NonAdvancement with retroactive effect, reverse that.
+        if (type === EventType.NonAdvancement && season <= Season.Decode) {
+            type = EventType.Scrimmage;
+        }
+
         if (
             api.code == null ||
             type == null ||

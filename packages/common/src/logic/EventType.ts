@@ -15,6 +15,8 @@ export const EventType = {
     VolunteerSignup: "VolunteerSignup",
     PracticeDay: "PracticeDay",
     Premier: "Premier",
+    NonAdvancement: "NonAdvancement",
+    Pilot: "Pilot",
 } as const;
 
 export function eventTypeFromFtcApi(str: string): EventType | null {
@@ -57,7 +59,9 @@ export const COMPETITION_EVENT_TYPES = [
     EventType.FIRSTChampionship,
     EventType.SuperQualifier,
     EventType.OffSeason,
-    EventType.Premier
+    EventType.Premier,
+    EventType.NonAdvancement,
+    EventType.Pilot,
 ];
 
 export const OFFICIAL_EVENT_TYPES = [
@@ -67,7 +71,8 @@ export const OFFICIAL_EVENT_TYPES = [
     EventType.Championship,
     EventType.FIRSTChampionship,
     EventType.SuperQualifier,
-    EventType.Premier
+    EventType.Premier,
+    EventType.Pilot,
 ];
 
 export const NON_COMPETITION_EVENT_TYPES = [

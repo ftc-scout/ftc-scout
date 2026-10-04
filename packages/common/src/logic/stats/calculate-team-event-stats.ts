@@ -281,6 +281,17 @@ function calculateRanks(
                               stats.tot.patternRp) /
                           stats.qualMatchesPlayed;
                 break;
+            case "BioBuzzRP":
+                stats.rp =
+                    stats.qualMatchesPlayed == 0
+                        ? 0
+                        : (3 * stats.wins +
+                              stats.ties +
+                              stats.tot.swarmRp +
+                              stats.tot.pollinator1Rp +
+                              stats.tot.pollinator2Rp) /
+                          stats.qualMatchesPlayed;
+                break;
         }
     }
 
@@ -306,6 +317,10 @@ function calculateRanks(
             case "AvgNpBase":
                 stats.tb1 = stats.avg.totalPointsNp;
                 stats.tb2 = stats.avg.dcBasePoints;
+                break;
+            case "AvgNpTips":
+                stats.tb1 = stats.avg.totalPointsNp;
+                stats.tb2 = stats.avg.tips;
                 break;
         }
     }

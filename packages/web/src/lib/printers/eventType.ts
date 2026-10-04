@@ -31,6 +31,12 @@ export function prettyPrintEventTypeShort(ty: EventType): string {
             return "VS";
         case "PracticeDay":
             return "PD";
+        case "Premier":
+            return "PR";
+        case "NonAdvancement":
+            return "NA";
+        case "Pilot":
+            return "PL";
         default:
             return "";
     }
@@ -68,6 +74,12 @@ export function prettyPrintEventTypeLong(ty: EventType): string {
             return "Volunteer Signup";
         case "PracticeDay":
             return "Practice Day";
+        case "Premier":
+            return "Premier Event";
+        case "NonAdvancement":
+            return "Non-Advancement Event";
+        case "Pilot":
+            return "Pilot Event";
         default:
             return "";
     }
