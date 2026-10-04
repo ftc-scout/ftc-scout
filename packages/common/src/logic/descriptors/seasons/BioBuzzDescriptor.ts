@@ -349,10 +349,16 @@ export const Descriptor2026 = new Descriptor({
             })
     )
     .addColumn(
-        new DescriptorColumn({ name: "tips" }).addMatchScore({
-            fromSelf: (self) => self.autoHiveTips + self.dcHiveTips,
-            dataTy: Int16DTy,
-        })
+        new DescriptorColumn({ name: "tips" })
+            .addMatchScore({
+                fromSelf: (self) => self.autoHiveTips + self.dcHiveTips,
+                dataTy: Int16DTy,
+            })
+            // (tb2 = avg tips)
+            .addTep({
+                columnPrefix: "Tips",
+                fullName: "Hive Tips",
+            })
     )
     .addColumn(
         new DescriptorColumn({ name: "swarmRp", tradOnly: true })
