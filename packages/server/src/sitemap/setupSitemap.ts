@@ -2,9 +2,10 @@ import type { Express, Response, Request } from "express";
 import { Team } from "../db/entities/Team";
 import { Event } from "../db/entities/Event";
 import { ALL_SEASONS } from "@ftc-scout/common";
+import { asyncHandler } from "../rest/async-handler";
 
 export function setupSiteMap(app: Express) {
-    app.get("/sitemap.xml", sitemap);
+    app.get("/sitemap.xml", asyncHandler(sitemap));
 }
 
 async function sitemap(_req: Request, res: Response) {

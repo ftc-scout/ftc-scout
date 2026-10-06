@@ -1,4 +1,15 @@
 process.setMaxListeners(0);
+
+// Backup if all other error catches fail, prevent server from crashing
+process.on("unhandledRejection", (reason) => {
+    console.error("!!! UNHANDLED PROMISE REJECTION !!!");
+    console.error(reason);
+});
+process.on("uncaughtException", (err) => {
+    console.error("!!! UNCAUGHT EXCEPTION !!!");
+    console.error(err);
+});
+
 import "dotenv/config";
 import { DATA_SOURCE } from "./db/data-source";
 import { initDynamicEntities } from "./db/entities/dyn/init";
@@ -22,6 +33,7 @@ import { ApolloServerPluginDrainHttpServer } from "@apollo/server/plugin/drainHt
 import { setupSiteMap } from "./sitemap/setupSitemap";
 import { InMemoryLRUCache } from "@apollo/utils.keyvaluecache";
 import { responseCachePlugin } from "./graphql/plugins/response-cache-plugin";
+import { errorHandler } from "./rest/error-handler";
 
 async function main() {
     await DATA_SOURCE.initialize();
@@ -92,14 +104,26 @@ async function main() {
 
     setupBannerRoutes(app);
 
+    app.use(errorHandler);
+
     httpServer.listen(SERVER_PORT, () => {
         console.info(`Server started and listening on port ${SERVER_PORT}.`);
     });
 
     if (SYNC_API) {
-        await fetchPriorSeasons();
-        await watchApi();
+        fetchPriorSeasons()
+            .then(async () => {
+                await watchApi();
+            })
+            .catch((e) => {
+                console.error("!!! ERROR DURING INITIAL DATA SYNC - watchApi is not started !!!");
+                console.error(e);
+            });
     }
 }
 
-main();
+main().catch((e) => {
+    console.error("!!! FATAL ERROR DURING STARTUP !!!");
+    console.error(e);
+    process.exit(1);
+});
