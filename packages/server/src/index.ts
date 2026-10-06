@@ -1,4 +1,15 @@
 process.setMaxListeners(0);
+
+// Backup if all other error catches fail, prevent server from crashing
+process.on("unhandledRejection", (reason) => {
+    console.error("!!! UNHANDLED PROMISE REJECTION !!!");
+    console.error(reason);
+});
+process.on("uncaughtException", (err) => {
+    console.error("!!! UNCAUGHT EXCEPTION !!!");
+    console.error(err);
+});
+
 import "dotenv/config";
 import { DATA_SOURCE } from "./db/data-source";
 import { initDynamicEntities } from "./db/entities/dyn/init";
