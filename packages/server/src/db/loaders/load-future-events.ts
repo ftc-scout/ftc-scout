@@ -3,6 +3,7 @@ import { Event } from "../entities/Event";
 import { MoreThan } from "typeorm";
 import { getTeams } from "../../ftc-api/get-teams";
 import { DATA_SOURCE } from "../data-source";
+import { removeStaleEventTeps } from "./remove-stale-teps";
 
 export async function loadFutureEvents(season: Season) {
     console.info(`Loading future events for season ${season}.`);
@@ -15,8 +16,11 @@ export async function loadFutureEvents(season: Season) {
     console.info(`${events.length} future events to load.`);
 
     for (let { code, remote } of events) {
-        let teamNumbers = (await getTeams(season, code)).map((t) => t.teamNumber);
-        let dbTeps = calculateTeamEventStats(season, code, remote, [], teamNumbers);
+        let apiTeamNumbers = (await getTeams(season, code)).map((t) => t.teamNumber);
+
+        await removeStaleEventTeps(DATA_SOURCE.manager, season, code, new Set(apiTeamNumbers));
+
+        let dbTeps = calculateTeamEventStats(season, code, remote, [], apiTeamNumbers);
         await DATA_SOURCE.createQueryBuilder()
             .insert()
             .into(`tep_${season}`)
