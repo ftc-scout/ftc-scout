@@ -32,6 +32,7 @@ export const MatchGQL: GraphQLObjectType = new GraphQLObjectType({
         description: StrTy,
         createdAt: DateTimeTy,
         updatedAt: DateTimeTy,
+        modifiedRules: BoolTy,
 
         // Must use aware loader
         scores: {

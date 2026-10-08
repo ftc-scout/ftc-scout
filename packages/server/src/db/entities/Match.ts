@@ -58,6 +58,9 @@ export class Match extends BaseEntity {
     @Column("smallint")
     series!: number;
 
+    @Column()
+    modifiedRules!: boolean;
+
     get matchNum(): number {
         return this.id % 1000;
     }
@@ -96,7 +99,6 @@ export class Match extends BaseEntity {
             allMatches
         );
         tournamentLevel = tournamentLevel_;
-
         return Match.create({
             eventSeason: event.season,
             eventCode: event.code,
@@ -116,6 +118,7 @@ export class Match extends BaseEntity {
                 : null,
             tournamentLevel,
             series,
+            modifiedRules: api.teams.every((t) => t.surrogate) || event.modifiedRules,
         } satisfies DeepPartial<Match>);
     }
 

@@ -102,6 +102,7 @@ async function getWorldRecordMatch(
         .andWhere("NOT e.remote")
         .andWhere("e.type <> 'OffSeason'")
         .andWhere("NOT e.modified_rules")
+        .andWhere("NOT m.modified_rules")
         .andWhere('m."event_season" = :season', { season })
         .limit(1)
         .getOne();
