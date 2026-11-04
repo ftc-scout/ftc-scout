@@ -24,11 +24,10 @@
 </script>
 
 <script lang="ts">
-    import { Alliance, Season } from "@ftc-scout/common";
+    import { Alliance, DESCRIPTORS, Season } from "@ftc-scout/common";
     import {
         TournamentLevel,
         type FullMatchFragment,
-        type FullMatchScore2025AllianceFragment,
     } from "../../graphql/generated/graphql-operations";
     import { prettyPrintTimeString } from "../../printers/time";
     import { createTippy } from "svelte-tippy";
@@ -45,19 +44,28 @@
 
     $: winner = computeWinner(match.scores);
 
-    function calculateRP(s: FullMatchFragment["scores"]) {
-        if (s?.season == Season.Decode) {
-            let red = (s as any).red as FullMatchScore2025AllianceFragment;
-            let blue = (s as any).blue as FullMatchScore2025AllianceFragment;
-            return [
-                +red.goalRp + +red.patternRp + +red.movementRp,
-                +blue.goalRp + +blue.patternRp + +blue.movementRp,
-            ];
-        } else {
-            return [0, 0];
+    function calculateRP(s: FullMatchFragment["scores"]): [number, number] {
+        if (s == undefined || !("red" in s)) return [0, 0];
+
+        let rankingPoints = DESCRIPTORS[s.season as Season]?.rankingPoints;
+        if (!rankingPoints || rankingPoints.length == 0) return [0, 0];
+
+        function sumRp(allianceScore: any): number {
+            return rankingPoints!.reduce(
+                (acc, rp) => acc + (rp.id in allianceScore ? +allianceScore[rp.id] : 0),
+                0
+            );
         }
+
+        return [sumRp(s.red), sumRp(s.blue)];
     }
     $: rps = calculateRP(match.scores);
+
+    $: hasRpDots =
+        match.scores != undefined &&
+        "red" in match.scores &&
+        !!DESCRIPTORS[match.season as Season]?.rankingPoints?.length &&
+        match.tournamentLevel == TournamentLevel.Quals;
 
     const tippy = createTippy({ placement: "left", delay: [750, 0], touch: false });
     $: tip = matchTimeTip(match, timeZone, $tippyTheme);
@@ -92,8 +100,7 @@
             {prettyPrintTimeString(match.scheduledStartTime, timeZone)}
         {:else if "red" in match.scores}
             <div class="left" class:winner={winner == Alliance.Red} class:tie={winner == "Tie"}>
-                <!-- // Help: Season Specific -->
-                {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
+                {#if hasRpDots}
                     <div class="dots red">
                         {#each new Array(rps[0] + 3 * +(winner == Alliance.Red) + +(winner == "Tie")) as _, i}
                             <div class="dot" style="right: calc({i} * var(--dot-stride))" />
@@ -107,7 +114,7 @@
             <div class="right" class:winner={winner == Alliance.Blue} class:tie={winner == "Tie"}>
                 {scoreValue(match.scores.blue)}
 
-                {#if match.season == Season.Decode && match.tournamentLevel == TournamentLevel.Quals}
+                {#if hasRpDots}
                     <div class="dots blue">
                         {#each new Array(rps[1] + 3 * +(winner == Alliance.Blue) + +(winner == "Tie")) as _, i}
                             <div class="dot" style="left: calc({i} * var(--dot-stride))" />

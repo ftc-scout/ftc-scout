@@ -127,8 +127,10 @@
                         event={wrWithPens.event}
                         showHeartLegend={false}
                     />
-                {:else}
+                {:else if !$homeStore}
                     <SkeletonRow header card={false} rows={2} />
+                {:else}
+                    <p class="no-events">No world record yet for this season.</p>
                 {/if}
             </div>
         </div>

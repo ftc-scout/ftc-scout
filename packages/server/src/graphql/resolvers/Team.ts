@@ -98,6 +98,8 @@ export async function getQuickStats(number: number, season: Season, region: Regi
         egColumn = "opr_dc_park_points";
     } else if (season == Season.Decode) {
         egColumn = "opr_dc_base_points";
+    } else if (season == Season.BioBuzz) {
+        egColumn = "opr_dc_park_points";
     }
     max = max.addSelect(`max(${egColumn})`, "eg");
 

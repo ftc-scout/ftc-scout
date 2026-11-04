@@ -258,6 +258,15 @@ export function calculateRp<T extends Tep>(
                     (stats.tot.patternRp ?? 0)) /
                 matchesUsed
             );
+        case "BioBuzzRP":
+            return (
+                (3 * stats.wins +
+                    stats.ties +
+                    (stats.tot.swarmRp ?? 0) +
+                    (stats.tot.pollinator1Rp ?? 0) +
+                    (stats.tot.pollinator2Rp ?? 0)) /
+                matchesUsed
+            );
         default:
             return 0;
     }
@@ -271,6 +280,9 @@ export function computeRankingPoints(
         movementRp?: number | boolean | null;
         goalRp?: number | boolean | null;
         patternRp?: number | boolean | null;
+        swarmRp?: number | boolean | null;
+        pollinator1Rp?: number | boolean | null;
+        pollinator2Rp?: number | boolean | null;
     },
     winningAlliance: Alliance | null
 ): number {
@@ -296,6 +308,20 @@ export function computeRankingPoints(
                 (allianceScore.patternRp ? 1 : 0)
             );
         }
+        case "BioBuzzRP": {
+            let base = 0;
+            if (winningAlliance == participantAlliance) {
+                base = 3;
+            } else if (winningAlliance == null) {
+                base = 1;
+            }
+            return (
+                base +
+                (allianceScore.swarmRp ? 1 : 0) +
+                (allianceScore.pollinator1Rp ? 1 : 0) +
+                (allianceScore.pollinator2Rp ? 1 : 0)
+            );
+        }
         default:
             return 0;
     }
@@ -310,6 +336,7 @@ export function calculateTiebreakersFromScores(
         ascentPoints?: number | null;
         totalPointsNp?: number | null;
         dcBasePoints?: number | null;
+        tips?: number | null;
     }
 ): { tb1: number; tb2: number } {
     switch (descriptor.rankings.tb) {
@@ -328,6 +355,11 @@ export function calculateTiebreakersFromScores(
             return {
                 tb1: scoreData.totalPointsNp ?? 0,
                 tb2: scoreData.dcBasePoints ?? 0,
+            };
+        case "AvgNpTips":
+            return {
+                tb1: scoreData.totalPointsNp ?? 0,
+                tb2: scoreData.tips ?? 0,
             };
         default:
             return { tb1: 0, tb2: 0 };
