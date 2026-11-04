@@ -21,6 +21,8 @@ import { Event } from "../entities/Event";
 import { Match } from "../entities/Match";
 import { LeagueRankingSchemas } from "../entities/dyn/league-ranking";
 import { FindOptionsWhere, In, IsNull, Not } from "typeorm";
+import { exit } from "process";
+import { IS_DEV } from "../../constants";
 
 /*This seems to be a mistake in the ftc-events logic, where league meets
  * not in the league were/are being counted towards league rankings, even though they shouldn't be.
@@ -39,10 +41,55 @@ type MatchContribution = {
     tb2: number;
 };
 
-type LeagueIdentifier = {
+export type LeagueIdentifier = {
     code: string;
     regionCode: string | null;
 };
+
+/**
+ * Finds the leagues whose rankings can change when these teams play at an event of the given
+ * league. Rankings count every league meet in the region, so besides the event's own league that's
+ * every league one of the teams is a member of (parent leagues list the members of their children).
+ */
+export async function leaguesAffectedByEvent(
+    season: Season,
+    leagueCode: string,
+    regionCode: string | null,
+    teamNumbers: number[]
+): Promise<LeagueIdentifier[]> {
+    let leagues: LeagueIdentifier[] = [{ code: leagueCode, regionCode }];
+    if (regionCode != null && teamNumbers.length) {
+        let memberships = await LeagueTeam.find({
+            where: { season, regionCode, teamNumber: In(teamNumbers) },
+            select: ["leagueCode", "regionCode"],
+        });
+        leagues.push(...memberships.map((m) => ({ code: m.leagueCode, regionCode: m.regionCode })));
+    }
+    return dedupeLeagues(leagues);
+}
+
+/**
+ * Recomputes the rankings of each league. Failures are logged instead of thrown so one league can't
+ * stop the others, or the loader that changed them, from finishing.
+ */
+export async function recomputeLeagues(season: Season, leagues: LeagueIdentifier[]) {
+    leagues = dedupeLeagues(leagues);
+    if (!leagues.length) return;
+
+    console.info(`Recomputing rankings for ${leagues.length} leagues.`);
+    for (let { code, regionCode } of leagues) {
+        try {
+            await recomputeLeagueRankings(season, code, regionCode);
+        } catch (e) {
+            console.error(`!!! ERROR recomputing league rankings for ${code} (${regionCode}) !!!`);
+            console.error(e);
+
+            if (IS_DEV) {
+                exit(1);
+            }
+        }
+    }
+}
 
 export async function recomputeLeagueRankings(
     season: Season,

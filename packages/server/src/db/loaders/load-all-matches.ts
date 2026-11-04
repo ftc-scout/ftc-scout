@@ -22,7 +22,11 @@ import {
     TeamEventParticipation,
     TeamEventParticipationSchemas as TepSchemas,
 } from "../entities/dyn/team-event-participation";
-import { recomputeLeagueRankings } from "./recompute-league-rankings";
+import {
+    type LeagueIdentifier,
+    leaguesAffectedByEvent,
+    recomputeLeagues,
+} from "./recompute-league-rankings";
 import { exit } from "process";
 import { IS_DEV } from "../../constants";
 import { newMatchesKey, pubsub } from "../../graphql/resolvers/pubsub";
@@ -44,20 +48,11 @@ function isIgnored(season: Season, eCode: string, m: MatchFtcApi): boolean {
     );
 }
 
-type LeagueKey = {
-    leagueCode: string;
-    regionCode: string | null;
-};
-
-function toLeagueKey(code: string, regionCode: string | null): string {
-    return `${code}::${regionCode ?? ""}`;
-}
-
 export async function loadAllMatches(season: Season, loadType: LoadType) {
     console.info(`Loading matches for season ${season}. (${loadType})`);
 
     let events = await eventsToFetch(season, loadType);
-    let leaguesToRecompute = new Map<string, LeagueKey>();
+    let leaguesToRecompute: LeagueIdentifier[] = [];
 
     console.info(`Got ${events.length} events to fetch.`);
 
@@ -129,10 +124,15 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
 
             publishMatchUpdates(updatedMatches);
             if (event.leagueCode && updatedMatches.length > 0) {
-                leaguesToRecompute.set(toLeagueKey(event.leagueCode, event.regionCode ?? null), {
-                    leagueCode: event.leagueCode,
-                    regionCode: event.regionCode ?? null,
-                });
+                let teamNumbers = updatedMatches.flatMap((m) => m.teams.map((t) => t.teamNumber));
+                leaguesToRecompute.push(
+                    ...(await leaguesAffectedByEvent(
+                        season,
+                        event.leagueCode,
+                        event.regionCode,
+                        teamNumbers
+                    ))
+                );
             }
 
             console.info(`Loaded ${i + 1}/${events.length}.`);
@@ -146,10 +146,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
         }
     }
 
-    console.info("Leagues to recompute:", leaguesToRecompute.size);
-    for (let { leagueCode, regionCode } of leaguesToRecompute.values()) {
-        await recomputeLeagueRankings(season, leagueCode, regionCode);
-    }
+    await recomputeLeagues(season, leaguesToRecompute);
 
     await DataHasBeenLoaded.create({
         season,
