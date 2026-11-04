@@ -11,6 +11,7 @@ import {
     calculateOprs,
     calculateRp,
     calculateTiebreakers,
+    sumRankingPoints,
     calcLosingScoreTb,
     determineWinner,
     hasAllianceScores,
@@ -170,11 +171,12 @@ function calculateRanks(
         recordRankSum(stats, "tb2");
     };
 
+    let rpSums = sumRankingPoints(matches, teps, descriptor, include);
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
 
         let matchesUsed = (stats.qualMatchesPlayed ?? 0) + (stats.emptyMatchesPlayed ?? 0);
-        stats.rp = calculateRp(stats, descriptor, matchesUsed);
+        stats.rp = calculateRp(rpSums[stats.teamNumber] ?? 0, descriptor, matchesUsed);
         recordRankSum(stats, "rp");
     }
 

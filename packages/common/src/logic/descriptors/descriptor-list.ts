@@ -5,12 +5,14 @@ import { Descriptor2022 } from "./seasons/PowerPlayDescriptor";
 import { Descriptor2023 } from "./seasons/CenterStageDescriptor";
 import { Descriptor2024 } from "./seasons/IntoTheDeepDescriptor";
 import { Descriptor2025 } from "./seasons/DecodeDescriptor";
+import { Descriptor2026 } from "./seasons/BioBuzzDescriptor";
 import { ALL_SEASONS, Season } from "../Season";
 import { Descriptor } from "./descriptor";
 
 // HELP: Season Specific
 
 export const DESCRIPTORS: Record<Season, Descriptor> = {
+    [Season.BioBuzz]: Descriptor2026,
     [Season.Decode]: Descriptor2025,
     [Season.IntoTheDeep]: Descriptor2024,
     [Season.CenterStage]: Descriptor2023,

@@ -11,6 +11,7 @@ import {
     calculateOprs,
     calculateRp,
     calculateTiebreakers,
+    sumRankingPoints,
     calcLosingScoreTb,
     determineWinner,
     hasAllianceScores,
@@ -25,7 +26,7 @@ export function calculateTeamEventStats(
     matches: FrontendMatch[],
     teams: number[]
 ): Tep[] {
-    matches = filterQualsMatches(matches);
+    matches = filterQualsMatches(matches, isRemote);
 
     let descriptor = DESCRIPTORS[season];
     let emptyGroup = createEmptyGroup(descriptor);
@@ -56,11 +57,6 @@ function calculateRecords(matches: FrontendMatch[], teps: Record<number, Tep>) {
             let r = teps[t.teamNumber];
             r.qualMatchesPlayed++;
             r.hasStats = true;
-            if (t.dq) {
-                r.dqs++;
-                r.losses++;
-                continue;
-            }
             if (t.alliance == winningAlliance) {
                 r.wins++;
             } else if (winningAlliance == null) {
@@ -68,6 +64,7 @@ function calculateRecords(matches: FrontendMatch[], teps: Record<number, Tep>) {
             } else {
                 r.losses++;
             }
+            if (t.dq) r.dqs++;
         }
     }
 }
@@ -87,9 +84,10 @@ function calculateRanks(
     matches: FrontendMatch[],
     descriptor: Descriptor
 ) {
+    let rpSums = sumRankingPoints(matches, teps, descriptor);
     for (let stats of Object.values(teps)) {
         if (!stats.hasStats) continue;
-        stats.rp = calculateRp(stats, descriptor);
+        stats.rp = calculateRp(rpSums[stats.teamNumber] ?? 0, descriptor, stats.qualMatchesPlayed);
     }
 
     let losingScoreTotals =

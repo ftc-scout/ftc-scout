@@ -8,11 +8,12 @@ export const Season = {
     CenterStage: 2023,
     IntoTheDeep: 2024,
     Decode: 2025,
+    BioBuzz: 2026,
 } as const;
 
 export type Season = (typeof Season)[keyof typeof Season];
 
-export const CURRENT_SEASON = Season.Decode;
+export const CURRENT_SEASON = Season.BioBuzz;
 // Preserve the order oldest to newest
 export const PAST_SEASONS = [
     Season.Skystone,
@@ -21,5 +22,6 @@ export const PAST_SEASONS = [
     Season.PowerPlay,
     Season.CenterStage,
     Season.IntoTheDeep,
+    Season.Decode,
 ] as const;
 export const ALL_SEASONS = [...PAST_SEASONS, CURRENT_SEASON] as const;
