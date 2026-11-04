@@ -88,11 +88,6 @@ function calculateRecords(
 
             r.qualMatchesPlayed++;
             r.hasStats = true;
-            if (t.dq) {
-                r.dqs++;
-                r.losses++;
-                continue;
-            }
             if (t.alliance == winningAlliance) {
                 r.wins++;
             } else if (winningAlliance == null) {
@@ -100,6 +95,7 @@ function calculateRecords(
             } else {
                 r.losses++;
             }
+            if (t.dq) r.dqs++;
         }
     }
 
