@@ -237,39 +237,41 @@ export function calculateOprs<T extends Tep, M extends Match>(
     }
 }
 
-export function calculateRp<T extends Tep>(
-    stats: T,
+// Disqualified teams keep the result in their record, but don't earn ranking points for the match.
+export function sumRankingPoints<T extends Tep, M extends Match>(
+    matches: M[],
+    teps: Record<number, T>,
     descriptor: Descriptor,
-    matchesUsed: number = stats.qualMatchesPlayed
-): number {
-    if (matchesUsed == 0) return 0;
+    shouldInclude: (teamNumber: number, match: M) => boolean = () => true
+): Record<number, number> {
+    let sums = {} as Record<number, number>;
 
-    switch (descriptor.rankings.rp) {
-        case "TotalPoints":
-            return (stats.tot.totalPoints ?? 0) / matchesUsed;
-        case "Record":
-            return (2 * stats.wins + stats.ties) / matchesUsed;
-        case "DecodeRP":
-            return (
-                (3 * stats.wins +
-                    stats.ties +
-                    (stats.tot.movementRp ?? 0) +
-                    (stats.tot.goalRp ?? 0) +
-                    (stats.tot.patternRp ?? 0)) /
-                matchesUsed
-            );
-        case "BioBuzzRP":
-            return (
-                (3 * stats.wins +
-                    stats.ties +
-                    (stats.tot.swarmRp ?? 0) +
-                    (stats.tot.pollinator1Rp ?? 0) +
-                    (stats.tot.pollinator2Rp ?? 0)) /
-                matchesUsed
-            );
-        default:
-            return 0;
+    for (let m of matches) {
+        let scores = hasAllianceScores(m.scores) ? m.scores : null;
+        let winningAlliance = scores ? determineWinner(scores.red, scores.blue) : null;
+
+        for (let t of m.teams) {
+            if (t.surrogate || t.dq || !teps[t.teamNumber]) continue;
+            if (!shouldInclude(t.teamNumber, m)) continue;
+            let score = scores
+                ? t.alliance == Alliance.Red
+                    ? scores.red
+                    : scores.blue
+                : (m.scores as Score | null);
+            if (!score) continue;
+
+            sums[t.teamNumber] =
+                (sums[t.teamNumber] ?? 0) +
+                computeRankingPoints(descriptor, t.alliance, score, winningAlliance);
+        }
     }
+
+    return sums;
+}
+
+export function calculateRp(rpSum: number, descriptor: Descriptor, matchesUsed: number): number {
+    if (descriptor.rankings.rp == "TotalPoints") return rpSum;
+    return matchesUsed == 0 ? 0 : rpSum / matchesUsed;
 }
 
 export function computeRankingPoints(
@@ -370,7 +372,8 @@ export function calculateTiebreakers<T extends Tep>(
     stats: T,
     descriptor: Descriptor
 ): { tb1: number; tb2: number } {
-    return calculateTiebreakersFromScores(descriptor, stats.avg);
+    let group = descriptor.rankings.tb == "AutoEndgameTot" ? stats.tot : stats.avg;
+    return calculateTiebreakersFromScores(descriptor, group);
 }
 
 // Calculate losing score tiebreaker
