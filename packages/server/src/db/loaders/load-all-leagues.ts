@@ -3,7 +3,7 @@ import { getLeagues } from "../../ftc-api/get-leagues";
 import { League } from "../entities/League";
 import { DATA_SOURCE } from "../data-source";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
-import { recomputeLeagueRankings } from "./recompute-league-rankings";
+import { recomputeLeagues } from "./recompute-league-rankings";
 import { LeagueTeam } from "../entities/LeagueTeam";
 import { getLeagueMembership } from "../../ftc-api/get-league-membership";
 
@@ -65,10 +65,7 @@ export async function loadAllLeagues(season: Season, opts: LoadAllLeaguesOptions
     });
 
     if (recomputeRankings) {
-        let leagueKeys = deduped.map((l) => ({ code: l.code, regionCode: l.regionCode ?? null }));
-        for (let league of leagueKeys) {
-            await recomputeLeagueRankings(season, league.code, league.regionCode);
-        }
+        await recomputeLeagues(season, deduped);
     }
 
     console.info(`Finished loading leagues for season ${season}.`);
