@@ -163,12 +163,11 @@ export async function recomputeLeagueRankings(
         .flatMap((m) => m.teams.map((t) => t.teamNumber))
         .filter((n): n is number => n != null);
 
-    let teamNumbers: number[] = [];
-    if (leagueTeams.length) {
-        teamNumbers = leagueTeams.map((t) => t.teamNumber);
-    } else {
-        teamNumbers = [...new Set(eventTeamNumbers)];
-    }
+    // Parent leagues list the members of their children, so teams can appear more than once.
+    let teamNumbers = [
+        ...new Set(leagueTeams.length ? leagueTeams.map((t) => t.teamNumber) : eventTeamNumbers),
+    ];
+    let isLeagueTeam = new Set(teamNumbers);
 
     let descriptor = DESCRIPTORS[season];
     let selections = buildMatchSelections(
@@ -179,7 +178,7 @@ export async function recomputeLeagueRankings(
     );
 
     selections = new Map(
-        [...selections.entries()].filter(([teamNumber]) => teamNumbers.includes(teamNumber))
+        [...selections.entries()].filter(([teamNumber]) => isLeagueTeam.has(teamNumber))
     );
 
     const includeMatch: TeamEventStatsOptions["includeMatch"] = (teamNumber, match) => {
@@ -208,7 +207,7 @@ export async function recomputeLeagueRankings(
         teamNumbers,
         {
             includeMatch: (teamNumber, match) =>
-                teamNumbers.includes(teamNumber) && match.eventCode != "filler",
+                isLeagueTeam.has(teamNumber) && match.eventCode != "filler",
         }
     );
 
@@ -442,17 +441,21 @@ function makeMatchKey(match: LeagueFrontendMatch) {
 }
 
 async function eventsForLeague(season: Season, league: League) {
-    let childLeagues = await League.find({
-        where: [
-            { season, parentLeagueCode: league.parentLeagueCode ?? "" }, // Get all league tournaments if current League is a child league (Tournament)
-            { season, parentLeagueCode: league.code, regionCode: league.regionCode }, // Get all league tournaments if current League is the parent league
-            { season, code: league.parentLeagueCode ?? "", regionCode: league.regionCode }, // Get all League meets
-        ],
-        select: ["code", "regionCode"],
-    });
+    // The league's children, its parent and the parent's other children share league meets and
+    // tournaments with it. League codes are only unique within a region.
+    let where: FindOptionsWhere<League>[] = [
+        { season, regionCode: league.regionCode, parentLeagueCode: league.code },
+    ];
+    if (league.parentLeagueCode) {
+        where.push(
+            { season, regionCode: league.regionCode, code: league.parentLeagueCode },
+            { season, regionCode: league.regionCode, parentLeagueCode: league.parentLeagueCode }
+        );
+    }
+    let relatedLeagues = await League.find({ where, select: ["code", "regionCode"] });
 
-    let includedLeagues = childLeagues.length
-        ? childLeagues.map<LeagueIdentifier>((l) => ({
+    let includedLeagues = relatedLeagues.length
+        ? relatedLeagues.map<LeagueIdentifier>((l) => ({
               code: l.code,
               regionCode: l.regionCode ?? null,
           }))
