@@ -1,5 +1,6 @@
 import {
     Alliance,
+    CURRENT_SEASON,
     Season,
     TournamentLevel,
     EventType,
@@ -223,21 +224,28 @@ async function loadEligibilityData(
     event: Event,
     teamNumberList: number[]
 ): Promise<{
-    teamRegionMap: Map<number, string | null>;
+    teamRegionMap: Map<number, string>;
     qualEventCounts: Map<number, number>;
     previouslyAdvanced: Set<number>;
 }> {
-    const teamRegionMap = new Map<number, string | null>();
+    const teamRegionMap = new Map<number, string>();
     const qualEventCounts = new Map<number, number>();
     const previouslyAdvanced = new Set<number>();
 
     if (teamNumberList.length === 0) return { teamRegionMap, qualEventCounts, previouslyAdvanced };
 
-    let teams = await Team.createQueryBuilder("team")
-        .select(["team.number", "team.regionCode"])
-        .where("team.number IN (:...teamNumbers)", { teamNumbers: teamNumberList })
-        .getMany();
-    teams.forEach((t) => teamRegionMap.set(t.number, t.regionCode ?? null));
+    // Teams only store the home region FIRST lists for the current season, and regions change
+    // between seasons (Texas was one region in 2025 and four in 2026), so earlier seasons can't be
+    // checked. Teams without a stored region aren't checked either.
+    if (season == CURRENT_SEASON) {
+        let teams = await Team.createQueryBuilder("team")
+            .select(["team.number", "team.regionCode"])
+            .where("team.number IN (:...teamNumbers)", { teamNumbers: teamNumberList })
+            .getMany();
+        teams.forEach((t) => {
+            if (t.regionCode) teamRegionMap.set(t.number, t.regionCode);
+        });
+    }
 
     // Registered teams get stats rows even if they never showed up, so only count events they played.
     let qualCountRows = EVENT_LIMIT_TYPES.includes(event.type as EventType)
@@ -912,7 +920,7 @@ async function computeDivisionParentTeamInfo(
 
 function getTeamAdvancementEligibility(
     teamNumber: number,
-    teamRegionMap: Map<number, string | null>,
+    teamRegionMap: Map<number, string>,
     qualEventCounts: Map<number, number>,
     previouslyAdvanced: Set<number>,
     event: Event,
