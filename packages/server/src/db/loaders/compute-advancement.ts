@@ -8,11 +8,6 @@ import {
     AdvancementEligibility,
     getAdvancementEligibility,
     isEligible,
-    FrontendMatch,
-    DESCRIPTORS,
-    calculateTiebreakersFromScores,
-    computeRankingPoints,
-    determineWinner,
     hasAllianceScores,
 } from "@ftc-scout/common";
 import { ADVANCEMENT_CONFIGS } from "@ftc-scout/common";
@@ -27,7 +22,12 @@ import { LeagueRankingSchemas } from "../entities/dyn/league-ranking";
 import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { MatchScore, MatchScoreSchemas } from "../entities/dyn/match-score";
 import { Team } from "../entities/Team";
-import { In, IsNull } from "typeorm";
+import { In } from "typeorm";
+import {
+    type LeagueSelection,
+    countedLeagueMatches,
+    loadLeagueSelection,
+} from "./recompute-league-rankings";
 
 const SUPPORTED_EVENT_TYPES: EventType[] = [
     EventType.Qualifier,
@@ -81,8 +81,7 @@ type DivisionTeamInfo = {
     isQualFinal: boolean;
     allianceSelectionPoints: number | null;
     isAllianceSelectionFinal: boolean;
-    qualScoresNP: number[];
-    autoScores: number[];
+    tiebreakScores?: TiebreakScores | undefined;
 };
 
 function allianceTeamNumbers(a: AllianceApi): number[] {
@@ -166,26 +165,34 @@ function sumTotalPoints(
 }
 
 async function getQualRowsForEvent(season: Season, event: Event): Promise<QualRow[]> {
-    if (event.type == EventType.LeagueTournament && event.leagueCode) {
-        let leagueRanks = await DATA_SOURCE.getRepository(LeagueRankingSchemas[season]).find({
-            where: { leagueCode: event.leagueCode },
-        });
-        let rows = leagueRanks.map((lr) => ({ teamNumber: lr.teamNumber, rank: lr.rank }));
-
-        let eventTeps = await DATA_SOURCE.getRepository(
-            TeamEventParticipationSchemas[season]
-        ).findBy({
-            season,
-            eventCode: event.code,
-        });
-        let eventTeamNumbers = new Set(eventTeps.map((t) => t.teamNumber));
-        return rows.filter((q) => eventTeamNumbers.has(q.teamNumber));
-    }
-
     let teps = await DATA_SOURCE.getRepository(TeamEventParticipationSchemas[season]).findBy({
         season,
         eventCode: event.code,
     });
+
+    // FIRST ranks the teams that played at a league tournament by their league ranking, which also
+    // counts their best league meet matches. Registered teams that didn't play aren't ranked.
+    if (event.type == EventType.LeagueTournament && event.leagueCode) {
+        let played = new Map(
+            teps.filter((t) => t.qualMatchesPlayed > 0).map((t) => [t.teamNumber, t])
+        );
+        let leagueRanks = await DATA_SOURCE.getRepository(LeagueRankingSchemas[season]).find({
+            where: {
+                season,
+                leagueCode: event.leagueCode,
+                ...(event.regionCode ? { regionCode: event.regionCode } : {}),
+            },
+            order: { rank: "ASC" },
+        });
+        return leagueRanks
+            .filter((lr) => played.has(lr.teamNumber))
+            .map((lr, i) => ({
+                teamNumber: lr.teamNumber,
+                rank: i + 1,
+                qualMatchesPlayed: played.get(lr.teamNumber)!.qualMatchesPlayed,
+            }));
+    }
+
     return teps.map((t) => ({
         teamNumber: t.teamNumber,
         rank: t.rank,
@@ -710,93 +717,77 @@ async function computeParentFinalistsPlayoffPoints(
     );
 }
 
-interface ScoreWithRpAndTb {
-    score: number;
-    rp: number;
-    tb1: number;
-    tb2: number;
+// The non-penalty and auto points of the matches a team's tiebreakers use.
+type TiebreakScores = { np: number[]; auto: number[] };
+
+function addTiebreakScore(
+    scoresPerTeam: Map<number, TiebreakScores>,
+    teamNumber: number,
+    np: number,
+    auto: number
+) {
+    let scores = scoresPerTeam.get(teamNumber) ?? { np: [], auto: [] };
+    scores.np.push(np);
+    scores.auto.push(auto);
+    scoresPerTeam.set(teamNumber, scores);
 }
+
+// Disqualified teams score 0 for the tiebreakers, like they do in the rankings.
 function calculateScoresPerTeam(
     scores: MatchScore[],
     tmps: TeamMatchParticipation[],
-    matchScoresPerTeam: Map<number, ScoreWithRpAndTb[]>,
-    autoScoresPerTeam: Map<number, ScoreWithRpAndTb[]>
+    scoresPerTeam: Map<number, TiebreakScores>
 ) {
-    if (scores.length === 0) return;
-    let descriptor = DESCRIPTORS[scores[0].season];
-
-    let matchScorePairs = new Map<string, MatchScore[]>();
-    scores.forEach((s) => {
-        let key = `${s.eventCode}-${s.matchId}`;
-        if (!matchScorePairs.has(key)) {
-            matchScorePairs.set(key, []);
+    for (let s of scores) {
+        for (let t of tmps) {
+            if (t.matchId != s.matchId || t.alliance != s.alliance || t.surrogate) continue;
+            let dq = t.dq ?? false;
+            addTiebreakScore(
+                scoresPerTeam,
+                t.teamNumber,
+                dq ? 0 : s.totalPointsNp ?? 0,
+                dq ? 0 : (s.autoPoints as number) ?? 0
+            );
         }
-        matchScorePairs.get(key)!.push(s);
-    });
+    }
+}
 
-    matchScorePairs.forEach((doubleScores, _key) => {
-        let redScore = doubleScores.find((s) => s.alliance === Alliance.Red);
-        let blueScore = doubleScores.find((s) => s.alliance === Alliance.Blue);
-        let frontendMatch = {
-            tournamentLevel: TournamentLevel.Quals,
-            teams: tmps.filter((t) => t.matchId === doubleScores[0].matchId),
-            scores: {
-                red: redScore,
-                blue: blueScore,
-            },
-        } as FrontendMatch;
-
-        let winningAlliance: Alliance | null = null;
-        if (hasAllianceScores(frontendMatch.scores)) {
-            winningAlliance = determineWinner(frontendMatch.scores.red, frontendMatch.scores.blue);
+// League tournaments use the same matches as the league ranking: the best league meet matches,
+// padded to 10 with empty ones, and the matches at the tournament.
+function calculateLeagueScoresPerTeam(
+    selection: LeagueSelection,
+    teamNumbers: number[],
+    scoresPerTeam: Map<number, TiebreakScores>
+) {
+    for (let teamNumber of teamNumbers) {
+        let { matches, fillers } = countedLeagueMatches(selection, teamNumber);
+        for (let m of matches) {
+            let t = m.teams.find((t) => t.teamNumber == teamNumber && !t.surrogate);
+            if (!t || !hasAllianceScores(m.scores)) continue;
+            let s = t.alliance == Alliance.Red ? m.scores.red : m.scores.blue;
+            addTiebreakScore(
+                scoresPerTeam,
+                teamNumber,
+                t.dq ? 0 : s.totalPointsNp ?? 0,
+                t.dq ? 0 : s.autoPoints ?? 0
+            );
         }
+        for (let i = 0; i < fillers; i++) {
+            addTiebreakScore(scoresPerTeam, teamNumber, 0, 0);
+        }
+    }
+}
 
-        doubleScores.forEach((s) => {
-            let alliance = s.alliance;
-            let score = s.totalPointsNp ?? 0;
-            let autoScore = (s.autoPoints as number) ?? 0;
-
-            let teamsInAlliance = frontendMatch.teams.filter((t) => t.alliance === alliance);
-
-            teamsInAlliance.forEach((team) => {
-                let teamNumber = team.teamNumber;
-                let dq = team.dq ?? false;
-                if (team.surrogate) return;
-
-                let { tb1, tb2 } = calculateTiebreakersFromScores(descriptor, s);
-
-                let rp = dq
-                    ? 0
-                    : (computeRankingPoints(
-                          descriptor,
-                          team.alliance,
-                          s,
-                          winningAlliance
-                      ) as number);
-
-                if (!matchScoresPerTeam.has(teamNumber)) {
-                    matchScoresPerTeam.set(teamNumber, []);
-                }
-
-                matchScoresPerTeam.get(teamNumber)!.push({
-                    score: dq ? 0 : score,
-                    rp,
-                    tb1,
-                    tb2,
-                });
-
-                if (!autoScoresPerTeam.has(teamNumber)) {
-                    autoScoresPerTeam.set(teamNumber, []);
-                }
-                autoScoresPerTeam.get(teamNumber)!.push({
-                    score: dq ? 0 : autoScore,
-                    rp,
-                    tb1,
-                    tb2,
-                });
-            });
-        });
-    });
+function calculateTiebreakers(scores: TiebreakScores | undefined) {
+    let np = scores?.np ?? [];
+    let auto = scores?.auto ?? [];
+    let sorted = [...np].sort((a, b) => b - a);
+    return {
+        averageNPMatchPoints: np.length ? np.reduce((a, b) => a + b, 0) / np.length : 0,
+        averageAutoPoints: auto.length ? auto.reduce((a, b) => a + b, 0) / auto.length : 0,
+        highestNPMatchPoints: sorted[0] ?? 0,
+        secondHighestNPMatchPoints: sorted[1] ?? 0,
+    };
 }
 
 async function computeDivisionParentTeamInfo(
@@ -889,8 +880,7 @@ async function computeDivisionParentTeamInfo(
             }
         }
 
-        let matchScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
-        let autoScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
+        let scoresPerTeam = new Map<number, TiebreakScores>();
         if (hasQuals) {
             let qualMatchIds = qualMatches.map((m) => m.id);
             let tmps = await TeamMatchParticipation.findBy({
@@ -904,7 +894,7 @@ async function computeDivisionParentTeamInfo(
                 matchId: In(qualMatchIds),
             });
 
-            calculateScoresPerTeam(scores, tmps, matchScoresPerTeam, autoScoresPerTeam);
+            calculateScoresPerTeam(scores, tmps, scoresPerTeam);
         }
 
         for (let q of qualRows) {
@@ -923,8 +913,7 @@ async function computeDivisionParentTeamInfo(
                 isQualFinal,
                 allianceSelectionPoints: sel,
                 isAllianceSelectionFinal,
-                qualScoresNP: matchScoresPerTeam.get(q.teamNumber)?.map((s) => s.score) ?? [],
-                autoScores: autoScoresPerTeam.get(q.teamNumber)?.map((s) => s.score) ?? [],
+                tiebreakScores: scoresPerTeam.get(q.teamNumber),
             });
         }
     }
@@ -955,10 +944,6 @@ function getTeamAdvancementEligibility(
     let playedCountOk = (qualEventCounts.get(teamNumber) ?? 0) < config.maxQualEvents;
     let notPreviouslyAdvanced = !previouslyAdvanced.has(teamNumber);
     return getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
-}
-
-function regionCondition(regionCode: string | null) {
-    return regionCode == null ? IsNull() : regionCode;
 }
 
 export async function computeAdvancementForEvent(season: Season, eventCode: string) {
@@ -1024,8 +1009,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 isQualFinal: false,
                 allianceSelectionPoints: null,
                 isAllianceSelectionFinal: false,
-                qualScoresNP: [],
-                autoScores: [],
             };
 
             let qualPoints = info.qualPoints;
@@ -1079,16 +1062,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 advancementRank: null,
                 eligibility,
                 advanced: false,
-                averageNPMatchPoints: info.qualScoresNP.length
-                    ? info.qualScoresNP.reduce((a, b) => a + b, 0) / info.qualScoresNP.length
-                    : 0,
-                highestNPMatchPoints: info.qualScoresNP.length ? Math.max(...info.qualScoresNP) : 0,
-                secondHighestNPMatchPoints: info.qualScoresNP.length
-                    ? [...info.qualScoresNP].sort((a, b) => b - a)[1] ?? 0
-                    : 0,
-                averageAutoPoints: info.autoScores.length
-                    ? info.autoScores.reduce((a, b) => a + b, 0) / info.autoScores.length
-                    : 0,
+                ...calculateTiebreakers(info.tiebreakScores),
             });
         }
 
@@ -1137,86 +1111,11 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         teamNumberList
     );
 
-    let matchScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
-    let autoScoresPerTeam = new Map<number, ScoreWithRpAndTb[]>();
-    let leagueRankings: Map<number, number> = new Map();
-
-    if (event.leagueCode) {
-        let leagueMeets = await Event.findBy({
-            season,
-            type: "LeagueMeet",
-            regionCode: regionCondition(event.regionCode),
-        });
-
-        // load all league rankings from database
-        let leagueRankingsRaw = await DATA_SOURCE.getRepository(LeagueRankingSchemas[season])
-            .findBy({
-                leagueCode: event.leagueCode,
-                teamNumber: In(teamNumberList),
-            })
-            .then((rows) => rows.sort((a, b) => a.rank - b.rank));
-
-        let rank = 0;
-        for (let r of leagueRankingsRaw) {
-            rank++;
-            leagueRankings.set(r.teamNumber, rank);
-        }
-
-        for (let meet of leagueMeets) {
-            let matches = await Match.findBy({
-                eventSeason: season,
-                eventCode: meet.code,
-                tournamentLevel: TournamentLevel.Quals,
-            });
-
-            let matchIds = matches.map((m) => m.id);
-            let tmps = await TeamMatchParticipation.findBy({
-                season,
-                eventCode: meet.code,
-                matchId: In(matchIds),
-            });
-            let scores = await DATA_SOURCE.getRepository(MatchScoreSchemas[season]).findBy({
-                season,
-                eventCode: meet.code,
-                matchId: In(matchIds),
-            });
-
-            calculateScoresPerTeam(scores, tmps, matchScoresPerTeam, autoScoresPerTeam);
-        }
-
-        matchScoresPerTeam.forEach((scores, teamNumber) => {
-            if (!scores) return;
-            let amountOfScores = scores.length;
-            if (amountOfScores < 10) {
-                let padding = new Array(10 - amountOfScores).fill(0);
-                matchScoresPerTeam.set(teamNumber, scores.concat(padding));
-            } else if (amountOfScores > 10) {
-                matchScoresPerTeam.set(
-                    teamNumber,
-                    scores
-                        .sort((a, b) => {
-                            if (b.rp !== a.rp) return b.rp - a.rp;
-                            if (b.tb1 !== a.tb1) return b.tb1 - a.tb1;
-                            return b.tb2 - a.tb2;
-                        })
-                        .slice(0, 10)
-                );
-            }
-        });
-
-        autoScoresPerTeam.forEach((scores, teamNumber) => {
-            if (!scores) return;
-            let amountOfScores = scores.length;
-            if (amountOfScores < 10) {
-                let padding = new Array(10 - amountOfScores).fill(0);
-                autoScoresPerTeam.set(teamNumber, scores.concat(padding));
-            } else if (amountOfScores > 10) {
-                autoScoresPerTeam.set(teamNumber, scores.sort((a, b) => b.rp - a.rp).slice(0, 10));
-            }
-        });
-    }
-
-    if (hasQuals) {
+    let scoresPerTeam = new Map<number, TiebreakScores>();
+    if (event.type == EventType.LeagueTournament && event.leagueCode) {
+        let selection = await loadLeagueSelection(season, event.leagueCode, event.regionCode);
+        if (selection) calculateLeagueScoresPerTeam(selection, teamNumberList, scoresPerTeam);
+    } else if (hasQuals) {
         let qualMatchIds = qualMatches.map((m) => m.id);
         let tmps = await TeamMatchParticipation.findBy({
             season,
@@ -1229,7 +1128,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             matchId: In(qualMatchIds),
         });
 
-        calculateScoresPerTeam(scores, tmps, matchScoresPerTeam, autoScoresPerTeam);
+        calculateScoresPerTeam(scores, tmps, scoresPerTeam);
     }
 
     let allianceSelectionFinal = anyPlayoffMatch || allianceTeams.size > 0;
@@ -1237,11 +1136,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     for (let teamNumber of teamNumbers) {
         let rankEntry = qualRows.find((q) => q.teamNumber == teamNumber);
         let qualPoints: number | null = null;
-        let leagueRanking = leagueRankings.get(teamNumber);
-        if (leagueRanking && teamCount > 0) {
-            let qp = config.calculateQualPoints(leagueRanking, teamCount);
-            qualPoints = Number.isFinite(qp) ? qp : null;
-        } else if (rankEntry && teamCount > 0 && rankEntry.rank != null && rankEntry.rank > 0) {
+        if (rankEntry && teamCount > 0 && rankEntry.rank != null && rankEntry.rank > 0) {
             let qp = config.calculateQualPoints(rankEntry.rank, teamCount);
 
             qualPoints = Number.isFinite(qp) ? qp : null;
@@ -1291,21 +1186,7 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             advancementRank: null,
             eligibility,
             advanced: false,
-            averageNPMatchPoints: matchScoresPerTeam.has(teamNumber)
-                ? matchScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b.score, 0) /
-                  matchScoresPerTeam.get(teamNumber)!.length
-                : 0,
-            highestNPMatchPoints: matchScoresPerTeam.has(teamNumber)
-                ? Math.max(...matchScoresPerTeam.get(teamNumber)!.map((s) => s.score))
-                : 0,
-            secondHighestNPMatchPoints: matchScoresPerTeam.has(teamNumber)
-                ? [...matchScoresPerTeam.get(teamNumber)!].sort((a, b) => b.score - a.score)[1]
-                      ?.score ?? 0
-                : 0,
-            averageAutoPoints: autoScoresPerTeam.has(teamNumber)
-                ? autoScoresPerTeam.get(teamNumber)!.reduce((a, b) => a + b.score, 0) /
-                  autoScoresPerTeam.get(teamNumber)!.length
-                : 0,
+            ...calculateTiebreakers(scoresPerTeam.get(teamNumber)),
         });
     }
 
