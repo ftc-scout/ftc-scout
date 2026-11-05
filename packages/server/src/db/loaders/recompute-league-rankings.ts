@@ -91,48 +91,42 @@ export async function recomputeLeagues(season: Season, leagues: LeagueIdentifier
     }
 }
 
-export async function recomputeLeagueRankings(
+export type LeagueSelection = {
+    league: League;
+    // Every played qualification match the ranking can use, empty if there are none yet.
+    matches: LeagueFrontendMatch[];
+    // The teams the ranking is calculated for, and the ones it ranks (null to rank all of them).
+    teamNumbers: number[];
+    rankedTeams: Set<number> | null;
+    // The keys of the matches that count for each team, padded with filler matches.
+    selections: Map<number, Set<string>>;
+};
+
+/**
+ * Loads the matches a league's ranking is based on and picks the ones that count for each team:
+ * its best 10 league meet matches, padded to 10 with empty ones, and all its league tournament
+ * matches. Returns null if the league doesn't exist.
+ */
+export async function loadLeagueSelection(
     season: Season,
     leagueCode: string,
     regionCode: string | null
-) {
-    // Only recompute leagues for Season.PowerPlay (2022) and newer.
-    if (!Number.isFinite(season) || season < Season.PowerPlay) {
-        console.info(
-            `Skipping league ranking recompute for ${leagueCode} (${season}) — leagues are only supported for ${Season.PowerPlay} and up.`
-        );
-        return;
-    }
-
+): Promise<LeagueSelection | null> {
     let where: FindOptionsWhere<League>[] =
         regionCode == null
             ? [{ season, code: leagueCode }]
             : [{ season, code: leagueCode, regionCode }];
     let league = await League.findOne({ where });
-    if (!league) return;
-    if (league.regionCode == null) {
-        console.warn(
-            `Skipping league ranking recompute for ${leagueCode} (${season}) due to missing region code.`
-        );
-        return;
-    }
+    if (!league) return null;
     let leagueRegion = league.regionCode;
 
-    console.info(
-        `Recomputing league rankings for ${leagueCode} (${season}, region: ${leagueRegion})`
-    );
-
-    let { leagueMeetCodes, tournamentCodes, includedLeagues } = await eventsForLeague(
-        season,
-        league
-    );
+    let { leagueMeetCodes, tournamentCodes, ownTournamentCodes, includedLeagues } =
+        await eventsForLeague(season, league);
     let allEventCodes = [...new Set([...leagueMeetCodes, ...tournamentCodes])];
     let allEventCodesLeague = [...new Set([...leagueMeetCodes, ...tournamentCodes])];
 
-    if (!allEventCodes.length) {
-        await clearLeagueRankings(season, leagueCode, leagueRegion);
-        return;
-    }
+    let empty = { league, matches: [], teamNumbers: [], rankedTeams: null, selections: new Map() };
+    if (!allEventCodes.length) return empty;
 
     if (COUNT_NON_LEAGUE_LEAGUE_MEETS) {
         let allLeaugeMeetsInRegion = await Event.find({
@@ -181,10 +175,7 @@ export async function recomputeLeagueRankings(
         )
         .getMany();
 
-    if (!matches.length) {
-        await clearLeagueRankings(season, leagueCode, leagueRegion);
-        return;
-    }
+    if (!matches.length) return empty;
 
     let allFrontendMatches = matches.map(
         (m) =>
@@ -210,9 +201,18 @@ export async function recomputeLeagueRankings(
         .flatMap((m) => m.teams.map((t) => t.teamNumber))
         .filter((n): n is number => n != null);
 
+    // FIRST also ranks teams that aren't members but played at one of the league's tournaments.
+    let tournamentTeams = allFrontendMatches
+        .filter((m) => ownTournamentCodes.includes(m.eventCode))
+        .flatMap((m) => m.teams.filter((t) => !t.surrogate).map((t) => t.teamNumber));
+
     // Parent leagues list the members of their children, so teams can appear more than once.
     let teamNumbers = [
-        ...new Set(leagueTeams.length ? leagueTeams.map((t) => t.teamNumber) : eventTeamNumbers),
+        ...new Set(
+            leagueTeams.length
+                ? [...leagueTeams.map((t) => t.teamNumber), ...tournamentTeams]
+                : eventTeamNumbers
+        ),
     ];
     let isLeagueTeam = new Set(teamNumbers);
 
@@ -227,6 +227,58 @@ export async function recomputeLeagueRankings(
     selections = new Map(
         [...selections.entries()].filter(([teamNumber]) => isLeagueTeam.has(teamNumber))
     );
+
+    return {
+        league,
+        matches: allFrontendMatches,
+        teamNumbers,
+        rankedTeams: strictTeamNumbers.size
+            ? new Set([...strictTeamNumbers, ...tournamentTeams])
+            : null,
+        selections,
+    };
+}
+
+/**
+ * The matches that count for a team's league ranking, and the number of empty matches that pad
+ * them to 10.
+ */
+export function countedLeagueMatches(selection: LeagueSelection, teamNumber: number) {
+    let keys = selection.selections.get(teamNumber) ?? new Set<string>();
+    return {
+        matches: selection.matches.filter((m) => keys.has(makeMatchKey(m))),
+        fillers: [...keys].filter((k) => k.startsWith("filler:")).length,
+    };
+}
+
+export async function recomputeLeagueRankings(
+    season: Season,
+    leagueCode: string,
+    regionCode: string | null
+) {
+    // Only recompute leagues for Season.PowerPlay (2022) and newer.
+    if (!Number.isFinite(season) || season < Season.PowerPlay) {
+        console.info(
+            `Skipping league ranking recompute for ${leagueCode} (${season}) — leagues are only supported for ${Season.PowerPlay} and up.`
+        );
+        return;
+    }
+
+    let selection = await loadLeagueSelection(season, leagueCode, regionCode);
+    if (!selection) return;
+    let { league, matches: allFrontendMatches, teamNumbers, rankedTeams, selections } = selection;
+    let leagueRegion = league.regionCode;
+
+    console.info(
+        `Recomputing league rankings for ${leagueCode} (${season}, region: ${leagueRegion})`
+    );
+
+    if (!allFrontendMatches.length) {
+        await clearLeagueRankings(season, leagueCode, leagueRegion);
+        return;
+    }
+
+    let isLeagueTeam = new Set(teamNumbers);
 
     const includeMatch: TeamEventStatsOptions["includeMatch"] = (teamNumber, match) => {
         let matchesForTeam = selections.get(teamNumber);
@@ -259,7 +311,7 @@ export async function recomputeLeagueRankings(
     );
 
     stats = stats
-        .filter((s) => strictTeamNumbers.size === 0 || strictTeamNumbers.has(s.teamNumber))
+        .filter((s) => rankedTeams == null || rankedTeams.has(s.teamNumber))
         .sort((a, b) => a.rank - b.rank)
         .map((s, i) => ({ ...s, rank: i + 1 }));
     let totalsByTeam = new Map(allMatchStats.map((s) => [s.teamNumber, s]));
@@ -519,11 +571,13 @@ async function eventsForLeague(season: Season, league: League) {
     let events = eventWhere.length ? await Event.find({ where: eventWhere }) : [];
 
     let leagueMeetCodes = events.filter((e) => e.type == EventType.LeagueMeet).map((e) => e.code);
-    let tournamentCodes = events
-        .filter((e) => e.type == EventType.LeagueTournament)
+    let tournaments = events.filter((e) => e.type == EventType.LeagueTournament);
+    let tournamentCodes = tournaments.map((e) => e.code);
+    let ownTournamentCodes = tournaments
+        .filter((e) => e.leagueCode == league.code)
         .map((e) => e.code);
 
-    return { leagueMeetCodes, tournamentCodes, includedLeagues };
+    return { leagueMeetCodes, tournamentCodes, ownTournamentCodes, includedLeagues };
 }
 
 function dedupeLeagues(leagues: LeagueIdentifier[]) {
