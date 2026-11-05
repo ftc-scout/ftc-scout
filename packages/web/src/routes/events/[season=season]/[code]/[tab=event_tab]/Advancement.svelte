@@ -447,7 +447,7 @@
     accurately based on the data we have, but there may be errors or missing information . For
     official advancement results, please refer to
     <a
-        href={`https://ftc-events.firstinspires.org/2025/${eventCode}/advancementpoints`}
+        href={`https://ftc-events.firstinspires.org/${season}/${eventCode}/advancementpoints`}
         target="_blank">FIRST's official advancement report</a
     > for official data.
 </div>
