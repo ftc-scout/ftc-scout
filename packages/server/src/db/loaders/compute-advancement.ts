@@ -426,7 +426,10 @@ async function computeElimPlacementsByAlliance(
 
     type AllianceResult = { allianceNum: number; losses: number; eliminatedAt?: number };
     let allianceResults = new Map<number, AllianceResult>();
-    alliances.forEach((a) => allianceResults.set(a.number, { allianceNum: a.number, losses: 0 }));
+    // FIRST also lists alliances without teams when fewer were picked, those never play.
+    alliances
+        .filter((a) => allianceTeamNumbers(a).length > 0)
+        .forEach((a) => allianceResults.set(a.number, { allianceNum: a.number, losses: 0 }));
 
     function allianceNumberForColor(matchId: number, color: Alliance): number | null {
         let teamsThisSide = tmps
@@ -526,8 +529,9 @@ async function computeNormalPlayoffPoints(
         alliances,
         playoffMatches
     );
-    let playoffsComplete =
-        playoffMatches.every((m) => m.hasBeenPlayed) || aliveAlliances.length <= 1;
+    // FIRST adds double elimination matches as the bracket fills up, so having played every listed
+    // match doesn't mean the playoffs are over.
+    let playoffsComplete = aliveAlliances.length <= 1;
 
     if (playoffsComplete && aliveAlliances.length === 1) {
         placementByAlliance.set(aliveAlliances[0]!, { placement: 1, isFinal: true });
