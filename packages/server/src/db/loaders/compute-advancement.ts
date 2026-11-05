@@ -799,7 +799,7 @@ async function computeDivisionParentTeamInfo(
     teamInfoByTeam: Map<number, DivisionTeamInfo>;
     playoffPtsByTeam: Map<number, { points: number; isFinal: boolean }>;
     allianceTeams: Set<number>;
-}> {
+} | null> {
     let teamInfoByTeam = new Map<number, DivisionTeamInfo>();
     let playoffPtsByTeam = new Map<number, { points: number; isFinal: boolean }>();
     let allianceTeams = new Set<number>();
@@ -827,6 +827,10 @@ async function computeDivisionParentTeamInfo(
 
         let playoffMatches = await getPlayoffMatchesForEvent(season, divEvent.code);
         let anyPlayoffMatch = playoffMatches.length > 0;
+        if (!alliances && anyPlayoffMatch) {
+            warnMissingAlliances(season, divEvent.code);
+            return null;
+        }
 
         // Alliance selection points
         let { alliancePoints, allianceTeams: thisDivisionAllianceTeams } =
@@ -929,6 +933,14 @@ async function computeDivisionParentTeamInfo(
     return { teamInfoByTeam, playoffPtsByTeam, allianceTeams };
 }
 
+// Without the alliances, every team would get a final 0 for alliance selection and playoffs, so
+// keep the event's earlier results until a later load can fetch them.
+function warnMissingAlliances(season: Season, eventCode: string) {
+    console.warn(
+        `Couldn't fetch the alliances of ${eventCode} (${season}), not computing its advancement.`
+    );
+}
+
 function getTeamAdvancementEligibility(
     teamNumber: number,
     teamRegionMap: Map<number, string>,
@@ -984,8 +996,14 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     let anyPlayoffMatch = playoffMatches.length > 0;
 
     if (divisionEvents.length === 2) {
-        let { teamInfoByTeam, playoffPtsByTeam, allianceTeams } =
-            await computeDivisionParentTeamInfo(season, event, divisionEvents, config);
+        let divisionInfo = await computeDivisionParentTeamInfo(
+            season,
+            event,
+            divisionEvents,
+            config
+        );
+        if (!divisionInfo) return;
+        let { teamInfoByTeam, playoffPtsByTeam, allianceTeams } = divisionInfo;
 
         let awards = await Award.findBy({ season, eventCode });
         let { awardsLoaded, awardPts } = computeAwardPointsMap(awards, config);
@@ -1079,6 +1097,10 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
     let teamCount = await getTeamCountFromPlayedMatches(season, eventCode);
 
     let alliances = await getAlliances(season, eventCode);
+    if (!alliances && anyPlayoffMatch) {
+        warnMissingAlliances(season, eventCode);
+        return;
+    }
     let { alliancePoints, allianceTeams } = computeAllianceSelectionFromAlliances(
         alliances,
         config
