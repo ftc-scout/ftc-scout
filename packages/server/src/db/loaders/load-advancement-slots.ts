@@ -3,7 +3,7 @@ import { Event } from "../entities/Event";
 import { getAdvancementSlots } from "../../ftc-api/get-advancement-slots";
 import { LoadType } from "../../ftc-api/watch";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
-import { computeAdvancementForEvent } from "./compute-advancement";
+import { QUALIFYING_EVENT_TYPES, computeAdvancementForEvent } from "./compute-advancement";
 
 export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
     if (season < Season.FreightFrenzy) {
@@ -78,12 +78,14 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
 async function eventsToFetch(season: Season, loadType: LoadType) {
     const loaded = await DataHasBeenLoaded.slotsHaveBeenLoaded(season);
 
+    // Only these events have slots. Don't skip events without slots yet: FIRST adds events during
+    // the season and often publishes the slots later.
     let qb = Event.createQueryBuilder("e")
         .where("e.season = :season", { season })
-        .andWhere("e.season >= :minSeason", { minSeason: Season.FreightFrenzy });
+        .andWhere("e.season >= :minSeason", { minSeason: Season.FreightFrenzy })
+        .andWhere("e.type IN (:...types)", { types: QUALIFYING_EVENT_TYPES });
 
     if (loaded) {
-        qb.andWhere("e.advancesTo IS NOT NULL");
         if (loadType === LoadType.Full) {
             qb.andWhere("e.start < now()").andWhere("e.start > now() - interval '30 days'");
         } else if (loadType === LoadType.Partial) {
