@@ -5,7 +5,7 @@ import { DATA_SOURCE } from "../data-source";
 import { getEventAwards } from "../../ftc-api/get-event-awards";
 import { Award } from "../entities/Award";
 import { LoadType } from "../../ftc-api/watch";
-import { computeAdvancementForEvent } from "./compute-advancement";
+import { computeAdvancementForEvents } from "./compute-advancement";
 
 export async function loadAllAwards(season: Season, loadType: LoadType) {
     console.info(`Loading awards for season ${season}. (${loadType})`);
@@ -40,10 +40,7 @@ export async function loadAllAwards(season: Season, loadType: LoadType) {
         console.info(`Loaded ${Math.min(i + chunkSize, events.length) + 1}/${events.length}.`);
     }
 
-    console.info("Advancements to recompute:", advancementToRecompute.size);
-    for (let eventCode of advancementToRecompute) {
-        await computeAdvancementForEvent(season, eventCode);
-    }
+    await computeAdvancementForEvents(season, [...advancementToRecompute]);
 
     await DataHasBeenLoaded.create({
         season,

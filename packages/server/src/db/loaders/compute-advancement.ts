@@ -23,6 +23,8 @@ import { TeamMatchParticipation } from "../entities/TeamMatchParticipation";
 import { MatchScore, MatchScoreSchemas } from "../entities/dyn/match-score";
 import { Team } from "../entities/Team";
 import { In } from "typeorm";
+import { exit } from "process";
+import { IS_DEV } from "../../constants";
 import {
     type LeagueSelection,
     countedLeagueMatches,
@@ -956,6 +958,28 @@ function getTeamAdvancementEligibility(
     let playedCountOk = (qualEventCounts.get(teamNumber) ?? 0) < config.maxQualEvents;
     let notPreviouslyAdvanced = !previouslyAdvanced.has(teamNumber);
     return getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
+}
+
+/**
+ * Computes the advancement of each event. Failures are logged instead of thrown so one event can't
+ * stop the others, or the loader that changed them, from finishing.
+ */
+export async function computeAdvancementForEvents(season: Season, eventCodes: string[]) {
+    if (!eventCodes.length) return;
+
+    console.info(`Computing advancement for ${eventCodes.length} events.`);
+    for (let eventCode of eventCodes) {
+        try {
+            await computeAdvancementForEvent(season, eventCode);
+        } catch (e) {
+            console.error(`!!! ERROR computing advancement for ${eventCode} (${season}) !!!`);
+            console.error(e);
+
+            if (IS_DEV) {
+                exit(1);
+            }
+        }
+    }
 }
 
 export async function computeAdvancementForEvent(season: Season, eventCode: string) {

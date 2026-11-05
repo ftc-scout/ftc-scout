@@ -3,7 +3,7 @@ import { Event } from "../entities/Event";
 import { getAdvancementSlots } from "../../ftc-api/get-advancement-slots";
 import { LoadType } from "../../ftc-api/watch";
 import { DataHasBeenLoaded } from "../entities/DataHasBeenLoaded";
-import { QUALIFYING_EVENT_TYPES, computeAdvancementForEvent } from "./compute-advancement";
+import { QUALIFYING_EVENT_TYPES, computeAdvancementForEvents } from "./compute-advancement";
 
 export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
     if (season < Season.FreightFrenzy) {
@@ -62,10 +62,7 @@ export async function loadAdvancementSlots(season: Season, loadType: LoadType) {
         console.info(`Loaded ${Math.min(i + chunkSize, events.length)}/${events.length}.`);
     }
 
-    console.info("Advancements to recompute:", advancementToRecompute.size);
-    for (let eventCode of advancementToRecompute) {
-        await computeAdvancementForEvent(season, eventCode);
-    }
+    await computeAdvancementForEvents(season, [...advancementToRecompute]);
 
     if (loadType === LoadType.Full) {
         let rec =

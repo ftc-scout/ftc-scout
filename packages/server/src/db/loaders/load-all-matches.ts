@@ -30,7 +30,7 @@ import {
 import { exit } from "process";
 import { IS_DEV } from "../../constants";
 import { newMatchesKey, pubsub } from "../../graphql/resolvers/pubsub";
-import { computeAdvancementForEvent } from "./compute-advancement";
+import { computeAdvancementForEvents } from "./compute-advancement";
 
 const IGNORED_MATCHES = [
     //cSpell:disable
@@ -154,10 +154,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
 
     await recomputeLeagues(season, leaguesToRecompute);
 
-    console.info("Advancements to recompute:", advancementToRecompute.size);
-    for (let eventCode of advancementToRecompute) {
-        await computeAdvancementForEvent(season, eventCode);
-    }
+    await computeAdvancementForEvents(season, [...advancementToRecompute]);
 
     await DataHasBeenLoaded.create({
         season,
