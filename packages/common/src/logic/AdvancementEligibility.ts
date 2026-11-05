@@ -11,14 +11,13 @@ export function getAdvancementEligibility(
     playedCountOk: boolean,
     notPreviouslyAdvanced: boolean
 ): AdvancementEligibility {
-    if (regionOk && playedCountOk && notPreviouslyAdvanced) {
-        return AdvancementEligibility.Eligible;
-    }
-
-    if (!regionOk) return AdvancementEligibility.WrongRegion;
+    // FIRST lists teams that already advanced as such, whatever else applies to them.
     if (!notPreviouslyAdvanced) return AdvancementEligibility.AlreadyAdvanced;
+    if (!regionOk && !playedCountOk) return AdvancementEligibility.MultipleReasons;
+    if (!regionOk) return AdvancementEligibility.WrongRegion;
+    if (!playedCountOk) return AdvancementEligibility.TooManyEvents;
 
-    return AdvancementEligibility.MultipleReasons;
+    return AdvancementEligibility.Eligible;
 }
 
 export function isEligible(eligibility: AdvancementEligibility): boolean {

@@ -43,6 +43,9 @@ const QUALIFYING_EVENT_TYPES: EventType[] = [
     EventType.Championship,
 ];
 
+// Teams can only advance from the first few Qualifiers and League Tournaments they play in.
+const EVENT_LIMIT_TYPES: EventType[] = [EventType.Qualifier, EventType.LeagueTournament];
+
 type TeamRow = {
     teamNumber: number;
     qualPoints: number | null;
@@ -236,17 +239,21 @@ async function loadEligibilityData(
         .getMany();
     teams.forEach((t) => teamRegionMap.set(t.number, t.regionCode ?? null));
 
-    let qualCountRows = await DATA_SOURCE.getRepository(TeamEventParticipationSchemas[season])
-        .createQueryBuilder("tep")
-        .innerJoin(Event, "e", "tep.season = e.season AND tep.eventCode = e.code")
-        .where("tep.season = :season", { season })
-        .andWhere("tep.teamNumber IN (:...teamNumbers)", { teamNumbers: teamNumberList })
-        .andWhere("e.type = :type", { type: event.type })
-        .andWhere("e.end < :eventStart", { eventStart: event.start })
-        .select("tep.teamNumber", "teamNumber")
-        .addSelect("COUNT(DISTINCT tep.eventCode)", "cnt")
-        .groupBy("tep.teamNumber")
-        .getRawMany();
+    // Registered teams get stats rows even if they never showed up, so only count events they played.
+    let qualCountRows = EVENT_LIMIT_TYPES.includes(event.type as EventType)
+        ? await DATA_SOURCE.getRepository(TeamEventParticipationSchemas[season])
+              .createQueryBuilder("tep")
+              .innerJoin(Event, "e", "tep.season = e.season AND tep.eventCode = e.code")
+              .where("tep.season = :season", { season })
+              .andWhere("tep.teamNumber IN (:...teamNumbers)", { teamNumbers: teamNumberList })
+              .andWhere("tep.qualMatchesPlayed > 0")
+              .andWhere("e.type IN (:...types)", { types: EVENT_LIMIT_TYPES })
+              .andWhere("e.end < :eventStart", { eventStart: event.start })
+              .select("tep.teamNumber", "teamNumber")
+              .addSelect("COUNT(DISTINCT tep.eventCode)", "cnt")
+              .groupBy("tep.teamNumber")
+              .getRawMany()
+        : [];
     qualCountRows.forEach((row: any) => {
         qualEventCounts.set(Number(row.teamNumber), Number(row.cnt));
     });
@@ -264,27 +271,6 @@ async function loadEligibilityData(
     priorAdvRows.forEach((row: any) => previouslyAdvanced.add(Number(row.teamNumber)));
 
     return { teamRegionMap, qualEventCounts, previouslyAdvanced };
-}
-
-function applyEligibilityToRows(
-    advancementConfig: AdvancementPointsConfig,
-    event: Event,
-    teamRegionMap: Map<number, string | null>,
-    qualEventCounts: Map<number, number>,
-    previouslyAdvanced: Set<number>,
-    rows: TeamRow[]
-) {
-    for (let r of rows) {
-        let regionOk =
-            event.regionCode == null ||
-            !teamRegionMap.has(r.teamNumber) ||
-            teamRegionMap.get(r.teamNumber) === event.regionCode;
-        let playedCountOk =
-            (qualEventCounts.get(r.teamNumber) ?? 0) < advancementConfig.maxQualEvents;
-        let notPreviouslyAdvanced = !previouslyAdvanced.has(r.teamNumber);
-
-        r.eligibility = getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
-    }
 }
 
 function sortRowsByTiebreak(rows: TeamRow[], config: AdvancementPointsConfig) {
@@ -927,15 +913,16 @@ async function computeDivisionParentTeamInfo(
 function getTeamAdvancementEligibility(
     teamNumber: number,
     teamRegionMap: Map<number, string | null>,
-    _qualEventCounts: Map<number, number>,
+    qualEventCounts: Map<number, number>,
     previouslyAdvanced: Set<number>,
-    event: Event
+    event: Event,
+    config: AdvancementPointsConfig
 ): AdvancementEligibility {
     let regionOk =
         event.regionCode == null ||
         !teamRegionMap.has(teamNumber) ||
         teamRegionMap.get(teamNumber) === event.regionCode;
-    let playedCountOk = true; // This is not reliable -> (qualEventCounts.get(teamNumber) ?? 0) < 3;
+    let playedCountOk = (qualEventCounts.get(teamNumber) ?? 0) < config.maxQualEvents;
     let notPreviouslyAdvanced = !previouslyAdvanced.has(teamNumber);
     return getAdvancementEligibility(regionOk, playedCountOk, notPreviouslyAdvanced);
 }
@@ -1044,7 +1031,8 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
                 teamRegionMap,
                 qualEventCounts,
                 previouslyAdvanced,
-                event
+                event,
+                config
             );
 
             rows.push({
@@ -1074,14 +1062,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             });
         }
 
-        applyEligibilityToRows(
-            config,
-            event,
-            teamRegionMap,
-            qualEventCounts,
-            previouslyAdvanced,
-            rows
-        );
         sortRowsByTiebreak(rows, config);
         assignAdvancedSlots(event, rows);
         finalizeRowRanks(rows);
@@ -1263,7 +1243,8 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
             teamRegionMap,
             qualEventCounts,
             previouslyAdvanced,
-            event
+            event,
+            config
         );
 
         rows.push({
@@ -1298,7 +1279,6 @@ export async function computeAdvancementForEvent(season: Season, eventCode: stri
         });
     }
 
-    applyEligibilityToRows(config, event, teamRegionMap, qualEventCounts, previouslyAdvanced, rows);
     sortRowsByTiebreak(rows, config);
     assignAdvancedSlots(event, rows);
     finalizeRowRanks(rows);
