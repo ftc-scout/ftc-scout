@@ -375,31 +375,29 @@ function finalizeRowRanks(rows: TeamRow[]) {
 }
 
 async function saveAdvancementRows(season: Season, eventCode: string, rows: TeamRow[]) {
-    await DATA_SOURCE.transaction(async (em) => {
-        await em
-            .createQueryBuilder()
-            .delete()
-            .from(AdvancementScore)
-            .where("season = :season", { season })
-            .andWhere("eventCode = :eventCode", { eventCode })
-            .execute();
+    let entities = rows.map((r) =>
+        AdvancementScore.create({
+            season,
+            eventCode,
+            teamNumber: r.teamNumber,
+            qualPoints: r.qualPoints,
+            isQualFinal: r.isQualFinal,
+            allianceSelectionPoints: r.allianceSelectionPoints,
+            isAllianceSelectionFinal: r.isAllianceSelectionFinal,
+            playoffPoints: r.playoffPoints,
+            isPlayoffPointsFinal: r.isPlayoffPointsFinal,
+            awardPoints: r.awardPoints,
+            totalPoints: r.totalPoints,
+            rank: r.rank,
+            advancementRank: r.advancementRank,
+            eligibility: r.eligibility,
+            advanced: r.advanced,
+        })
+    );
 
-        for (let r of rows) {
-            let existing = AdvancementScore.createEmpty(season, eventCode, r.teamNumber);
-            existing.qualPoints = r.qualPoints;
-            existing.isQualFinal = r.isQualFinal;
-            existing.allianceSelectionPoints = r.allianceSelectionPoints;
-            existing.isAllianceSelectionFinal = r.isAllianceSelectionFinal;
-            existing.playoffPoints = r.playoffPoints;
-            existing.isPlayoffPointsFinal = r.isPlayoffPointsFinal;
-            existing.awardPoints = r.awardPoints;
-            existing.totalPoints = r.totalPoints;
-            existing.rank = (r as any).rank ?? null;
-            existing.advancementRank = r.advancementRank;
-            existing.eligibility = r.eligibility;
-            existing.advanced = r.advanced;
-            await em.save(existing);
-        }
+    await DATA_SOURCE.transaction(async (em) => {
+        await em.delete(AdvancementScore, { season, eventCode });
+        if (entities.length) await em.insert(AdvancementScore, entities);
     });
 }
 

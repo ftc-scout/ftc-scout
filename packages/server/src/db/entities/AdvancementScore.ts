@@ -3,7 +3,6 @@ import {
     BaseEntity,
     Column,
     CreateDateColumn,
-    DeepPartial,
     Entity,
     PrimaryColumn,
     UpdateDateColumn,
@@ -64,24 +63,4 @@ export class AdvancementScore extends BaseEntity {
 
     @UpdateDateColumn({ type: "timestamptz" })
     updatedAt!: Date;
-
-    static createEmpty(season: Season, eventCode: string, teamNumber: number): AdvancementScore {
-        return AdvancementScore.create({
-            season,
-            eventCode,
-            teamNumber,
-            qualPoints: null,
-            isQualFinal: false,
-            allianceSelectionPoints: null,
-            isAllianceSelectionFinal: false,
-            eligibility: AdvancementEligibility.Eligible,
-            playoffPoints: null,
-            isPlayoffPointsFinal: false,
-            awardPoints: null,
-            totalPoints: null,
-            rank: null,
-            advancementRank: null,
-            advanced: false,
-        } satisfies DeepPartial<AdvancementScore>);
-    }
 }
