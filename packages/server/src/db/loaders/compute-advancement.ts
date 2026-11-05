@@ -266,16 +266,34 @@ async function loadEligibilityData(
         qualEventCounts.set(Number(row.teamNumber), Number(row.cnt));
     });
 
-    let priorAdvRows = await DATA_SOURCE.getRepository(AdvancementScore)
+    // Teams that already advanced to an event like the one this event advances to don't take
+    // another slot, whichever type of event they advanced from. This covers a Qualifier and a League
+    // Tournament feeding the same Championship, and regions with several Championships or Super
+    // Qualifiers at the same level.
+    let target = event.advancesTo
+        ? await Event.findOne({
+              where: { season, code: event.advancesTo },
+              select: ["season", "code", "type"],
+          })
+        : null;
+    let priorAdvQuery = DATA_SOURCE.getRepository(AdvancementScore)
         .createQueryBuilder("as")
         .innerJoin(Event, "e", "as.season = e.season AND as.eventCode = e.code")
         .where("as.season = :season", { season })
         .andWhere("as.teamNumber IN (:...teamNumbers)", { teamNumbers: teamNumberList })
         .andWhere("as.advanced = true")
-        .andWhere("e.type = :type", { type: event.type })
-        .andWhere("e.end < :eventStart", { eventStart: event.start })
-        .select("as.teamNumber", "teamNumber")
-        .getRawMany();
+        .andWhere("e.end < :eventStart", { eventStart: event.start });
+    if (target) {
+        priorAdvQuery
+            .innerJoin(Event, "t", "t.season = e.season AND t.code = e.advancesTo")
+            .andWhere("t.type = :targetType", { targetType: target.type });
+    } else if (event.advancesTo) {
+        // FIRST Championship isn't an event of the season, only a name.
+        priorAdvQuery.andWhere("e.advancesTo = :advancesTo", { advancesTo: event.advancesTo });
+    } else {
+        priorAdvQuery.andWhere("e.type = :type", { type: event.type });
+    }
+    let priorAdvRows = await priorAdvQuery.select("as.teamNumber", "teamNumber").getRawMany();
     priorAdvRows.forEach((row: any) => previouslyAdvanced.add(Number(row.teamNumber)));
 
     return { teamRegionMap, qualEventCounts, previouslyAdvanced };
