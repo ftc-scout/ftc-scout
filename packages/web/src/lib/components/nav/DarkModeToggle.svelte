@@ -68,6 +68,7 @@
         class="render-light"
         name="currTheme"
         value="light"
+        aria-label="Switch to dark theme"
         on:click|preventDefault={() => setTheme("dark")}
     >
         <Fa icon={faMoon} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
@@ -77,6 +78,7 @@
         class="render-dark"
         name="currTheme"
         value="dark"
+        aria-label="Switch to light theme"
         on:click|preventDefault={() => setTheme("light")}
     >
         <Fa icon={faSun} fw size="1.25x" translateX="-0.25" style="font-size: 24px" />
