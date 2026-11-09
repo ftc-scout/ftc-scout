@@ -93,6 +93,7 @@
                 { value: "no", name: "Pre Filter Rank" },
                 { value: "yes", name: "Post Filter Rank" },
             ]}
+            label="Rank before or after filters"
         />
     {/if}
     {#if includeSkipRankTys}
@@ -102,6 +103,7 @@
                 { value: "skip", name: "Rank Best Results" },
                 { value: "keep", name: "Rank All Results" },
             ]}
+            label="Results to rank"
         />
     {/if}
     <div>

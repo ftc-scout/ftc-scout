@@ -4,6 +4,7 @@
     export let date: Date | null;
     export let id: string | null = null;
     export let name: string | null = null;
+    export let label: string | null = null;
 
     const i = (x: Date | null) => (dateStr = x ? dateToStr(x) : null);
     const o = (x: string | null) => (date = x ? dateFromStr(x) : null);
@@ -20,7 +21,16 @@
     $: maxStr = dateToStr(max);
 </script>
 
-<input type="date" {id} {name} min={minStr} max={maxStr} bind:value={dateStr} on:change />
+<input
+    type="date"
+    {id}
+    {name}
+    aria-label={label}
+    min={minStr}
+    max={maxStr}
+    bind:value={dateStr}
+    on:change
+/>
 
 <style>
     input {
