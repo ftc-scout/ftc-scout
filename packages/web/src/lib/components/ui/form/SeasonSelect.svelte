@@ -5,6 +5,7 @@
     export let season: Season;
     export let nonForm = false;
     export let id: string | null = null;
+    export let label: string | null = null;
     export let disabledValues: Season[] = [];
 
     const i = (x: Season) => (seasonStr = "" + x);
@@ -28,5 +29,6 @@
         }))}
     {nonForm}
     {id}
+    {label}
     on:change
 />

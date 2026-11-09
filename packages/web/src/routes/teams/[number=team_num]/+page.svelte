@@ -103,7 +103,12 @@
 
         <Card vis={false}>
             <Form id="season" noscriptSubmit>
-                <SeasonSelect bind:season={$season} nonForm disabledValues={inactiveSeasons} />
+                <SeasonSelect
+                    bind:season={$season}
+                    nonForm
+                    disabledValues={inactiveSeasons}
+                    label="Season"
+                />
             </Form>
         </Card>
 
