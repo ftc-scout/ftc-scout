@@ -21,6 +21,10 @@ import { DATA_SOURCE } from "../db/data-source";
 import { frontendMSFromDB } from "../graphql/dyn/match-score";
 import { FindOptionsWhere, In } from "typeorm";
 import { getQuickStats } from "../graphql/resolvers/Team";
+import { AdvancementScore } from "../db/entities/AdvancementScore";
+import { League } from "../db/entities/League";
+import { LeagueTeam } from "../db/entities/LeagueTeam";
+import { LeagueRanking, firstSeasonLeagueRankings } from "../db/entities/dyn/league-ranking";
 import { addTypename } from "../graphql/dyn/tep";
 
 const pre = "/rest/v1/";
@@ -57,8 +61,15 @@ export function setupRest(app: Express) {
     app.get(pre + "events/:season(\\d+)/:code/matches", eventMatches);
     app.get(pre + "events/:season(\\d+)/:code/awards", eventAwards);
     app.get(pre + "events/:season(\\d+)/:code/teams", eventTeams);
+    app.get(pre + "events/:season(\\d+)/:code/advancement", eventAdvancement);
     app.get(pre + "events/:season(\\d+)/:code/preview", eventPreview);
     app.get(pre + "events/search/:season(\\d+)", eventSearch);
+
+    app.get(pre + "leagues/:season(\\d+)", leagueSearch);
+    app.get(pre + "leagues/:season(\\d+)/:regionCode/:code", leagueByCode);
+    app.get(pre + "leagues/:season(\\d+)/:regionCode/:code/teams", leagueTeams);
+
+    app.get(pre + "teams/:number(\\d+)/leagues", teamLeagues);
 }
 
 async function teamByNumber(req: Request<{ number: string }>, res: Response) {
@@ -441,6 +452,183 @@ async function eventSearch(req: Request<{ season: string }>, res: Response) {
     }
 
     res.send(entities);
+}
+
+async function teamLeagues(req: Request<{ number: string }>, res: Response) {
+    let teamNumber = +req.params.number;
+    let season = req.query.season as string | undefined;
+
+    if (season && !isSeason(+season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    let memberships = await LeagueTeam.findBy({
+        teamNumber,
+        ...(season ? { season: +season as Season } : {}),
+    });
+
+    res.send(memberships);
+}
+
+async function leagueSearch(req: Request<{ season: string }>, res: Response) {
+    let season = +req.params.season;
+
+    if (!isSeason(season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    let regionCode = req.query.regionCode as string | undefined;
+    let limit = req.query.limit as string | undefined;
+    let searchText = req.query.searchText as string | undefined;
+
+    if (limit && !isNumber(limit)) {
+        res.status(400).send(`Invalid limit ${limit}.`);
+        return;
+    }
+
+    let leagues = await League.findBy({
+        season,
+        ...(regionCode ? { regionCode } : {}),
+    });
+
+    if (searchText && searchText.trim() != "") {
+        let results = fuzzySearch(
+            leagues,
+            searchText.trim(),
+            limit ? +limit : undefined,
+            "name",
+            true
+        );
+        leagues = results.map((d) => d.document);
+    } else if (limit) {
+        leagues = leagues.slice(0, +limit);
+    }
+
+    res.send(leagues);
+}
+
+async function getLeagueRankings(
+    season: Season,
+    leagueCode: string,
+    regionCode: string
+): Promise<any[]> {
+    if (season < firstSeasonLeagueRankings) return [];
+
+    let rankings = await LeagueRanking[season].find({
+        where: { leagueCode, regionCode },
+        order: { rank: "ASC" },
+    });
+    let results = [];
+
+    for (let r of rankings) {
+        if (r.hasStats) {
+            results.push({
+                season: r.season,
+                leagueCode: r.leagueCode,
+                regionCode: r.regionCode,
+                teamNumber: r.teamNumber,
+                isRemote: r.isRemote,
+                stats: {
+                    rank: r.rank,
+                    avgRp: r.avgRp,
+                    rp: r.rp,
+                    tb1: r.tb1,
+                    tb2: r.tb2,
+                    wins: r.wins,
+                    losses: r.losses,
+                    ties: r.ties,
+                    dqs: r.dqs,
+                    qualMatchesPlayed: r.qualMatchesPlayed,
+                    tot: r.tot,
+                    avg: r.avg,
+                    opr: r.opr,
+                    min: r.min,
+                    max: r.max,
+                    dev: r.dev,
+                },
+                createdAt: r.createdAt,
+                updatedAt: r.updatedAt,
+            });
+        } else {
+            results.push({
+                season: r.season,
+                leagueCode: r.leagueCode,
+                regionCode: r.regionCode,
+                teamNumber: r.teamNumber,
+                isRemote: r.isRemote,
+                stats: null,
+                createdAt: r.createdAt,
+                updatedAt: r.updatedAt,
+            });
+        }
+    }
+
+    return results;
+}
+
+async function leagueByCode(
+    req: Request<{ season: string; regionCode: string; code: string }>,
+    res: Response
+) {
+    let season = +req.params.season;
+    let { regionCode, code } = req.params;
+
+    if (!isSeason(season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    let league = await League.findOneBy({ season, code, regionCode });
+
+    if (!league) {
+        res.status(404).send(
+            `No league in season ${season} with code ${code} and region ${regionCode}.`
+        );
+        return;
+    }
+
+    res.send(league);
+}
+
+async function leagueTeams(
+    req: Request<{ season: string; regionCode: string; code: string }>,
+    res: Response
+) {
+    let season = +req.params.season;
+    let { regionCode, code: leagueCode } = req.params;
+
+    if (!isSeason(season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    res.send(await getLeagueRankings(season, leagueCode, regionCode));
+}
+
+async function eventAdvancement(req: Request<{ season: string; code: string }>, res: Response) {
+    let season = +req.params.season;
+    let eventCode = req.params.code;
+
+    if (!isSeason(season)) {
+        res.status(400).send(`Invalid season ${season}.`);
+        return;
+    }
+
+    let event = await Event.findOneBy({ season, code: eventCode });
+
+    if (!event) {
+        res.status(404).send(`No event in season ${season} with code ${eventCode}.`);
+        return;
+    }
+
+    let advancement = await AdvancementScore.find({
+        where: { season, eventCode },
+        order: { rank: "ASC" },
+    });
+
+    res.send(advancement);
 }
 
 async function eventPreview(req: Request<{ season: string; code: string }>, res: Response) {

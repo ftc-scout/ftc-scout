@@ -5,11 +5,13 @@ import { DATA_SOURCE } from "../data-source";
 import { getEventAwards } from "../../ftc-api/get-event-awards";
 import { Award } from "../entities/Award";
 import { LoadType } from "../../ftc-api/watch";
+import { computeAdvancementForEvent } from "./compute-advancement";
 
 export async function loadAllAwards(season: Season, loadType: LoadType) {
     console.info(`Loading awards for season ${season}. (${loadType})`);
 
     let events = await eventsToFetch(season, loadType);
+    let advancementToRecompute = new Set<string>();
 
     console.info(`Got ${events.length} events to fetch.`);
 
@@ -25,9 +27,22 @@ export async function loadAllAwards(season: Season, loadType: LoadType) {
             .flat()
             .map((a) => Award.fromApi(season, a))
             .filter(notEmpty);
-        await Award.save(dbAwards, { chunk: 100 });
+        let savedAwards = await Award.save(dbAwards, { chunk: 100 });
+
+        // Track which events had awards updated or inserted
+        let updatedAwards = savedAwards.filter((award) => "updatedAt" in award);
+        for (let award of updatedAwards) {
+            if (season >= Season.Decode) {
+                advancementToRecompute.add(award.eventCode);
+            }
+        }
 
         console.info(`Loaded ${Math.min(i + chunkSize, events.length) + 1}/${events.length}.`);
+    }
+
+    console.info("Advancements to recompute:", advancementToRecompute.size);
+    for (let eventCode of advancementToRecompute) {
+        await computeAdvancementForEvent(season, eventCode);
     }
 
     await DataHasBeenLoaded.create({
