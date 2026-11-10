@@ -31,9 +31,11 @@
 <style>
     table {
         width: 100%;
-        border-spacing: 0;
         --data-percent: 40%;
         --col-width: 75px;
+        /* Make table itself scroll horizontally when bigger than dialog (i.e. mobile), instead of the whole dialog */
+        display: grid;
+        overflow-x: auto;
     }
 
     @media (max-width: 700px) {

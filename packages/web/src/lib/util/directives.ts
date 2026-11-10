@@ -22,12 +22,11 @@ export function quickFocus(node: any) {
 
 export function stickTableHead(node: HTMLElement) {
     let table = node.parentElement!;
-    let card = table.parentElement?.parentElement!;
     let content = document.getElementById("content")!;
     content?.addEventListener("scroll", listener);
 
     function listener() {
-        let requiredOff = content.scrollTop - table.offsetTop - card.offsetTop - 1; // + table.offsetTop - card.offsetTop  - 1;
+        let requiredOff = content.getBoundingClientRect().top - table.getBoundingClientRect().top - 1;
 
         let firstRow = table.lastChild?.firstChild as HTMLElement | null;
         let minTableHeight = firstRow?.clientHeight ?? 48;

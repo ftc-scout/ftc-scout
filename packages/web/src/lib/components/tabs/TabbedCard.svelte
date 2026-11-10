@@ -51,6 +51,12 @@
         gap: var(--md-gap);
         align-items: center;
         justify-content: left;
+
+        /* Make sure tabs don't move when switching to tab with contents wider than requested size */
+        max-width: var(--requested-width);
+        margin: 0 auto;
+        /* Avoid border weirdness if last tab is up against right side */
+        padding-right: 8px;
     }
 
     .tab {
@@ -63,7 +69,7 @@
         border-top-left-radius: 8px;
         border-top-right-radius: 8px;
         border: 1px solid transparent;
-        border-bottom: 1px solid var(--sep-color);
+        border-bottom: none !important;
 
         transform: translate(0, 1px);
 
@@ -75,23 +81,22 @@
         background: var(--tab-hover-color);
     }
 
+    /* Far left tab shows "under" the tab where the broder radius is, so extend hover color down */
+    .tab:hover:not(.selected):after {
+        position: absolute;
+        content: "";
+        background: var(--tab-hover-color);
+        top: 100%;
+        height: 20px;
+        right: -1px;
+        left: -1px;
+    }
+
     .tab.selected {
         background: var(--fg-color);
 
         border: 1px solid var(--sep-color);
-        border-bottom: 1px solid transparent;
-    }
-
-    .tab:first-child:not(.selected):not(:focus-visible) {
-        /* Fix extra border */
-        clip-path: polygon(
-            0 0,
-            100% 0,
-            100% 100%,
-            8px 100%,
-            8px calc(100% - 1px),
-            0 calc(100% - 1px)
-        );
+        z-index: 1; /* Stack selected tab above card, so top border of card in selected tab's area is hidden behind selected tab */
     }
 
     .card {
@@ -100,6 +105,9 @@
         border-radius: 8px;
 
         padding: var(--lg-pad);
+
+        /* Stack card over non-selected tabs, so tab hover background is behind card */
+        position: relative;
     }
 
     .flat-top {

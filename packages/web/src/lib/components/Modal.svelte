@@ -61,7 +61,7 @@
         flex-direction: column;
         height: auto;
         max-height: calc(100% - var(--lg-gap) * 2);
-        max-width: 100%;
+        max-width: calc(100% - var(--lg-gap) * 2);
         position: relative;
 
         box-shadow: -2px 2px 10px 3px rgba(0, 0, 0, 10%);
@@ -86,7 +86,7 @@
     }
 
     .scroll-wrapper {
-        padding: var(--lg-pad);
+        padding: var(--lg-pad) 0;
         padding-top: 0;
 
         max-height: 100%;
@@ -97,6 +97,11 @@
     .scroll-wrapper:focus-visible,
     .scroll-wrapper:focus {
         outline: none;
+    }
+
+    .scroll-wrapper > :global(*) {
+        padding-left: var(--lg-pad);
+        padding-right: var(--lg-pad);
     }
 
     .close {

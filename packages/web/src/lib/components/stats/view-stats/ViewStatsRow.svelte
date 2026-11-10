@@ -77,7 +77,7 @@
         display: grid;
         grid-template-columns:
             minmax(var(--name-min-len), 1fr)
-            repeat(var(--col-count), minmax(var(--data-max), var(--col-width)));
+            repeat(var(--col-count), minmax(var(--col-width), var(--data-max)));
     }
 
     td {
