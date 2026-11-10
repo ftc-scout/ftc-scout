@@ -1,6 +1,47 @@
 <script lang="ts" context="module">
     export const SHOW_MATCH_SCORE = {};
     export type ShowMatchFn = (match: FullMatchFragment) => void;
+
+    const BREAK_THRESHOLD_MS = 15 * 60 * 1000;
+
+    export function getDelayForMatches(
+        sortedSection: {
+            id: number;
+            scores?: any;
+            actualStartTime?: string;
+            scheduledStartTime?: string;
+        }[]
+    ): Map<number, number> {
+        const result = new Map<number, number>();
+
+        let lastPlayedIdx = -1;
+        let delayMs = 0;
+        for (let i = sortedSection.length - 1; i >= 0; i--) {
+            const m = sortedSection[i];
+            if (m.scores && m.actualStartTime && m.scheduledStartTime) {
+                lastPlayedIdx = i;
+                delayMs =
+                    new Date(m.actualStartTime).getTime() -
+                    new Date(m.scheduledStartTime).getTime();
+                break;
+            }
+        }
+        if (lastPlayedIdx === -1) return result;
+
+        for (let i = lastPlayedIdx + 1; i < sortedSection.length; i++) {
+            const prev = sortedSection[i - 1];
+            const curr = sortedSection[i];
+            if (curr.scheduledStartTime && prev.scheduledStartTime) {
+                const gap =
+                    new Date(curr.scheduledStartTime).getTime() -
+                    new Date(prev.scheduledStartTime).getTime();
+                if (gap > BREAK_THRESHOLD_MS) break;
+            }
+            if (!curr.scores) result.set(curr.id, delayMs);
+        }
+
+        return result;
+    }
 </script>
 
 <script lang="ts">
@@ -48,6 +89,26 @@
         .sort(matchSorter);
     $: doubleElim = matches.filter((m) => m.tournamentLevel == TournamentLevel.DoubleElim);
 
+    $: qualsDelays = getDelayForMatches(quals);
+    $: finalsDelays = getDelayForMatches(finals);
+    $: doubleElimDelays = getDelayForMatches(doubleElim);
+    $: semisDelays = getDelayForMatches(semis);
+
+    $: activeDelayMs = (() => {
+        for (const map of [qualsDelays, finalsDelays, doubleElimDelays, semisDelays]) {
+            if (map.size > 0) return map.values().next().value as number;
+        }
+        return null;
+    })();
+
+    function formatDelay(ms: number): string {
+        const mins = Math.round(Math.abs(ms) / 60000);
+        if (mins === 0) return "On schedule";
+        return ms > 0 ? `~${mins} min behind schedule` : `~${mins} min ahead of schedule`;
+    }
+
+    let showPredicted = true;
+
     $: soloMatches = groupBy(matches, (m) => m.id - (m.id % 1000));
 
     $: anySurrogate = matches.some((m) => m.teams.some((t) => t.surrogate));
@@ -87,6 +148,19 @@
     on:close={() => ($modalMatchId = null)}
 />
 
+{#if activeDelayMs !== null && !remote}
+    <div class="delay-bar">
+        <div class="delay-status" class:late={activeDelayMs > 0} class:early={activeDelayMs < 0}>
+            <span class="delay-dot" />
+            {formatDelay(activeDelayMs)}
+        </div>
+        <label class="predicted-toggle">
+            <input type="checkbox" bind:checked={showPredicted} />
+            Show predicted times
+        </label>
+    </div>
+{/if}
+
 <table class:remote>
     {#if remote}
         <RemoteMatchTableHeader />
@@ -121,6 +195,7 @@
                         zebraStripe={i % 2 == 1}
                         {teamCount}
                         {showNonPenaltyScores}
+                        delayMs={showPredicted ? doubleElimDelays.get(match.id) ?? null : null}
                     />
                 {/each}
                 {#if finals.length}
@@ -135,6 +210,7 @@
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
                         {showNonPenaltyScores}
+                        delayMs={showPredicted ? finalsDelays.get(match.id) ?? null : null}
                     />
                 {/each}
                 {#if semis.length}
@@ -149,6 +225,7 @@
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
                         {showNonPenaltyScores}
+                        delayMs={showPredicted ? semisDelays.get(match.id) ?? null : null}
                     />
                 {/each}
                 {#if quals.length && (finals.length || semis.length || doubleElim.length)}
@@ -163,6 +240,7 @@
                         {focusedTeam}
                         zebraStripe={i % 2 == 1}
                         {showNonPenaltyScores}
+                        delayMs={showPredicted ? qualsDelays.get(match.id) ?? null : null}
                     />
                 {/each}
             {/if}
@@ -238,5 +316,62 @@
 
     .info td {
         display: block;
+    }
+
+    .delay-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: var(--md-gap);
+        padding: 0 var(--md-pad);
+        margin-bottom: var(--sm-gap);
+    }
+
+    .delay-status {
+        display: flex;
+        align-items: center;
+        gap: var(--sm-gap);
+        font-weight: 600;
+        color: var(--grayed-out-text-color);
+    }
+
+    .delay-status.late {
+        color: #c87000;
+    }
+
+    .delay-status.early {
+        color: #2e7d32;
+    }
+
+    :global(body.dark) .delay-status.late {
+        color: #ffb74d;
+    }
+
+    :global(body.dark) .delay-status.early {
+        color: #81c784;
+    }
+
+    .delay-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: currentColor;
+        flex-shrink: 0;
+    }
+
+    .predicted-toggle {
+        display: flex;
+        align-items: center;
+        gap: var(--sm-gap);
+        cursor: pointer;
+        color: var(--grayed-out-text-color);
+        font-size: 0.9em;
+        white-space: nowrap;
+    }
+
+    .predicted-toggle input {
+        width: 1.2em;
+        height: 1.2em;
+        cursor: pointer;
     }
 </style>

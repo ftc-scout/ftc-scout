@@ -29,7 +29,7 @@
         TournamentLevel,
         type FullMatchFragment,
     } from "../../graphql/generated/graphql-operations";
-    import { prettyPrintTimeString } from "../../printers/time";
+    import { prettyPrintTime, prettyPrintTimeString } from "../../printers/time";
     import { createTippy } from "svelte-tippy";
     import "tippy.js/dist/tippy.css";
     import "tippy.js/themes/light.css";
@@ -41,6 +41,12 @@
     export let match: FullMatchFragment;
     export let timeZone: string;
     export let showNonPenaltyScores = false;
+    export let delayMs: number | null = null;
+
+    $: predictedTime =
+        delayMs !== null && match.scheduledStartTime
+            ? new Date(new Date(match.scheduledStartTime).getTime() + delayMs)
+            : null;
 
     $: winner = computeWinner(match.scores);
 
@@ -97,7 +103,13 @@
     </div>
     <div class="score">
         {#if match.scores == undefined}
-            {prettyPrintTimeString(match.scheduledStartTime, timeZone)}
+            {#if predictedTime}
+                <span class="predicted" title="Predicted based on current delay"
+                    >{prettyPrintTime(predictedTime, timeZone)}</span
+                >
+            {:else}
+                {prettyPrintTimeString(match.scheduledStartTime, timeZone)}
+            {/if}
         {:else if "red" in match.scores}
             <div class="left" class:winner={winner == Alliance.Red} class:tie={winner == "Tie"}>
                 {#if hasRpDots}
@@ -210,6 +222,11 @@
     }
     .tie {
         color: var(--neutral-team-text-color);
+    }
+
+    .predicted {
+        color: #c87000;
+        font-style: italic;
     }
 
     .score {
