@@ -25,6 +25,7 @@ import {
 import { exit } from "process";
 import { IS_DEV } from "../../constants";
 import { newMatchesKey, pubsub } from "../../graphql/resolvers/pubsub";
+import { removeStaleMatches } from "./remove-stale-matches";
 
 const IGNORED_MATCHES = [
     //cSpell:disable
@@ -104,6 +105,12 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
                 await em.save(allDbTmps, { chunk: 500 });
                 await em.getRepository(MatchScoreSchemas[season]).save(allDbScores, { chunk: 100 });
                 await em.getRepository(TepSchemas[season]).save(allDbTeps, { chunk: 100 });
+                await removeStaleMatches(
+                    em,
+                    season,
+                    event.code,
+                    new Set(allDbMatches.map((m) => m.id))
+                );
             });
 
             let updatedScores = allDbScores.filter((m) => "updatedAt" in m);
