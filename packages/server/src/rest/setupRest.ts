@@ -22,6 +22,7 @@ import { frontendMSFromDB } from "../graphql/dyn/match-score";
 import { FindOptionsWhere, In } from "typeorm";
 import { getQuickStats } from "../graphql/resolvers/Team";
 import { addTypename } from "../graphql/dyn/tep";
+import { asyncHandler } from "./async-handler";
 
 const pre = "/rest/v1/";
 
@@ -46,19 +47,19 @@ function isDate(date: string): boolean {
 }
 
 export function setupRest(app: Express) {
-    app.get(pre + "teams/:number(\\d+)", teamByNumber);
-    app.get(pre + "teams/:number(\\d+)/events/:season(\\d+)", teamEvents);
-    app.get(pre + "teams/:number(\\d+)/awards", teamAwards);
-    app.get(pre + "teams/:number(\\d+)/matches", teamMatches);
-    app.get(pre + "teams/:number(\\d+)/quick-stats", teamQuickStats);
-    app.get(pre + "teams/search", teamSearch);
+    app.get(pre + "teams/:number(\\d+)", asyncHandler(teamByNumber));
+    app.get(pre + "teams/:number(\\d+)/events/:season(\\d+)", asyncHandler(teamEvents));
+    app.get(pre + "teams/:number(\\d+)/awards", asyncHandler(teamAwards));
+    app.get(pre + "teams/:number(\\d+)/matches", asyncHandler(teamMatches));
+    app.get(pre + "teams/:number(\\d+)/quick-stats", asyncHandler(teamQuickStats));
+    app.get(pre + "teams/search", asyncHandler(teamSearch));
 
-    app.get(pre + "events/:season(\\d+)/:code", eventByCode);
-    app.get(pre + "events/:season(\\d+)/:code/matches", eventMatches);
-    app.get(pre + "events/:season(\\d+)/:code/awards", eventAwards);
-    app.get(pre + "events/:season(\\d+)/:code/teams", eventTeams);
-    app.get(pre + "events/:season(\\d+)/:code/preview", eventPreview);
-    app.get(pre + "events/search/:season(\\d+)", eventSearch);
+    app.get(pre + "events/:season(\\d+)/:code", asyncHandler(eventByCode));
+    app.get(pre + "events/:season(\\d+)/:code/matches", asyncHandler(eventMatches));
+    app.get(pre + "events/:season(\\d+)/:code/awards", asyncHandler(eventAwards));
+    app.get(pre + "events/:season(\\d+)/:code/teams", asyncHandler(eventTeams));
+    app.get(pre + "events/:season(\\d+)/:code/preview", asyncHandler(eventPreview));
+    app.get(pre + "events/search/:season(\\d+)", asyncHandler(eventSearch));
 }
 
 async function teamByNumber(req: Request<{ number: string }>, res: Response) {

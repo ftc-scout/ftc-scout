@@ -8,27 +8,34 @@ import { createCanvas, registerFont, Image } from "canvas";
 import { readFile } from "fs/promises";
 import { MatchScore } from "./db/entities/dyn/match-score";
 import { DateTime } from "luxon";
+import { asyncHandler } from "./rest/async-handler";
 
 function sendBanner(res: core.Response) {
     res.sendFile(resolve("src/res/banner.png"));
 }
 
 export function setupBannerRoutes(app: core.Express) {
-    app.get("/banners/teams/:team_num", async (req, res) => {
-        if (+req.params.team_num) {
-            teamBanner(+req.params.team_num, res);
-        } else {
-            sendBanner(res);
-        }
-    });
+    app.get(
+        "/banners/teams/:team_num",
+        asyncHandler(async (req, res) => {
+            if (+req.params.team_num) {
+                await teamBanner(+req.params.team_num, res);
+            } else {
+                sendBanner(res);
+            }
+        })
+    );
 
-    app.get("/banners/events/:season/:code", async (req, res) => {
-        if (/^\d+$/.test(req.params.season)) {
-            await eventBanner(+req.params.season as Season, req.params.code, res);
-        } else {
-            sendBanner(res);
-        }
-    });
+    app.get(
+        "/banners/events/:season/:code",
+        asyncHandler(async (req, res) => {
+            if (/^\d+$/.test(req.params.season)) {
+                await eventBanner(+req.params.season as Season, req.params.code, res);
+            } else {
+                sendBanner(res);
+            }
+        })
+    );
 }
 
 async function teamBanner(number: number, res: core.Response) {

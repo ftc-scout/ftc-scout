@@ -22,7 +22,7 @@ export function handleAnalytics(req: Request, res: Response) {
             typeof url != "string" ||
             (fromUrl != null && typeof fromUrl != "string") ||
             typeof sessionId != "string" ||
-            Number.isNaN(time)
+            !Number.isFinite(time)
         ) {
             return;
         }
@@ -48,6 +48,8 @@ export function handleAnalytics(req: Request, res: Response) {
             browser,
             deviceType,
             date: new Date(time),
-        }).save();
+        })
+            .save()
+            .catch((e) => console.error("Failed to save analytics:", e));
     } catch (e) {}
 }
