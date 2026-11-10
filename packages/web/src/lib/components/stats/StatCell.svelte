@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { StatType } from "@ftc-scout/common";
     import { prettyPrintFloat, prettyPrintOrdinal } from "../../printers/number";
     import StatEvent from "./StatEvent.svelte";
     import StatTeam from "./StatTeam.svelte";
@@ -15,7 +16,9 @@
 </script>
 
 {#if val == null}
-    <td class="{stat.color} na" title={stat.titleName}> N/A </td>
+    <td class="{stat.color} {stat.ty == StatType.Rank ? '' : 'na'}" title={stat.titleName}>
+        {#if stat.ty != StatType.Rank} N/A {/if}
+    </td>
 {:else if val.ty == "team"}
     <StatTeam {val} {eventCode} {focusedTeam} />
 {:else if val.ty == "event"}

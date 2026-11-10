@@ -16,8 +16,8 @@
     export let timeZone: string;
     export let focusedTeam: number | null;
     export let zebraStripe: boolean;
-    export let teamCount = 0;
     export let showNonPenaltyScores = false;
+    export let allianceCount = 0;
 
     $: teams = match.teams;
     $: redTeams = teams.filter((t) => t.alliance == Alliance.Red);
@@ -29,56 +29,62 @@
     $: blues = [...blueTeams, ...blueExtras].sort(sortTeams);
 
     $: isDoubleElim = match.tournamentLevel == TournamentLevel.DoubleElim;
-    $: isNewRound = isDoubleElim && checkIsNewRound(match.series, match.matchNum, teamCount);
+    $: isNewRound = isDoubleElim && checkIsNewRound(match.series, match.matchNum, allianceCount);
 
     $: winner = computeWinner(match.scores);
 
-    function hasAlreadyLost(series: number, teamCount: number, alliance: Alliance): boolean {
-        if (teamCount <= 10) {
-            return false;
-        } else if (teamCount <= 20) {
-            return (
-                series == 3 ||
-                series == 5 ||
-                (series == 6 && alliance == Alliance.Blue) ||
-                series == 7
-            );
-        } else if (teamCount <= 40) {
-            return (
-                series == 5 ||
-                series == 6 ||
-                series == 8 ||
-                series == 9 ||
-                (series == 10 && alliance == Alliance.Blue) ||
-                series == 11
-            );
-        } else {
-            return (
-                series == 5 ||
-                series == 6 ||
-                series == 9 ||
-                series == 10 ||
-                series == 12 ||
-                series == 13 ||
-                (series == 14 && alliance == Alliance.Blue) ||
-                series == 15
-            );
+    function hasAlreadyLost(series: number, allianceCount: number, alliance: Alliance): boolean {
+        switch (allianceCount) {
+            case 2:
+                return false;
+            case 4:
+                return (
+                    series == 3 ||
+                    series == 5 ||
+                    (series == 6 && alliance == Alliance.Blue) ||
+                    series == 7
+                );
+            case 6:
+                return (
+                    series == 5 ||
+                    series == 6 ||
+                    series == 8 ||
+                    series == 9 ||
+                    (series == 10 && alliance == Alliance.Blue) ||
+                    series == 11
+                );
+            case 8:
+                return (
+                    series == 5 ||
+                    series == 6 ||
+                    series == 9 ||
+                    series == 10 ||
+                    series == 12 ||
+                    series == 13 ||
+                    (series == 14 && alliance == Alliance.Blue) ||
+                    series == 15
+                );
+            default:
+                return false;
         }
     }
 
-    function checkIsNewRound(series: number, matchNum: number, teamCount: number): boolean {
+    function checkIsNewRound(series: number, matchNum: number, allianceCount: number): boolean {
         if (matchNum != 1) {
             return false;
         }
 
-        if (teamCount <= 10) {
-            return false;
-        } else if (teamCount <= 20) {
-            return series == 3 || series == 5 || series == 6;
-        } else if (teamCount <= 40) {
-            return series == 3 || series == 5 || series == 7 || series == 9 || series == 10;
-        } else {
-            return series == 5 || series == 9 || series == 11 || series == 13 || series == 14;
+        switch (allianceCount) {
+            case 2:
+                return false;
+            case 4:
+                return series == 3 || series == 5 || series == 6;
+            case 6:
+                return series == 3 || series == 5 || series == 7 || series == 9 || series == 10;
+            case 8:
+                return series == 5 || series == 9 || series == 11 || series == 13 || series == 14;
+            default:
+                return false;
         }
     }
 </script>
@@ -89,8 +95,9 @@
     {#if isDoubleElim}
         <DeLives
             alliance={Alliance.Red}
-            alreadyLost={hasAlreadyLost(match.series, teamCount, Alliance.Red)}
-            lostThis={winner == Alliance.Blue}
+            alreadyLost={hasAlreadyLost(match.series, allianceCount, Alliance.Red)}
+            lostThis={(winner == Alliance.Blue && !blues.some((t) => t.dq)) ||
+                (reds.some((t) => t.dq) && !blues.some((t) => t.dq))}
         />
     {/if}
 
@@ -112,8 +119,9 @@
     {#if isDoubleElim}
         <DeLives
             alliance={Alliance.Blue}
-            alreadyLost={hasAlreadyLost(match.series, teamCount, Alliance.Blue)}
-            lostThis={winner == Alliance.Red}
+            alreadyLost={hasAlreadyLost(match.series, allianceCount, Alliance.Blue)}
+            lostThis={(winner == Alliance.Red && !reds.some((t) => t.dq)) ||
+                (blues.some((t) => t.dq) && !reds.some((t) => t.dq))}
         />
     {/if}
 
