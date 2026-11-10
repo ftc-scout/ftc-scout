@@ -1,0 +1,65 @@
+name: Publish pull request images
+# PR builds from forks have no permissions (as they should), so if a build finishes publish the build under that pr reference
+# This runs no arbitrary code from any PR, so should be fine.
+on:
+  workflow_run:
+    workflows: [Build]
+    types: [completed]
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    name: Publish the pull request's images
+    if: >-
+      github.event.workflow_run.event == 'pull_request' &&
+      github.event.workflow_run.conclusion == 'success' &&
+      github.event.workflow_run.head_repository.full_name != github.repository
+    runs-on: ubuntu-latest
+    permissions:
+      actions: read
+      packages: write
+      pull-requests: read
+    env:
+      IMAGE_PREFIX: ${{ vars.IMAGE_PREFIX || format('ghcr.io/{0}', github.repository) }}
+    steps:
+      - name: Find the pull request
+        id: pr
+        env:
+          GH_TOKEN: ${{ github.token }}
+          HEAD: ${{ github.event.workflow_run.head_repository.owner.login }}:${{ github.event.workflow_run.head_branch }}
+          SHA: ${{ github.event.workflow_run.head_sha }}
+        run: |
+          number=$(gh api -X GET "repos/$GITHUB_REPOSITORY/pulls" -f state=open -f head="$HEAD" \
+            --jq ".[] | select(.head.sha == \"$SHA\") | .number" | head -n 1)
+          if [ -z "$number" ]; then
+            echo "No open pull request from $HEAD is at $SHA; nothing to publish."
+          fi
+          echo "number=$number" >> "$GITHUB_OUTPUT"
+
+      - name: Download the images
+        if: steps.pr.outputs.number
+        uses: actions/download-artifact@v4
+        with:
+          pattern: image-*
+          path: images
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+
+      - name: Install skopeo
+        if: steps.pr.outputs.number
+        run: sudo apt-get update && sudo apt-get install -y skopeo
+
+      - name: Publish pr-${{ steps.pr.outputs.number }}
+        if: steps.pr.outputs.number
+        env:
+          NUMBER: ${{ steps.pr.outputs.number }}
+          REGISTRY_USER: ${{ github.repository_owner }}
+          REGISTRY_PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for name in server web; do
+            target="${IMAGE_PREFIX,,}-$name:pr-$NUMBER"
+            skopeo copy --all --dest-creds "$REGISTRY_USER:$REGISTRY_PASSWORD" \
+              "oci-archive:images/image-$name/image.tar" "docker://$target"
+          done

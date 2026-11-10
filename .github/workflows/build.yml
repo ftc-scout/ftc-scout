@@ -1,0 +1,185 @@
+name: Build
+# ghcr.io/<owner>/<repo>-<matrix>
+# Matrix options: web and server
+# Tags: main (+latest) or pr-xxx and commit sha
+# repository variables:
+#  - IMAGE_PREFIX: the image name before -server and -web for example: ghcr.io/me/ftc-scout-beta;
+#  - WEB_CODEGEN_ENV: CODEGEN_ENV build argument from web.
+# Cache node_modules, PR use main's cache (read only)
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".nvmrc"
+      - ".github/workflows/build.yml"
+  pull_request:
+    paths:
+      - "packages/**"
+      - "package.json"
+      - "package-lock.json"
+      - ".nvmrc"
+      - ".github/workflows/build.yml"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: Publish the images (tagged with the branch)
+        type: boolean
+        default: true
+
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORK_PR: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository }}
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repo Checkout
+        uses: actions/checkout@v4
+        with:
+          # Nothing here pushes to git, and so the token isn't left in .git/config, where the code
+          # being built (a pull request's too) or an image could pick it up.
+          persist-credentials: false
+
+      - uses: actions/setup-node@v4
+        id: node
+        with:
+          node-version-file: .nvmrc
+
+      # Skip ci if same lock file
+      - name: Restore node_modules
+        id: node-modules
+        uses: actions/cache/restore@v4
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+          key: node-modules-${{ runner.os }}-node${{ steps.node.outputs.node-version }}-${{ hashFiles('package-lock.json') }}
+
+      - if: steps.node-modules.outputs.cache-hit != 'true'
+        run: npm ci
+
+      - name: Save node_modules
+        if: steps.node-modules.outputs.cache-hit != 'true' && env.FORK_PR != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: |
+            node_modules
+            packages/*/node_modules
+          key: ${{ steps.node-modules.outputs.cache-primary-key }}
+
+      - run: npm run common:build
+      - run: npm run server:build
+        # Use new schema build command, so no running server needed
+      - run: npm run server:schema
+      - run: cp packages/web/codegen.yml.ci packages/web/codegen.yml
+      - run: npm run web:gen
+      - run: npm run check
+
+      - name: Upload graphql schema
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-schema
+          path: packages/web/schema.graphql
+          retention-days: 1
+
+  images:
+    name: Build ${{ matrix.name }}
+    needs: check
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: server
+            file: packages/server/Dockerfile
+          - name: web
+            file: packages/web/Dockerfile
+            build-args: ${{ vars.WEB_CODEGEN_ENV && format('CODEGEN_ENV={0}', vars.WEB_CODEGEN_ENV) || '' }}
+            # Build-secrets does nothing i think? but kept it from previous build.yml just in case
+            build-secrets: |
+              PUBLIC_FRONTEND_CODE=docker-frontend-code
+              PUBLIC_SERVER_ORIGIN=api.ftcscout.org
+    env:
+      PUBLISH: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.head.repo.full_name != github.repository) && (github.event_name != 'workflow_dispatch' || inputs.publish) }}
+      IMAGE_PREFIX: ${{ vars.IMAGE_PREFIX || format('ghcr.io/{0}', github.repository) }}
+    steps:
+      - name: Repo Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Image name
+        id: image
+        run: echo "name=${IMAGE_PREFIX,,}-${{ matrix.name }}" >> "$GITHUB_OUTPUT"
+
+      - name: Extract metadata (tags, labels) for Docker
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ steps.image.outputs.name }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=sha,format=long,enable=${{ github.event_name != 'pull_request' }}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Log in to the Container registry
+        if: env.PUBLISH == 'true' # only if manual dispatch (with publish true) or on main, pr from fork has no GITHUB_TOKEN.
+        uses: docker/login-action@v4
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Freaking usage limits...
+      - uses: docker/setup-buildx-action@v3
+        with:
+          buildkitd-config-inline: |
+            [registry."docker.io"]
+              mirrors = ["mirror.gcr.io"]
+
+      - name: Download web schema
+        if: matrix.name == 'web'
+        uses: actions/download-artifact@v4
+        with:
+          name: web-schema
+          path: packages/web
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          file: ${{ matrix.file }}
+          build-args: ${{ matrix.build-args }}
+          secrets: ${{ matrix.build-secrets }}
+          push: ${{ env.PUBLISH == 'true' }}
+          outputs: ${{ env.FORK_PR == 'true' && format('type=oci,dest={0}/image.tar', runner.temp) || '' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha,scope=${{ matrix.name }}
+          cache-to: ${{ env.FORK_PR != 'true' && format('type=gha,mode=max,ignore-error=true,scope={0}', matrix.name) || '' }}
+
+        # If fork, output the built for publish-pr.yml.
+      - name: Keep the image for publish-pr.yml
+        if: env.FORK_PR == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: image-${{ matrix.name }}
+          path: ${{ runner.temp }}/image.tar
+          retention-days: 1
