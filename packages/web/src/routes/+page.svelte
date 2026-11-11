@@ -96,6 +96,7 @@
                             },
                         ]}
                         nonForm
+                        label="World record type"
                         style="font-size: inherit; font-weight: 600; width: max-content; max-width: calc(100% - 16px);"
                     />
                     <span

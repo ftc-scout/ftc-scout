@@ -18,6 +18,7 @@
     import { page } from "$app/stores";
     import ScoreModal from "./score-modal/ScoreModal.svelte";
     import { setContext } from "svelte";
+    import { setTableId } from "./headers";
     import { queryParam } from "../../util/search-params/search-params";
     import { faHeart, faHeartBroken } from "@fortawesome/free-solid-svg-icons";
     import { faHeart as faHeartOutline } from "@fortawesome/free-regular-svg-icons";
@@ -66,6 +67,8 @@
 
     setContext(SHOW_MATCH_SCORE, show);
 
+    const tableId = setTableId(event.season, event.code);
+
     let modalMatchId = queryParam<[string, number] | null>("scores", {
         encode: (m) => (m ? `${m[0]}-${m[1]}` : null),
         decode: (s) => {
@@ -109,10 +112,11 @@
                 {/each}
             {:else}
                 {#if doubleElim.length}
-                    <SectionRow name={"Playoffs"} />
+                    <SectionRow name={"Playoffs"} id="{tableId}-playoffs" />
                 {/if}
                 {#each doubleElim as match, i}
                     <TradMatchRow
+                        section="{tableId}-playoffs"
                         {match}
                         {eventCode}
                         {season}
@@ -124,10 +128,11 @@
                     />
                 {/each}
                 {#if finals.length}
-                    <SectionRow name={"Finals"} />
+                    <SectionRow name={"Finals"} id="{tableId}-finals" />
                 {/if}
                 {#each finals as match, i}
                     <TradMatchRow
+                        section="{tableId}-finals"
                         {match}
                         {eventCode}
                         {season}
@@ -138,10 +143,11 @@
                     />
                 {/each}
                 {#if semis.length}
-                    <SectionRow name={"Semifinals"} />
+                    <SectionRow name={"Semifinals"} id="{tableId}-semis" />
                 {/if}
                 {#each semis as match, i}
                     <TradMatchRow
+                        section="{tableId}-semis"
                         {match}
                         {eventCode}
                         {season}
@@ -152,10 +158,13 @@
                     />
                 {/each}
                 {#if quals.length && (finals.length || semis.length || doubleElim.length)}
-                    <SectionRow name={"Qualification Matches"} />
+                    <SectionRow name={"Qualification Matches"} id="{tableId}-quals" />
                 {/if}
                 {#each quals as match, i}
                     <TradMatchRow
+                        section={finals.length || semis.length || doubleElim.length
+                            ? `${tableId}-quals`
+                            : null}
                         {match}
                         {eventCode}
                         {season}

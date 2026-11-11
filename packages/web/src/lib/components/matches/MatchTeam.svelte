@@ -8,6 +8,7 @@
     import { Alliance, type FullMatchFragment } from "../../graphql/generated/graphql-operations";
     import { getContext } from "svelte";
     import { browser } from "$app/environment";
+    import { cellHeaders, type Column } from "./headers";
 
     export let team: FullMatchFragment["teams"][number];
     export let eventCode: string;
@@ -33,6 +34,11 @@
         (!onField && !dq && !noShow ? " (Not on Field)" : "") +
         (surrogate ? " (Surrogate)" : "");
 
+    const headers = cellHeaders();
+    let column: Column;
+    $: column =
+        team.alliance == Alliance.Red ? "red" : team.alliance == Alliance.Blue ? "blue" : "team";
+
     let clickAction = getContext(TEAM_CLICK_ACTION_CTX) as
         | ((num: number, name: string) => void)
         | undefined;
@@ -47,6 +53,7 @@
     class:focused={focusedTeam == number && (showRemoteFocus || team.alliance != Alliance.Solo)}
     class:winner
     {title}
+    headers={headers(column)}
 >
     <a
         class="inner"

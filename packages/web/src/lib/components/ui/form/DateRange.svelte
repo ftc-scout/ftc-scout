@@ -19,10 +19,19 @@
         {max}
         id={id ? `start-${id}` : null}
         name="start"
+        label="Start date"
         on:change
     />
     to
-    <DateInput bind:date={end} {min} {max} id={id ? `end-${id}` : null} name="end" on:change />
+    <DateInput
+        bind:date={end}
+        {min}
+        {max}
+        id={id ? `end-${id}` : null}
+        name="end"
+        label="End date"
+        on:change
+    />
 </div>
 
 <style>

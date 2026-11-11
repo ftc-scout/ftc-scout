@@ -8,13 +8,14 @@
     export let id: string | null = null;
     export let style = "";
     export let nonForm = false;
+    export let label: string | null = null;
 
     export let disabledValues: string[] = [];
 
     let form = getContext(FORM_ID) as string | null;
 </script>
 
-<select bind:value {form} {name} {id} on:change {style} class:non-form={nonForm}>
+<select bind:value {form} {name} {id} on:change {style} class:non-form={nonForm} aria-label={label}>
     {#each options as o}
         <option
             selected={value == o.value}

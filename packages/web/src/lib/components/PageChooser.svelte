@@ -36,6 +36,7 @@
         <input
             class="non-form"
             type="number"
+            aria-label="Page"
             bind:value={inputVal}
             min="1"
             max={totalPageCount}

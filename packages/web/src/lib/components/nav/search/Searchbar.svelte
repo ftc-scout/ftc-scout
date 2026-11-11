@@ -186,7 +186,7 @@
     </div>
 </form>
 
-<button class="search-btn" on:click={show}>
+<button class="search-btn" aria-label="Search" on:click={show}>
     <Fa icon={faSearch} size="1.5x" />
 </button>
 

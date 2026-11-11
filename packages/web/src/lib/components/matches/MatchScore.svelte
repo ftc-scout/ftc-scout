@@ -37,6 +37,7 @@
     import { matchTimeTip } from "../../util/tippy";
     import { getContext } from "svelte";
     import { SHOW_MATCH_SCORE, type ShowMatchFn } from "./MatchTable.svelte";
+    import { cellHeaders } from "./headers";
 
     export let match: FullMatchFragment;
     export let timeZone: string;
@@ -71,6 +72,7 @@
     $: tip = matchTimeTip(match, timeZone, $tippyTheme);
 
     let show: ShowMatchFn = getContext(SHOW_MATCH_SCORE);
+    const headers = cellHeaders();
 
     function scoreValue(score: any): number {
         if (!score || !("totalPoints" in score)) return 0;
@@ -86,6 +88,7 @@
     use:tippy={tip}
     on:click={() => show(match)}
     id="{match.eventCode}-{match.id}"
+    headers={headers("match")}
 >
     <div
         class="description"

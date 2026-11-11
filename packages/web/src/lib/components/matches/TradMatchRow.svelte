@@ -9,6 +9,7 @@
     import MatchScore, { computeWinner } from "./MatchScore.svelte";
     import MatchTeam from "./MatchTeam.svelte";
     import PlaceholderMatchTeam from "./PlaceholderMatchTeam.svelte";
+    import { setSection } from "./headers";
 
     export let match: FullMatchFragment;
     export let eventCode: string;
@@ -18,6 +19,9 @@
     export let zebraStripe: boolean;
     export let teamCount = 0;
     export let showNonPenaltyScores = false;
+    export let section: string | null = null;
+
+    setSection(section);
 
     $: teams = match.teams;
     $: redTeams = teams.filter((t) => t.alliance == Alliance.Red);
