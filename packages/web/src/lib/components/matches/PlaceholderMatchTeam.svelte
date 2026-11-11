@@ -1,14 +1,18 @@
 <script lang="ts">
     import { Alliance } from "@ftc-scout/common";
+    import { cellHeaders } from "./headers";
 
     export let alliance: "Red" | "Blue";
     export let span: number;
+
+    const headers = cellHeaders();
 </script>
 
 <td
     class:red={alliance == Alliance.Red}
     class:blue={alliance == Alliance.Blue}
     style:--span={span}
+    headers={headers(alliance == Alliance.Red ? "red" : "blue")}
 />
 
 <style>

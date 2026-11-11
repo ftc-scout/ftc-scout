@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { cellHeaders } from "./headers";
     import {
         faHeart,
         faHeartBroken,
@@ -14,6 +15,8 @@
     export let alliance: Alliance;
     export let alreadyLost: boolean;
     export let lostThis: boolean;
+
+    const headers = cellHeaders();
 
     function compute(
         i: number,
@@ -59,6 +62,7 @@
     class:blue={alliance == Alliance.Blue}
     class="hearts"
     {title}
+    headers={headers(alliance == Alliance.Red ? "red" : "blue")}
 >
     {#if a}
         <Fa icon={a} class="heart {a == faHeartBroken || a == faHeartOutline ? 'broken' : ''}" />

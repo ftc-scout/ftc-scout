@@ -1,10 +1,16 @@
+<script lang="ts">
+    import { headerId } from "./headers";
+
+    const id = headerId();
+</script>
+
 <thead>
     <tr>
-        <th class="s">
+        <th class="s" id={id("match")}>
             <div>Match</div>
             <div>Score</div>
-        </th><th class="r">Red Alliance</th>
-        <th class="b">Blue Alliance</th>
+        </th><th class="r" id={id("red")}>Red Alliance</th>
+        <th class="b" id={id("blue")}>Blue Alliance</th>
     </tr>
 </thead>
 

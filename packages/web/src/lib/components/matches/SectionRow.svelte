@@ -1,12 +1,13 @@
 <script lang="ts">
     export let name: string;
+    export let id: string;
 </script>
 
 <tr>
     <td />
     <td class="red" />
     <td class="blue" />
-    <td class="name"> <span>{name}</span> </td>
+    <th class="name" {id}> <span>{name}</span> </th>
 </tr>
 
 <style>
@@ -22,7 +23,8 @@
         }
     }
 
-    td {
+    td,
+    th {
         display: block;
     }
 
@@ -37,6 +39,7 @@
         grid-column: 3 / 4;
     }
     .name {
+        font-weight: normal;
         display: flex;
         align-items: center;
         justify-content: center;

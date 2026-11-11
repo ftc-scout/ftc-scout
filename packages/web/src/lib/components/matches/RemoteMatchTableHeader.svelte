@@ -1,6 +1,12 @@
+<script lang="ts">
+    import { headerId } from "./headers";
+
+    const id = headerId();
+</script>
+
 <thead>
     <tr>
-        <th class="team">Team</th>
+        <th class="team" id={id("team")}>Team</th>
         <th>Q-1</th>
         <th>Q-2</th>
         <th>Q-3</th>
