@@ -1,5 +1,6 @@
 export function prettyPrintOrdinal(num: number): string {
-    if (num >= 11 && num <= 13) {
+    const lastTwo = num % 100;
+    if (lastTwo >= 11 && lastTwo <= 13) {
         return `${num}th`;
     }
 
