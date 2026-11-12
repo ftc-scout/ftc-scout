@@ -1,12 +1,15 @@
 <script lang="ts">
+    import { browser } from "$app/environment";
     import { page } from "$app/stores";
-    import { EMAIL } from "../constants";
+    import { EMAIL, UNREACHABLE } from "../constants";
     import Card from "./Card.svelte";
     import Head from "./Head.svelte";
     import WidthProvider from "./WidthProvider.svelte";
 
     export let status: number | null = null;
     export let message: string | null = null;
+
+    let offline = browser && !navigator.onLine;
 
     $: computedStatus = status ?? $page.status;
     $: computedMessage = message ?? $page?.error?.message;
@@ -27,6 +30,12 @@
             {:else if computedStatus == 404}
                 <h1>{computedStatus}</h1>
                 <p class="top">{computedMessage}</p>
+            {:else if offline || computedMessage == UNREACHABLE}
+                <h1 class="word">{offline ? "Offline" : "Can't reach the server"}</h1>
+                <p class="top">This page isn't saved on this device</p>
+                <p class="bottom">
+                    The site can't reach the server and hasn't been saved this page on your device.
+                </p>
             {:else}
                 <h1>{computedStatus}</h1>
                 <p class="top">{computedMessage}</p>
@@ -36,7 +45,9 @@
                 </p>
             {/if}
 
-            <p class="help"><slot /></p>
+            {#if !offline && computedMessage != UNREACHABLE}
+                <p class="help"><slot /></p>
+            {/if}
         </div>
     </Card>
 </WidthProvider>
@@ -50,6 +61,11 @@
     h1 {
         font-weight: 600;
         font-size: calc(var(--xl-font-size) * 5);
+    }
+
+    h1.word {
+        font-size: calc(var(--xl-font-size) * 1.5);
+        margin-bottom: var(--md-gap);
     }
 
     p {

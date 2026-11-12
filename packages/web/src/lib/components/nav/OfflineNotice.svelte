@@ -1,8 +1,12 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { page } from "$app/stores";
+    import { beforeNavigate } from "$app/navigation";
 
     let offline = false;
     let kept = false; // if data request failed
+
+    beforeNavigate(() => (kept = false));
 
     onMount(() => {
         let update = () => (offline = !navigator.onLine);
@@ -22,7 +26,7 @@
     });
 </script>
 
-{#if offline || kept}
+{#if (offline || kept) && !$page.error}
     <div class="offline" role="status">
         {offline ? "Offline" : "The server can't be reached"}: now showing old cached data.
     </div>
