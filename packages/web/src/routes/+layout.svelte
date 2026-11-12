@@ -2,6 +2,7 @@
     import Navbar from "$lib/components/nav/Navbar.svelte";
     import { browser } from "$app/environment";
     import Sidebar from "$lib/components/nav/Sidebar.svelte";
+    import OfflineNotice from "$lib/components/nav/OfflineNotice.svelte";
     import { afterNavigate } from "$app/navigation";
     import { sendAnalyticsRequest } from "./analytics";
 
@@ -40,6 +41,8 @@
 <div id="content" tabindex="-1" autofocus>
     <slot />
 </div>
+
+<OfflineNotice />
 
 <style>
     @import "/static/css/global.css";
