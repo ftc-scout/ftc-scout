@@ -1,32 +1,23 @@
 <script lang="ts">
     import { onMount } from "svelte";
     import { page } from "$app/stores";
-    import { beforeNavigate } from "$app/navigation";
+    import { kept } from "$lib/pwa/kept";
 
     let offline = false;
-    let kept = false; // if data request failed
-
-    beforeNavigate(() => (kept = false));
 
     onMount(() => {
         let update = () => (offline = !navigator.onLine);
-        let told = (e: MessageEvent) => {
-            if (e.data?.ftcscout == "kept") kept = true;
-            else if (e.data?.ftcscout == "fresh") kept = false;
-        };
         update();
         addEventListener("online", update);
         addEventListener("offline", update);
-        navigator.serviceWorker?.addEventListener("message", told);
         return () => {
             removeEventListener("online", update);
             removeEventListener("offline", update);
-            navigator.serviceWorker?.removeEventListener("message", told);
         };
     });
 </script>
 
-{#if (offline || kept) && !$page.error}
+{#if (offline || $kept) && !$page.error}
     <div class="offline" role="status">
         {offline ? "Offline" : "The server can't be reached"}: now showing old cached data.
     </div>
