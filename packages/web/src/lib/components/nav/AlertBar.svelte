@@ -53,7 +53,7 @@
         padding: var(--md-pad) var(--lg-pad);
 
         /* background: var(--alert-bar-color); */
-        background: var(--blue-team-text-color);
+        background: var(--blue-team-fill-color);
         font-size: var(--lg-font-size);
         font-weight: bold;
 
@@ -82,7 +82,7 @@
         cursor: pointer;
         border-radius: var(--pill-border-radius);
         /* background: var(--alert-bar-color); */
-        background: var(--blue-team-text-color);
+        background: var(--blue-team-fill-color);
     }
 
     :is(a, button):hover {

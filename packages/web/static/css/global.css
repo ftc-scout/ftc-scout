@@ -224,9 +224,9 @@ body.dark {
     --red-team-bg-color: rgba(204, 47, 47, var(--team-color-transparency));
     --blue-team-color-vs: 27, 87, 179;
     --neutral-team-color-vs: 127, 0, 190;
-    --red-team-text-color: rgb(255, 83, 71);
-    --blue-team-text-color: rgb(33, 150, 243);
-    --neutral-team-text-color: rgb(196, 79, 255);
+    --red-team-text-color: rgb(255, 117, 108);
+    --blue-team-text-color: rgb(66, 166, 245);
+    --neutral-team-text-color: rgb(211, 123, 255);
     --red-team-fill-color: var(--red-team-color);
     --blue-team-fill-color: var(--blue-team-color);
 
@@ -310,9 +310,9 @@ body.dark .render-light {
         --red-team-bg-color: rgba(204, 47, 47, var(--team-color-transparency));
         --blue-team-color-vs: 27, 87, 179;
         --neutral-team-color-vs: 127, 0, 190;
-        --red-team-text-color: rgb(255, 83, 71);
-        --blue-team-text-color: rgb(33, 150, 243);
-        --neutral-team-text-color: rgb(196, 79, 255);
+        --red-team-text-color: rgb(255, 117, 108);
+        --blue-team-text-color: rgb(66, 166, 245);
+        --neutral-team-text-color: rgb(211, 123, 255);
         --red-team-fill-color: var(--red-team-color);
         --blue-team-fill-color: var(--blue-team-color);
 
@@ -386,5 +386,7 @@ a:hover {
     body {
         --red-team-fill-color: color-mix(in srgb, var(--red-team-color) 88%, black);
         --blue-team-fill-color: color-mix(in srgb, var(--blue-team-color) 80%, black);
+        --red-team-text-color: color-mix(in srgb, var(--red-team-color) 82%, black);
+        --blue-team-text-color: color-mix(in srgb, var(--blue-team-color) 75%, black);
     }
 }
