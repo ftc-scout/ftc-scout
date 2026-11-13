@@ -137,9 +137,10 @@ async function keep(url: string, response: Response): Promise<void> {
 
 async function ask(
     request: Request,
-    event: FetchEvent
+    event: FetchEvent,
+    answered: Promise<Response>
 ): Promise<{ response: Response; isData: boolean; usable: boolean }> {
-    let response = await fetch(request);
+    let response = await answered;
     let url = new URL(request.url);
     if (url.pathname != "/graphql") {
         let isData = good(url, response.status, null, null);
@@ -166,7 +167,8 @@ async function ask(
 
 async function api(request: Request, event: FetchEvent): Promise<Response> {
     let hit = await (await caches.open(API)).match(request.url);
-    let fresh = ask(request, event);
+    let answered = fetch(request);
+    let fresh = ask(request, event, answered);
     if (!hit) {
         let { response, isData } = await fresh;
         if (isData) event.waitUntil(tell(event, "fresh"));
@@ -180,8 +182,10 @@ async function api(request: Request, event: FetchEvent): Promise<Response> {
 
     event.waitUntil(fresh.catch(() => {}));
     try {
-        let first = await Promise.race([fresh, sleep(PATIENCE_MS).then(() => null)]);
-        if (!first?.usable) return saved();
+        let started = await Promise.race([answered, sleep(PATIENCE_MS).then(() => null)]);
+        if (!started) return saved();
+        let first = await fresh;
+        if (!first.usable) return saved();
         if (first.isData) event.waitUntil(tell(event, "fresh"));
         return first.response;
     } catch {
