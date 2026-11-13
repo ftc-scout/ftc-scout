@@ -1,5 +1,5 @@
-import type { Handle } from "@sveltejs/kit";
-import { THEME_COOKIE_NAME } from "./lib/constants";
+import type { Handle, HandleServerError } from "@sveltejs/kit";
+import { THEME_COOKIE_NAME, UNREACHABLE, isUnreachable } from "./lib/constants";
 
 export const handle: Handle = async ({ event, resolve }) => {
     let theme = "system";
@@ -14,4 +14,10 @@ export const handle: Handle = async ({ event, resolve }) => {
     });
 
     return response;
+};
+
+export const handleError: HandleServerError = ({ error }) => {
+    if (isUnreachable(error)) return { message: UNREACHABLE };
+    console.error(error);
+    return { message: "Internal Error" };
 };
