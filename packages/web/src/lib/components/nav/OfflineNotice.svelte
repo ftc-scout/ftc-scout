@@ -1,9 +1,14 @@
 <script lang="ts">
     import { onMount } from "svelte";
+    import { beforeNavigate } from "$app/navigation";
     import { page } from "$app/stores";
-    import { kept } from "$lib/pwa/kept";
+    import { UNREACHABLE } from "$lib/constants";
+    import { kept, navigated } from "$lib/pwa/kept";
+    import { keptLine } from "$lib/pwa/shown";
 
     let offline = false;
+
+    beforeNavigate(navigated);
 
     onMount(() => {
         let update = () => (offline = !navigator.onLine);
@@ -15,12 +20,12 @@
             removeEventListener("offline", update);
         };
     });
+
+    $: line = keptLine($kept, offline, UNREACHABLE, new Date());
 </script>
 
-{#if (offline || $kept) && !$page.error}
-    <div class="offline" role="status">
-        {offline ? "Offline" : "The server can't be reached"}: now showing old cached data.
-    </div>
+{#if line && !$page.error}
+    <div class="offline" role="status">{line}</div>
 {/if}
 
 <style>
