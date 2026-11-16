@@ -27,7 +27,6 @@
     <link rel="manifest" href="/head/site.webmanifest" />
     <link rel="mask-icon" href="/head/safari-pinned-tab.svg" color="#2c666e" />
     <meta name="msapplication-TileColor" content="#2c666e" />
-    <meta name="theme-color" content="#ffffff" />
     <meta property="og:site_name" content="FTCScout" />
 
     <title>{IS_DEV ? "*" : ""}{title}</title>

@@ -1,6 +1,14 @@
 {
+    "id": "/",
     "name": "FTCScout",
     "short_name": "FTCScout",
+    "description": "Live scores, rankings, OPR and EPA for every FIRST Tech Challenge team and event.",
+    "lang": "en",
+    "start_url": "/",
+    "scope": "/",
+    "display": "standalone",
+    "theme_color": "#2c666e",
+    "background_color": "#2c666e",
     "icons": [
         {
             "src": "/head/android-chrome-192x192.png",
@@ -11,10 +19,17 @@
             "src": "/head/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
+        },
+        {
+            "src": "/head/maskable-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png",
+            "purpose": "maskable"
         }
     ],
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff",
-    "display": "minimal-ui",
-    "start_url": "/"
+    "shortcuts": [
+        { "name": "Events", "url": "/events" },
+        { "name": "Teams", "url": "/teams" },
+        { "name": "Season Records", "url": "/records" }
+    ]
 }

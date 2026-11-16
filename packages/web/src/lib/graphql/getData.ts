@@ -1,4 +1,6 @@
 import { browser } from "$app/environment";
+import { NetworkStatus } from "@apollo/client/core";
+import { getOperationName } from "@apollo/client/utilities";
 import type {
     ApolloClient,
     ApolloQueryResult,
@@ -7,9 +9,57 @@ import type {
 } from "@apollo/client";
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
-import { writable, type Readable, type Writable, readable } from "svelte/store";
+import { writable, type Readable, readable, get } from "svelte/store";
+import { whileShown } from "$lib/pwa/kept";
 
 let cache: Record<string, ApolloQueryResult<any>> = {};
+
+const WAIT_MS = 300;
+
+function load<Data, Variables extends OperationVariables>(
+    client: ApolloClient<NormalizedCacheObject>,
+    query: DocumentNode | TypedDocumentNode<Data, Variables>,
+    variables: Variables,
+    bypassCacheKey: string | null,
+    noCache: boolean
+) {
+    let key = bypassCacheKey + "-" + JSON.stringify(variables);
+
+    let apolloCache = browser && !bypassCacheKey && !noCache;
+    let earlier: ApolloQueryResult<Data> | null = !browser
+        ? null
+        : bypassCacheKey
+        ? cache[key] ?? null
+        : apolloCache
+        ? fromApolloCache(client, query, variables)
+        : null;
+
+    let result = writable<ApolloQueryResult<Data> | null>(null);
+    let queryResult = client.query({
+        query,
+        variables,
+        fetchPolicy: apolloCache ? "network-only" : "no-cache",
+        context: browser ? { fetchOptions: { cache: "no-cache" } } : {},
+    });
+    queryResult.then((r) => {
+        result.set(r);
+        if (browser && bypassCacheKey) cache[key] = r;
+    });
+    return { result, queryResult, earlier };
+}
+
+function fromApolloCache<Data, Variables extends OperationVariables>(
+    client: ApolloClient<NormalizedCacheObject>,
+    query: DocumentNode | TypedDocumentNode<Data, Variables>,
+    variables: Variables
+): ApolloQueryResult<Data> | null {
+    try {
+        let data = client.readQuery({ query, variables });
+        return data ? { data, loading: false, networkStatus: NetworkStatus.ready } : null;
+    } catch {
+        return null;
+    }
+}
 
 export async function getData<Data = any, Variables extends OperationVariables = object>(
     client: ApolloClient<NormalizedCacheObject>,
@@ -18,34 +68,23 @@ export async function getData<Data = any, Variables extends OperationVariables =
     bypassCacheKey: string | null = null,
     noCache: boolean = false
 ): Promise<Readable<ApolloQueryResult<Data> | null>> {
-    let keyWithVars = bypassCacheKey + "-" + JSON.stringify(variables);
-    if (bypassCacheKey && cache[keyWithVars]) {
-        return readable(cache[keyWithVars]);
-    }
-
-    let queryResult = client.query({
-        query,
-        variables,
-        // No caching if on server or if bypassing apollo cache
-        fetchPolicy: browser && !bypassCacheKey && !noCache ? "cache-first" : "no-cache",
-    });
-
-    let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
-
-    queryResult.then((r) => {
-        result.set(r);
-        if (bypassCacheKey) cache[keyWithVars] = r;
-    });
+    let { result, queryResult, earlier } = load(client, query, variables, bypassCacheKey, noCache);
 
     if (!browser) {
         // We are doing SSR so we must have the data.
         await queryResult;
     } else {
-        // wait up to 300ms
-        await Promise.race([queryResult, new Promise((r) => setTimeout(r, 300))]);
+        await Promise.race([
+            queryResult.catch((e) => {
+                if (!earlier) throw e;
+            }),
+            new Promise((r) => setTimeout(r, WAIT_MS)),
+        ]);
+        if (earlier && get(result) == null) result.set(earlier);
     }
 
-    return result;
+    let operationName = getOperationName(query) ?? "";
+    return whileShown(result, { operationName, variables: variables as Record<string, unknown> });
 }
 
 export function getDataSync<Data = any, Variables extends OperationVariables = object>(
@@ -54,26 +93,10 @@ export function getDataSync<Data = any, Variables extends OperationVariables = o
     variables: Variables,
     bypassCacheKey: string | null = null
 ): Readable<ApolloQueryResult<Data> | null> {
-    let keyWithVars = bypassCacheKey + "-" + JSON.stringify(variables);
-    if (bypassCacheKey && cache[keyWithVars]) {
-        return readable(cache[keyWithVars]);
-    }
-
     if (!client) return readable(null);
 
-    let queryResult = client.query({
-        query,
-        variables,
-        // No caching if on server or if bypassing apollo cache
-        fetchPolicy: browser && !bypassCacheKey ? "cache-first" : "no-cache",
-    });
-
-    let result: Writable<ApolloQueryResult<Data> | null> = writable(null);
-
-    queryResult.then((r) => {
-        result.set(r);
-        if (bypassCacheKey) cache[keyWithVars] = r;
-    });
-
+    let { result, earlier } = load(client, query, variables, bypassCacheKey, false);
+    // Shown until the API answers.
+    if (earlier) result.set(earlier);
     return result;
 }
