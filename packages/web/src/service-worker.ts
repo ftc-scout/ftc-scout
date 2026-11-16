@@ -30,6 +30,7 @@ import {
     staticKept,
     worthKeeping,
 } from "$lib/pwa/requests";
+import type { Message, Reason } from "$lib/pwa/shown";
 
 const sw = self as unknown as ServiceWorkerGlobalScope;
 
@@ -39,6 +40,9 @@ const CODE = `code-${version}`;
 const API = "api";
 const MAX_API = 150;
 const PATIENCE_MS = 6000;
+const KEPT_AT = "x-ftcscout-kept-at";
+// PATIENCE_MS but for retry
+const ARRIVED_MS = 30_000;
 
 sw.addEventListener("install", (event) => {
     event.waitUntil(
@@ -114,10 +118,13 @@ async function keepInlined(pageUrl: string, response: Response): Promise<void> {
     }
 }
 
-/** Avoids recaching a cached response */
-async function tell(event: FetchEvent, what: "kept" | "fresh"): Promise<void> {
+async function tell(event: FetchEvent, message: Message): Promise<void> {
     let client = event.clientId ? await sw.clients.get(event.clientId) : undefined;
-    client?.postMessage({ ftcscout: what });
+    client?.postMessage(message);
+}
+
+function keptAt(copy: Response): number | null {
+    return Number(copy.headers.get(KEPT_AT)) || null;
 }
 
 function good(url: URL, status: number, contentType: string | null, body: string | null): boolean {
@@ -128,6 +135,13 @@ function good(url: URL, status: number, contentType: string | null, body: string
 async function keep(url: string, response: Response): Promise<void> {
     try {
         let cache = await caches.open(API);
+        let headers = new Headers(response.headers);
+        headers.set(KEPT_AT, String(Date.now()));
+        response = new Response(response.body, {
+            status: response.status,
+            statusText: response.statusText,
+            headers,
+        });
         await cache.delete(url);
         await cache.put(url, response);
         let keys = await cache.keys();
@@ -135,62 +149,131 @@ async function keep(url: string, response: Response): Promise<void> {
     } catch {}
 }
 
-async function ask(
-    request: Request,
-    event: FetchEvent,
-    answered: Promise<Response>
-): Promise<{ response: Response; isData: boolean; usable: boolean }> {
+type Answer = {
+    status: number;
+    statusText: string;
+    headers: Headers;
+    body: ArrayBuffer | null;
+    isData: boolean;
+    usable: boolean;
+};
+
+function respond(answer: Answer): Response {
+    return new Response(answer.body, {
+        status: answer.status,
+        statusText: answer.statusText,
+        headers: answer.headers,
+    });
+}
+
+async function read(request: Request, answered: Promise<Response>): Promise<Answer> {
     let response = await answered;
     let url = new URL(request.url);
-    if (url.pathname != "/graphql") {
-        let isData = good(url, response.status, null, null);
-        if (isData) event.waitUntil(keep(request.url, response.clone()));
-        return { response, isData, usable: isData };
-    }
+    let answer = {
+        status: response.status,
+        statusText: response.statusText,
+        headers: response.headers,
+    };
 
     if ([204, 205, 304].includes(response.status)) {
-        return { response, isData: false, usable: false };
+        return { ...answer, body: null, isData: false, usable: false };
     }
 
-    let text = await response.text();
-    let answer = () =>
-        new Response(text, {
-            status: response.status,
-            statusText: response.statusText,
-            headers: response.headers,
-        });
-    let isData = good(url, response.status, response.headers.get("content-type"), text);
-    if (isData) event.waitUntil(keep(request.url, answer()));
+    let body = await response.arrayBuffer();
+    if (url.pathname != "/graphql") {
+        let isData = good(url, response.status, null, null);
+        return { ...answer, body, isData, usable: isData };
+    }
 
-    return { response: answer(), isData, usable: isData || asksForQuery(text) };
+    let text = new TextDecoder().decode(body);
+    let isData = good(url, response.status, response.headers.get("content-type"), text);
+    return { ...answer, body, isData, usable: isData || asksForQuery(text) };
+}
+
+// Keep track of outgoing api request, to reuse old ones
+type Asking = { answered: Promise<Response>; answer: Promise<Answer>; kept: Promise<void> };
+const asking = new Map<string, Asking>();
+const arrived = new Map<string, Answer>();
+
+// replaces fetch, keeps track of outstanding queries, to avoid stopping a previous one and restarting
+function askFor(request: Request): Asking {
+    let going = asking.get(request.url);
+    if (going) return going;
+    let answered = fetch(request);
+    let answer = read(request, answered);
+    let kept = answer.then((a) => (a.isData ? keep(request.url, respond(a)) : undefined));
+    going = { answered, answer, kept };
+    asking.set(request.url, going);
+    kept.catch(() => {}).finally(() => asking.delete(request.url));
+    return going;
 }
 
 async function api(request: Request, event: FetchEvent): Promise<Response> {
-    let hit = await (await caches.open(API)).match(request.url);
-    let answered = fetch(request);
-    let fresh = ask(request, event, answered);
-    if (!hit) {
-        let { response, isData } = await fresh;
-        if (isData) event.waitUntil(tell(event, "fresh"));
-        return response;
+    if (request.mode == "no-cors") return fetch(request);
+
+    let url = request.url;
+    let late = arrived.get(url);
+    if (late) {
+        arrived.delete(url);
+        event.waitUntil(tell(event, { ftcscout: "fresh", url }));
+        return respond(late);
     }
 
-    let saved = () => {
-        event.waitUntil(tell(event, "kept"));
+    let hit = await (await caches.open(API)).match(url);
+
+    let going = askFor(request);
+    event.waitUntil(going.kept.catch(() => {}));
+    if (!hit) {
+        let answer = await going.answer;
+        if (answer.isData) event.waitUntil(tell(event, { ftcscout: "fresh", url }));
+        return respond(answer);
+    }
+
+    let saved = (reason: Reason) => {
+        let shown = hit!.clone().arrayBuffer();
+        event.waitUntil(tell(event, { ftcscout: "kept", url, at: keptAt(hit!), reason }));
+        // If slow, send event when it does arrive
+        if (reason == "slow") event.waitUntil(followUp(event, url, going, shown));
         return hit!;
     };
-
-    event.waitUntil(fresh.catch(() => {}));
     try {
-        let started = await Promise.race([answered, sleep(PATIENCE_MS).then(() => null)]);
-        if (!started) return saved();
-        let first = await fresh;
-        if (!first.usable) return saved();
-        if (first.isData) event.waitUntil(tell(event, "fresh"));
-        return first.response;
+        let started = await Promise.race([going.answered, sleep(PATIENCE_MS).then(() => null)]);
+        if (!started) return saved("slow");
+        let answer = await going.answer;
+        if (!answer.usable) return saved("failed");
+        if (answer.isData) event.waitUntil(tell(event, { ftcscout: "fresh", url }));
+        return respond(answer);
     } catch {
-        return saved();
+        return saved("failed");
     }
+}
+
+async function followUp(
+    event: FetchEvent,
+    url: string,
+    going: Asking,
+    shown: Promise<ArrayBuffer>
+): Promise<void> {
+    try {
+        await going.kept;
+        let answer = await going.answer;
+        if (!answer.isData || !answer.body) return;
+        if (same(answer.body, await shown)) {
+            await tell(event, { ftcscout: "fresh", url });
+        } else {
+            arrived.set(url, answer);
+            setTimeout(() => arrived.get(url) == answer && arrived.delete(url), ARRIVED_MS);
+            await tell(event, { ftcscout: "update", url });
+        }
+    } catch {}
+}
+
+function same(a: ArrayBuffer, b: ArrayBuffer): boolean {
+    if (a.byteLength != b.byteLength) return false;
+    let x = new Uint8Array(a);
+    let y = new Uint8Array(b);
+    for (let i = 0; i < x.length; i++) if (x[i] != y[i]) return false;
+    return true;
 }
 
 async function posted(request: Request, event: FetchEvent): Promise<Response> {
@@ -198,7 +281,10 @@ async function posted(request: Request, event: FetchEvent): Promise<Response> {
     if (!key) return fetch(request);
     let saved = async () => {
         let hit = await (await caches.open(API)).match(key!);
-        if (hit) event.waitUntil(tell(event, "kept"));
+        if (hit) {
+            let at = keptAt(hit);
+            event.waitUntil(tell(event, { ftcscout: "kept", url: key!, at, reason: "failed" }));
+        }
         return hit;
     };
     let response: Response;
@@ -216,7 +302,7 @@ async function posted(request: Request, event: FetchEvent): Promise<Response> {
         if (hit) return hit;
     } else {
         let copy = new Response(text, { headers: { "content-type": type ?? "application/json" } });
-        event.waitUntil(keep(key, copy).then(() => tell(event, "fresh")));
+        event.waitUntil(keep(key, copy).then(() => tell(event, { ftcscout: "fresh", url: key! })));
     }
     return new Response(text, {
         status: response.status,
