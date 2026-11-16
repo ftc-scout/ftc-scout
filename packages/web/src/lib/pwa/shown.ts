@@ -35,7 +35,7 @@ export class KeptAnswers {
                 this.shown.delete(url);
                 return false;
             case "update":
-                return this.shown.delete(url);
+                return this.shown.has(url);
         }
         return false;
     }

@@ -39,7 +39,7 @@ const CODE = `code-${version}`;
 
 const API = "api";
 const MAX_API = 150;
-const PATIENCE_MS = 6000;
+const PATIENCE_MS = 3000;
 const KEPT_AT = "x-ftcscout-kept-at";
 // PATIENCE_MS but for retry
 const ARRIVED_MS = 30_000;
@@ -215,7 +215,7 @@ async function api(request: Request, event: FetchEvent): Promise<Response> {
     let late = arrived.get(url);
     if (late) {
         arrived.delete(url);
-        event.waitUntil(tell(event, { ftcscout: "fresh", url }));
+        if (late.isData) event.waitUntil(tell(event, { ftcscout: "fresh", url }));
         return respond(late);
     }
 
@@ -257,10 +257,10 @@ async function followUp(
     try {
         await going.kept;
         let answer = await going.answer;
-        if (!answer.isData || !answer.body) return;
-        if (same(answer.body, await shown)) {
+        if (!answer.body) return;
+        if (answer.isData && same(answer.body, await shown)) {
             await tell(event, { ftcscout: "fresh", url });
-        } else {
+        } else if (answer.usable) {
             arrived.set(url, answer);
             setTimeout(() => arrived.get(url) == answer && arrived.delete(url), ARRIVED_MS);
             await tell(event, { ftcscout: "update", url });
