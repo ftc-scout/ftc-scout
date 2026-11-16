@@ -1,14 +1,11 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import { beforeNavigate } from "$app/navigation";
     import { page } from "$app/stores";
     import { UNREACHABLE } from "$lib/constants";
-    import { kept, navigated } from "$lib/pwa/kept";
+    import { kept } from "$lib/pwa/kept";
     import { keptLine } from "$lib/pwa/shown";
 
     let offline = false;
-
-    beforeNavigate(navigated);
 
     onMount(() => {
         let update = () => (offline = !navigator.onLine);

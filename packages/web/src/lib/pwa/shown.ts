@@ -9,39 +9,84 @@ export type Message =
     | { ftcscout: "fresh"; url?: string }
     | { ftcscout: "update"; url?: string };
 
-export class KeptAnswers {
-    private shown = new Map<string, Kept & { page: number }>();
-    /** Keeps track of the page, prevents the bottom bar from showing data of the previous page */
-    private page = 0;
-    navigated() {
-        this.page++;
+export type Asked = { operationName: string; variables: Record<string, unknown> };
+
+export function askedOf(url: string): Asked | null {
+    try {
+        let params = new URL(url).searchParams;
+        let operationName = params.get("operationName");
+        if (!operationName) return null;
+        let variables = JSON.parse(params.get("variables") ?? "{}") ?? {};
+        return { operationName, variables };
+    } catch {
+        return null;
     }
+}
+
+function stable(value: unknown): string | undefined {
+    return JSON.stringify(value, (_, v) =>
+        v && typeof v == "object" && !Array.isArray(v)
+            ? Object.fromEntries(Object.entries(v).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0)))
+            : v
+    );
+}
+
+export function sameAsked(address: Asked, asked: Asked): boolean {
+    if (address.operationName != asked.operationName) return false;
+    return Object.entries(address.variables).every(
+        ([name, value]) => stable(value) == stable(asked.variables[name])
+    );
+}
+
+const MAX_KEPT = 100;
+
+export class KeptAnswers {
+    private kept = new Map<string, Kept & { updated: boolean }>();
+
+    /** Keeps track of queries on the page */
+    constructor(private shown: (url: string) => boolean) {}
 
     /** Returns true when page should reload data */
     receive(message: Message): boolean {
-        for (let [url, kept] of this.shown) {
-            if (kept.page < this.page) this.shown.delete(url);
-        }
         let url = message.url ?? "";
         switch (message.ftcscout) {
             case "kept":
-                this.shown.set(url, {
+                this.kept.delete(url);
+                this.kept.set(url, {
                     at: message.at ?? null,
                     reason: message.reason ?? "failed",
-                    page: this.page,
+                    updated: false,
                 });
+                for (let old of [...this.kept.keys()].slice(0, -MAX_KEPT)) this.kept.delete(old);
                 return false;
             case "fresh":
-                this.shown.delete(url);
+                this.kept.delete(url);
                 return false;
-            case "update":
-                return this.shown.has(url);
+            case "update": {
+                let copy = this.kept.get(url);
+                if (!copy) return false;
+                if (this.shown(url)) return true;
+                // Preloaded: load again once its page is opened
+                copy.updated = true;
+                return false;
+            }
         }
         return false;
     }
 
+    shownChanged(): boolean {
+        let again = false;
+        for (let [url, copy] of this.kept) {
+            if (copy.updated && this.shown(url)) {
+                copy.updated = false;
+                again = true;
+            }
+        }
+        return again;
+    }
+
     summary(): Kept | null {
-        let all = [...this.shown.values()];
+        let all = [...this.kept].filter(([url]) => this.shown(url)).map(([, copy]) => copy);
         if (!all.length) return null;
         let times = all.map((k) => k.at).filter((at): at is number => at != null);
         return {

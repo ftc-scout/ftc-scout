@@ -1,5 +1,6 @@
 import { browser } from "$app/environment";
 import { NetworkStatus } from "@apollo/client/core";
+import { getOperationName } from "@apollo/client/utilities";
 import type {
     ApolloClient,
     ApolloQueryResult,
@@ -9,6 +10,7 @@ import type {
 import type { TypedDocumentNode } from "@graphql-typed-document-node/core";
 import type { DocumentNode } from "graphql";
 import { writable, type Readable, readable, get } from "svelte/store";
+import { whileShown } from "$lib/pwa/kept";
 
 let cache: Record<string, ApolloQueryResult<any>> = {};
 
@@ -81,7 +83,8 @@ export async function getData<Data = any, Variables extends OperationVariables =
         if (earlier && get(result) == null) result.set(earlier);
     }
 
-    return result;
+    let operationName = getOperationName(query) ?? "";
+    return whileShown(result, { operationName, variables: variables as Record<string, unknown> });
 }
 
 export function getDataSync<Data = any, Variables extends OperationVariables = object>(
