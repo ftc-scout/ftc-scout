@@ -22,6 +22,11 @@ import {
     TeamEventParticipation,
     TeamEventParticipationSchemas as TepSchemas,
 } from "../entities/dyn/team-event-participation";
+import {
+    type LeagueIdentifier,
+    leaguesAffectedByEvent,
+    recomputeLeagues,
+} from "./recompute-league-rankings";
 import { exit } from "process";
 import { IS_DEV } from "../../constants";
 import { newMatchesKey, pubsub } from "../../graphql/resolvers/pubsub";
@@ -47,6 +52,7 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
     console.info(`Loading matches for season ${season}. (${loadType})`);
 
     let events = await eventsToFetch(season, loadType);
+    let leaguesToRecompute: LeagueIdentifier[] = [];
 
     console.info(`Got ${events.length} events to fetch.`);
 
@@ -117,6 +123,17 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
             });
 
             publishMatchUpdates(updatedMatches);
+            if (event.leagueCode && updatedMatches.length > 0) {
+                let teamNumbers = updatedMatches.flatMap((m) => m.teams.map((t) => t.teamNumber));
+                leaguesToRecompute.push(
+                    ...(await leaguesAffectedByEvent(
+                        season,
+                        event.leagueCode,
+                        event.regionCode,
+                        teamNumbers
+                    ))
+                );
+            }
 
             console.info(`Loaded ${i + 1}/${events.length}.`);
         } catch (e) {
@@ -128,6 +145,8 @@ export async function loadAllMatches(season: Season, loadType: LoadType) {
             }
         }
     }
+
+    await recomputeLeagues(season, leaguesToRecompute);
 
     await DataHasBeenLoaded.create({
         season,
@@ -156,7 +175,14 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
     if (loadType == LoadType.Full) {
         return DATA_SOURCE.getRepository(Event)
             .createQueryBuilder("e")
-            .select(["e.season", "e.code", "e.remote", "e.timezone"])
+            .select([
+                "e.season",
+                "e.code",
+                "e.remote",
+                "e.timezone",
+                "e.leagueCode",
+                "e.regionCode",
+            ])
             .distinct(true)
             .leftJoin(Match, "m", "e.season = m.event_season AND e.code = m.event_code")
             .leftJoin(
@@ -172,7 +198,14 @@ async function eventsToFetch(season: Season, loadType: LoadType) {
     } else {
         return DATA_SOURCE.getRepository(Event)
             .createQueryBuilder("e")
-            .select(["e.season", "e.code", "e.remote", "e.timezone"])
+            .select([
+                "e.season",
+                "e.code",
+                "e.remote",
+                "e.timezone",
+                "e.leagueCode",
+                "e.regionCode",
+            ])
             .distinct(true)
             .where("season = :season", { season })
             .andWhere("start <= (NOW() at time zone timezone)::date")
