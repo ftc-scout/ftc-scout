@@ -150,11 +150,11 @@ body {
     --red-team-color-vs: 244, 67, 54;
     --blue-team-color-vs: 33, 150, 243;
     --neutral-team-color-vs: 170, 0, 255;
-    --red-team-text-color: rgb(var(--red-team-color-vs));
-    --blue-team-text-color: rgb(var(--blue-team-color-vs));
+    --red-team-text-color: rgb(200, 55, 44);
+    --blue-team-text-color: rgb(25, 112, 182);
     --neutral-team-text-color: rgb(var(--neutral-team-color-vs));
-    --red-team-fill-color: var(--red-team-color);
-    --blue-team-fill-color: var(--blue-team-color);
+    --red-team-fill-color: rgb(215, 59, 48);
+    --blue-team-fill-color: rgb(26, 120, 194);
 
     --red-stat-color-vs: var(--red-team-color-vs);
     --blue-stat-color-vs: 25, 118, 210;
@@ -380,13 +380,4 @@ a {
 
 a:hover {
     text-decoration: underline;
-}
-
-@supports (color: color-mix(in srgb, red 50%, black)) {
-    body {
-        --red-team-fill-color: color-mix(in srgb, var(--red-team-color) 88%, black);
-        --blue-team-fill-color: color-mix(in srgb, var(--blue-team-color) 80%, black);
-        --red-team-text-color: color-mix(in srgb, var(--red-team-color) 82%, black);
-        --blue-team-text-color: color-mix(in srgb, var(--blue-team-color) 75%, black);
-    }
 }
