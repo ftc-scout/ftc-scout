@@ -209,9 +209,29 @@ export const Descriptor2026 = new Descriptor({
         })
     )
     .addColumn(
+        new DescriptorColumn({ name: "dcHiveTipsPoints" }).addScoreModal({
+            displayName: "Tips",
+            columnPrefix: "DC Hive Tips",
+            fullName: "DC Hive Tip Points",
+            sql: (ms) => `(${ms}.dcHiveTips * 20)`,
+            getValue: (ms) => ms.dcHiveTips * 20,
+            getTitle: (ms) => nOf(ms.dcHiveTips, "Tip"),
+        })
+    )
+    .addColumn(
         new DescriptorColumn({ name: "dcHivePollenNectar" }).addMatchScore({
             fromApi: (api: Api) => api.teleopHivePollenNectar,
             dataTy: Int16DTy,
+        })
+    )
+    .addColumn(
+        new DescriptorColumn({ name: "dcHivePollenNectarPoints" }).addScoreModal({
+            displayName: "Pollen & Nectar",
+            columnPrefix: "DC Hive Pollen & Nectar",
+            fullName: "DC Hive Pollen and Nectar Points",
+            sql: (ms) => `(${ms}.dcHivePollenNectar * 2)`,
+            getValue: (ms) => ms.dcHivePollenNectar * 2,
+            getTitle: (ms) => nOf(ms.dcHivePollenNectar, "Pollen/Nectar", "Pollen/Nectar"),
         })
     )
     .addColumn(
@@ -595,13 +615,19 @@ export const Descriptor2026 = new Descriptor({
                         { val: "autoParkPointsIndividual", for: "tep", children: [] },
                     ],
                 },
-                { val: "autoHivePoints", children: [] },
+                { val: "autoHivePoints", children: [{ val: "autoHiveTipsPoints", children: [] }] },
             ],
         },
         {
             val: "dcPoints",
             children: [
-                { val: "dcHivePoints", children: [] },
+                {
+                    val: "dcHivePoints",
+                    children: [
+                        { val: "dcHiveTipsPoints", children: [] },
+                        { val: "dcHivePollenNectarPoints", children: [] },
+                    ],
+                },
                 { val: "dcFlowerPoints", children: [] },
                 { val: "dcGardenPoints", children: [] },
                 {
