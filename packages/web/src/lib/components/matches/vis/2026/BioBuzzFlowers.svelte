@@ -28,7 +28,6 @@
 <script lang="ts">
     import { faCaretRight } from "@fortawesome/free-solid-svg-icons";
     import Fa from "svelte-fa";
-    import { slide } from "svelte/transition";
     import type { Season } from "@ftc-scout/common";
     import type { FullMatchFragment } from "$lib/graphql/generated/graphql-operations";
     import { SM_OPEN_SECTIONS } from "../../score-modal/ScoreModal.svelte";
@@ -129,8 +128,8 @@
         </button>
     </h3>
 
-    {#if open}
-        <div id="flowers-body" transition:slide={{ duration: 250 }}>
+    <div id="flowers-body" class="body" class:open>
+        <div class="body-inner">
             <ul class="grid">
                 {#each flowers as f}
                     <li>
@@ -181,7 +180,7 @@
                 </span>
             </p>
         </div>
-    {/if}
+    </div>
 </section>
 
 <style>
@@ -240,6 +239,28 @@
     .data.zero {
         color: var(--grayed-out-text-color);
         font-weight: normal;
+    }
+
+    .body {
+        display: grid;
+        grid-template-rows: 0fr;
+        visibility: hidden;
+        transition: grid-template-rows 0.25s cubic-bezier(0.33, 1, 0.68, 1), visibility 0s 0.25s;
+    }
+    .body.open {
+        grid-template-rows: 1fr;
+        visibility: visible;
+        transition: grid-template-rows 0.25s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+    .body-inner {
+        min-height: 0;
+        overflow: hidden;
+    }
+    @media (prefers-reduced-motion: reduce) {
+        .body,
+        .body.open {
+            transition: none;
+        }
     }
 
     .grid {
