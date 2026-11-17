@@ -158,10 +158,10 @@ body {
 
     --red-stat-color-vs: var(--red-team-color-vs);
     --blue-stat-color-vs: 25, 118, 210;
-    --light-blue-stat-color-vs: var(--blue-team-color-vs);
+    --light-blue-stat-color-vs: 14, 116, 144;
     --purple-stat-color-vs: var(--neutral-team-color-vs);
-    --green-stat-color-vs: 67, 160, 71;
-    --red-stat-color: rgb(var(--red-stat-color-vs));
+    --green-stat-color-vs: 46, 125, 50;
+    --red-stat-color: var(--red-team-fill-color);
     --red-stat-bg-color: rgba(var(--red-stat-color-vs), var(--stat-transparency));
     --blue-stat-color: rgb(var(--blue-stat-color-vs));
     --blue-stat-bg-color: rgba(var(--blue-stat-color-vs), var(--stat-transparency));
