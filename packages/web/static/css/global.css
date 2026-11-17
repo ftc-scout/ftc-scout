@@ -150,16 +150,18 @@ body {
     --red-team-color-vs: 244, 67, 54;
     --blue-team-color-vs: 33, 150, 243;
     --neutral-team-color-vs: 170, 0, 255;
-    --red-team-text-color: rgb(var(--red-team-color-vs));
-    --blue-team-text-color: rgb(var(--blue-team-color-vs));
+    --red-team-text-color: rgb(219, 26, 12);
+    --blue-team-text-color: rgb(11, 113, 195);
     --neutral-team-text-color: rgb(var(--neutral-team-color-vs));
+    --red-team-fill-color: rgb(215, 59, 48);
+    --blue-team-fill-color: rgb(26, 120, 194);
 
     --red-stat-color-vs: var(--red-team-color-vs);
     --blue-stat-color-vs: 25, 118, 210;
-    --light-blue-stat-color-vs: var(--blue-team-color-vs);
+    --light-blue-stat-color-vs: 14, 116, 144;
     --purple-stat-color-vs: var(--neutral-team-color-vs);
-    --green-stat-color-vs: 67, 160, 71;
-    --red-stat-color: rgb(var(--red-stat-color-vs));
+    --green-stat-color-vs: 46, 125, 50;
+    --red-stat-color: var(--red-team-fill-color);
     --red-stat-bg-color: rgba(var(--red-stat-color-vs), var(--stat-transparency));
     --blue-stat-color: rgb(var(--blue-stat-color-vs));
     --blue-stat-bg-color: rgba(var(--blue-stat-color-vs), var(--stat-transparency));
@@ -222,9 +224,11 @@ body.dark {
     --red-team-bg-color: rgba(204, 47, 47, var(--team-color-transparency));
     --blue-team-color-vs: 27, 87, 179;
     --neutral-team-color-vs: 127, 0, 190;
-    --red-team-text-color: rgb(255, 83, 71);
-    --blue-team-text-color: rgb(33, 150, 243);
-    --neutral-team-text-color: rgb(196, 79, 255);
+    --red-team-text-color: rgb(255, 117, 108);
+    --blue-team-text-color: rgb(66, 166, 245);
+    --neutral-team-text-color: rgb(211, 123, 255);
+    --red-team-fill-color: var(--red-team-color);
+    --blue-team-fill-color: var(--blue-team-color);
 
     --red-stat-color-vs: 204, 47, 47;
     --blue-stat-color-vs: var(--blue-team-color-vs);
@@ -306,9 +310,11 @@ body.dark .render-light {
         --red-team-bg-color: rgba(204, 47, 47, var(--team-color-transparency));
         --blue-team-color-vs: 27, 87, 179;
         --neutral-team-color-vs: 127, 0, 190;
-        --red-team-text-color: rgb(255, 83, 71);
-        --blue-team-text-color: rgb(33, 150, 243);
-        --neutral-team-text-color: rgb(196, 79, 255);
+        --red-team-text-color: rgb(255, 117, 108);
+        --blue-team-text-color: rgb(66, 166, 245);
+        --neutral-team-text-color: rgb(211, 123, 255);
+        --red-team-fill-color: var(--red-team-color);
+        --blue-team-fill-color: var(--blue-team-color);
 
         --red-stat-color-vs: 204, 47, 47;
         --blue-stat-color-vs: var(--blue-team-color-vs);
