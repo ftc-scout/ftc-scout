@@ -150,8 +150,8 @@ body {
     --red-team-color-vs: 244, 67, 54;
     --blue-team-color-vs: 33, 150, 243;
     --neutral-team-color-vs: 170, 0, 255;
-    --red-team-text-color: rgb(200, 55, 44);
-    --blue-team-text-color: rgb(25, 112, 182);
+    --red-team-text-color: rgb(219, 26, 12);
+    --blue-team-text-color: rgb(11, 113, 195);
     --neutral-team-text-color: rgb(var(--neutral-team-color-vs));
     --red-team-fill-color: rgb(215, 59, 48);
     --blue-team-fill-color: rgb(26, 120, 194);
