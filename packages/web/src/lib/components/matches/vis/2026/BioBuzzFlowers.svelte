@@ -381,6 +381,14 @@
         height: 22px;
     }
 
+    .flower.red,
+    .flower.blue,
+    .ball-wrap,
+    .points .data.red,
+    .points .data.blue {
+        forced-color-adjust: none;
+    }
+
     .sr-only {
         position: absolute;
         width: 1px;
