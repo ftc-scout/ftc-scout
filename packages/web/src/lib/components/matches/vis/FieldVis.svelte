@@ -4,6 +4,7 @@
     import Button from "../../ui/Button.svelte";
     import { Season } from "@ftc-scout/common";
     import PowerPlayVisModal from "./2022/PowerPlayVisModal.svelte";
+    import BioBuzzFlowers from "./2026/BioBuzzFlowers.svelte";
     import type { SimpleTeamMatchParticipation } from "./2022/HoverInfo.svelte";
 
     export let scores: FullMatchFragment["scores"];
@@ -22,6 +23,10 @@
     <div>
         <Button icon={faBinoculars} on:click={() => (shown2022 = true)}>View Cone Layout</Button>
     </div>
+{/if}
+
+{#if scores && scores.__typename == "MatchScores2026"}
+    <BioBuzzFlowers {scores} />
 {/if}
 
 <style>
