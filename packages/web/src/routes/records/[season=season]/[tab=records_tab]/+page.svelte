@@ -114,7 +114,7 @@
     />
 {/if}
 
-<WidthProvider width={"850px"}>
+<WidthProvider>
     <Card>
         <h1>{DESCRIPTORS[season].seasonName} Season Records</h1>
 
