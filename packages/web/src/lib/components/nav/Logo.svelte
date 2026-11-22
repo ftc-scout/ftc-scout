@@ -14,7 +14,7 @@
         align-items: center;
         gap: var(--sm-gap);
         padding: var(--md-pad);
-        font-size: var(--vl-font-size);
+        font-size: 22px;
         background-color: var(--theme-color);
         color: var(--theme-text-color);
         font-weight: bold;
@@ -23,11 +23,5 @@
 
     a:hover {
         text-decoration: none;
-    }
-
-    @media (max-width: 800px) {
-        span {
-            display: none;
-        }
     }
 </style>
