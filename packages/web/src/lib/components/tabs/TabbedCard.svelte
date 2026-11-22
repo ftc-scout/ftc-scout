@@ -19,11 +19,14 @@
 
     $: if (!shownTabs.some((t) => t[2] == selectedTab) && shownTabs.length)
         selectedTab = shownTabs[0][2];
+
+    let tabsWidth = 0;
+    let cardWidth = 0;
 </script>
 
 {#if shownTabs.length}
     <Card vis={false}>
-        <div class="tabs">
+        <div class="tabs" bind:offsetWidth={tabsWidth}>
             {#each shownTabs as [icon, name, id]}
                 <a
                     class="tab"
@@ -37,7 +40,11 @@
             {/each}
         </div>
 
-        <div class="card" class:flat-top={shownTabs[0][2] == selectedTab}>
+        <div
+            class="card"
+            class:flat-top={shownTabs[0][2] == selectedTab && cardWidth <= tabsWidth}
+            bind:offsetWidth={cardWidth}
+        >
             <slot />
         </div>
     </Card>
