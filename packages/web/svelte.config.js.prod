@@ -31,6 +31,7 @@ const config = {
                     "fonts.googleapis.com",
                     "ftc-scout-server.fly.dev",
                     "i.ytimg.com",
+                    "ftcvideos.org",
                 ],
                 "font-src": ["self", "fonts.gstatic.com", "fonts.googleapis.com"],
                 "frame-ancestors": ["self"],
