@@ -13,6 +13,7 @@
     import type { RemoteScoresTy, TradScoresTy } from "../MatchScore.svelte";
     import RemoteScores from "./RemoteScores.svelte";
     import TradScores from "./TradScores.svelte";
+    import MatchVideo from "./MatchVideo.svelte";
     import { writable, type Writable } from "svelte/store";
     import { ALL_SEASONS, type Season } from "@ftc-scout/common";
 
@@ -38,6 +39,7 @@
             dispatch("close");
         }}
     >
+        <MatchVideo {match} />
         {#if trad}
             <TradScores scores={trad} {matchDescription} teams={match.teams} {level} />
         {:else if remote}

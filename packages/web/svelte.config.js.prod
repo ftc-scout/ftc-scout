@@ -15,9 +15,24 @@ const config = {
         csp: {
             directives: {
                 "default-src": ["self", 'ws:', "ftc-scout-server.fly.dev", "api.ftcscout.org"],
+                "connect-src": [
+                    "self",
+                    "ws:",
+                    "ftc-scout-server.fly.dev",
+                    "api.ftcscout.org",
+                    "ftcvideos.org",
+                ],
+                "frame-src": ["self", "ftcvideos.org"],
                 "script-src": ["self", "www.googletagmanager.com"],
                 "style-src": ["self", "unsafe-inline", "fonts.googleapis.com"],
-                "img-src": ["self", "data:", "fonts.googleapis.com", "ftc-scout-server.fly.dev"],
+                "img-src": [
+                    "self",
+                    "data:",
+                    "fonts.googleapis.com",
+                    "ftc-scout-server.fly.dev",
+                    "i.ytimg.com",
+                    "ftcvideos.org",
+                ],
                 "font-src": ["self", "fonts.gstatic.com", "fonts.googleapis.com"],
                 "frame-ancestors": ["self"],
                 "upgrade-insecure-requests": true,
