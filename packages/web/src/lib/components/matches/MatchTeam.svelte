@@ -8,6 +8,7 @@
     import { Alliance, type FullMatchFragment } from "../../graphql/generated/graphql-operations";
     import { getContext } from "svelte";
     import { browser } from "$app/environment";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
 
     export let team: FullMatchFragment["teams"][number];
     export let eventCode: string;
@@ -59,8 +60,11 @@
             }
         }}
     >
-        <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
-        <em class="name">{name}</em>
+        <span class="avatar"><TeamAvatar {number} {season} size="2em" /></span>
+        <span class="text">
+            <span class:dq={dq || noShow}>{number}{surrogate ? "*" : ""}</span>
+            <em class="name">{name}</em>
+        </span>
     </a>
 </td>
 
@@ -77,8 +81,8 @@
 
     .inner {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        gap: var(--md-gap);
 
         white-space: nowrap;
         overflow: hidden;
@@ -92,6 +96,19 @@
         text-decoration: none;
 
         height: 100%;
+    }
+
+    .avatar {
+        display: contents;
+    }
+
+    .text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        align-self: stretch;
+        min-width: 0;
+        overflow: hidden;
     }
 
     :global(.hearts) + td .inner {
@@ -148,8 +165,19 @@
         }
 
         .inner {
+            justify-content: center;
+            gap: var(--sm-gap);
+        }
+
+        .text {
             align-items: center;
             justify-content: center;
+        }
+    }
+
+    @media (max-width: 600px) {
+        .avatar {
+            display: none;
         }
     }
 </style>

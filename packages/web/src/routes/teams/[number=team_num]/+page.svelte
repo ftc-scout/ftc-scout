@@ -38,6 +38,7 @@
     import { setContext } from "svelte";
     import { SHOW_REMOTE_FOCUS_CTX } from "$lib/components/matches/MatchTeam.svelte";
     import QuickStats from "./QuickStats.svelte";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
 
     const toSeason = (n: number) => n as Season;
 
@@ -76,7 +77,10 @@
         </ErrorPage>
 
         <Card>
-            <h1>{team.number} - {team.name}</h1>
+            <h1>
+                <TeamAvatar number={team.number} season={$season} size="40px" />
+                {team.number} - {team.name}
+            </h1>
 
             <InfoIconRow icon={faSchool}>{team.schoolName}</InfoIconRow>
 

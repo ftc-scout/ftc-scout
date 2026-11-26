@@ -14,6 +14,7 @@
     import InfiniteScroll from "svelte-infinite-scroll";
     import { browser } from "$app/environment";
     import Head from "$lib/components/Head.svelte";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
 
     export let data;
     $: teamsStore = data.teams;
@@ -85,6 +86,9 @@
 
                     <li>
                         <a {href}>
+                            <span class="avatar">
+                                <TeamAvatar number={team.number} size="32px" />
+                            </span>
                             <span class="number"> {@html highlightNum(team.number)} </span>
                             <span class="name">{@html highlight(team.name, highlights)} </span>
                             <em class="location"> <Location {...team.location} link={false} /> </em>
@@ -155,7 +159,7 @@
         border-radius: 8px;
 
         display: grid;
-        grid-template-columns: 6ch 1fr;
+        grid-template-columns: 32px 6ch 1fr;
         grid-template-rows: auto auto;
         gap: var(--sm-gap) var(--lg-gap);
 
@@ -165,6 +169,13 @@
     a:hover {
         text-decoration: none;
         background: var(--hover-color);
+    }
+
+    .avatar {
+        grid-row: span 2;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 
     .number {
