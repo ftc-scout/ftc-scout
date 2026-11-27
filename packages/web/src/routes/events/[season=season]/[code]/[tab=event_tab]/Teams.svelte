@@ -4,6 +4,7 @@
     import type { EventPageQuery } from "$lib/graphql/generated/graphql-operations";
     import { CURRENT_SEASON } from "@ftc-scout/common";
     import { browser } from "$app/environment";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
     import Location from "../../../../../lib/components/Location.svelte";
 
     export let teams: NonNullable<EventPageQuery["eventByCode"]>["teams"];
@@ -30,7 +31,10 @@
                     }
                 }}
             >
-                <span>{team.team.number} - <em>{team.team.name}</em></span>
+                <span>
+                    <TeamAvatar number={team.teamNumber} season={team.season} />
+                    {team.team.number} - <em>{team.team.name}</em>
+                </span>
                 <em class="loc"> &nbsp <Location {...team.team.location} link={false} /></em>
             </a>
         </li>

@@ -6,6 +6,7 @@
     import { preloadData } from "$app/navigation";
     import { fly } from "svelte/transition";
     import { prettyPrintFloat, prettyPrintOrdinal } from "$lib/printers/number";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
 
     type Team = Omit<NonNullable<EventPageQuery["eventByCode"]>["teams"][number], "__typename">;
 
@@ -32,7 +33,10 @@
 
 <a {href} transition:fly={{ y: 100, duration: 300 }}>
     <div class="top-row">
-        <b class="name"> {number} - <em> {name} </em> </b>
+        <b class="name"
+            ><TeamAvatar {number} {season} />
+            {number} - <em> {name} </em>
+        </b>
         <span class="view-team"> View Team <Fa icon={faAngleRight} /></span>
     </div>
 

@@ -6,6 +6,7 @@
     import { CURRENT_SEASON, type Season } from "@ftc-scout/common";
     import { TEAM_CLICK_ACTION_CTX } from "$lib/components/matches/MatchTeam.svelte";
     import { getContext } from "svelte";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
 
     type Award = NonNullable<EventPageQuery["eventByCode"]>["awards"][number];
 
@@ -57,6 +58,7 @@
                                 }
                             }}
                         >
+                            <TeamAvatar number={award.team.number} {season} />
                             {#if award.personName == null}
                                 {award.team.number} - <em>{award.team.name}</em>
                             {:else}

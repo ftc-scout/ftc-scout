@@ -2,7 +2,9 @@
     import { browser } from "$app/environment";
     import { getContext } from "svelte";
     import { TEAM_CLICK_ACTION_CTX } from "../matches/MatchTeam.svelte";
-    import type { StatValue } from "@ftc-scout/common";
+    import { CURRENT_SEASON, type StatValue } from "@ftc-scout/common";
+    import { page } from "$app/stores";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
 
     export let val: Extract<StatValue, { ty: "team" }>;
     export let eventCode: string | null = null;
@@ -10,6 +12,7 @@
     $: number = val.number;
     $: name = val.name;
     $: href = `/teams/${number}`;
+    $: season = Number($page.params.season ?? CURRENT_SEASON);
 
     let clickAction = getContext(TEAM_CLICK_ACTION_CTX) as
         | ((num: number, name: string, eventCode: string | null) => void)
@@ -29,8 +32,11 @@
     }}
 >
     <a class="wrap" {href} role={browser && clickAction ? "button" : "link"}>
-        <span> {number} </span>
-        <em class="name">{name}</em>
+        <TeamAvatar {number} {season} size="2em" />
+        <div class="text">
+            <span> {number} </span>
+            <em class="name">{name}</em>
+        </div>
     </a>
 </td>
 
@@ -48,8 +54,8 @@
 
     a {
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        align-items: center;
+        gap: var(--md-gap);
 
         text-decoration: none;
         color: inherit;
@@ -57,7 +63,13 @@
         padding: var(--sm-pad);
     }
 
-    a * {
+    .text {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .text * {
         display: block;
         min-width: 100%;
         width: 20ch;
@@ -74,7 +86,7 @@
             padding: var(--sm-pad);
         }
 
-        a * {
+        .text * {
             width: 14ch;
         }
     }

@@ -9,6 +9,7 @@
     import { prettyPrintDateRangeString } from "../../../printers/dateRange";
     import { watchForFocus } from "../../../util/directives";
     import type { Writable } from "svelte/store";
+    import TeamAvatar from "$lib/components/TeamAvatar.svelte";
 
     export let res: FuzzyResult<EventsSearchEventFragment | TeamsSearchTeamFragment>;
     export let searchText: string;
@@ -25,7 +26,13 @@
 </script>
 
 <a {href} {title} use:watchForFocus={{ store: focusNum, myNum: index }} on:keydown on:click>
-    <span class="icon"> <Fa {icon} /> </span>
+    <span class="icon">
+        {#if doc.__typename == "Event"}
+            <Fa {icon} />
+        {:else}
+            <TeamAvatar number={doc.number} size="1.25em"><Fa {icon} /></TeamAvatar>
+        {/if}
+    </span>
 
     <span class="info">
         {#if doc.__typename == "Event"}
